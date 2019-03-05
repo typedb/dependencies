@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-def checkstyle_dependencies(
+def checkstyle(
     omit = [],
     versions = {
       "antlr_antlr": "2.7.7",

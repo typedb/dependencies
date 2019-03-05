@@ -18,9 +18,16 @@
 
 workspace(name = "graknlabs_tools")
 
-load("//maven:dependencies.bzl", "maven_dependencies")
-maven_dependencies()
+load("//bazel:dependencies.bzl", "bazel_common", "bazel_deps", "bazel_toolchain")
+bazel_common()
+bazel_deps()
+bazel_toolchain()
 
-load("//checkstyle:dependencies.bzl", "checkstyle_dependencies")
-checkstyle_dependencies()
+load("//bazel:dependencies.bzl", "buildifier", "buildozer", "unused_deps")
+buildifier()
+buildozer()
+unused_deps()
+
+load("//checkstyle:dependencies.bzl", "checkstyle")
+checkstyle()
 
