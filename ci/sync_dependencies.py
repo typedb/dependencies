@@ -4,7 +4,7 @@
 dependency_update updates bazel dependencies declared in WORKSPACE
 
 Example usage:
-dependency_update.py --dependency client-python:development --user docs:development-client-python
+sync_dependencies.py --dependency client-python:development --user docs:development-client-python
 """
 
 from __future__ import print_function

@@ -17,13 +17,13 @@
 #
 
 py_binary(
-    name = "dependency-update",
-    srcs = ["dependency_update.py"],
-    main = "dependency_update.py"
+    name = "sync-dependencies",
+    srcs = ["sync_dependencies.py"],
+    main = "sync_dependencies.py"
 )
 
 py_binary(
-    name = "approval-request",
-    srcs = ["approval_request.py"],
-    main = "approval_request.py"
+    name = "release-appproval",
+    srcs = ["release_approval.py"],
+    main = "release_approval.py"
 )
