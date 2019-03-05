@@ -27,7 +27,7 @@ jobs:
       - run: ci/install-bazel-rbe-credential.sh
       - run: ci/run-bazel.sh bazel build //...
 
-  dependency-update:
+  sync-dependencies:
     machine: true
     steps:
       - checkout
@@ -35,11 +35,10 @@ jobs:
       - run:
           name: Sync grakn:master graql:master client-java:master client-python:master client-nodejs:master docs:master and examples:master with the latest build-tools:master
           command: |
-            ci/run-bazel.sh bazel run //release:dependency-update -- --dependency build-tools:master \
-              --user grakn:master graql:mster client-java:mster client-python:master client-nodejs:master docs:master examples:master
+            bazel run //ci:sync-dependencies -- --dependency build-tools:master --user grakn:master
 
 workflows:
   build-tools:
     jobs:
       - build
-#      - dependency-update
+      - sync-dependencies

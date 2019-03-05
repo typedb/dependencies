@@ -84,7 +84,7 @@ class GitRepo(object):
     GRAKN_AUTHENTICATED_REMOTE_TEMPLATE = 'https://{credential}@github.com/graknlabs/{repo}.git'
 
     # pylint: disable=line-too-long
-    GRABL_MARKER = '# grabl-marker: do not remove this comment, this is used for dependency-update by @{ws_name}'
+    SYNC_MARKER = '# sync-marker: do not remove this comment, this is used for sync-dependencies by @{ws_name}'
     COMMIT_HASH_REGEX = r'[0-9a-f]{40}'
     CLEAN_TREE_MSG = 'nothing to commit, working tree clean'
 
@@ -120,7 +120,7 @@ class GitRepo(object):
     @property
     def marker(self):
         """ reference marker to update """
-        return self.GRABL_MARKER.format(ws_name=self.bazel_workspace)
+        return self.SYNC_MARKER.format(ws_name=self.bazel_workspace)
 
     @property
     def last_commit(self):

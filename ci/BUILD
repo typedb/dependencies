@@ -25,7 +25,7 @@ py_binary(
 )
 
 py_binary(
-    name = "release-appproval",
+    name = "release-approval",
     srcs = ["release_approval.py"],
     main = "release_approval.py"
 )

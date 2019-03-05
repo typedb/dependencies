@@ -25,11 +25,12 @@ import subprocess
 import sys
 
 
-def execute(*args, **kwargs):
-    output = subprocess.check_output(*args, **kwargs)
-    if type(output) == bytes:
-        output = output.decode()
-    return output
+def check_output_discarding_stderr(*args, **kwargs):
+    with open(os.devnull, 'w') as devnull:
+        output = subprocess.check_output(*args, cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"), stderr=devnull, **kwargs)
+        if type(output) == bytes:
+            output = output.decode()
+        return output
 
 
 def try_decode(s):
