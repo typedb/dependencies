@@ -79,7 +79,7 @@ jobs:
       - bazel:
           command: bazel build //...
 
-  dependency-update:
+  sync-dependencies:
     machine: true
     steps:
       - checkout
@@ -87,11 +87,11 @@ jobs:
       - run:
           name: Sync grakn:master graql:mster client-java:mster client-python:master client-nodejs:master docs:master and examples:master with the latest build-tools:master
           command: |
-            bazel run //release:dependency-update -- --dependency build-tools:master \
+            bazel run //ci:sync-dependencies -- --dependency build-tools:master \
               --user grakn:master graql:mster client-java:mster client-python:master client-nodejs:master docs:master examples:master
 
 workflows:
   build-tools:
     jobs:
       - build
-#      - dependency-update
+      - sync-dependencies
