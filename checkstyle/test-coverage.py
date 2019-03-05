@@ -25,12 +25,11 @@ import subprocess
 import sys
 
 
-def check_output_discarding_stderr(*args, **kwargs):
-    with open(os.devnull, 'w') as devnull:
-        output = subprocess.check_output(*args, stderr=devnull, **kwargs)
-        if type(output) == bytes:
-            output = output.decode()
-        return output
+def execute(*args, **kwargs):
+    output = subprocess.check_output(*args, **kwargs)
+    if type(output) == bytes:
+        output = output.decode()
+    return output
 
 
 def try_decode(s):
@@ -41,13 +40,13 @@ def try_decode(s):
 
 print('Checking if there are any source files not covered by checkstyle...')
 
-java_targets = check_output_discarding_stderr([
+java_targets = execute([
     'bazel', 'query',
     '(kind(java_library, //...) union kind(java_test, //...)) '
     'except //dependencies/... except attr("tags", "checkstyle_ignore", //...)'
 ]).split()
 
-checkstyle_targets_xml = check_output_discarding_stderr([
+checkstyle_targets_xml = execute([
     'bazel', 'query', 'kind(checkstyle_test, //...)', '--output', 'xml'
 ])
 checkstyle_targets_tree = ElementTree.fromstring(checkstyle_targets_xml)
