@@ -16,11 +16,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-workspace(name = "graknlabs_tools")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_jar")
 
-load("//maven:dependencies.bzl", "maven_dependencies")
-maven_dependencies()
 
-load("//checkstyle:dependencies.bzl", "checkstyle_dependencies")
-checkstyle_dependencies()
+def maven_dependencies():
 
+    http_jar(
+        name = "bazel_deps",
+        sha256 = "43278a0042e253384543c4700021504019c1f51f3673907a1b25bb1045461c0c",
+        urls = ["https://github.com/graknlabs/bazel-deps/releases/download/v0.2/grakn-bazel-deps-v0.2.jar"],
+    )

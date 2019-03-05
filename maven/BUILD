@@ -16,11 +16,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-workspace(name = "graknlabs_tools")
-
-load("//maven:dependencies.bzl", "maven_dependencies")
-maven_dependencies()
-
-load("//checkstyle:dependencies.bzl", "checkstyle_dependencies")
-checkstyle_dependencies()
-
+java_binary(
+    name = "bazel-deps",
+    main_class = "com.github.johnynek.bazel_deps.ParseProject",
+    visibility = ["//visibility:public"],
+    runtime_deps = ["@bazel_deps//jar:jar"],
+)
