@@ -27,7 +27,7 @@ import sys
 
 def check_output_discarding_stderr(*args, **kwargs):
     with open(os.devnull, 'w') as devnull:
-        output = subprocess.check_output(*args, stderr=devnull, **kwargs)
+        output = subprocess.check_output(*args, cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"), stderr=devnull, **kwargs)
         if type(output) == bytes:
             output = output.decode()
         return output

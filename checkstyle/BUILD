@@ -16,3 +16,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+py_binary(
+    name = "test-coverage",
+    srcs = ["test-coverage.py"],
+    main = "test-coverage.py",
+)
