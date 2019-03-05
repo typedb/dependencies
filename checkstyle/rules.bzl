@@ -100,17 +100,17 @@ checkstyle_test = rule(
         "config": attr.label(
             allow_single_file=True,
             doc = "A checkstyle configuration file",
-            default = "//config/checkstyle:checkstyle.xml"
+            default = "//checkstyle/config:checkstyle.xml"
         ),
         "suppressions": attr.label(
             allow_single_file=True,
             doc = "A checkstyle suppressions file",
-            default = "//config/checkstyle:checkstyle-suppressions.xml",
+            default = "//checkstyle/config:checkstyle-suppressions.xml",
         ),
         "license_files": attr.label_list(
             allow_files=True,
             doc = "License file(s) that can be used with the checkstyle license target",
-            default = ["//config/checkstyle:license_files"]
+            default = ["//checkstyle/config:license_files"]
         ),
         "properties": attr.label(
             allow_single_file=True,
