@@ -1,8 +1,4 @@
 # IDEA files
 *.iml
 .ijwb/
-bazel-bin
-bazel-genfiles
-bazel-out
-bazel-testlogs
-bazel-tools
+bazel-*

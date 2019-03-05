@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-workspace(name = "graknlabs_tools")
+workspace(name = "graknlabs_build_tools")
 
 load("//bazel:dependencies.bzl", "bazel_common", "bazel_deps", "bazel_toolchain")
 bazel_common()
