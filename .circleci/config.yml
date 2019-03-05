@@ -17,77 +17,25 @@
 #
 
 version: 2.1
-commands:
-  bazel_install:
-    steps:
-      - run:
-          name: Bazel - Install
-          command: |
-            curl -OL https://github.com/bazelbuild/bazel/releases/download/0.20.0/bazel-0.20.0-installer-linux-x86_64.sh
-            chmod +x bazel-0.20.0-installer-linux-x86_64.sh
-            sudo ./bazel-0.20.0-installer-linux-x86_64.sh
-
-  bazel_add_rbe_credential:
-    steps:
-      - run:
-          name: Bazel - Add RBE Credential
-          command: |
-            if [[ -n "$BAZEL_RBE_CREDENTIAL" ]]; then
-              BAZEL_RBE_CREDENTIAL_LOCATION=~/.config/gcloud/application_default_credentials.json
-              echo "An RBE credential is found and will be saved to $BAZEL_RBE_CREDENTIAL_LOCATION. Bazel will be executed with RBE support."
-              mkdir -p ~/.config/gcloud/
-              echo $BAZEL_RBE_CREDENTIAL > "$BAZEL_RBE_CREDENTIAL_LOCATION"
-            else
-              echo "No RBE credential found. Bazel will be executed locally without RBE support."
-            fi
-
-  bazel:
-    parameters:
-      command:
-        type: string
-    steps:
-      - run:
-          name: Bazel - Execute
-          command: |
-            if [[ -f ~/.config/gcloud/application_default_credentials.json ]]; then
-              echo "Bazel will be executed with RBE support. This means the build is remotely executed and the cache will be re-used by subsequent CI jobs."
-              CMD="<< parameters.command >> --config=rbe"
-            else
-              echo "Bazel will be executed locally (without RBE support)."
-              CMD="<< parameters.command >>"
-            fi
-            echo "Executing $CMD"
-            $CMD
-
-  start_grakn_server:
-    steps:
-      - run:
-          name: Grakn Server - Start
-          command: |
-            bazel build @graknlabs_grakn_core//:distribution
-            unzip bazel-genfiles/external/graknlabs_grakn_core/grakn-core-all.zip -d bazel-genfiles/dist/
-            nohup bazel-genfiles/dist/grakn-core-all/grakn server start
-
 jobs:
   build:
     machine: true
     working_directory: ~/grakn
     steps:
       - checkout
-      - bazel_install
-      - bazel_add_rbe_credential
-      - bazel:
-          command: bazel build //...
+      - run: ci/install-bazel.sh
+      - run: ci/install-bazel-rbe-credential.sh
+      - run: ci/run-bazel.sh bazel build //...
 
   dependency-update:
     machine: true
     steps:
       - checkout
-      - bazel_install
+      - run: ci/install-bazel.sh
       - run:
-          name: Sync grakn:master graql:mster client-java:mster client-python:master client-nodejs:master docs:master and examples:master with the latest build-tools:master
+          name: Sync grakn:master graql:master client-java:master client-python:master client-nodejs:master docs:master and examples:master with the latest build-tools:master
           command: |
-            bazel run //release:dependency-update -- --dependency build-tools:master \
+            ci/run-bazel.sh bazel run //release:dependency-update -- --dependency build-tools:master \
               --user grakn:master graql:mster client-java:mster client-python:master client-nodejs:master docs:master examples:master
 
 workflows:
