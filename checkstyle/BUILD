@@ -16,7 +16,3 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-workspace(name = "graknlabs_tools")
-
-load("//checkstyle:dependencies.bzl", "checkstyle_dependencies")
-checkstyle_dependencies()
