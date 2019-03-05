@@ -16,13 +16,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file", "http_jar")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-
 def bazel_common():
-
     git_repository(
         name="com_github_google_bazel_common",
         remote="https://github.com/graknlabs/bazel-common",
@@ -30,7 +27,6 @@ def bazel_common():
     )
 
 def bazel_toolchain():
-
     http_archive(
       name = "bazel_toolchains",
       sha256 = "07a81ee03f5feae354c9f98c884e8e886914856fb2b6a63cba4619ef10aaaf0b",
@@ -42,22 +38,33 @@ def bazel_toolchain():
     )
 
 def bazel_deps():
-
     http_jar(
         name = "bazel_deps",
         sha256 = "43278a0042e253384543c4700021504019c1f51f3673907a1b25bb1045461c0c",
         urls = ["https://github.com/graknlabs/bazel-deps/releases/download/v0.2/grakn-bazel-deps-v0.2.jar"],
     )
 
-def buildifier():
+def bazel_rules_nodejs():
+    git_repository(
+        name = "build_bazel_rules_nodejs",
+        remote = "https://github.com/graknlabs/rules_nodejs.git",
+        commit = "1c9b8cb1e1f39214fe27bafa44d1597cdc9d8ff5",
+    )
 
+def bazel_rules_python():
+    git_repository(
+        name = "io_bazel_rules_python",
+        remote = "https://github.com/bazelbuild/rules_python.git",
+        commit = "e6399b601e2f72f74e5aa635993d69166784dde1",
+    )
+
+def buildifier():
     http_file(
         name = "buildifier",
         executable = True,
         sha256 = "d7d41def74991a34dfd2ac8a73804ff11c514c024a901f64ab07f45a3cf0cfef",
         urls = ["https://github.com/bazelbuild/buildtools/releases/download/0.11.1/buildifier"],
     )
-
     http_file(
         name = "buildifier_osx",
         executable = True,
@@ -66,14 +73,12 @@ def buildifier():
     )
 
 def buildozer():
-
     http_file(
         name = "buildozer",
         executable = True,
         sha256 = "3226cfd3ac706b48fe69fc4581c6c163ba5dfa71a752a44d3efca4ae489f1105",
         urls = ["https://github.com/bazelbuild/buildtools/releases/download/0.11.1/buildozer"],
     )
-
     http_file(
         name = "buildozer_osx",
         executable = True,
@@ -82,14 +87,12 @@ def buildozer():
     )
 
 def unused_deps():
-
     http_file(
         name = "unused_deps",
         executable = True,
         sha256 = "59a7553f825e78bae9875e48d29e6dd09f9e80ecf40d16210c4ac95bab7ce29c",
         urls = ["https://github.com/bazelbuild/buildtools/releases/download/0.19.2/unused_deps"],
     )
-
     http_file(
         name = "unused_deps_osx",
         executable = True,
