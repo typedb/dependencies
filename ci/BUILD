@@ -30,8 +30,17 @@ py_binary(
     main = "release_approval.py"
 )
 
-exports_files([
-    "install-bazel.sh",
-    "install-bazel-rbe-credential.sh",
-    "run-bazel.sh"
+sh_binary([
+    name = "install-bazel"
+    srcs = ["install-bazel.sh"],
+])
+
+sh_binary([
+    name = "install-bazel-rbe-credential"
+    srcs = ["install-bazel-rbe-credential.sh"],
+])
+
+sh_binary([
+    name = "run-bazel"
+    srcs = ["run-bazel.sh"],
 ])
