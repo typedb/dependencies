@@ -16,21 +16,3 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-workspace(name = "graknlabs_build_tools")
-
-load("//bazel:dependencies.bzl", "bazel_common", "bazel_deps", "bazel_toolchain")
-bazel_common()
-bazel_deps()
-bazel_toolchain()
-
-load("//bazel:dependencies.bzl", "buildifier", "buildozer", "unused_deps")
-buildifier()
-buildozer()
-unused_deps()
-
-load("//checkstyle:dependencies.bzl", "checkstyle_dependencies")
-checkstyle_dependencies()
-
-load("//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
-graknlabs_bazel_distribution()
-
