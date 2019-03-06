@@ -17,28 +17,30 @@
 #
 
 version: 2.1
+commands:
+  install_bazel:
+    steps:
+      - run:
+          name: Install bazel and RBE credential
+          command: |
+            # Install bazel
+            curl -OL https://github.com/bazelbuild/bazel/releases/download/0.20.0/bazel-0.20.0-installer-linux-x86_64.sh
+            chmod +x bazel-0.20.0-installer-linux-x86_64.sh
+            sudo ./bazel-0.20.0-installer-linux-x86_64.sh
+
+            # Install RBE credential
+            bazel run //ci:install-bazel-rbe-credential
+
 jobs:
   build:
     machine: true
     working_directory: ~/grakn
     steps:
       - checkout
-      - run: ci/install-bazel.sh
-      - run: ci/install-bazel-rbe-credential.sh
-      - run: ci/run-bazel.sh bazel build //...
-
-  sync-dependencies:
-    machine: true
-    steps:
-      - checkout
-      - run: ci/install-bazel.sh
-      - run:
-          name: Sync grakn:master graql:master client-java:master client-python:master client-nodejs:master docs:master and examples:master with the latest build-tools:master
-          command: |
-            bazel run //ci:sync-dependencies -- --dependency build-tools:master --user grakn:master
+      - install_bazel
+      - run: bazel run //ci:run-bazel-rbe bazel build //...
 
 workflows:
   build-tools:
     jobs:
       - build
-      - sync-dependencies
