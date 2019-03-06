@@ -87,7 +87,7 @@ jobs:
       - run:
           name: Sync grakn:master graql:mster client-java:mster client-python:master client-nodejs:master docs:master and examples:master with the latest build-tools:master
           command: |
-            bazel run //ci:sync-dependencies -- --source build-tools:master --targets grakn:master graql:master docs:development
+            bazel run //ci:sync-dependencies -- --source build-tools:master --targets graql:master
 
 workflows:
   build-tools:
