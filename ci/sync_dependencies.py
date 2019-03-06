@@ -173,7 +173,7 @@ class GitRepo(object):
         with open(dependencies_file_path, 'w') as workspace_file:
             workspace_file.writelines(workspace_content)
 
-        sp.check_output(['git', 'add', str(dependencies_file_path)], cwd=self.clone_dir, stderr=sp.STDOUT)
+        sp.check_output(['git', 'add', '.'], cwd=self.clone_dir, stderr=sp.STDOUT)
         should_commit = self.CLEAN_TREE_MSG not in sp.check_output(
             ['git', 'status'], cwd=self.clone_dir, env={
                 'LANG': 'C'
