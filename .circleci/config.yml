@@ -93,4 +93,9 @@ workflows:
   build-tools:
     jobs:
       - build
-      - sync-dependencies
+      - sync-dependencies:
+          filters:
+            branches:
+              only: master
+          requires:
+            - build
