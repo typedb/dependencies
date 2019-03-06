@@ -186,7 +186,7 @@ class GitRepo(object):
             return
 
         sp.check_output(['git', 'commit', '-m',
-                         'update @{o.bazel_workspace} dependency to latest {o.branch}'.format(o=other_repo)],
+                         "Update @{o.bazel_workspace} dependency to latest '{o.branch}' branch".format(o=other_repo)],
                         cwd=self.clone_dir,
                         stderr=sp.STDOUT)
         print('Pushing the change to {u.remote_url} ({u.branch} branch)'.format(u=self))

@@ -18,10 +18,13 @@
 
 workspace(name = "graknlabs_build_tools")
 
-load("//bazel:dependencies.bzl", "bazel_common", "bazel_deps", "bazel_toolchain")
+load("//bazel:dependencies.bzl","bazel_common", "bazel_deps", "bazel_toolchain",
+     "bazel_rules_nodejs", "bazel_rules_python")
 bazel_common()
 bazel_deps()
 bazel_toolchain()
+bazel_rules_nodejs()
+bazel_rules_python()
 
 load("//bazel:dependencies.bzl", "buildifier", "buildozer", "unused_deps")
 buildifier()
