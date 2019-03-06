@@ -31,7 +31,7 @@ commands:
             # Install RBE credential
             bazel run //ci:install-bazel-rbe-credential
   
-  bazel-rbe:
+  run-bazel-rbe:
     parameters:
       command:
           type: string
@@ -47,14 +47,14 @@ jobs:
     steps:
       - checkout
       - install-bazel
-      - bazel-rbe:
+      - run-bazel-rbe:
           command: bazel build //...
 
   sync-dependencies:
     machine: true
     steps:
       - checkout
-      - bazel_install
+      - install-bazel
       - run:
           name: Sync graql:master, grakn:master, and docs:development with the latest build-tools:master
           command: |
