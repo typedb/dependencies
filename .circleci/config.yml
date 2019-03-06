@@ -18,7 +18,7 @@
 
 version: 2.1
 commands:
-  install_bazel:
+  install-bazel:
     steps:
       - run:
           name: Install bazel and RBE credential
@@ -46,7 +46,7 @@ jobs:
     working_directory: ~/grakn
     steps:
       - checkout
-      - install_bazel
+      - install-bazel
       - bazel-rbe:
           command: bazel run //ci:run-bazel-rbe bazel build //...
 
