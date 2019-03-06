@@ -27,3 +27,13 @@ py_binary(
     srcs = ["release_approval.py"],
     main = "release_approval.py"
 )
+
+sh_binary(
+    name = "install-bazel-rbe-credential",
+    srcs = ["install-bazel-rbe-credential.sh"]
+)
+
+sh_binary(
+    name = "run-bazel-rbe",
+    srcs = ["run-bazel-rbe.sh"]
+)
