@@ -9,5 +9,5 @@ else
     echo "Bazel will be executed locally (without RBE support)."
     CMD="$@"
 fi
-echo "Executing $CMD"
+echo "Executing '$CMD' (working directory = '$BUILD_WORKSPACE_DIRECTORY')"
 $CMD

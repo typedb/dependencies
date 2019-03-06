@@ -16,8 +16,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-# TODO: move 'sync-dependencies',  'release-appproval'
-
 py_binary(
     name = "sync-dependencies",
     srcs = ["sync_dependencies.py"],
@@ -36,11 +34,6 @@ sh_binary(
 )
 
 sh_binary(
-    name = "install-bazel-rbe-credential",
-    srcs = ["install-bazel-rbe-credential.sh"]
-)
-
-sh_binary(
-    name = "run-bazel",
-    srcs = ["run-bazel.sh"]
+    name = "run-bazel-rbe",
+    srcs = ["run-bazel-rbe.sh"]
 )
