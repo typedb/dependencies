@@ -48,7 +48,7 @@ jobs:
       - checkout
       - install-bazel
       - bazel-rbe:
-          command: bazel run //ci:run-bazel-rbe bazel build //...
+          command: bazel build //...
 
 workflows:
   build-tools:
