@@ -9,6 +9,7 @@ sync_dependencies.py --source client-python:development --targets docs:developme
 
 from __future__ import print_function
 
+import json
 import os
 import re
 import subprocess as sp
@@ -76,6 +77,60 @@ def exception_handler(fun):
     return wrapper
 
 
+class DependencyReplacer(object):
+    def replace(self, clone_dir, src):
+        pass
+
+
+class WorkspaceDependencyReplacer(DependencyReplacer):
+    COMMIT_HASH_REGEX = r'[0-9a-f]{40}'
+
+    def replace(self, clone_dir, src):
+        dependencies_file_path = os.path.join(clone_dir, 'dependencies', 'graknlabs', 'dependencies.bzl')
+        if not os.path.isfile(dependencies_file_path):
+            return []
+        with open(dependencies_file_path, 'r') as workspace_file:
+            workspace_content = workspace_file.readlines()
+
+        for i, line in enumerate(workspace_content):
+            if src.marker in line:
+                workspace_content[i] = re.sub(self.COMMIT_HASH_REGEX, src.last_commit, line, 1)
+                break
+        else:
+            print('@{tgt.bazel_workspace} has '
+                  'no dependency marker of '
+                  '@{src.bazel_workspace} to replace'.format(tgt=self, src=src))
+            return
+
+        with open(dependencies_file_path, 'w') as workspace_file:
+            workspace_file.writelines(workspace_content)
+
+        return [dependencies_file_path]
+
+
+class PackageJsonDependencyReplacer(DependencyReplacer):
+    COMMIT_HASH_REGEX = r'[0-9a-f]{40}'
+
+    def replace(self, clone_dir, src):
+        package_json_file_path = os.path.join(clone_dir, 'test', 'standalone', 'nodejs', 'package.json')
+        if not os.path.isfile(package_json_file_path):
+            return []
+        if src.repo != 'client-nodejs':
+            return []
+
+        with open(package_json_file_path) as package_json_file:
+            package_json = json.load(package_json_file)
+
+        grakn_client_link = package_json['dependencies']['grakn-client']
+        grakn_client_link = re.sub(self.COMMIT_HASH_REGEX, src.last_commit, grakn_client_link, 1)
+        package_json['dependencies']['grakn-client'] = grakn_client_link
+
+        with open(package_json_file_path, 'w') as package_json_file:
+            json.dump(package_json, package_json_file, indent=4)
+
+        return [package_json_file]
+
+
 class GitRepo(object):
     """ Encapsulates a git repository @grabl has access to """
     GRAKNLABS_PREFIX = 'graknlabs_'
@@ -85,11 +140,12 @@ class GitRepo(object):
 
     # pylint: disable=line-too-long
     SYNC_MARKER = '# sync-marker: do not remove this comment, this is used for sync-dependencies by @{ws_name}'
-    COMMIT_HASH_REGEX = r'[0-9a-f]{40}'
     CLEAN_TREE_MSG = 'nothing to commit, working tree clean'
 
     GIT_USERNAME = 'Grabl'
     GIT_EMAIL = 'grabl@grakn.ai'
+
+    replacers = [WorkspaceDependencyReplacer(), PackageJsonDependencyReplacer()]
 
     def __init__(self, git_coordinates):
         coords = git_coordinates.split(':')
@@ -156,24 +212,12 @@ class GitRepo(object):
     @ensure_cloned
     def replace_marker(self, src):
         """ replaces marker with other_repo reference """
-        dependencies_file_path = os.path.join(self.clone_dir, 'dependencies', 'graknlabs', 'dependencies.bzl')
-        with open(dependencies_file_path, 'r') as workspace_file:
-            workspace_content = workspace_file.readlines()
 
-        for i, line in enumerate(workspace_content):
-            if src.marker in line:
-                workspace_content[i] = re.sub(self.COMMIT_HASH_REGEX, src.last_commit, line, 1)
-                break
-        else:
-            print('@{tgt.bazel_workspace} has '
-                  'no dependency marker of '
-                  '@{src.bazel_workspace} to replace'.format(tgt=self, src=src))
-            return
+        replaced_files = []
+        for replacer in self.replacers:
+            replaced_files.extend(replacer.replace(self.clone_dir, src))
 
-        with open(dependencies_file_path, 'w') as workspace_file:
-            workspace_file.writelines(workspace_content)
-
-        sp.check_output(['git', 'add', str(dependencies_file_path)], cwd=self.clone_dir, stderr=sp.STDOUT)
+        sp.check_output(['git', 'add', ' '.join(replaced_files)], cwd=self.clone_dir, stderr=sp.STDOUT)
         should_commit = self.CLEAN_TREE_MSG not in sp.check_output(
             ['git', 'status'], cwd=self.clone_dir, env={
                 'LANG': 'C'
