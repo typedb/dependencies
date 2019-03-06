@@ -4,7 +4,7 @@
 dependency_update updates bazel dependencies declared in WORKSPACE
 
 Example usage:
-sync_dependencies.py --dependency client-python:development --user docs:development-client-python
+sync_dependencies.py --source client-python:development --targets docs:development-client-python
 """
 
 from __future__ import print_function
@@ -22,9 +22,9 @@ CMDLINE_PARSER = argparse.ArgumentParser(
 CMDLINE_PARSER.add_argument(
     '--dry-run', help='Do not perform any real actions')
 CMDLINE_PARSER.add_argument(
-    '--dependency', required=True)
+    '--source', required=True)
 CMDLINE_PARSER.add_argument(
-    '--user', nargs='+', required=True)
+    '--targets', nargs='+', required=True)
 
 
 def is_building_upstream():
@@ -154,46 +154,46 @@ class GitRepo(object):
         return self.clone_dir
 
     @ensure_cloned
-    def replace_marker(self, other_repo):
+    def replace_marker(self, src):
         """ replaces marker with other_repo reference """
-        workspace_file_path = os.path.join(self.clone_dir, 'WORKSPACE')
-        with open(workspace_file_path, 'r') as workspace_file:
+        dependencies_file_path = os.path.join(self.clone_dir, 'dependencies', 'graknlabs', 'dependencies.bzl')
+        with open(dependencies_file_path, 'r') as workspace_file:
             workspace_content = workspace_file.readlines()
 
         for i, line in enumerate(workspace_content):
-            if other_repo.marker in line:
-                workspace_content[i] = re.sub(self.COMMIT_HASH_REGEX, other_repo.last_commit, line, 1)
+            if src.marker in line:
+                workspace_content[i] = re.sub(self.COMMIT_HASH_REGEX, src.last_commit, line, 1)
                 break
         else:
-            print('@{u.bazel_workspace} has '
+            print('@{tgt.bazel_workspace} has '
                   'no dependency marker of '
-                  '@{o.bazel_workspace} to replace'.format(u=self, o=other_repo))
+                  '@{src.bazel_workspace} to replace'.format(tgt=self, src=src))
             return
 
-        with open(workspace_file_path, 'w') as workspace_file:
+        with open(dependencies_file_path, 'w') as workspace_file:
             workspace_file.writelines(workspace_content)
 
-        sp.check_output(['git', 'add', 'WORKSPACE'], cwd=self.clone_dir, stderr=sp.STDOUT)
+        sp.check_output(['git', 'add', str(dependencies_file_path)], cwd=self.clone_dir, stderr=sp.STDOUT)
         should_commit = self.CLEAN_TREE_MSG not in sp.check_output(
             ['git', 'status'], cwd=self.clone_dir, env={
                 'LANG': 'C'
             })
 
         if not should_commit:
-            print('@{u.bazel_workspace} already depends on @{o.bazel_workspace} at commit {o.last_commit}'.format(
-                u=self, o=other_repo
+            print('@{tgt.bazel_workspace} already depends on @{src.bazel_workspace} at commit {src.last_commit}'.format(
+                tgt=self, src=src
             ))
             return
 
         sp.check_output(['git', 'commit', '-m',
-                         "Update @{o.bazel_workspace} dependency to latest '{o.branch}' branch".format(o=other_repo)],
+                         "Update @{src.bazel_workspace} dependency to latest '{src.branch}' branch".format(src=src)],
                         cwd=self.clone_dir,
                         stderr=sp.STDOUT)
-        print('Pushing the change to {u.remote_url} ({u.branch} branch)'.format(u=self))
+        print('Pushing the change to {tgt.remote_url} ({tgt.branch} branch)'.format(tgt=self))
 
         sp.check_output(["git", "push", self.remote_url, self.branch],
                         cwd=self.clone_dir, stderr=sp.STDOUT)
-        print('The change has been pushed to {u.remote_url} ({u.branch} branch)'.format(u=self))
+        print('The change has been pushed to {tgt.remote_url} ({tgt.branch} branch)'.format(tgt=self))
 
 
 @exception_handler
@@ -207,18 +207,18 @@ def main():
 
     arguments = CMDLINE_PARSER.parse_args(sys.argv[1:])
 
-    dependency = GitRepo(arguments.dependency)
-    users = list(map(GitRepo, arguments.user))
+    source = GitRepo(arguments.source)
+    targets = list(map(GitRepo, arguments.targets))
 
     print('** This will make these repos depend on the latest '
-          '{d.repo} ({d.branch} branch) '.format(d=dependency))
-    for user in users:
-        print('\t * {u.repo: <15} ({u.branch: <10} branch)'.format(u=user))
+          '{src.repo} ({src.branch} branch) '.format(src=source))
+    for target in targets:
+        print('\t * {tgt.repo} ({tgt.branch} branch)'.format(tgt=target))
 
-    print('The latest commit in @{d.bazel_workspace} is {d.last_commit}'.format(d=dependency))
-    for user in users:
-        print('{u} cloned to {r}'.format(u=user, r=user.clone()))
-        user.replace_marker(dependency)
+    print('The latest commit in @{src.bazel_workspace} is {src.last_commit}'.format(src=source))
+    for target in targets:
+        print('{tgt} cloned to {clone}'.format(tgt=target, clone=target.clone()))
+        target.replace_marker(source)
 
 
 if __name__ == '__main__':
