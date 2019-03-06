@@ -85,24 +85,24 @@ class DependencyReplacer(object):
 class WorkspaceDependencyReplacer(DependencyReplacer):
     COMMIT_HASH_REGEX = r'[0-9a-f]{40}'
 
-    def replace(self, clone_dir, src):
-        dependencies_file_path = os.path.join(clone_dir, 'dependencies', 'graknlabs', 'dependencies.bzl')
+    def replace(self, target, source):
+        dependencies_file_path = os.path.join(target.clone_dir, 'dependencies', 'graknlabs', 'dependencies.bzl')
         if not os.path.isfile(dependencies_file_path):
-            print('Could not find dependencies.bzl file at ' + str(dependencies_file_path.lstrip(clone_dir)) +
-                  ' in @{tgt.bazel_workspace}'.format(tgt=self))
+            print('Could not find dependencies.bzl file at ' + str(dependencies_file_path.lstrip(target.clone_dir)) +
+                  ' in @{tgt.bazel_workspace}'.format(tgt=target))
             exit(1)
 
         with open(dependencies_file_path, 'r') as workspace_file:
             workspace_content = workspace_file.readlines()
 
         for i, line in enumerate(workspace_content):
-            if src.marker in line:
-                workspace_content[i] = re.sub(self.COMMIT_HASH_REGEX, src.last_commit, line, 1)
+            if source.marker in line:
+                workspace_content[i] = re.sub(self.COMMIT_HASH_REGEX, source.last_commit, line, 1)
                 break
         else:
             print('@{tgt.bazel_workspace} has '
                   'no dependency marker of '
-                  '@{src.bazel_workspace} to replace'.format(tgt=self, src=src))
+                  '@{src.bazel_workspace} to replace'.format(tgt=target, src=source))
             exit(1)
 
         with open(dependencies_file_path, 'w') as workspace_file:
@@ -114,21 +114,21 @@ class WorkspaceDependencyReplacer(DependencyReplacer):
 class PackageJsonDependencyReplacer(DependencyReplacer):
     COMMIT_HASH_REGEX = r'[0-9a-f]{40}'
 
-    def replace(self, clone_dir, src):
-        package_json_file_path = os.path.join(clone_dir, 'test', 'standalone', 'nodejs', 'package.json')
+    def replace(self, target, source):
+        package_json_file_path = os.path.join(target.clone_dir, 'test', 'standalone', 'nodejs', 'package.json')
 
-        if src.repo != 'client-nodejs':
+        if source.repo != 'client-nodejs':
             return []
         elif not os.path.isfile(package_json_file_path):
-            print('Could not find package.json file at ' + str(package_json_file_path.lstrip(clone_dir)) +
-                  ' in @{tgt.bazel_workspace}'.format(tgt=self))
+            print('Could not find package.json file at ' + str(package_json_file_path.lstrip(target.clone_dir)) +
+                  ' in @{tgt.bazel_workspace}'.format(tgt=target))
             exit(1)
 
         with open(package_json_file_path) as package_json_file:
             package_json = json.load(package_json_file)
 
         grakn_client_link = package_json['dependencies']['grakn-client']
-        grakn_client_link = re.sub(self.COMMIT_HASH_REGEX, src.last_commit, grakn_client_link, 1)
+        grakn_client_link = re.sub(self.COMMIT_HASH_REGEX, source.last_commit, grakn_client_link, 1)
         package_json['dependencies']['grakn-client'] = grakn_client_link
 
         with open(package_json_file_path, 'w') as package_json_file:
@@ -221,7 +221,7 @@ class GitRepo(object):
 
         replaced_files = []
         for replacer in self.replacers:
-            replaced_files.extend(replacer.replace(self.clone_dir, src))
+            replaced_files.extend(replacer.replace(self, src))
 
         sp.check_output(['git', 'add', ' '.join(replaced_files)], cwd=self.clone_dir, stderr=sp.STDOUT)
         should_commit = self.CLEAN_TREE_MSG not in sp.check_output(
