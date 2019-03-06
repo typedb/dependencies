@@ -37,37 +37,10 @@ jobs:
     working_directory: ~/grakn
     steps:
       - checkout
-<<<<<<< HEAD
       - install_bazel
       - run: bazel run //ci:run-bazel-rbe bazel build //...
-=======
-      - bazel_install
-      - bazel_add_rbe_credential
-      - bazel:
-          command: bazel build //...
-
-  sync-dependencies:
-    machine: true
-    steps:
-      - checkout
-      - bazel_install
-      - run:
-          name: Sync grakn:master graql:mster client-java:mster client-python:master client-nodejs:master docs:master and examples:master with the latest build-tools:master
-          command: |
-            bazel run //ci:sync-dependencies -- --dependency build-tools:master --user grakn:master graql:master docs:development
->>>>>>> master
 
 workflows:
   build-tools:
     jobs:
-<<<<<<< HEAD
       - build
-=======
-      - build
-      - sync-dependencies:
-          filters:
-            branches:
-              only: master
-          requires:
-            - build
->>>>>>> master
