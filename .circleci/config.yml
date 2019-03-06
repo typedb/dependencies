@@ -30,6 +30,15 @@ commands:
 
             # Install RBE credential
             bazel run //ci:install-bazel-rbe-credential
+  
+  bazel-rbe:
+    parameters:
+      command:
+          type: string
+    steps:
+      - run:
+          command: |
+            bazel run @graknlabs_build_tools//ci:run-bazel-rbe << parameters.command >>
 
 jobs:
   build:
@@ -38,7 +47,8 @@ jobs:
     steps:
       - checkout
       - install_bazel
-      - run: bazel run //ci:run-bazel-rbe bazel build //...
+      - bazel-rbe:
+          command: bazel run //ci:run-bazel-rbe bazel build //...
 
 workflows:
   build-tools:
