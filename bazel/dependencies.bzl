@@ -44,6 +44,14 @@ def bazel_deps():
         urls = ["https://github.com/graknlabs/bazel-deps/releases/download/v0.2/grakn-bazel-deps-v0.2.jar"],
     )
 
+def bazel_rules_docker():
+    http_archive(
+        name = "io_bazel_rules_docker",
+        sha256 = "aed1c249d4ec8f703edddf35cbe9dfaca0b5f5ea6e4cd9e83e99f3b0d1136c3d",
+        strip_prefix = "rules_docker-0.7.0",
+        urls = ["https://github.com/bazelbuild/rules_docker/archive/v0.7.0.tar.gz"],
+    )
+
 def bazel_rules_nodejs():
     git_repository(
         name = "build_bazel_rules_nodejs",
