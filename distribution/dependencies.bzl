@@ -23,5 +23,5 @@ def graknlabs_bazel_distribution():
     git_repository(
         name="graknlabs_bazel_distribution",
         remote="https://github.com/graknlabs/bazel-distribution",
-        commit="ca5c3e1284bdfbfd8c34a7fe2299254d902bdba0"
+        commit="8f60d28a46b22c76458d613bebf18a98c4644f30"
     )
