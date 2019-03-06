@@ -88,7 +88,10 @@ class WorkspaceDependencyReplacer(DependencyReplacer):
     def replace(self, clone_dir, src):
         dependencies_file_path = os.path.join(clone_dir, 'dependencies', 'graknlabs', 'dependencies.bzl')
         if not os.path.isfile(dependencies_file_path):
-            return []
+            print('Could not find dependencies.bzl file at ' + str(dependencies_file_path.lstrip(clone_dir)) +
+                  ' in @{tgt.bazel_workspace}'.format(tgt=self))
+            exit(1)
+
         with open(dependencies_file_path, 'r') as workspace_file:
             workspace_content = workspace_file.readlines()
 
@@ -100,7 +103,7 @@ class WorkspaceDependencyReplacer(DependencyReplacer):
             print('@{tgt.bazel_workspace} has '
                   'no dependency marker of '
                   '@{src.bazel_workspace} to replace'.format(tgt=self, src=src))
-            return
+            exit(1)
 
         with open(dependencies_file_path, 'w') as workspace_file:
             workspace_file.writelines(workspace_content)
@@ -113,10 +116,13 @@ class PackageJsonDependencyReplacer(DependencyReplacer):
 
     def replace(self, clone_dir, src):
         package_json_file_path = os.path.join(clone_dir, 'test', 'standalone', 'nodejs', 'package.json')
-        if not os.path.isfile(package_json_file_path):
-            return []
+
         if src.repo != 'client-nodejs':
             return []
+        elif not os.path.isfile(package_json_file_path):
+            print('Could not find package.json file at ' + str(package_json_file_path.lstrip(clone_dir)) +
+                  ' in @{tgt.bazel_workspace}'.format(tgt=self))
+            exit(1)
 
         with open(package_json_file_path) as package_json_file:
             package_json = json.load(package_json_file)
