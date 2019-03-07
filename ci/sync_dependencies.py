@@ -178,7 +178,7 @@ class GitRepo(object):
         return self.GRAKNLABS_PREFIX + self.repo.replace('-', '_')
 
     @property
-    def remote_url(self):
+    def remote_url_with_credential(self):
         """ git remote url for authenticated pushing """
         return self.GRAKN_AUTHENTICATED_REMOTE_TEMPLATE.format(
             credential=self.credential, repo=self.repo)
@@ -195,7 +195,7 @@ class GitRepo(object):
             return self._last_commit
         git_output = sp.check_output([
             'git', 'ls-remote',
-            self.remote_url,
+            self.remote_url_with_credential,
             self.branch
         ])
         self._last_commit = git_output.split()[0]
@@ -211,7 +211,7 @@ class GitRepo(object):
         """ clones git repo to a temp directory and returns it; result is cached"""
         temp_dir = tempfile.mkdtemp('.' + self.repo, 'git.')
         sp.check_call([
-            'git', 'clone', self.remote_url, temp_dir
+            'git', 'clone', self.remote_url_with_credential, temp_dir
         ])
         sp.check_call([
             'git', 'checkout', self.branch
@@ -244,11 +244,11 @@ class GitRepo(object):
                          "Update @{src.bazel_workspace} dependency to latest '{src.branch}' branch".format(src=src)],
                         cwd=self.clone_dir,
                         stderr=sp.STDOUT)
-        print('Pushing the change to {tgt.remote_url} ({tgt.branch} branch)'.format(tgt=self))
+        print('Pushing the change to {tgt.remote_url_with_credential} ({tgt.branch} branch)'.format(tgt=self))
 
-        sp.check_output(["git", "push", self.remote_url, self.branch],
+        sp.check_output(["git", "push", self.remote_url_with_credential, self.branch],
                         cwd=self.clone_dir, stderr=sp.STDOUT)
-        print('The change has been pushed to {tgt.remote_url} ({tgt.branch} branch)'.format(tgt=self))
+        print('The change has been pushed to {tgt.remote_url_with_credential} ({tgt.branch} branch)'.format(tgt=self))
         print()
 
 
