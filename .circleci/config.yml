@@ -56,7 +56,8 @@ jobs:
       - checkout
       - install-bazel
       - run: |
-          bazel run //ci:sync-dependencies -- --source build-tools:master \
+          bazel run //ci:sync-dependencies -- \
+          --source build-tools:master \
           --targets graql:master grakn:master client-java:master client-python:master client-nodejs:master docs:development
 
 workflows:
