@@ -244,11 +244,11 @@ class GitRepo(object):
                          "Update @{src.bazel_workspace} dependency to latest '{src.branch}' branch".format(src=src)],
                         cwd=self.clone_dir,
                         stderr=sp.STDOUT)
-        print('Pushing the change to {tgt.remote_url_with_credential} ({tgt.branch} branch)'.format(tgt=self))
+        print('Pushing the change to {tgt.repo} ({tgt.branch} branch)'.format(tgt=self))
 
         sp.check_output(["git", "push", self.remote_url_with_credential, self.branch],
                         cwd=self.clone_dir, stderr=sp.STDOUT)
-        print('The change has been pushed to {tgt.remote_url_with_credential} ({tgt.branch} branch)'.format(tgt=self))
+        print('The change has been pushed to {tgt.repo} ({tgt.branch} branch)'.format(tgt=self))
         print()
 
 
