@@ -73,6 +73,7 @@ def exception_handler(fun):
             print('An error occurred when running {ex.cmd}. '
                   'Process exited with code {ex.returncode} '
                   'and message {ex.output}'.format(ex=ex))
+            print()
             raise ex
     return wrapper
 
@@ -90,6 +91,7 @@ class WorkspaceDependencyReplacer(DependencyReplacer):
         if not os.path.isfile(dependencies_file_path):
             print('Could not find dependencies.bzl file at ' + str(dependencies_file_path.lstrip(target.clone_dir)) +
                   ' in @{tgt.bazel_workspace}'.format(tgt=target))
+            print()
             exit(1)
 
         with open(dependencies_file_path, 'r') as workspace_file:
@@ -103,6 +105,7 @@ class WorkspaceDependencyReplacer(DependencyReplacer):
             print('@{tgt.bazel_workspace} has '
                   'no dependency marker of '
                   '@{src.bazel_workspace} to replace'.format(tgt=target, src=source))
+            print()
             exit(1)
 
         with open(dependencies_file_path, 'w') as workspace_file:
@@ -122,6 +125,7 @@ class PackageJsonDependencyReplacer(DependencyReplacer):
         elif not os.path.isfile(package_json_file_path):
             print('Could not find package.json file at ' + str(package_json_file_path.lstrip(target.clone_dir)) +
                   ' in @{tgt.bazel_workspace}'.format(tgt=target))
+            print()
             exit(1)
 
         with open(package_json_file_path) as package_json_file:
@@ -233,6 +237,7 @@ class GitRepo(object):
             print('@{tgt.bazel_workspace} already depends on @{src.bazel_workspace} at commit {src.last_commit}'.format(
                 tgt=self, src=src
             ))
+            print()
             return
 
         sp.check_output(['git', 'commit', '-m',
@@ -244,6 +249,7 @@ class GitRepo(object):
         sp.check_output(["git", "push", self.remote_url, self.branch],
                         cwd=self.clone_dir, stderr=sp.STDOUT)
         print('The change has been pushed to {tgt.remote_url} ({tgt.branch} branch)'.format(tgt=self))
+        print()
 
 
 @exception_handler
