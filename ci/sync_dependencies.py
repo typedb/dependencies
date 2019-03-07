@@ -228,7 +228,7 @@ class GitRepo(object):
 
         replaced_file = replacer.replace(self, source)
 
-        sp.check_output(['git', 'add', replaced_file], cwd=self.clone_dir, stderr=sp.STDOUT)
+        sp.check_output(['git', 'add', str(replaced_file)], cwd=self.clone_dir, stderr=sp.STDOUT)
         should_commit = self.CLEAN_TREE_MSG not in sp.check_output(
             ['git', 'status'], cwd=self.clone_dir, env={
                 'LANG': 'C'
