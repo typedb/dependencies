@@ -155,8 +155,6 @@ class GitRepo(object):
     GIT_USERNAME = 'Grabl'
     GIT_EMAIL = 'grabl@grakn.ai'
 
-    replacers = [WorkspaceDependencyReplacer(), PackageJsonDependencyReplacer()]
-
     def __init__(self, git_coordinates):
         coords = git_coordinates.split(':')
         if len(coords) != 2:
@@ -220,14 +218,17 @@ class GitRepo(object):
         return self.clone_dir
 
     @ensure_cloned
-    def replace_marker(self, src):
+    def replace_marker(self, source):
         """ replaces marker with other_repo reference """
 
-        replaced_files = []
-        for replacer in self.replacers:
-            replaced_files.extend(replacer.replace(self, src))
+        if source.repo == 'client-nodejs':
+            replacer = PackageJsonDependencyReplacer()
+        else:
+            replacer = WorkspaceDependencyReplacer()
 
-        sp.check_output(['git', 'add', ' '.join(replaced_files)], cwd=self.clone_dir, stderr=sp.STDOUT)
+        replaced_file = replacer.replace(self, source)
+
+        sp.check_output(['git', 'add', replaced_file], cwd=self.clone_dir, stderr=sp.STDOUT)
         should_commit = self.CLEAN_TREE_MSG not in sp.check_output(
             ['git', 'status'], cwd=self.clone_dir, env={
                 'LANG': 'C'
@@ -235,13 +236,13 @@ class GitRepo(object):
 
         if not should_commit:
             print('@{tgt.bazel_workspace} already depends on @{src.bazel_workspace} at commit {src.last_commit}'.format(
-                tgt=self, src=src
+                tgt=self, src=source
             ))
             print()
             return
 
         sp.check_output(['git', 'commit', '-m',
-                         "Update @{src.bazel_workspace} dependency to latest '{src.branch}' branch".format(src=src)],
+                         "Update @{src.bazel_workspace} dependency to latest '{src.branch}' branch".format(src=source)],
                         cwd=self.clone_dir,
                         stderr=sp.STDOUT)
         print('Pushing the change to {tgt.repo} ({tgt.branch} branch)'.format(tgt=self))
