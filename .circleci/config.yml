@@ -55,11 +55,8 @@ jobs:
     steps:
       - checkout
       - install-bazel
-      - run:
-          name: Sync graql:master, grakn:master, client-java:master, client-python:master and docs:development with the latest build-tools:master
-          command: |
-            bazel run //ci:sync-dependencies -- --source build-tools:master \
-            --targets graql:master grakn:master client-java:master client-python:master docs:development
+      - run: bazel run //ci:sync-dependencies -- --source build-tools:master \
+            --targets graql:master grakn:master client-java:master client-python:master client-nodejs:master docs:development
 
 workflows:
   build-tools:
