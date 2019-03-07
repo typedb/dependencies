@@ -23,6 +23,9 @@ load("//bazel:dependencies.bzl","bazel_common", "bazel_deps", "bazel_toolchain",
 bazel_common()
 bazel_deps()
 bazel_toolchain()
+
+load("//bazel:dependencies.bzl", "bazel_rules_docker", "bazel_rules_nodejs", "bazel_rules_python")
+bazel_rules_docker()
 bazel_rules_nodejs()
 bazel_rules_python()
 
@@ -37,3 +40,5 @@ checkstyle_dependencies()
 load("//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
 graknlabs_bazel_distribution()
 
+load("//grpc:dependencies.bzl", "grpc_dependencies")
+grpc_dependencies()

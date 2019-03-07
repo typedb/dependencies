@@ -56,10 +56,10 @@ jobs:
       - checkout
       - install-bazel
       - run:
-          name: Sync graql:master, grakn:master, and docs:development with the latest build-tools:master
+          name: Sync graql:master, grakn:master, client-java:master and docs:development with the latest build-tools:master
           command: |
             bazel run //ci:sync-dependencies -- --source build-tools:master \
-            --targets graql:master grakn:master docs:development
+            --targets graql:master grakn:master client-java:master docs:development
 
 workflows:
   build-tools:
