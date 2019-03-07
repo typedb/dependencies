@@ -1,1 +1,4 @@
-exports_files(["checkstyle.py"])
+exports_files([
+    "checkstyle.py",
+    "checkstyle.xml",
+])

@@ -24,25 +24,16 @@
 <module name="Checker">
     <property name="charset" value="UTF-8"/>
 
-    <module name="SuppressionFilter">
-        <property name="file" value="external/graknlabs_build_tools/checkstyle/config/checkstyle-suppressions.xml" />
-    </module>
-
     <!-- Use 4 spaces, not tabs -->
     <module name="FileTabCharacter">
         <property name="eachLine" value="true"/>
     </module>
 
     <!-- Make sure every source file has the license at the top -->
-    <module name="RegexpHeader">
-        <property name="id" value="agplHeader"/>
-        <property name="headerFile" value="external/graknlabs_build_tools/checkstyle/config/checkstyle-file-header-agpl.txt"/>
-        <property name="fileExtensions" value="java"/>
-    </module>
 
     <module name="RegexpHeader">
-        <property name="id" value="apacheHeader"/>
-        <property name="headerFile" value="external/graknlabs_build_tools/checkstyle/config/checkstyle-file-header-apache.txt"/>
+        <property name="id" value="licenseHeader"/>
+        <property name="headerFile" value="{licenseFile}"/>
         <property name="fileExtensions" value="java"/>
     </module>
 

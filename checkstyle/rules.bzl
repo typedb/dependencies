@@ -42,7 +42,6 @@ def _checkstyle_test_impl(ctx):
     if ctx.attr.target and "{}-checkstyle".format(ctx.attr.target.label.name) != ctx.attr.name:
         fail("target should follow `{java_library target name}-checkstyle` pattern")
     properties = ctx.file.properties
-    suppressions = ctx.file.suppressions
     opts = ctx.attr.opts
     sopts = ctx.attr.string_opts
 
@@ -50,14 +49,31 @@ def _checkstyle_test_impl(ctx):
 
     args = ""
     inputs = []
-    if ctx.file.config:
-      args += " -c %s" % ctx.file.config.path
-      inputs.append(ctx.file.config)
+    config = ctx.actions.declare_file("checkstyle.xml")
+
+    if ctx.attr.license_type == "apache":
+        license_file = "external/graknlabs_build_tools/checkstyle/config/checkstyle-file-header-apache.txt"
+    else:
+        license_file = "external/graknlabs_build_tools/checkstyle/config/checkstyle-file-header-agpl.txt"
+
+    ctx.actions.expand_template(
+        template = ctx.file._checkstyle_xml_template,
+        output = config,
+        substitutions = {
+            "{licenseFile}" : license_file
+        }
+    )
+
+    args += " -c "
+    if ctx.label.package:
+        args += ctx.label.package + '/'
+    args += config.basename
+
+    inputs.append(config)
+
     if properties:
       args += " -p %s" % properties.path
       inputs.append(properties)
-    if suppressions:
-      inputs.append(suppressions)
 
     all_java_files = []
     for target in ctx.attr.targets + [ctx.attr.target]:
@@ -82,10 +98,10 @@ def _checkstyle_test_impl(ctx):
         is_executable = True,
     )
 
-    files = [ctx.outputs.checkstyle_script] + ctx.files.license_files + all_java_files + ctx.files._classpath + inputs
+    files = [ctx.outputs.checkstyle_script] + ctx.files._license_files + all_java_files + ctx.files._classpath + inputs
     runfiles = ctx.runfiles(
         files = files,
-        collect_data = True
+        collect_data = True,
     )
     return DefaultInfo(
         executable = ctx.outputs.checkstyle_script,
@@ -97,20 +113,10 @@ checkstyle_test = rule(
     implementation = _checkstyle_test_impl,
     test = True,
     attrs = {
-        "config": attr.label(
-            allow_single_file=True,
-            doc = "A checkstyle configuration file",
-            default = "@graknlabs_build_tools//checkstyle/config:checkstyle.xml"
-        ),
-        "suppressions": attr.label(
-            allow_single_file=True,
-            doc = "A checkstyle suppressions file",
-            default = "@graknlabs_build_tools//checkstyle/config:checkstyle-suppressions.xml",
-        ),
-        "license_files": attr.label_list(
-            allow_files=True,
-            doc = "License file(s) that can be used with the checkstyle license target",
-            default = ["@graknlabs_build_tools//checkstyle/config:license_files"]
+        "license_type": attr.string(
+            doc = "Type of license to produce the header for every source code",
+            values = ["agpl", "apache"],
+            default = "agpl",
         ),
         "properties": attr.label(
             allow_single_file=True,
@@ -138,6 +144,10 @@ checkstyle_test = rule(
              allow_single_file=True,
              default = "//checkstyle/templates:checkstyle.py"
         ),
+        "_checkstyle_xml_template": attr.label(
+             allow_single_file=True,
+             default = "//checkstyle/templates:checkstyle.xml"
+        ),
         "_classpath": attr.label_list(default=[
             Label("@com_puppycrawl_tools_checkstyle//jar"),
             Label("@commons_beanutils_commons_beanutils//jar"),
@@ -149,6 +159,11 @@ checkstyle_test = rule(
             Label("@org_antlr_antlr4_runtime//jar"),
             Label("@com_google_guava_guava23//jar"),
         ]),
+        "_license_files": attr.label_list(
+            allow_files=True,
+            doc = "License file(s) that can be used with the checkstyle license target",
+            default = ["@graknlabs_build_tools//checkstyle/config:license_files"]
+        ),
     },
     outputs = {
         "checkstyle_script": "%{name}.py",
