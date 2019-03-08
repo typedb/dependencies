@@ -137,7 +137,7 @@ class PackageJsonDependencyReplacer(DependencyReplacer):
         with open(package_json_file_path, 'w') as package_json_file:
             json.dump(package_json, package_json_file, indent=4)
 
-        return package_json_file
+        return package_json_file_path
 
 
 class GitRepo(object):
