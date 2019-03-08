@@ -88,6 +88,7 @@ class WorkspaceDependencyReplacer(DependencyReplacer):
 
     def replace(self, target, source):
         dependencies_file_path = os.path.join(target.clone_dir, 'dependencies', 'graknlabs', 'dependencies.bzl')
+
         if not os.path.isfile(dependencies_file_path):
             print('Could not find dependencies.bzl file at ' + str(dependencies_file_path.lstrip(target.clone_dir)) +
                   ' in @{tgt.bazel_workspace}'.format(tgt=target))
@@ -111,7 +112,7 @@ class WorkspaceDependencyReplacer(DependencyReplacer):
         with open(dependencies_file_path, 'w') as workspace_file:
             workspace_file.writelines(workspace_content)
 
-        return [dependencies_file_path]
+        return dependencies_file_path
 
 
 class PackageJsonDependencyReplacer(DependencyReplacer):
@@ -120,9 +121,7 @@ class PackageJsonDependencyReplacer(DependencyReplacer):
     def replace(self, target, source):
         package_json_file_path = os.path.join(target.clone_dir, 'test', 'standalone', 'nodejs', 'package.json')
 
-        if source.repo != 'client-nodejs':
-            return []
-        elif not os.path.isfile(package_json_file_path):
+        if not os.path.isfile(package_json_file_path):
             print('Could not find package.json file at ' + str(package_json_file_path.lstrip(target.clone_dir)) +
                   ' in @{tgt.bazel_workspace}'.format(tgt=target))
             print()
@@ -138,7 +137,7 @@ class PackageJsonDependencyReplacer(DependencyReplacer):
         with open(package_json_file_path, 'w') as package_json_file:
             json.dump(package_json, package_json_file, indent=4)
 
-        return [package_json_file]
+        return package_json_file
 
 
 class GitRepo(object):
@@ -228,7 +227,7 @@ class GitRepo(object):
 
         replaced_file = replacer.replace(self, source)
 
-        sp.check_output(['git', 'add', str(replaced_file)], cwd=self.clone_dir, stderr=sp.STDOUT)
+        sp.check_output(['git', 'add', str(replaced_file).lstrip(self.clone_dir)], cwd=self.clone_dir, stderr=sp.STDOUT)
         should_commit = self.CLEAN_TREE_MSG not in sp.check_output(
             ['git', 'status'], cwd=self.clone_dir, env={
                 'LANG': 'C'
