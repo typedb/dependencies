@@ -22,5 +22,5 @@ def graknlabs_bazel_distribution():
     git_repository(
         name="graknlabs_bazel_distribution",
         remote="https://github.com/graknlabs/bazel-distribution",
-        commit="9b58a857c6ad31f04f3e33d0e96589b5e032beac" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
+        commit="f5d2066454ba9672eca7453599c389d1f6988c89" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
     )
