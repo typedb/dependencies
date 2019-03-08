@@ -187,7 +187,7 @@ class GitRepo(object):
         return self.GRAKNLABS_PREFIX + self.repo.replace('-', '_')
 
     @property
-    def remote_url_with_credential(self):
+    def remote_url(self):
         """ git remote url for authenticated pushing """
         return self.GRAKN_AUTHENTICATED_REMOTE_TEMPLATE.format(repo=self.repo)
 
@@ -204,7 +204,7 @@ class GitRepo(object):
         git_output = sp.check_output([
             'bash', '-c',
             'git ls-remote {} {}'.format(
-                self.remote_url_with_credential,
+                self.remote_url,
                 self.branch
             )], env=self.credential_env)
         self._last_commit = git_output.split()[0]
@@ -221,7 +221,7 @@ class GitRepo(object):
         temp_dir = tempfile.mkdtemp('.' + self.repo, 'git.')
         sp.check_call([
             'bash', '-c',
-            'git clone {} {}'.format(self.remote_url_with_credential, temp_dir)
+            'git clone {} {}'.format(self.remote_url, temp_dir)
         ], env=self.credential_env)
         sp.check_call([
             'git', 'checkout', self.branch
@@ -259,7 +259,7 @@ class GitRepo(object):
                         stderr=sp.STDOUT)
         print('Pushing the change to {tgt.repo} ({tgt.branch} branch)'.format(tgt=self))
 
-        sp.check_output(['bash', '-c' 'git push {} {}'.format(self.remote_url_with_credential, self.branch)],
+        sp.check_output(['bash', '-c' 'git push {} {}'.format(self.remote_url, self.branch)],
                         env=self.credential_env, cwd=self.clone_dir, stderr=sp.STDOUT)
         print('The change has been pushed to {tgt.repo} ({tgt.branch} branch)'.format(tgt=self))
         print()
