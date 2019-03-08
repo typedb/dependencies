@@ -20,6 +20,7 @@ import tempfile
 
 CMDLINE_PARSER = argparse.ArgumentParser(
     description='Automatic updater for GraknLabs inter-repository dependencies')
+# TODO(vmax): support this cmdline argument
 CMDLINE_PARSER.add_argument(
     '--dry-run', help='Do not perform any real actions')
 CMDLINE_PARSER.add_argument(
@@ -150,19 +151,29 @@ class GitRepo(object):
     # pylint: disable=line-too-long
     SYNC_MARKER = '# sync-marker: do not remove this comment, this is used for sync-dependencies by @{ws_name}'
     CLEAN_TREE_MSG = 'nothing to commit, working tree clean'
+    CIRCLECI_GITSHA_ENV_KEY = 'CIRCLE_SHA1'
 
     GIT_USERNAME = 'Grabl'
     GIT_EMAIL = 'grabl@grakn.ai'
 
     def __init__(self, git_coordinates):
         coords = git_coordinates.split(':')
-        if len(coords) != 2:
-            raise ValueError('git coordinates should be in "repo_name:branch_name" form')
-        self.repo, self.branch = coords
+        if len(coords) == 1:
+            # only repo name was specified, commit is read from environment variable
+            [self.repo] = git_coordinates
+            if self.CIRCLECI_GITSHA_ENV_KEY not in os.environ:
+                raise ValueError(
+                    '${} should be set if branch is not specified'.format(
+                        self.CIRCLECI_GITSHA_ENV_KEY))
+            self._last_commit = os.getenv(self.CIRCLECI_GITSHA_ENV_KEY)
+        elif len(coords) == 2:
+            self.repo, self.branch = coords
+            self._last_commit = None
+        else:
+            raise ValueError('git coordinates should be in "repo_name" or "repo_name:branch_name" form')
         self.credential = grabl_credential()
         self.is_configured = False
         self.clone_dir = None
-        self._last_commit = None
 
     def __str__(self):
         return 'GitRepo<{}:{}>'.format(self.repo, self.branch)
@@ -259,6 +270,7 @@ def main():
         print('Not building the upstream repo, no need to update the docs')
         exit(0)
 
+    # ensure that credential is present
     grabl_credential()
 
     arguments = CMDLINE_PARSER.parse_args(sys.argv[1:])
