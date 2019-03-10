@@ -58,7 +58,9 @@ jobs:
       - run: |
           bazel run //ci:sync-dependencies -- \
           --source build-tools:master \
-          --targets graql:master grakn:master client-java:master client-python:master client-nodejs:master docs:development
+          --targets \
+          graql:master grakn:master workbase:master docs:development \
+          client-java:master client-python:master client-nodejs:master
 
 workflows:
   build-tools:
