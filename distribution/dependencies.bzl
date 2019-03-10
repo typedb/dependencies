@@ -20,7 +20,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 def graknlabs_bazel_distribution():
     git_repository(
-        name="graknlabs_bazel_distribution",
-        remote="https://github.com/graknlabs/bazel-distribution",
-        commit="4c94820b5774846ab43c64a22bb8348f2b1a1753" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
+        name = "graknlabs_bazel_distribution",
+        remote = "https://github.com/graknlabs/bazel-distribution",
+        commit = "c70def270b852cd83b9a28e80f0938f29d326c45" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
     )
