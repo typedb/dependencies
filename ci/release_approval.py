@@ -42,13 +42,16 @@ status = 'no-status'
 
 while status == 'no-status':
     status = check_output_discarding_stderr(['curl', grabl_url_status])
+    organisation = os.getenv('CIRCLE_PROJECT_USERNAME')
+    repository = os.getenv('CIRCLE_PROJECT_REPONAME')
+    release_branch = repository + '-release-branch'
 
     if status == 'deploy':
-        print('Approval received! Initiating the release process. '
-            'Please monitor it at https://circleci.com/gh/' + os.getenv('CIRCLE_PROJECT_USERNAME') + 
-            '/workflows/' + os.getenv('CIRCLE_PROJECT_REPONAME') + '/tree/trigger-ci-release')
-        subprocess.check_output(['git', 'branch', 'trigger-ci-release', 'HEAD'])
-        subprocess.check_output(['git', 'push', 'origin', 'trigger-ci-release:trigger-ci-release'])
+        print('Release Approval received! Initiating release workflow ...')
+        subprocess.check_output(['git', 'branch', release_branch, 'HEAD'])
+        subprocess.check_output(['git', 'push', 'origin', release_branch + ':' + release_branch])
+        print('Initiated the release workflow on {0}/{1}:{2}'.format(organisation, repository, release_branch))
+        print('You can monitor it at https://circleci.com/gh/{0}/workflows/{1}/tree/{2}'.format(organisation, repository, release_branch))
     elif status == 'do-not-deploy':
         print("This version won't be released as it has been marked 'do-not-deploy' by an administrator")
         break
