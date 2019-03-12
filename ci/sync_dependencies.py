@@ -113,11 +113,30 @@ class WorkspaceDependencyReplacer(DependencyReplacer):
         with open(dependencies_file_path, 'w') as workspace_file:
             workspace_file.writelines(workspace_content)
 
-        return dependencies_file_path
+        return [dependencies_file_path]
 
 
 class PackageJsonDependencyReplacer(DependencyReplacer):
     COMMIT_HASH_REGEX = r'[0-9a-f]{40}'
+
+    def find_packagejson_files(self, path):
+        packagejson_files = []
+        for dirpath, subdirs, files in os.walk(path):
+            for x in files:
+                if x == "package.json":
+                    packagejson_files.append(os.path.join(dirpath, x))
+        return packagejson_files
+
+    def replace_singlefile(self, fn, source):
+        with open(fn) as package_json_file:
+            package_json = json.load(package_json_file)
+
+        grakn_client_link = package_json['dependencies']['grakn-client']
+        grakn_client_link = re.sub(self.COMMIT_HASH_REGEX, source.last_commit, grakn_client_link, 1)
+        package_json['dependencies']['grakn-client'] = grakn_client_link
+
+        with open(fn, 'w') as package_json_file:
+            json.dump(package_json, package_json_file, indent=4)
 
     def replace(self, target, source):
         package_json_file_path = os.path.join(target.clone_dir, 'test', 'standalone', 'nodejs', 'package.json')
@@ -128,17 +147,12 @@ class PackageJsonDependencyReplacer(DependencyReplacer):
             print()
             exit(1)
 
-        with open(package_json_file_path) as package_json_file:
-            package_json = json.load(package_json_file)
+        packagejson_files = self.find_packagejson_files(target.clone_dir)
 
-        grakn_client_link = package_json['dependencies']['grakn-client']
-        grakn_client_link = re.sub(self.COMMIT_HASH_REGEX, source.last_commit, grakn_client_link, 1)
-        package_json['dependencies']['grakn-client'] = grakn_client_link
+        for fn in packagejson_files:
+            self.replace_singlefile(fn, source)
 
-        with open(package_json_file_path, 'w') as package_json_file:
-            json.dump(package_json, package_json_file, indent=4)
-
-        return package_json_file_path
+        return packagejson_files
 
 
 class GitRepo(object):
@@ -236,9 +250,9 @@ class GitRepo(object):
         else:
             replacer = WorkspaceDependencyReplacer()
 
-        replaced_file = replacer.replace(self, source)
+        replaced_files = replacer.replace(self, source)
 
-        sp.check_output(['git', 'add', str(replaced_file)], cwd=self.clone_dir, stderr=sp.STDOUT)
+        sp.check_output(['git', 'add'] + replaced_files, cwd=self.clone_dir, stderr=sp.STDOUT)
         should_commit = self.CLEAN_TREE_MSG not in sp.check_output(
             ['git', 'status'], cwd=self.clone_dir, env={
                 'LANG': 'C'
