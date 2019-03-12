@@ -271,7 +271,7 @@ class GitRepo(object):
                         stderr=sp.STDOUT)
         print('Pushing the change to {tgt.repo} ({tgt.branch} branch)'.format(tgt=self))
 
-        sp.check_output(['bash', '-c' 'git push {} {}'.format(self.remote_url, self.branch)],
+        sp.check_output(['bash', '-c', 'git push {} {}'.format(self.remote_url, self.branch)],
                         env=self.credential_env, cwd=self.clone_dir, stderr=sp.STDOUT)
         print('The change has been pushed to {tgt.repo} ({tgt.branch} branch)'.format(tgt=self))
         print()
