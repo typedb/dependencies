@@ -139,15 +139,13 @@ class PackageJsonDependencyReplacer(DependencyReplacer):
             json.dump(package_json, package_json_file, indent=4)
 
     def replace(self, target, source):
-        package_json_file_path = os.path.join(target.clone_dir, 'test', 'standalone', 'nodejs', 'package.json')
+        packagejson_files = self.find_packagejson_files(target.clone_dir)
 
-        if not os.path.isfile(package_json_file_path):
-            print('Could not find package.json file at ' + str(package_json_file_path.lstrip(target.clone_dir)) +
-                  ' in @{tgt.bazel_workspace}'.format(tgt=target))
+        if not packagejson_files:
+            print('Could not find any package.json files at {clone_dir}'
+                  ' in @{tgt.bazel_workspace}'.format(clone_dir=target.clone_dir, tgt=target))
             print()
             exit(1)
-
-        packagejson_files = self.find_packagejson_files(target.clone_dir)
 
         for fn in packagejson_files:
             self.replace_singlefile(fn, source)
