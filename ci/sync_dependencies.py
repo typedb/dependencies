@@ -158,7 +158,7 @@ class GitRepo(object):
     GRAKNLABS_PREFIX = 'graknlabs_'
     GRAKN_CORE_REPO_NAME = 'grakn'
     GRAKN_CORE_WORKSPACE = GRAKNLABS_PREFIX + 'grakn_core'
-    GRAKN_AUTHENTICATED_REMOTE_TEMPLATE = 'https://{credential}@github.com/graknlabs/{repo}.git'
+    GRAKN_AUTHENTICATED_REMOTE_TEMPLATE = 'https://$CREDENTIAL@github.com/graknlabs/{repo}.git'
 
     # pylint: disable=line-too-long
     SYNC_MARKER = '# sync-marker: do not remove this comment, this is used for sync-dependencies by @{ws_name}'
@@ -184,6 +184,7 @@ class GitRepo(object):
         else:
             raise ValueError('git coordinates should be in "repo_name" or "repo_name:branch_name" form')
         self.credential = grabl_credential()
+        self.credential_env = {'CREDENTIAL': self.credential}
         self.is_configured = False
         self.clone_dir = None
 
@@ -198,10 +199,9 @@ class GitRepo(object):
         return self.GRAKNLABS_PREFIX + self.repo.replace('-', '_')
 
     @property
-    def remote_url_with_credential(self):
+    def remote_url(self):
         """ git remote url for authenticated pushing """
-        return self.GRAKN_AUTHENTICATED_REMOTE_TEMPLATE.format(
-            credential=self.credential, repo=self.repo)
+        return self.GRAKN_AUTHENTICATED_REMOTE_TEMPLATE.format(repo=self.repo)
 
     @property
     def marker(self):
@@ -214,10 +214,11 @@ class GitRepo(object):
         if self._last_commit:
             return self._last_commit
         git_output = sp.check_output([
-            'git', 'ls-remote',
-            self.remote_url_with_credential,
-            self.branch
-        ])
+            'bash', '-c',
+            'git ls-remote {} {}'.format(
+                self.remote_url,
+                self.branch
+            )], env=self.credential_env)
         self._last_commit = git_output.split()[0]
         return self._last_commit
 
@@ -231,8 +232,9 @@ class GitRepo(object):
         """ clones git repo to a temp directory and returns it; result is cached"""
         temp_dir = tempfile.mkdtemp('.' + self.repo, 'git.')
         sp.check_call([
-            'git', 'clone', self.remote_url_with_credential, temp_dir
-        ])
+            'bash', '-c',
+            'git clone {} {}'.format(self.remote_url, temp_dir)
+        ], env=self.credential_env)
         sp.check_call([
             'git', 'checkout', self.branch
         ], cwd=temp_dir)
@@ -269,8 +271,8 @@ class GitRepo(object):
                         stderr=sp.STDOUT)
         print('Pushing the change to {tgt.repo} ({tgt.branch} branch)'.format(tgt=self))
 
-        sp.check_output(["git", "push", self.remote_url_with_credential, self.branch],
-                        cwd=self.clone_dir, stderr=sp.STDOUT)
+        sp.check_output(['bash', '-c' 'git push {} {}'.format(self.remote_url, self.branch)],
+                        env=self.credential_env, cwd=self.clone_dir, stderr=sp.STDOUT)
         print('The change has been pushed to {tgt.repo} ({tgt.branch} branch)'.format(tgt=self))
         print()
 
