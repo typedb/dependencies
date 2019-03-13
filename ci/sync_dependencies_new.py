@@ -82,7 +82,7 @@ def main():
     arguments = CMDLINE_PARSER.parse_args(sys.argv[1:])
     targets = {}
     source_repo, source_commit = arguments.source.split('@')
-    source_commit = short_commit(source_commit)
+    source_commit_short = short_commit(source_commit)
 
     for target in arguments.targets:
         target_repo, target_branch = target.split(':')
@@ -93,7 +93,7 @@ def main():
     source_message = github_commit.commit.message
 
     if not source_message.startswith(COMMIT_SUBJECT_PREFIX):
-        sync_message = '{0} {1}/{2}@{3}'.format(COMMIT_SUBJECT_PREFIX, graknlabs, source_repo, source_commit)
+        sync_message = '{0} {1}/{2}@{3}'.format(COMMIT_SUBJECT_PREFIX, graknlabs, source_repo, source_commit_short)
     else:
         sync_message = source_message
 
