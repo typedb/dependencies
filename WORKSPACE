@@ -42,3 +42,15 @@ graknlabs_bazel_distribution()
 
 load("//grpc:dependencies.bzl", "grpc_dependencies")
 grpc_dependencies()
+
+
+load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip_import")
+pip_repositories()
+
+pip_import(
+    name = "graknlabs_build_tools_ci_pip",
+    requirements = "//ci:requirements.txt",
+)
+
+load("@graknlabs_build_tools_ci_pip//:requirements.bzl", "pip_install")
+pip_install()

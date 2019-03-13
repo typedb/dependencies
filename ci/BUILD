@@ -16,10 +16,26 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+exports_files(["requirements.txt"])
+load("@graknlabs_build_tools_ci_pip//:requirements.bzl", "requirement")
+
 py_binary(
     name = "sync-dependencies",
     srcs = ["sync_dependencies.py"],
     main = "sync_dependencies.py"
+)
+
+py_binary(
+    name = "sync-dependencies-new",
+    srcs = ["sync_dependencies_new.py"],
+    main = "sync_dependencies_new.py",
+    deps = [
+        requirement("PyGithub"),
+        requirement("urllib3"),
+        requirement("chardet"),
+        requirement("idna"),
+        requirement("wrapt"),
+    ],
 )
 
 py_binary(
