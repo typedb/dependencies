@@ -292,8 +292,7 @@ def main():
     source = GitRepo(arguments.source)
     targets = list(map(GitRepo, arguments.targets))
 
-    print('** This will make these repos depend on the latest '
-          '{src.repo} ({src.branch} branch) '.format(src=source))
+    print('** This will make these repos depend on the latest {0}@{1}'.format(source.repo, source.last_commit))
     for target in targets:
         print('\t * {tgt.repo} ({tgt.branch} branch)'.format(tgt=target))
 
