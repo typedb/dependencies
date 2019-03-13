@@ -70,7 +70,7 @@ def check_output_discarding_stderr(*args, **kwargs):
 
 def short_commit(commit_sha):
     return subprocess.check_output(['git', 'rev-parse', '--short=7', commit_sha],
-                                   cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY")).decode()
+                                   cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY")).decode().replace('\n', '')
 
 
 @exception_handler
