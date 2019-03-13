@@ -4,7 +4,7 @@
 dependency_update updates bazel dependencies declared in WORKSPACE
 
 Example usage:
-sync_dependencies.py --source client-python:development --targets docs:development-client-python
+sync_dependencies.py --source client-python:development --targets docs:development
 """
 
 from __future__ import print_function
@@ -174,9 +174,7 @@ class GitRepo(object):
             # only repo name was specified, commit is read from environment variable
             self.repo = coords[0]
             if self.CIRCLECI_GITSHA_ENV_KEY not in os.environ:
-                raise ValueError(
-                    '${} should be set if branch is not specified'.format(
-                        self.CIRCLECI_GITSHA_ENV_KEY))
+                raise ValueError('${} should be set if branch is not specified'.format(self.CIRCLECI_GITSHA_ENV_KEY))
             self._last_commit = os.getenv(self.CIRCLECI_GITSHA_ENV_KEY)
         elif len(coords) == 2:
             self.repo, self.branch = coords
