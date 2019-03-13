@@ -27,11 +27,11 @@ CMDLINE_PARSER.add_argument('--targets', nargs='+', required=True)
 
 COMMIT_SUBJECT_PREFIX = "//sync-dependencies:"
 
-
 graknlabs = 'graknlabs'
 github_token = os.getenv('GRABL_CREDENTIAL')
 github_connection = github.Github(github_token)
 github_org = github_connection.get_organization(graknlabs)
+
 
 def is_building_upstream():
     """ Returns False is running in a forked repo"""
@@ -69,7 +69,8 @@ def check_output_discarding_stderr(*args, **kwargs):
 
 
 def short_commit(commit_sha):
-    return subprocess.check_output(['git', 'rev-parse', '--short=7', commit_sha]).decode()
+    return subprocess.check_output(['git', 'rev-parse', '--short=7', commit_sha],
+                                   cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY")).decode()
 
 
 @exception_handler
