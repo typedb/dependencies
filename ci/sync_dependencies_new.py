@@ -68,15 +68,21 @@ def check_output_discarding_stderr(*args, **kwargs):
             raise e
 
 
+def short_commit(commit_sha):
+    return subprocess.check_output(['git', 'rev-parse', '--short=7', commit_sha]).decode()
+
+
 @exception_handler
 def main():
-    # if not is_building_upstream(): TODO: Re-enable this in production
-    #     print('Not building the upstream repo, no need to update the docs')
-    #     exit(0)
+    if not is_building_upstream():
+        print('//sync-dependencies aborted: not building the upstream repo on @graknlabs')
+        exit(0)
 
     arguments = CMDLINE_PARSER.parse_args(sys.argv[1:])
     targets = {}
     source_repo, source_commit = arguments.source.split('@')
+    source_commit = short_commit(source_commit)
+
     for target in arguments.targets:
         target_repo, target_branch = target.split(':')
         targets[target_repo] = target_branch
@@ -86,7 +92,7 @@ def main():
     source_message = github_commit.commit.message
 
     if not source_message.startswith(COMMIT_SUBJECT_PREFIX):
-        sync_message = '{0} {1}/{2}@{3}'.format(COMMIT_SUBJECT_PREFIX, graknlabs, source_repo, source_commit[:10])
+        sync_message = '{0} {1}/{2}@{3}'.format(COMMIT_SUBJECT_PREFIX, graknlabs, source_repo, source_commit)
     else:
         sync_message = source_message
 
