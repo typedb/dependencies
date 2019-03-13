@@ -172,7 +172,7 @@ class GitRepo(object):
         coords = git_coordinates.split(':')
         if len(coords) == 1:
             # only repo name was specified, commit is read from environment variable
-            [self.repo] = git_coordinates
+            self.repo = coords[0]
             if self.CIRCLECI_GITSHA_ENV_KEY not in os.environ:
                 raise ValueError(
                     '${} should be set if branch is not specified'.format(
