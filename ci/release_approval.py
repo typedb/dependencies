@@ -28,13 +28,13 @@ grabl_data = {
     'repo': '{}/{}'.format(os.getenv('CIRCLE_PROJECT_USERNAME'), os.getenv('CIRCLE_PROJECT_REPONAME'))
 }
 
-GRABL_HOST = "http://grabl.herokuapp.com"
+GRABL_HOST = "https://grabl.grakn.ai"
 grabl_url_new = '{GRABL_HOST}/release/new'.format(GRABL_HOST=GRABL_HOST)
 grabl_url_status = '{GRABL_HOST}/release/{commit}/status'.format(GRABL_HOST=GRABL_HOST, commit=workflow_id)
 
 print("Tests have been ran and everything is in a good, releasable state. "
     "It is possible to proceed with the release process. Waiting for approval.")
-_ = check_output_discarding_stderr([
+check_output_discarding_stderr([
     'curl', '-X', 'POST', '--data', json.dumps(grabl_data), '-H', 'Content-Type: application/json', grabl_url_new
 ])
 
@@ -42,11 +42,12 @@ status = 'no-status'
 
 while status == 'no-status':
     status = check_output_discarding_stderr(['curl', grabl_url_status])
-    organisation = os.getenv('CIRCLE_PROJECT_USERNAME')
-    repository = os.getenv('CIRCLE_PROJECT_REPONAME')
-    release_branch = repository + '-release-branch'
 
     if status == 'deploy':
+        organisation = os.getenv('CIRCLE_PROJECT_USERNAME')
+        repository = os.getenv('CIRCLE_PROJECT_REPONAME')
+        release_branch = repository + '-release-branch'
+
         print('Release Approval received! Initiating release workflow ...')
         subprocess.check_output(['git', 'branch', release_branch, 'HEAD'], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
         subprocess.check_output(['git', 'push', 'origin', release_branch + ':' + release_branch], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
