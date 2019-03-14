@@ -3,3 +3,4 @@ urllib3==1.23
 chardet==3.0.4
 idna==2.7
 wrapt==1.10.11
+certifi==2018.8.24
