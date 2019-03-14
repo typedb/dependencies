@@ -19,7 +19,7 @@ import sys
 import github
 
 
-GRABL_HOST = 'http://localhost:8000'
+GRABL_HOST = 'https://grabl.grakn.ai'
 GRABL_SYNC_DEPS = '{0}/sync/dependencies'.format(GRABL_HOST)
 
 CMDLINE_PARSER = argparse.ArgumentParser(description='Automatic updater for GraknLabs inter-repository dependencies')
