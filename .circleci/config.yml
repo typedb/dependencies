@@ -57,18 +57,18 @@ jobs:
       - install-bazel
       - run: |
           bazel run //ci:sync-dependencies -- \
-          --source build-tools \
+          --source build-tools@$CIRCLE_SHA1 \
           --targets \
-          graql:master grakn:master workbase:master docs:development \
+          graql:master grakn:master workbase:master docs:development examples:development \
           client-java:master client-python:master client-nodejs:master
 
 workflows:
   build-tools:
     jobs:
       - build
-      - sync-dependencies:
-          filters:
-            branches:
-              only: master
-          requires:
-            - build
+#      - sync-dependencies: // TODO: @haikalpribadi will re-enable once all repos are updated with new sync-dependencies
+#          filters:
+#            branches:
+#              only: master
+#          requires:
+#            - build

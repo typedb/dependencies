@@ -22,13 +22,7 @@ load("@graknlabs_build_tools_ci_pip//:requirements.bzl", "requirement")
 py_binary(
     name = "sync-dependencies",
     srcs = ["sync_dependencies.py"],
-    main = "sync_dependencies.py"
-)
-
-py_binary(
-    name = "sync-dependencies-new",
-    srcs = ["sync_dependencies_new.py"],
-    main = "sync_dependencies_new.py",
+    main = "sync_dependencies.py",
     deps = [
         requirement("PyGithub"),
         requirement("urllib3"),
