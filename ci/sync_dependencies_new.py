@@ -97,17 +97,17 @@ def main():
     else:
         sync_message = source_message
 
+    print('Requesting the synchronisation of dependency to {0}/{1}@{2} in the following repos:'
+          .format(graknlabs, source_repo, source_commit_short))
+    for target_repo in targets:
+        print('- {0}/{1}:{2}'.format(graknlabs, target_repo, targets[target_repo]))
+
     sync_data = {
         'source-repo': source_repo,
         'source-commit': source_commit,
         'sync-message': sync_message,
         'targets': targets
     }
-
-    print('Requesting the synchronisation of dependency to {0}/{1}@{2} in the following repos:'
-          .format(graknlabs, source_repo, source_commit))
-    for target_repo in sync_data['targets']:
-        print('* {0}:{1}'.format(target_repo, sync_data['targets'][target_repo]))
 
     check_output_discarding_stderr([
         'curl', '-X', 'POST', '--data', json.dumps(sync_data), '-H', 'Content-Type: application/json', GRABL_SYNC_DEPS
