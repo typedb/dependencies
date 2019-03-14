@@ -15,9 +15,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-load("//dependencies/graknlabs:dependencies.bzl", graknlabs_bazel_distribution_synced = "graknlabs_bazel_distribution")
-
-def graknlabs_bazel_distribution():
-    graknlabs_bazel_distribution_synced()
