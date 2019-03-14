@@ -27,7 +27,7 @@ CMDLINE_PARSER.add_argument('--dry-run', help='Do not perform any real actions')
 CMDLINE_PARSER.add_argument('--source', required=True)
 CMDLINE_PARSER.add_argument('--targets', nargs='+', required=True)
 
-COMMIT_SUBJECT_PREFIX = "//sync-dependencies:"
+COMMIT_SUBJECT_PREFIX = "//ci:sync-dependencies:"
 
 graknlabs = 'graknlabs'
 github_token = os.getenv('GRABL_CREDENTIAL')
