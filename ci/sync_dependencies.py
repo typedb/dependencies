@@ -18,8 +18,14 @@ import subprocess
 import sys
 import github
 
+IS_CIRCLE_ENV = os.getenv('CIRCLECI')
+if IS_CIRCLE_ENV is None:
+    IS_CIRCLE_ENV = False
 
 GRABL_HOST = 'https://grabl.grakn.ai'
+if not IS_CIRCLE_ENV:
+    GRABL_HOST = 'http://localhost:8000'
+
 GRABL_SYNC_DEPS = '{0}/sync/dependencies'.format(GRABL_HOST)
 
 CMDLINE_PARSER = argparse.ArgumentParser(description='Automatic updater for GraknLabs inter-repository dependencies')
@@ -78,7 +84,7 @@ def short_commit(commit_sha):
 @exception_handler
 def main():
     if not is_building_upstream():
-        print('//sync-dependencies aborted: not building the upstream repo on @graknlabs')
+        print('//ci:sync-dependencies aborted: not building the upstream repo on @graknlabs')
         exit(0)
 
     arguments = CMDLINE_PARSER.parse_args(sys.argv[1:])
@@ -94,6 +100,7 @@ def main():
     github_commit = github_repo.get_commit(source_commit)
     source_message = github_commit.commit.message
 
+    # TODO: Check that the commit author is @grabl
     if not source_message.startswith(COMMIT_SUBJECT_PREFIX):
         sync_message = '{0} {1}/{2}@{3}'.format(COMMIT_SUBJECT_PREFIX, graknlabs, source_repo, source_commit_short)
     else:
