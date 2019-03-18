@@ -7,7 +7,8 @@ import subprocess
 import json
 import time
 import sys
-
+import hashlib
+import hmac
 
 def check_output_discarding_stderr(*args, **kwargs):
     with open(os.devnull, 'w') as devnull:
@@ -31,17 +32,19 @@ grabl_data = {
 GRABL_HOST = "https://grabl.grakn.ai"
 grabl_url_new = '{GRABL_HOST}/release/new'.format(GRABL_HOST=GRABL_HOST)
 grabl_url_status = '{GRABL_HOST}/release/{commit}/status'.format(GRABL_HOST=GRABL_HOST, commit=workflow_id)
+git_token = os.getenv('GRABL_CREDENTIAL')
+signature = hmac.new(git_token, json.dumps(sync_data), hashlib.sha1).hexdigest()
 
 print("Tests have been ran and everything is in a good, releasable state. "
     "It is possible to proceed with the release process. Waiting for approval.")
 check_output_discarding_stderr([
-    'curl', '-X', 'POST', '--data', json.dumps(grabl_data), '-H', 'Content-Type: application/json', grabl_url_new
+    'curl', '-X', 'POST', '--data', json.dumps(grabl_data), '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, grabl_url_new
 ])
 
 status = 'no-status'
 
 while status == 'no-status':
-    status = check_output_discarding_stderr(['curl', grabl_url_status])
+    status = check_output_discarding_stderr(['curl', '-H', 'X-Hub-Signature: ' + signature, grabl_url_status])
 
     if status == 'deploy':
         organisation = os.getenv('CIRCLE_PROJECT_USERNAME')
