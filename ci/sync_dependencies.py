@@ -25,6 +25,10 @@ IS_CIRCLE_ENV = os.getenv('CIRCLECI')
 if IS_CIRCLE_ENV is None:
     IS_CIRCLE_ENV = False
 
+GRABL_TOKEN = os.getenv('GRABL_CREDENTIAL')
+if GRABL_TOKEN is None:
+    raise Exception("$GRABL_CREDENTIAL is not set!")
+
 GRABL_HOST = 'https://grabl.grakn.ai'
 if not IS_CIRCLE_ENV:
     GRABL_HOST = 'http://localhost:8000'
@@ -114,19 +118,23 @@ def main():
     for target_repo in targets:
         print('- {0}/{1}:{2}'.format(graknlabs, target_repo, targets[target_repo]))
 
+    print('Constructing request payload:')
     sync_data = {
         'source-repo': source_repo,
         'source-commit': source_commit,
         'sync-message': sync_message,
         'targets': targets
     }
+    print(str(sync_data))
 
-    git_token = os.getenv('GRABL_CREDENTIAL')
-    signature = hmac.new(git_token, json.dumps(sync_data), hashlib.sha1).hexdigest()
+    sync_data_json = json.dumps(sync_data)
+    signature = hmac.new(GRABL_TOKEN, sync_data_json, hashlib.sha1).hexdigest()
 
+    print('Sending post request to: ' + GRABL_SYNC_DEPS)
     check_output_discarding_stderr([
-        'curl', '-X', 'POST', '--data', json.dumps(sync_data), '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
+        'curl', '-X', 'POST', '--data', sync_data_json, '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
     ])
+    print('DONE!')
 
 
 if __name__ == '__main__':
