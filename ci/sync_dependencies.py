@@ -17,6 +17,9 @@ import os
 import subprocess
 import sys
 import github
+import hashlib
+import hmac
+
 
 IS_CIRCLE_ENV = os.getenv('CIRCLECI')
 if IS_CIRCLE_ENV is None:
@@ -118,8 +121,11 @@ def main():
         'targets': targets
     }
 
+    git_token = os.getenv('GRABL_CREDENTIAL')
+    signature = hmac.new(git_token, json.dumps(sync_data), hashlib.sha1).hexdigest()
+
     check_output_discarding_stderr([
-        'curl', '-X', 'POST', '--data', json.dumps(sync_data), '-H', 'Content-Type: application/json', GRABL_SYNC_DEPS
+        'curl', '-X', 'POST', '--data', json.dumps(sync_data), '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
     ])
 
 
