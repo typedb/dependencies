@@ -29,22 +29,30 @@ grabl_data = {
     'repo': '{}/{}'.format(os.getenv('CIRCLE_PROJECT_USERNAME'), os.getenv('CIRCLE_PROJECT_REPONAME'))
 }
 
-GRABL_HOST = "https://grabl.grakn.ai"
+IS_CIRCLE_ENV = os.getenv('CIRCLECI')
+if IS_CIRCLE_ENV is None:
+    IS_CIRCLE_ENV = False
+
+GRABL_HOST = 'https://grabl.grakn.ai'
+if not IS_CIRCLE_ENV:
+    GRABL_HOST = 'http://localhost:8000'
+
 grabl_url_new = '{GRABL_HOST}/release/new'.format(GRABL_HOST=GRABL_HOST)
 grabl_url_status = '{GRABL_HOST}/release/{commit}/status'.format(GRABL_HOST=GRABL_HOST, commit=workflow_id)
 git_token = os.getenv('GRABL_CREDENTIAL')
-signature = hmac.new(git_token, json.dumps(sync_data), hashlib.sha1).hexdigest()
 
+new_release_signature = hmac.new(git_token, json.dumps(grabl_data), hashlib.sha1).hexdigest()
 print("Tests have been ran and everything is in a good, releasable state. "
     "It is possible to proceed with the release process. Waiting for approval.")
 check_output_discarding_stderr([
-    'curl', '-X', 'POST', '--data', json.dumps(grabl_data), '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, grabl_url_new
+    'curl', '-X', 'POST', '--data', json.dumps(grabl_data), '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + new_release_signature, grabl_url_new
 ])
 
 status = 'no-status'
 
 while status == 'no-status':
-    status = check_output_discarding_stderr(['curl', '-H', 'X-Hub-Signature: ' + signature, grabl_url_status])
+    get_release_status_signature = hmac.new(git_token, '', hashlib.sha1).hexdigest()
+    status = check_output_discarding_stderr(['curl', '-H', 'X-Hub-Signature: ' + get_release_status_signature, grabl_url_status])
 
     if status == 'deploy':
         organisation = os.getenv('CIRCLE_PROJECT_USERNAME')
