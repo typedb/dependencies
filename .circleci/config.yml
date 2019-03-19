@@ -20,17 +20,15 @@ version: 2.1
 commands:
   install-bazel-linux-rbe:
     steps:
-      - run: sh ./ci/install-bazel-linux.sh
-      - run: sh ./ci/install-bazel-rbe.sh
+      - run: bash ./ci/install-bazel-linux.sh
+      - run: bash ./ci/install-bazel-rbe.sh
   
   run-bazel-rbe:
     parameters:
       command:
           type: string
     steps:
-      - run:
-          command: |
-            bazel run @graknlabs_build_tools//ci:run-bazel-rbe << parameters.command >>
+      - run: bazel run @graknlabs_build_tools//ci:run-bazel-rbe -- << parameters.command >>
 
 jobs:
   build:

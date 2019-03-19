@@ -1,5 +1,6 @@
 #!/bin/bash
 
+set -e
 echo "Installing RBE credential..."
 if [[ -n "$BAZEL_RBE_CREDENTIAL" ]]; then
     BAZEL_RBE_CREDENTIAL_LOCATION=~/.config/gcloud/application_default_credentials.json
