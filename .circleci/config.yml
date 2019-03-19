@@ -18,18 +18,10 @@
 
 version: 2.1
 commands:
-  install-bazel:
+  install-bazel-linux-rbe:
     steps:
-      - run:
-          name: Install bazel and RBE credential
-          command: |
-            # Install bazel
-            curl -OL https://github.com/bazelbuild/bazel/releases/download/0.20.0/bazel-0.20.0-installer-linux-x86_64.sh
-            chmod +x bazel-0.20.0-installer-linux-x86_64.sh
-            sudo ./bazel-0.20.0-installer-linux-x86_64.sh
-
-            # Install RBE credential
-            bazel run //ci:install-bazel-rbe-credential
+      - run: sh ./ci/install-bazel-linux.sh
+      - run: sh ./ci/install-bazel-rbe.sh
   
   run-bazel-rbe:
     parameters:
@@ -43,18 +35,19 @@ commands:
 jobs:
   build:
     machine: true
-    working_directory: ~/grakn
+    working_directory: ~/build-tools
     steps:
       - checkout
-      - install-bazel
+      - install-bazel-linux-rbe
       - run-bazel-rbe:
           command: bazel build //...
 
   sync-dependencies:
     machine: true
+    working_directory: ~/build-tools
     steps:
       - checkout
-      - install-bazel
+      - install-bazel-linux-rbe
       - run: |
           bazel run //ci:sync-dependencies -- \
           --source build-tools@$CIRCLE_SHA1 \

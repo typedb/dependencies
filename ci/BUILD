@@ -40,8 +40,8 @@ py_binary(
 )
 
 sh_binary(
-    name = "install-bazel-rbe-credential",
-    srcs = ["install-bazel-rbe-credential.sh"]
+    name = "install-bazel-rbe",
+    srcs = ["install-bazel-rbe.sh"]
 )
 
 sh_binary(
