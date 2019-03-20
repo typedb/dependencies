@@ -21,8 +21,8 @@ load("@graknlabs_build_tools_ci_pip//:requirements.bzl", "requirement")
 
 py_binary(
     name = "sync-dependencies",
-    srcs = ["sync_dependencies.py"],
-    main = "sync_dependencies.py",
+    srcs = ["sync-dependencies.py"],
+    main = "sync-dependencies.py",
     deps = [
         requirement("PyGithub"),
         requirement("urllib3"),
@@ -34,9 +34,15 @@ py_binary(
 )
 
 py_binary(
+    name = "release-docs",
+    srcs = ["release-docs.py"],
+    main = "release-docs.py"
+)
+
+py_binary(
     name = "release-approval",
-    srcs = ["release_approval.py"],
-    main = "release_approval.py"
+    srcs = ["release-approval.py"],
+    main = "release-approval.py"
 )
 
 sh_binary(
