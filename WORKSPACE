@@ -58,5 +58,5 @@ pip_install()
 # Generate a JSON document of commit hashes of all external workspace dependencies
 load("//bazel:rules.bzl", "workspace_refs")
 workspace_refs(
-    name = "graknlabs_build_tools_bazel_workspace_refs"
+    name = "graknlabs_build_tools_workspace_refs"
 )
