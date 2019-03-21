@@ -22,10 +22,10 @@ genrule(
         "@graknlabs_bazel_distribution//maven/templates:rules.bzl",
         "@graknlabs_build_tools//:deployment.properties"
     ],
+    tools = ["@graknlabs_bazel_distribution//maven:deployment_rules_builder.py"],
     cmd = "$(location @graknlabs_bazel_distribution//maven:deployment_rules_builder.py) " +
-    "$(location @graknlabs_bazel_distribution//maven/templates:rules.bzl) $@ " +
-    "$(location @graknlabs_build_tools//:deployment.properties) " +
-    "//:VERSION @graknlabs_build_tools//:deployment.properties",
-    outs = ["rules.bzl"],
-    tools = ["@graknlabs_bazel_distribution//maven:deployment_rules_builder.py"]
+        "$(location @graknlabs_bazel_distribution//maven/templates:rules.bzl) $@ " +
+        "$(location @graknlabs_build_tools//:deployment.properties) " +
+        "//:VERSION @graknlabs_build_tools//:deployment.properties",
+    outs = ["rules.bzl"]
 )

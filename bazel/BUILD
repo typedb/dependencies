@@ -31,3 +31,10 @@ sh_binary(
         "@unused_deps_osx//file",
     ],
 )
+
+genrule(
+    name = 'test',
+    srcs = ['@graknlabs_build_tools_bazel_workspace_refs//:commits.json'],
+    cmd = 'cat $(location @graknlabs_build_tools_bazel_workspace_refs//:commits.json) > $@',
+    outs = ['commits.json']
+)
