@@ -19,8 +19,9 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 def graknlabs_bazel_distribution():
+    # TODO: update to graknlabs/bazel-distribution before merging the PR
     git_repository(
         name = "graknlabs_bazel_distribution",
-        remote = "https://github.com/graknlabs/bazel-distribution",
-        commit = "259e56d52a4ca4d1da088e92c6deba7dfcd8a690" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
+        remote = "https://github.com/lolski/bazel-distribution",
+        commit = "7a2c9f0f3892094951a82f107b53562a7b88a375" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
     )
