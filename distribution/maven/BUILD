@@ -26,6 +26,6 @@ genrule(
     cmd = "$(location @graknlabs_bazel_distribution//maven:deployment_rules_builder.py) " +
         "$(location @graknlabs_bazel_distribution//maven/templates:rules.bzl) $@ " +
         "$(location @graknlabs_build_tools//:deployment.properties) " +
-        "//:VERSION @graknlabs_build_tools//:deployment.properties",
+        "@graknlabs_build_tools//:deployment.properties",
     outs = ["rules.bzl"]
 )
