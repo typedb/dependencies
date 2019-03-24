@@ -18,9 +18,14 @@
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
+# TODO: revert to graknlabs/bazel-distribution and remove local_repository before merging the PR to master
 def graknlabs_bazel_distribution():
+#    native.local_repository(
+#        name = "graknlabs_bazel_distribution",
+#        path = "/Users/lolski/grakn.ai/bazel-distribution"
+#    )
     git_repository(
         name = "graknlabs_bazel_distribution",
-        remote = "https://github.com/graknlabs/bazel-distribution",
-        commit = "e4d87a290a092b2874208bc2b0a8b4ffa330bd72" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
+        remote = "https://github.com/lolski/bazel-distribution",
+        commit = "dff5095af9f1d5e60829184f67f2b5e16929c9a4" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
     )
