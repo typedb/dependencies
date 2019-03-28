@@ -1,4 +1,4 @@
-# IDEA files
+.DS_Store
 *.iml
 .ijwb/
 bazel-*

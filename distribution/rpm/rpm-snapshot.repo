@@ -1,0 +1,5 @@
+[repo-grakn-rpm-snapshot]
+name=repo-grakn-rpm-snapshot
+baseurl=http://repo.grakn.ai/repository/rpm-snapshot/
+enabled=1
+gpgcheck=0
