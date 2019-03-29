@@ -52,6 +52,6 @@ sh_binary(
 
 py_binary(
     name = "run-bazel-rbe",
-    srcs = ["run-bazel-rbe.py"]
+    srcs = ["run-bazel-rbe.py"],
     main = "run-bazel-rbe.py"
 )
