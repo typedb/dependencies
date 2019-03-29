@@ -39,7 +39,7 @@ if not IS_CIRCLE_ENV:
 
 grabl_url_new = '{GRABL_HOST}/release/new'.format(GRABL_HOST=GRABL_HOST)
 grabl_url_status = '{GRABL_HOST}/release/{commit}/status'.format(GRABL_HOST=GRABL_HOST, commit=workflow_id)
-git_token = os.getenv('GRABL_CREDENTIAL')
+git_token = os.getenv('RELEASE_APPROVAL_TOKEN')
 
 new_release_signature = hmac.new(git_token, json.dumps(grabl_data), hashlib.sha1).hexdigest()
 print("Tests have been ran and everything is in a good, releasable state. "

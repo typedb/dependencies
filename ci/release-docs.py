@@ -2,9 +2,19 @@ import os
 import sys
 import subprocess as sp
 
-git_username = "grabl"
-git_email = "grabl@grakn.ai"
-git_token = "grabl:" + os.environ['GRABL_CREDENTIAL']
+
+if os.environ['RELEASE_DOCS_USERNAME'] is None:
+    'Environment variable $RELEASE_DOCS_USERNAME is not set!'
+
+if os.environ['RELEASE_DOCS_EMAIL'] is None:
+    'Environment variable $RELEASE_DOCS_EMAIL is not set!'
+
+if os.environ['RELEASE_DOCS_TOKEN'] is None:
+    'Environment variable $RELEASE_DOCS_TOKEN is not set!'
+
+git_username = os.environ['RELEASE_DOCS_USERNAME']
+git_email = os.environ['RELEASE_DOCS_EMAIL']
+git_token = git_username + ":" + os.environ['RELEASE_DOCS_TOKEN']
 
 git_org = "graknlabs"
 

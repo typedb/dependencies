@@ -25,9 +25,9 @@ IS_CIRCLE_ENV = os.getenv('CIRCLECI')
 if IS_CIRCLE_ENV is None:
     IS_CIRCLE_ENV = False
 
-GRABL_TOKEN = os.getenv('GRABL_CREDENTIAL')
+GRABL_TOKEN = os.getenv('SYNC_DEPENDENCIES_TOKEN')
 if GRABL_TOKEN is None:
-    raise Exception("$GRABL_CREDENTIAL is not set!")
+    raise Exception("$SYNC_DEPENDENCIES_TOKEN is not set!")
 
 GRABL_HOST = 'https://grabl.grakn.ai'
 if not IS_CIRCLE_ENV:
@@ -43,7 +43,7 @@ CMDLINE_PARSER.add_argument('--targets', nargs='+', required=True)
 COMMIT_SUBJECT_PREFIX = "//ci:sync-dependencies:"
 
 graknlabs = 'graknlabs'
-github_token = os.getenv('GRABL_CREDENTIAL')
+github_token = os.getenv('SYNC_DEPENDENCIES_TOKEN')
 github_connection = github.Github(github_token)
 github_org = github_connection.get_organization(graknlabs)
 
