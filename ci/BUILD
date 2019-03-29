@@ -50,7 +50,8 @@ sh_binary(
     srcs = ["install-bazel-rbe.sh"]
 )
 
-sh_binary(
+py_binary(
     name = "run-bazel-rbe",
-    srcs = ["run-bazel-rbe.sh"]
+    srcs = ["run-bazel-rbe.py"]
+    main = "run-bazel-rbe.py"
 )
