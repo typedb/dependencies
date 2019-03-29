@@ -10,6 +10,20 @@ import sys
 import hashlib
 import hmac
 
+
+IS_CIRCLE_ENV = os.getenv('CIRCLECI')
+if IS_CIRCLE_ENV is None:
+    IS_CIRCLE_ENV = False
+
+GRABL_HOST = 'https://grabl.grakn.ai'
+if not IS_CIRCLE_ENV:
+    GRABL_HOST = 'http://localhost:8000'
+
+git_token = os.getenv('RELEASE_APPROVAL_TOKEN')
+if git_token is None:
+    raise Exception('Environment variable $RELEASE_APPROVAL_TOKEN is not set!')
+
+
 def check_output_discarding_stderr(*args, **kwargs):
     with open(os.devnull, 'w') as devnull:
         try:
@@ -29,17 +43,8 @@ grabl_data = {
     'repo': '{}/{}'.format(os.getenv('CIRCLE_PROJECT_USERNAME'), os.getenv('CIRCLE_PROJECT_REPONAME'))
 }
 
-IS_CIRCLE_ENV = os.getenv('CIRCLECI')
-if IS_CIRCLE_ENV is None:
-    IS_CIRCLE_ENV = False
-
-GRABL_HOST = 'https://grabl.grakn.ai'
-if not IS_CIRCLE_ENV:
-    GRABL_HOST = 'http://localhost:8000'
-
 grabl_url_new = '{GRABL_HOST}/release/new'.format(GRABL_HOST=GRABL_HOST)
 grabl_url_status = '{GRABL_HOST}/release/{commit}/status'.format(GRABL_HOST=GRABL_HOST, commit=workflow_id)
-git_token = os.getenv('RELEASE_APPROVAL_TOKEN')
 
 new_release_signature = hmac.new(git_token, json.dumps(grabl_data), hashlib.sha1).hexdigest()
 print("Tests have been ran and everything is in a good, releasable state. "

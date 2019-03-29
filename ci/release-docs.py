@@ -4,13 +4,13 @@ import subprocess as sp
 
 
 if os.environ['RELEASE_DOCS_USERNAME'] is None:
-    'Environment variable $RELEASE_DOCS_USERNAME is not set!'
+    raise Exception('Environment variable $RELEASE_DOCS_USERNAME is not set!')
 
 if os.environ['RELEASE_DOCS_EMAIL'] is None:
-    'Environment variable $RELEASE_DOCS_EMAIL is not set!'
+    raise Exception('Environment variable $RELEASE_DOCS_EMAIL is not set!')
 
 if os.environ['RELEASE_DOCS_TOKEN'] is None:
-    'Environment variable $RELEASE_DOCS_TOKEN is not set!'
+    raise Exception('Environment variable $RELEASE_DOCS_TOKEN is not set!')
 
 git_username = os.environ['RELEASE_DOCS_USERNAME']
 git_email = os.environ['RELEASE_DOCS_EMAIL']
