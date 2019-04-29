@@ -52,7 +52,7 @@ jobs:
           --source build-tools@$CIRCLE_SHA1 \
           --targets \
           graql:master grakn:master workbase:master docs:development examples:development \
-          client-java:master client-python:master client-nodejs:master
+          client-java:master client-python:master client-nodejs:master benchmark:master
 
 workflows:
   build-tools:
