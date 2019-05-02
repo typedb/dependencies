@@ -19,10 +19,13 @@ GRABL_HOST = 'https://grabl.grakn.ai'
 if not IS_CIRCLE_ENV:
     GRABL_HOST = 'http://localhost:8000'
 
+git_username = os.environ['RELEASE_APPROVAL_USERNAME']
+if git_token is None:
+    raise Exception('Environment variable $RELEASE_APPROVAL_USERNAME is not set!')
+
 git_token = os.getenv('RELEASE_APPROVAL_TOKEN')
 if git_token is None:
     raise Exception('Environment variable $RELEASE_APPROVAL_TOKEN is not set!')
-
 
 def check_output_discarding_stderr(*args, **kwargs):
     with open(os.devnull, 'w') as devnull:
@@ -66,7 +69,7 @@ while status == 'no-status':
 
         print('Release Approval received! Initiating release workflow ...')
         subprocess.check_output(['git', 'branch', release_branch, 'HEAD'], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
-        subprocess.check_output(['git', 'push', 'origin', release_branch + ':' + release_branch], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
+        subprocess.check_output(['git', 'push', '{0}:{1}@github.com/{2}/{3}.git'.format(git_username, git_token, organisation, repository), release_branch], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
         print('Initiated the release workflow on {0}/{1}:{2}'.format(organisation, repository, release_branch))
         print('You can monitor it at https://circleci.com/gh/{0}/workflows/{1}/tree/{2}'.format(organisation, repository, release_branch))
     elif status == 'do-not-deploy':
