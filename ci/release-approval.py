@@ -27,7 +27,7 @@ git_token = os.getenv('RELEASE_APPROVAL_TOKEN')
 if git_token is None:
     raise Exception('Environment variable $RELEASE_APPROVAL_TOKEN is not set!')
 
-def check_output_discarding_stderr(*args, **kwargs):
+def shell_execute(*args, **kwargs):
     with open(os.devnull, 'w') as devnull:
         try:
             output = sp.check_output(*args, stderr=sp.STDOUT, **kwargs)
@@ -52,7 +52,7 @@ grabl_url_status = '{GRABL_HOST}/release/{commit}/status'.format(GRABL_HOST=GRAB
 new_release_signature = hmac.new(git_token, json.dumps(grabl_data), hashlib.sha1).hexdigest()
 print("Tests have been ran and everything is in a good, releasable state. "
     "It is possible to proceed with the release process. Waiting for approval.")
-check_output_discarding_stderr([
+shell_execute([
     'curl', '--fail', '-X', 'POST', '--data', json.dumps(grabl_data), '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + new_release_signature, grabl_url_new
 ])
 
@@ -60,7 +60,7 @@ status = 'no-status'
 
 while status == 'no-status':
     get_release_status_signature = hmac.new(git_token, '', hashlib.sha1).hexdigest()
-    status = check_output_discarding_stderr(['curl', '--fail', '-H', 'X-Hub-Signature: ' + get_release_status_signature, grabl_url_status])
+    status = shell_execute(['curl', '--fail', '-H', 'X-Hub-Signature: ' + get_release_status_signature, grabl_url_status])
 
     if status == 'deploy':
         organisation = os.getenv('CIRCLE_PROJECT_USERNAME')
@@ -82,5 +82,4 @@ while status == 'no-status':
     # print '...' to provide a visual indication that it's waiting for an input
     sys.stdout.write('.')
     sys.stdout.flush()
-    print('-- {}'.format(status))
     time.sleep(1)

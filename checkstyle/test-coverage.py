@@ -21,13 +21,13 @@
 from __future__ import print_function
 import os
 from xml.etree import ElementTree
-import subprocess
+import subprocess as sp
 import sys
 
 
-def check_output_discarding_stderr(*args, **kwargs):
+def shell_execute(*args, **kwargs):
     with open(os.devnull, 'w') as devnull:
-        output = subprocess.check_output(*args, cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"), stderr=devnull, **kwargs)
+        output = sp.check_output(*args, cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"), stderr=sp.STDOUT, **kwargs)
         if type(output) == bytes:
             output = output.decode()
         return output
@@ -41,13 +41,13 @@ def try_decode(s):
 
 print('Checking if there are any source files not covered by checkstyle...')
 
-java_targets = check_output_discarding_stderr([
+java_targets = shell_execute([
     'bazel', 'query',
     '(kind(java_library, //...) union kind(java_test, //...)) '
     'except //dependencies/... except attr("tags", "checkstyle_ignore", //...)'
 ]).split()
 
-checkstyle_targets_xml = check_output_discarding_stderr([
+checkstyle_targets_xml = shell_execute([
     'bazel', 'query', 'kind(checkstyle_test, //...)', '--output', 'xml'
 ])
 checkstyle_targets_tree = ElementTree.fromstring(checkstyle_targets_xml)
