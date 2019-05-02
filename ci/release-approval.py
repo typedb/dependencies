@@ -82,5 +82,5 @@ while status == 'no-status':
     # print '...' to provide a visual indication that it's waiting for an input
     sys.stdout.write('.')
     sys.stdout.flush()
-
+    print('-- {}'.format(status))
     time.sleep(1)
