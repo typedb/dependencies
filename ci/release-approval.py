@@ -53,14 +53,14 @@ new_release_signature = hmac.new(git_token, json.dumps(grabl_data), hashlib.sha1
 print("Tests have been ran and everything is in a good, releasable state. "
     "It is possible to proceed with the release process. Waiting for approval.")
 check_output_discarding_stderr([
-    'curl', '-X', 'POST', '--data', json.dumps(grabl_data), '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + new_release_signature, grabl_url_new
+    'curl', '--fail', '-X', 'POST', '--data', json.dumps(grabl_data), '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + new_release_signature, grabl_url_new
 ])
 
 status = 'no-status'
 
 while status == 'no-status':
     get_release_status_signature = hmac.new(git_token, '', hashlib.sha1).hexdigest()
-    status = check_output_discarding_stderr(['curl', '-H', 'X-Hub-Signature: ' + get_release_status_signature, grabl_url_status])
+    status = check_output_discarding_stderr(['curl', '--fail', '-H', 'X-Hub-Signature: ' + get_release_status_signature, grabl_url_status])
 
     if status == 'deploy':
         organisation = os.getenv('CIRCLE_PROJECT_USERNAME')

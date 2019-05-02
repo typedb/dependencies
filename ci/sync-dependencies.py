@@ -132,7 +132,7 @@ def main():
 
     print('Sending post request to: ' + GRABL_SYNC_DEPS)
     check_output_discarding_stderr([
-        'curl', '-X', 'POST', '--data', sync_data_json, '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
+        'curl', '--fail', '-X', 'POST', '--data', sync_data_json, '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
     ])
     print('DONE!')
 
