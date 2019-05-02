@@ -20,7 +20,7 @@ if not IS_CIRCLE_ENV:
     GRABL_HOST = 'http://localhost:8000'
 
 git_username = os.environ['RELEASE_APPROVAL_USERNAME']
-if git_token is None:
+if git_username is None:
     raise Exception('Environment variable $RELEASE_APPROVAL_USERNAME is not set!')
 
 git_token = os.getenv('RELEASE_APPROVAL_TOKEN')
