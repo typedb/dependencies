@@ -14,7 +14,7 @@ from __future__ import print_function
 import argparse
 import json
 import os
-import subprocess
+import subprocess as sp
 import sys
 import github
 import hashlib
@@ -60,7 +60,7 @@ def exception_handler(fun):
         # pylint: disable=missing-docstring
         try:
             fun(*args, **kwargs)
-        except subprocess.CalledProcessError as ex:
+        except sp.CalledProcessError as ex:
             print('An error occurred when running {ex.cmd}. '
                   'Process exited with code {ex.returncode} '
                   'and message {ex.output}'.format(ex=ex))
@@ -70,21 +70,21 @@ def exception_handler(fun):
     return wrapper
 
 
-def check_output_discarding_stderr(*args, **kwargs):
+def shell_execute(*args, **kwargs):
     with open(os.devnull, 'w') as devnull:
         try:
-            output = subprocess.check_output(*args, stderr=devnull, **kwargs)
+            output = sp.check_output(*args, stderr=sp.STDOUT, **kwargs)
             if type(output) == bytes:
                 output = output.decode()
             return output
-        except subprocess.CalledProcessError as e:
+        except sp.CalledProcessError as e:
             print('An error occurred when running "' + str(e.cmd) + '". Process exited with code ' + str(
                 e.returncode) + ' and message "' + e.output + '"')
             raise e
 
 
 def short_commit(commit_sha):
-    return subprocess.check_output(['git', 'rev-parse', '--short=7', commit_sha],
+    return sp.check_output(['git', 'rev-parse', '--short=7', commit_sha],
                                    cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY")).decode().replace('\n', '')
 
 
@@ -131,8 +131,8 @@ def main():
     signature = hmac.new(GRABL_TOKEN, sync_data_json, hashlib.sha1).hexdigest()
 
     print('Sending post request to: ' + GRABL_SYNC_DEPS)
-    check_output_discarding_stderr([
-        'curl', '-X', 'POST', '--data', sync_data_json, '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
+    shell_execute([
+        'curl', '--silent', '--show-error', '--fail', '-X', 'POST', '--data', sync_data_json, '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
     ])
     print('DONE!')
 
