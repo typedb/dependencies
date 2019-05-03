@@ -27,7 +27,7 @@ import sys
 
 def shell_execute(*args, **kwargs):
     with open(os.devnull, 'w') as devnull:
-        output = sp.check_output(*args, cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"), stderr=sp.STDOUT, **kwargs)
+        output = sp.check_output(*args, cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"), stderr=devnull, **kwargs)
         if type(output) == bytes:
             output = output.decode()
         return output
