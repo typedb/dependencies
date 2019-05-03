@@ -47,7 +47,7 @@ jobs:
       - checkout
       - install-bazel-linux-rbe
       - run: |
-          export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN_GRABL
+          export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run //ci:sync-dependencies -- \
           --source build-tools@$CIRCLE_SHA1 \
           --targets \
