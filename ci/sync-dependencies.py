@@ -19,6 +19,7 @@ import sys
 import github
 import hashlib
 import hmac
+import re
 
 
 IS_CIRCLE_ENV = os.getenv('CIRCLECI')
@@ -41,6 +42,8 @@ CMDLINE_PARSER.add_argument('--source', required=True)
 CMDLINE_PARSER.add_argument('--targets', nargs='+', required=True)
 
 COMMIT_SUBJECT_PREFIX = "//ci:sync-dependencies:"
+regex_git_commit = r'[0-9a-f]{40}'
+regex_git_tag = r'([0-9]+\.[0-9]+\.[0-9]+)'
 
 graknlabs = 'graknlabs'
 github_token = os.getenv('SYNC_DEPENDENCIES_TOKEN')
@@ -96,32 +99,38 @@ def main():
 
     arguments = CMDLINE_PARSER.parse_args(sys.argv[1:])
     targets = {}
-    source_repo, source_commit = arguments.source.split('@')
-    source_commit_short = short_commit(source_commit)
+    source_repo, source_ref = arguments.source.split('@')
+
+    if re.match(regex_git_commit, source_ref) is not None:
+        source_ref_short = short_commit(source_ref)
+    elif re.match(regex_git_tag, source_ref) is not None:
+        source_ref_short = source_ref
+    else:
+        raise ValueError
 
     for target in arguments.targets:
         target_repo, target_branch = target.split(':')
         targets[target_repo] = target_branch
 
     github_repo = github_org.get_repo(source_repo)
-    github_commit = github_repo.get_commit(source_commit)
+    github_commit = github_repo.get_commit(source_ref)
     source_message = github_commit.commit.message
 
     # TODO: Check that the commit author is @grabl
     if not source_message.startswith(COMMIT_SUBJECT_PREFIX):
-        sync_message = '{0} {1}/{2}@{3}'.format(COMMIT_SUBJECT_PREFIX, graknlabs, source_repo, source_commit_short)
+        sync_message = '{0} {1}/{2}@{3}'.format(COMMIT_SUBJECT_PREFIX, graknlabs, source_repo, source_ref_short)
     else:
         sync_message = source_message
 
     print('Requesting the synchronisation of dependency to {0}/{1}@{2} in the following repos:'
-          .format(graknlabs, source_repo, source_commit_short))
+          .format(graknlabs, source_repo, source_ref_short))
     for target_repo in targets:
         print('- {0}/{1}:{2}'.format(graknlabs, target_repo, targets[target_repo]))
 
     print('Constructing request payload:')
     sync_data = {
         'source-repo': source_repo,
-        'source-commit': source_commit,
+        'source-ref': source_ref,
         'sync-message': sync_message,
         'targets': targets
     }
