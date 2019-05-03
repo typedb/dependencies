@@ -53,7 +53,7 @@ jobs:
           --targets \
           graql:master grakn:master grakn-kgms:master workbase:master benchmark:master \
           client-java:master client-python:master client-nodejs:master \
-          docs:development examples:development
+          docs:master examples:master
 
 workflows:
   build-tools:
