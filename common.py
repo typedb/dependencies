@@ -21,12 +21,11 @@ def shell_execute(args, **kwargs):
             err = err.decode()
 
         if process.returncode == 0:
-            print('cmd = {}\nout = {}\nerr = {}'.format(args, out, err))
             return out, err
         else:
             raise RuntimeError('An error occurred.\n' +
                                '- Command = "'+ str(args) + '"\n' +
                                '- Exit code = "' + str(process.returncode) + '"\n' +
-                               '- Working directory = "' + str(cwd) + '"\n' +
+                               '- Working directory = "' + str(os.getcwd()) + '"\n' +
                                '- stdout = "' + out + '"\n' +
                                '- stderr = "' + err + '"\n')

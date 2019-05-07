@@ -20,6 +20,7 @@
 
 from __future__ import print_function
 import common
+import os
 import sys
 from xml.etree import ElementTree
 
@@ -37,12 +38,12 @@ if __name__ == '__main__':
         'bazel', 'query',
         '(kind(java_library, //...) union kind(java_test, //...)) '
         'except //dependencies/... except attr("tags", "checkstyle_ignore", //...)'
-    ], cwd='/Users/lolski/grakn.ai/grakn') # ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
+    ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
     java_targets = java_targets.split()
 
     checkstyle_targets_xml, _ = common.shell_execute([
         'bazel', 'query', 'kind(checkstyle_test, //...)', '--output', 'xml'
-    ], cwd='/Users/lolski/grakn.ai/grakn') # ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
+    ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
     checkstyle_targets_tree = ElementTree.fromstring(checkstyle_targets_xml)
     java_targets_covered_by_target_attr = checkstyle_targets_tree.findall(".//label[@name='target'][@value]")
     java_targets_covered_by_targets_attr = checkstyle_targets_tree.findall(".//list[@name='targets']//label[@value]")
