@@ -49,7 +49,7 @@ status = 'no-status'
 
 while status == 'no-status':
     get_release_status_signature = hmac.new(git_token, '', hashlib.sha1).hexdigest()
-    status = common.shell_execute(['curl', '--silent', '--show-error', '--fail', '-H', 'X-Hub-Signature: ' + get_release_status_signature, grabl_url_status])
+    status, _ = common.shell_execute(['curl', '--silent', '--show-error', '--fail', '-H', 'X-Hub-Signature: ' + get_release_status_signature, grabl_url_status])
 
     if status == 'deploy':
         organisation = os.getenv('CIRCLE_PROJECT_USERNAME')

@@ -34,13 +34,13 @@ def try_decode(s):
 
 print('Checking if there are any source files not covered by checkstyle...')
 
-java_targets = common.shell_execute([
+java_targets, _ = common.shell_execute([
     'bazel', 'query',
     '(kind(java_library, //...) union kind(java_test, //...)) '
     'except //dependencies/... except attr("tags", "checkstyle_ignore", //...)'
 ]).split()
 
-checkstyle_targets_xml = common.shell_execute([
+checkstyle_targets_xml, _ = common.shell_execute([
     'bazel', 'query', 'kind(checkstyle_test, //...)', '--output', 'xml'
 ])
 checkstyle_targets_tree = ElementTree.fromstring(checkstyle_targets_xml)
