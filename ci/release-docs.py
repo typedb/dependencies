@@ -29,6 +29,11 @@ git_remote = "github.com/{0}/{1}.git".format(git_org, git_repo)
 git_clone_dir = os.path.join("web-dev")
 git_clone_submod_dir = os.path.join(git_clone_dir, "docs")
 
+
+def short_commit(commit_sha):
+    return sp.check_output(['git', 'rev-parse', '--short=7', commit_sha],
+                           cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY")).decode().replace('\n', '')
+
 if __name__ == '__main__':
     try:
         print('Starting the process of deploying {0} to {1}:{2}'.format(git_submod_repo, git_repo, git_branch))
@@ -49,7 +54,7 @@ if __name__ == '__main__':
         # the command returns 1 if there is a staged file. otherwise, it will return 0
         should_commit = sp.call(["git", "diff", "--staged", "--exit-code"], cwd=git_clone_dir) == 1
         if should_commit:
-            git_commit_msg = "//ci:release-docs: {0}/{1}@{2}".format(git_org, git_submod_repo, git_submod_commit)
+            git_commit_msg = "//ci:release-docs: {0}/{1}@{2}".format(git_org, git_submod_repo, short_commit(git_submod_commit))
             print('Committing {0}:{1} with message {2}'.format(git_repo, git_branch, git_commit_msg))
             sp.check_call(["git", "commit", "-m", git_commit_msg], cwd=git_clone_dir)
             print('Pushing changes to {0}'.format(git_remote))
