@@ -2,14 +2,14 @@
 
 from __future__ import print_function
 
-import os
-import subprocess as sp
-import json
-import time
-import sys
+import common
 import hashlib
 import hmac
-
+import json
+import os
+import subprocess as sp
+import sys
+import time
 
 IS_CIRCLE_ENV = os.getenv('CIRCLECI')
 if IS_CIRCLE_ENV is None:
@@ -27,17 +27,6 @@ git_token = os.getenv('RELEASE_APPROVAL_TOKEN')
 if git_token is None:
     raise Exception('Environment variable $RELEASE_APPROVAL_TOKEN is not set!')
 
-def shell_execute(*args, **kwargs):
-    with open(os.devnull, 'w') as devnull:
-        try:
-            output = sp.check_output(*args, stderr=sp.STDOUT, **kwargs)
-            if type(output) == bytes:
-                output = output.decode()
-            return output
-        except sp.CalledProcessError as e:
-            print('An error occurred when running "' + str(e.cmd) + '". Process exited with code ' + str(
-                e.returncode) + ' and message "' + e.output + '"')
-            raise e
 
 workflow_id = os.getenv('CIRCLE_WORKFLOW_ID')
 
@@ -52,7 +41,7 @@ grabl_url_status = '{GRABL_HOST}/release/{commit}/status'.format(GRABL_HOST=GRAB
 new_release_signature = hmac.new(git_token, json.dumps(grabl_data), hashlib.sha1).hexdigest()
 print("Tests have been ran and everything is in a good, releasable state. "
     "It is possible to proceed with the release process. Waiting for approval.")
-shell_execute([
+common.shell_execute([
     'curl', '--silent', '--show-error', '--fail', '-X', 'POST', '--data', json.dumps(grabl_data), '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + new_release_signature, grabl_url_new
 ])
 
@@ -60,7 +49,7 @@ status = 'no-status'
 
 while status == 'no-status':
     get_release_status_signature = hmac.new(git_token, '', hashlib.sha1).hexdigest()
-    status = shell_execute(['curl', '--silent', '--show-error', '--fail', '-H', 'X-Hub-Signature: ' + get_release_status_signature, grabl_url_status])
+    status = common.shell_execute(['curl', '--silent', '--show-error', '--fail', '-H', 'X-Hub-Signature: ' + get_release_status_signature, grabl_url_status])
 
     if status == 'deploy':
         organisation = os.getenv('CIRCLE_PROJECT_USERNAME')
