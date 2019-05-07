@@ -58,7 +58,9 @@ while status == 'no-status':
 
         print('Release Approval received! Initiating release workflow ...')
         sp.check_output(['git', 'branch', release_branch, 'HEAD'], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
-        sp.check_output(['git', 'push', 'https://{0}:{1}@github.com/{2}/{3}.git'.format(git_username, git_token, organisation, repository), release_branch], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
+        sp.check_output(['bash', '-c', 'git push https://{0}:{1}@github.com/{2}/{3}.git {4}'
+                        .format(git_username, git_token, organisation, repository, release_branch)],
+                        cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
         print('Initiated the release workflow on {0}/{1}:{2}'.format(organisation, repository, release_branch))
         print('You can monitor it at https://circleci.com/gh/{0}/workflows/{1}/tree/{2}'.format(organisation, repository, release_branch))
     elif status == 'do-not-deploy':
