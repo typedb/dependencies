@@ -19,18 +19,10 @@
 #
 
 from __future__ import print_function
+import common
 import os
-from xml.etree import ElementTree
-import subprocess as sp
 import sys
-
-
-def shell_execute(*args, **kwargs):
-    with open(os.devnull, 'w') as devnull:
-        output = sp.check_output(*args, cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"), stderr=devnull, **kwargs)
-        if type(output) == bytes:
-            output = output.decode()
-        return output
+from xml.etree import ElementTree
 
 
 def try_decode(s):
@@ -39,40 +31,41 @@ def try_decode(s):
     return s
 
 
-print('Checking if there are any source files not covered by checkstyle...')
+if __name__ == '__main__':
+    print('Checking if there are any source files not covered by checkstyle...')
 
-java_targets = shell_execute([
-    'bazel', 'query',
-    '(kind(java_library, //...) union kind(java_test, //...)) '
-    'except //dependencies/... except attr("tags", "checkstyle_ignore", //...)'
-]).split()
+    java_targets, _ = common.shell_execute([
+        'bazel', 'query',
+        '(kind(java_library, //...) union kind(java_test, //...)) '
+        'except //dependencies/... except attr("tags", "checkstyle_ignore", //...)'
+    ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
+    java_targets = java_targets.split()
 
-checkstyle_targets_xml = shell_execute([
-    'bazel', 'query', 'kind(checkstyle_test, //...)', '--output', 'xml'
-])
-checkstyle_targets_tree = ElementTree.fromstring(checkstyle_targets_xml)
-java_targets_covered_by_target_attr = checkstyle_targets_tree.findall(".//label[@name='target'][@value]")
-java_targets_covered_by_targets_attr = checkstyle_targets_tree.findall(".//list[@name='targets']//label[@value]")
-checkstyle_targets = list(map(
-    lambda x: x.get('value'), java_targets_covered_by_target_attr + java_targets_covered_by_targets_attr))
-unique_checkstyle_targets = set(checkstyle_targets)
+    checkstyle_targets_xml, _ = common.shell_execute([
+        'bazel', 'query', 'kind(checkstyle_test, //...)', '--output', 'xml'
+    ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
+    checkstyle_targets_tree = ElementTree.fromstring(checkstyle_targets_xml)
+    java_targets_covered_by_target_attr = checkstyle_targets_tree.findall(".//label[@name='target'][@value]")
+    java_targets_covered_by_targets_attr = checkstyle_targets_tree.findall(".//list[@name='targets']//label[@value]")
+    checkstyle_targets = list(map(
+        lambda x: x.get('value'), java_targets_covered_by_target_attr + java_targets_covered_by_targets_attr))
+    unique_checkstyle_targets = set(checkstyle_targets)
 
-if len(unique_checkstyle_targets) != len(checkstyle_targets):
-    non_unique_checkstyle_target = set([x for x in checkstyle_targets if checkstyle_targets.count(x) > 1])
-    non_unique_checkstyle_target_count = len(non_unique_checkstyle_target)
-    print('ERROR: Found %d bazel targets which are covered more than once:' % non_unique_checkstyle_target_count)
-    for i, target_label in enumerate(non_unique_checkstyle_target, start=1):
-        print('%d: %s' % (i, target_label))
-    sys.exit(1)
+    if len(unique_checkstyle_targets) != len(checkstyle_targets):
+        non_unique_checkstyle_target = set([x for x in checkstyle_targets if checkstyle_targets.count(x) > 1])
+        non_unique_checkstyle_target_count = len(non_unique_checkstyle_target)
+        print('ERROR: Found %d bazel targets which are covered more than once:' % non_unique_checkstyle_target_count)
+        for i, target_label in enumerate(non_unique_checkstyle_target, start=1):
+            print('%d: %s' % (i, target_label))
+        sys.exit(1)
 
+    java_targets_with_no_checkstyle = set(java_targets) - set(checkstyle_targets)
+    target_count = len(java_targets_with_no_checkstyle)
 
-java_targets_with_no_checkstyle = set(java_targets) - set(checkstyle_targets)
-target_count = len(java_targets_with_no_checkstyle)
-
-if java_targets_with_no_checkstyle:
-    print('ERROR: Found %d bazel targets which are not covered by a `checkstyle_test`:' % target_count)
-    for i, target_label in enumerate(java_targets_with_no_checkstyle, start=1):
-        print('%d: %s' % (i, target_label))
-    sys.exit(1)
-else:
-    print('SUCCESS: Every source code is covered by a `checkstyle_test`!')
+    if java_targets_with_no_checkstyle:
+        print('ERROR: Found %d bazel targets which are not covered by a `checkstyle_test`:' % target_count)
+        for i, target_label in enumerate(java_targets_with_no_checkstyle, start=1):
+            print('%d: %s' % (i, target_label))
+        sys.exit(1)
+    else:
+        print('SUCCESS: Every source code is covered by a `checkstyle_test`!')

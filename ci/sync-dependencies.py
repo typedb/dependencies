@@ -12,14 +12,15 @@ bazel run @graknlabs_build_tools//ci:sync-dependencies -- \
 from __future__ import print_function
 
 import argparse
-import json
-import os
-import subprocess as sp
-import sys
+import common
 import github
 import hashlib
 import hmac
+import json
+import os
 import re
+import subprocess as sp
+import sys
 
 
 IS_CIRCLE_ENV = os.getenv('CIRCLECI')
@@ -71,19 +72,6 @@ def exception_handler(fun):
             raise ex
 
     return wrapper
-
-
-def shell_execute(*args, **kwargs):
-    with open(os.devnull, 'w') as devnull:
-        try:
-            output = sp.check_output(*args, stderr=sp.STDOUT, **kwargs)
-            if type(output) == bytes:
-                output = output.decode()
-            return output
-        except sp.CalledProcessError as e:
-            print('An error occurred when running "' + str(e.cmd) + '". Process exited with code ' + str(
-                e.returncode) + ' and message "' + e.output + '"')
-            raise e
 
 
 def short_commit(commit_sha):
@@ -140,7 +128,7 @@ def main():
     signature = hmac.new(GRABL_TOKEN, sync_data_json, hashlib.sha1).hexdigest()
 
     print('Sending post request to: ' + GRABL_SYNC_DEPS)
-    shell_execute([
+    common.shell_execute([
         'curl', '-X', 'POST', '--data', sync_data_json, '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
         # 'curl', '--silent', '--show-error', '--fail', '-X', 'POST', '--data', sync_data_json, '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
     ])

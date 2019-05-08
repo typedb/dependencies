@@ -24,6 +24,7 @@ py_binary(
     srcs = ["sync-dependencies.py"],
     main = "sync-dependencies.py",
     deps = [
+        "//:common",
         requirement("PyGithub"),
         requirement("urllib3"),
         requirement("chardet"),
@@ -42,7 +43,8 @@ py_binary(
 py_binary(
     name = "release-approval",
     srcs = ["release-approval.py"],
-    main = "release-approval.py"
+    main = "release-approval.py",
+    deps = [ "//:common"]
 )
 
 sh_binary(

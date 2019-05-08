@@ -19,5 +19,6 @@
 py_binary(
     name = "test-coverage",
     srcs = ["test-coverage.py"],
-    main = "test-coverage.py"
+    main = "test-coverage.py",
+    deps = ["//:common"]
 )
