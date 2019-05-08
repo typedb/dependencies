@@ -55,3 +55,9 @@ py_binary(
     srcs = ["run-bazel-rbe.py"],
     main = "run-bazel-rbe.py"
 )
+
+py_binary(
+    name = "test-cache",
+    srcs = ["test-cache.py"],
+    main = "test-cache.py"
+)
