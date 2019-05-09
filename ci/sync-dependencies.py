@@ -130,7 +130,6 @@ def main():
     print('Sending post request to: ' + GRABL_SYNC_DEPS)
     common.shell_execute([
         'curl', '-X', 'POST', '--data', sync_data_json, '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
-        # 'curl', '--silent', '--show-error', '--fail', '-X', 'POST', '--data', sync_data_json, '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
     ])
     print('DONE!')
 
