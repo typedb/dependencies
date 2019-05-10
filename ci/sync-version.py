@@ -38,11 +38,11 @@ with open(version_fn) as version_file:
     version = version_file.read().strip().split('.')
 
 if len(version) != 3:
-    raise Exception('Version file should contain \'major.minor.patch\'')
+    raise Exception('Version file should be in the following format: \'x.y.z\'')
 
 logger.debug('Read version %s from version file %s', '.'.join(version), version_fn)
 # bump patch version
-version = '.'.join(*((major, minor, str(int(patch)+1)) for major, minor, patch in [version]))
+version = '.'.join(*((x, y, str(int(z) + 1)) for x, y, z in [version]))
 logger.debug('Writing back version %s into version file %s', version, version_fn)
 
 with open(version_fn, 'w') as version_file:
