@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-exports_files(["requirements.txt"])
+exports_files(["requirements.txt", "sync-version.py"])
 load("@graknlabs_build_tools_ci_pip//:requirements.bzl", "requirement")
 
 py_binary(
