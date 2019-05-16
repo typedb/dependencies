@@ -25,7 +25,10 @@ platform(
     name = "rbe-ubuntu1604-network-standard",
     parents = ["@bazel_toolchains//configs/ubuntu16_04_clang/1.1:rbe_ubuntu1604"],
     remote_execution_properties = """
-        {PARENT_REMOTE_EXECUTION_PROPERTIES}
+        properties: {
+            name: "container-image"
+            value: "docker://gcr.io/grakn-dev/rbe_platform@sha256:e45b81a193c7b783c92db389655664d353ffb1fdf219577c5ced7b7d86795246"
+        }
         properties: {
           name: "dockerNetwork"
           value: "standard"
