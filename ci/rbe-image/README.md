@@ -2,7 +2,7 @@
 
 ## Purpose
 
-We've built a custom RBE image that includes `rpmbuild` which is needed for building `pkg_rpm` targets.
+We’ve built a custom RBE image that includes `rpmbuild` which will allow executing `pkg_rpm` on RBE.
 The goal, however, is to keep as close to upstream as possible, so it's built on a stock 'base' image that is used 
 by RBE.
 
