@@ -104,7 +104,7 @@ if __name__ == '__main__':
     with open(release_template_filepath) as filepath:
         release_notes_content = filepath.read()
 
-    release_notes_content = re.sub(release_notes_template_regex, release_notes, release_notes_content, 1)
+    release_notes_content = re.sub(release_notes_template_regex, release_notes, release_notes_content, 1, flags=re.IGNORECASE)
 
     with open(release_template_filepath, 'w') as filepath:
         filepath.write(release_notes_content)
