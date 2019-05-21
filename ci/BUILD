@@ -47,6 +47,19 @@ py_binary(
     deps = [ "//:common"]
 )
 
+py_binary(
+    name = "release-notes",
+    srcs = ["release-notes.py"],
+    main = "release-notes.py",
+    deps = [
+        requirement("PyGithub"),
+        requirement("urllib3"),
+        requirement("chardet"),
+        requirement("idna"),
+        requirement("wrapt"),
+    ]
+)
+
 sh_binary(
     name = "install-bazel-rbe",
     srcs = ["install-bazel-rbe.sh"]

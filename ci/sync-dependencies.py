@@ -27,8 +27,8 @@ IS_CIRCLE_ENV = os.getenv('CIRCLECI')
 if IS_CIRCLE_ENV is None:
     IS_CIRCLE_ENV = False
 
-GRABL_TOKEN = os.getenv('SYNC_DEPENDENCIES_TOKEN')
-if GRABL_TOKEN is None:
+GITHUB_TOKEN = os.getenv('SYNC_DEPENDENCIES_TOKEN')
+if GITHUB_TOKEN is None:
     raise Exception("$SYNC_DEPENDENCIES_TOKEN is not set!")
 
 GRABL_HOST = 'https://grabl.grakn.ai'
@@ -47,8 +47,7 @@ regex_git_commit = r'[0-9a-f]{40}'
 regex_git_tag = r'([0-9]+\.[0-9]+\.[0-9]+)'
 
 graknlabs = 'graknlabs'
-github_token = os.getenv('SYNC_DEPENDENCIES_TOKEN')
-github_connection = github.Github(github_token)
+github_connection = github.Github(GITHUB_TOKEN)
 github_org = github_connection.get_organization(graknlabs)
 
 
@@ -125,7 +124,7 @@ def main():
     print(str(sync_data))
 
     sync_data_json = json.dumps(sync_data)
-    signature = hmac.new(GRABL_TOKEN, sync_data_json, hashlib.sha1).hexdigest()
+    signature = hmac.new(GITHUB_TOKEN, sync_data_json, hashlib.sha1).hexdigest()
 
     print('Sending post request to: ' + GRABL_SYNC_DEPS)
     common.shell_execute([
