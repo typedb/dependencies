@@ -79,25 +79,29 @@ if __name__ == '__main__':
 
     release_notes = ""
 
-    release_notes += "\n## New Features\n\n"
+    release_notes += "## New Features\n\n"
     for pull in pull_features:
         release_notes += pull_request_notes(pull)
         release_notes += "\n"
+    release_notes += "\n"
 
-    release_notes += "\n## Bugs Fixed\n\n"
+    release_notes += "## Bugs Fixed\n\n"
     for pull in pull_bugs:
         release_notes += pull_request_notes(pull)
         release_notes += "\n"
+    release_notes += "\n"
 
-    release_notes += "\n## Code Refactors\n\n"
+    release_notes += "## Code Refactors\n\n"
     for pull in pull_refactors:
         release_notes += pull_request_notes(pull)
         release_notes += "\n"
+    release_notes += "\n"
 
-    release_notes += "\n## Other Improvements\n\n"
+    release_notes += "## Other Improvements\n\n"
     for pull in pull_others:
         release_notes += pull_request_notes(pull)
         release_notes += "\n"
+    release_notes += "\n"
 
     release_template_filepath = os.path.join(os.getenv("BUILD_WORKSPACE_DIRECTORY"), release_template_file)
 
