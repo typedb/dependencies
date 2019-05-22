@@ -23,11 +23,11 @@ exports_files(["deployment.properties"], visibility = ["//visibility:public"])
 # but with an additional setting dockerNetwork = standard because our tests need network access
 platform(
     name = "rbe-ubuntu1604-network-standard",
-    parents = ["@bazel_toolchains//configs/ubuntu16_04_clang/1.1:rbe_ubuntu1604"],
+    parents = ["@bazel_toolchains//configs/ubuntu16_04_clang/9.0.0/bazel_0.25.2/config:platform"],
     remote_execution_properties = """
         properties: {
             name: "container-image"
-            value: "docker://gcr.io/grakn-dev/rbe_platform@sha256:e45b81a193c7b783c92db389655664d353ffb1fdf219577c5ced7b7d86795246"
+            value: "docker://gcr.io/grakn-dev/rbe_platform@sha256:c64a67d102e1842563f46c0be534a52e0138e5ec90bf74e2047471019e107bc6"
         }
         properties: {
           name: "dockerNetwork"
