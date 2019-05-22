@@ -108,3 +108,5 @@ if __name__ == '__main__':
 
     with open(release_template_filepath, 'w') as filepath:
         filepath.write(release_notes_content)
+
+    release_milestone.edit(release_milestone.title, state="closed")
