@@ -16,7 +16,10 @@ import java.util.regex.Pattern;
 
 public class SingleJar {
     private final static Pattern JAVA_PACKAGE_PATTERN = Pattern.compile("package\\s+([\\w.]+);");
-    private final static String SINGLEJAR_EXECUTABLE = "/tools/jdk/singlejar/singlejar";
+    // bazel v0.25.2 and before
+    private final static String SINGLEJAR_EXECUTABLE_OLD = "/tools/jdk/singlejar/singlejar";
+    // bazel v0.26.0 and onwards
+    private final static String SINGLEJAR_EXECUTABLE = "/tools/singlejar/singlejar_local";
 
     private static String javaPackage(String sourcePath) throws IOException {
         for (String line: Files.readAllLines(Paths.get(sourcePath))) {
@@ -39,7 +42,16 @@ public class SingleJar {
         int i;
         byte[] buf = new byte[8192];
 
-        try (InputStream fileStream = SingleJar.class.getResourceAsStream(SINGLEJAR_EXECUTABLE);
+        InputStream is;
+        is = SingleJar.class.getResourceAsStream(SINGLEJAR_EXECUTABLE_OLD);
+        if (is == null) {
+            is = SingleJar.class.getResourceAsStream(SINGLEJAR_EXECUTABLE);
+        }
+        if (is == null) {
+            throw new RuntimeException("Could not find singlejar executable in JAR");
+        }
+
+        try (InputStream fileStream = is;
              OutputStream out = new FileOutputStream(singlejar)) {
 
             while ((i = fileStream.read(buf)) != -1) {
