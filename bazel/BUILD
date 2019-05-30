@@ -41,11 +41,7 @@ default_java_toolchain(
     name = "java-toolchain",
     source_version = "8",
     target_version = "8",
-    singlejar = select({
-        "@bazel_tools//src/conditions:remote": ["@remote_java_tools_linux//:SingleJar"],
-        "@bazel_tools//src/conditions:windows": ["@remote_java_tools_windows//:SingleJar"],
-        "//conditions:default": [":singlejar_deploy.jar"]
-    }),
+    singlejar = [":singlejar_deploy.jar"],
     visibility = ["//visibility:public"],
 )
 

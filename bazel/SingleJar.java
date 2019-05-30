@@ -16,13 +16,19 @@ import java.util.regex.Pattern;
 
 public class SingleJar {
     private final static Pattern JAVA_PACKAGE_PATTERN = Pattern.compile("package\\s+([\\w.]+);");
-    // bazel v0.25.2 and before
-    private final static String SINGLEJAR_EXECUTABLE_OLD = "/tools/jdk/singlejar/singlejar";
-    // bazel v0.26.0 and onwards
-    private final static String SINGLEJAR_EXECUTABLE = "/tools/singlejar/singlejar_local";
+    private final static String[] SINGLEJAR_LOCATIONS = {
+            // bazel v0.25.2 and before [Linux/macOS]
+            "/tools/jdk/singlejar/singlejar",
+            // bazel v0.26.0 and onwards [Linux/macOS]
+            "/tools/singlejar/singlejar_local",
+            // bazel v0.25.2 and before [Windows]
+            "/tools/jdk/singlejar/singlejar.exe",
+            // bazel v0.26.0 and onwards [Windows]
+            "/tools/singlejar/singlejar_local.exe"
+    };
 
     private static String javaPackage(String sourcePath) throws IOException {
-        for (String line: Files.readAllLines(Paths.get(sourcePath))) {
+        for (String line : Files.readAllLines(Paths.get(sourcePath))) {
             Matcher lineMatcher = JAVA_PACKAGE_PATTERN.matcher(line);
             if (lineMatcher.find()) {
                 return lineMatcher.group(1);
@@ -42,11 +48,15 @@ public class SingleJar {
         int i;
         byte[] buf = new byte[8192];
 
-        InputStream is;
-        is = SingleJar.class.getResourceAsStream(SINGLEJAR_EXECUTABLE_OLD);
-        if (is == null) {
-            is = SingleJar.class.getResourceAsStream(SINGLEJAR_EXECUTABLE);
+        InputStream is = null;
+        for (String singleJarLocation : SINGLEJAR_LOCATIONS) {
+            // iterate over all possible locations of singlejar
+            is = SingleJar.class.getResourceAsStream(singleJarLocation);
+            if (is != null) {
+                break;
+            }
         }
+
         if (is == null) {
             throw new RuntimeException("Could not find singlejar executable in JAR");
         }
