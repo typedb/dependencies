@@ -19,6 +19,7 @@
 #
 
 import os
+import platform
 import sys
 import subprocess as sp
 
@@ -36,8 +37,9 @@ def add_rbe_param(cmd):
 
 
 command = ' '.join(sys.argv[1:])
+is_linux = platform.system() == 'Linux'
 
-if os.path.isfile(os.path.expanduser('~/.config/gcloud/application_default_credentials.json')):
+if is_linux and os.path.isfile(os.path.expanduser('~/.config/gcloud/application_default_credentials.json')):
     print('Bazel will be executed with RBE support. '
           'This means the build is remotely executed '
           'and the cache will be re-used by subsequent CI jobs.')
