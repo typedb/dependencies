@@ -18,6 +18,7 @@
 
 workspace(name = "graknlabs_build_tools")
 
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("//bazel:dependencies.bzl","bazel_common", "bazel_deps", "bazel_toolchain",
      "bazel_rules_nodejs", "bazel_rules_python")
 bazel_common()
@@ -60,3 +61,21 @@ load("//bazel:rules.bzl", "workspace_refs")
 workspace_refs(
     name = "graknlabs_build_tools_workspace_refs"
 )
+
+git_repository(
+    name = "io_bazel_skydoc",
+    remote = "https://github.com/graknlabs/skydoc.git",
+    branch = "experimental-skydoc-allow-dep-on-bazel-tools",
+)
+
+load("@io_bazel_skydoc//:setup.bzl", "skydoc_repositories")
+skydoc_repositories()
+
+load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
+rules_sass_dependencies()
+
+load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
+node_repositories()
+
+load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
+sass_repositories()
