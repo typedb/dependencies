@@ -101,21 +101,25 @@ public class SingleJar {
 
 
     public static void main(String[] args) throws IOException, InterruptedException {
+        List<String> singleJarWithArgs = new ArrayList<>(args.length);
+
         for (String arg : args) {
+            String newArg = arg;
             if (arg.startsWith("@") && arg.endsWith(".params")) {
                 // @fn signifies that command-line arguments
                 // will be expanded from file with name 'fn'
                 Path fn = Paths.get(arg.replace("@", ""));
                 String[] lines = Files.readAllLines(fn).toArray(new String[0]);
                 patchSourceJarLinks(lines);
-                Files.write(fn, Arrays.asList(lines));
-                break;
+
+                File paramsFile = File.createTempFile("patched.params", "");
+                Files.write(paramsFile.toPath(), Arrays.asList(lines));
+                newArg = "@" + paramsFile.toPath().toString();
             }
+            singleJarWithArgs.add(newArg);
         }
 
-        List<String> singleJarWithArgs = new ArrayList<>(Arrays.asList(args));
         singleJarWithArgs.add(0, unpackSingleJar());
-
         Process process = new ProcessBuilder(singleJarWithArgs).inheritIO().start();
         System.exit(process.waitFor());
     }
