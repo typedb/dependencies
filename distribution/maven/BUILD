@@ -22,8 +22,8 @@ genrule(
         "@graknlabs_bazel_distribution//maven/templates:rules.bzl",
         "@graknlabs_build_tools//:deployment.properties"
     ],
-    tools = ["@graknlabs_bazel_distribution//maven:deployment_rules_builder.py"],
-    cmd = "$(location @graknlabs_bazel_distribution//maven:deployment_rules_builder.py) " +
+    tools = ["@graknlabs_bazel_distribution//maven:deployment_rules_builder"],
+    cmd = "$(location @graknlabs_bazel_distribution//maven:deployment_rules_builder) " +
         "$(location @graknlabs_bazel_distribution//maven/templates:rules.bzl) $@ " +
         "$(location @graknlabs_build_tools//:deployment.properties) " +
         "@graknlabs_build_tools//:deployment.properties",
