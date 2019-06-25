@@ -58,7 +58,7 @@ if __name__ == '__main__':
     pull_others = []
     for issue in release_milestone_issues:
         if issue.state != "closed":
-            raise Exception("Issue/PR {0} is no closed. "
+            raise Exception("At least issue/PR #{0} is not closed. There may be others too. "
                             "Please close all issues & PRs in milestone {1} before proceeding."
                             .format(issue.number, release_milestone.title))
         elif issue.pull_request is not None:
