@@ -120,7 +120,7 @@ def _maven_pom_deps_impl(_target, ctx):
     return [MavenPomInfo(maven_pom_deps = deps_coordinates)]
 
 # Filled in by deployment_rules_builder
-_maven_packages = "api,client-java,common,concept,console,daemon,grammar,java,protocol,server".split(",")
+_maven_packages = "api,client-java,common,concept,console,daemon,grammar,java,keyspace,session,server".split(",")
 _maven_pom_deps = aspect(
     attr_aspects = [
         "jars",
