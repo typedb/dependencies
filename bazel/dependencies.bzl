@@ -39,7 +39,8 @@ def bazel_toolchain():
 def bazel_deps():
     http_jar(
         name = "bazel_deps",
-        urls = ["https://github.com/lolski/bazel-deps/releases/download/0.3/parseproject_deploy.jar"],
+        executable = True,
+        urls = ["https://github.com/graknlabs/bazel-deps/releases/download/0.3/grakn-bazel-deps-0.3.jar"],
     )
 
 def bazel_rules_docker():
