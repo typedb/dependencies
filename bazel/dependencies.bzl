@@ -39,8 +39,7 @@ def bazel_toolchain():
 def bazel_deps():
     http_jar(
         name = "bazel_deps",
-        sha256 = "43278a0042e253384543c4700021504019c1f51f3673907a1b25bb1045461c0c",
-        urls = ["https://github.com/graknlabs/bazel-deps/releases/download/v0.2/grakn-bazel-deps-v0.2.jar"],
+        urls = ["https://github.com/graknlabs/bazel-deps/releases/download/0.3/grakn-bazel-deps-0.3.jar"],
     )
 
 def bazel_rules_docker():
