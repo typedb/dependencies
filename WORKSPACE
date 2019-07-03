@@ -65,7 +65,7 @@ graknlabs_build_tools_ci_pip_install = "pip_install")
 graknlabs_build_tools_ci_pip_install()
 
 # Generate a JSON document of commit hashes of all external workspace dependencies
-load("//bazel:rules.bzl", "workspace_refs")
+load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")
 workspace_refs(
     name = "graknlabs_build_tools_workspace_refs"
 )

@@ -51,8 +51,9 @@ jobs:
           bazel run //ci:sync-dependencies -- \
           --source build-tools@$CIRCLE_SHA1 \
           --targets \
-          graql:master grakn:master grakn-kgms:master workbase:master benchmark:master biograkn:master \
+          graql:master grakn:master grakn-kgms:master protocol:master \
           client-java:master client-python:master client-nodejs:master \
+          benchmark:master biograkn:master workbase:master \
           docs:master examples:master
 
 workflows:
