@@ -54,7 +54,7 @@ def bazel_rules_nodejs():
     git_repository(
         name = "build_bazel_rules_nodejs",
         remote = "https://github.com/graknlabs/rules_nodejs.git",
-        commit = "bf925edc794ebaba1586fb3487d451f84edaf635",
+        commit = "ae55e5b839aad78dd12a11ea4fe9601664c40a96",
     )
 
 def bazel_rules_python():
