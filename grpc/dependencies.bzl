@@ -27,5 +27,5 @@ def grpc_dependencies():
     git_repository(
         name = "stackb_rules_proto",
         remote = "https://github.com/stackb/rules_proto",
-        commit = "e783457abea020e7df6b94acb54f668c0473ae31",
+        commit = "d9a123032f8436dbc34069cfc3207f2810a494ee",
     )
