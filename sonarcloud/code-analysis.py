@@ -31,6 +31,7 @@ if not credential:
 parser = argparse.ArgumentParser()
 parser.add_argument('--project-key', help='Sonarcloud project key', required=True)
 parser.add_argument('--organisation', help='Sonarcloud organisation', required=True)
+parser.add_argument('--commit-id', help='git commit id', required=True)
 args = parser.parse_args()
 
 tmpdir = None
@@ -42,6 +43,7 @@ try:
     sp.check_call([os.path.join(tmpdir, 'bin', 'sonar-scanner'),
         '-Dsonar.projectKey=' + args.project_key,
         '-Dsonar.organization=' + args.organisation,
+        '-Dsonar.projectVersion=' + args.commit_id,
         '-Dsonar.sources=.',
         '-Dsonar.java.binaries=.',
         '-Dsonar.java.libraries=.',
