@@ -49,6 +49,9 @@ pip_repositories()
 load("//checkstyle:dependencies.bzl", "checkstyle_dependencies")
 checkstyle_dependencies()
 
+load("//sonarcloud:dependencies.bzl", "sonarcloud_dependencies")
+sonarcloud_dependencies()
+
 load("//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
 graknlabs_bazel_distribution()
 
