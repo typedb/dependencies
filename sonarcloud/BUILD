@@ -1,6 +1,6 @@
 py_binary(
-    name = "analyse",
-    srcs = ["analyse.py"],
-    main = "analyse.py",
+    name = "code-analysis",
+    srcs = ["code-analysis.py"],
+    main = "code-analysis.py",
     data = [ "@sonarscanner_zip//file"]
 )
