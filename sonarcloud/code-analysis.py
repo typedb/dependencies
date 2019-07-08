@@ -24,9 +24,9 @@ import os
 import shutil
 import subprocess as sp
 
-credential = os.getenv('SONARCLOUD_ANALYSE_CREDENTIAL')
+credential = os.getenv('SONARCLOUD_CODE_ANALYSIS_CREDENTIAL')
 if not credential:
-    raise Exception('$SONARCLOUD_ANALYSE_CREDENTIAL must be defined')
+    raise Exception('$SONARCLOUD_CODE_ANALYSIS_CREDENTIAL must be defined')
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--project-key', help='Sonarcloud project key', required=True)
