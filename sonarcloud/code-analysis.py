@@ -32,6 +32,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--project-key', help='Sonarcloud project key', required=True)
 parser.add_argument('--organisation', help='Sonarcloud organisation', required=True)
 parser.add_argument('--commit-id', help='git commit id', required=True)
+parser.add_argument('--branch', help='git branch name', required=True)
 args = parser.parse_args()
 
 tmpdir = None
@@ -45,6 +46,7 @@ try:
             ' -Dsonar.projectKey=' + args.project_key + \
             ' -Dsonar.organization=' + args.organisation + \
             ' -Dsonar.projectVersion=' + args.commit_id + \
+            ' -Dsonar.branch.name=' + args.branch + \
             ' -Dsonar.sources=. -Dsonar.java.binaries=. ' + \
             ' -Dsonar.java.libraries=.' + \
             ' -Dsonar.host.url=https://sonarcloud.io' + \
