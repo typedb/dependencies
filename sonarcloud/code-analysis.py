@@ -40,15 +40,15 @@ try:
     sp.check_call(['unzip', '-qq',
         os.path.join('external', 'sonarscanner_zip', 'file', 'downloaded'), '-d', tmpdir])
     sp.check_call(['mv'] + glob.glob(os.path.join(tmpdir, 'sonar-scanner-*', '*')) + ['.'], cwd=tmpdir)
-    sp.check_call([os.path.join(tmpdir, 'bin', 'sonar-scanner'),
-        '-Dsonar.projectKey=' + args.project_key,
-        '-Dsonar.organization=' + args.organisation,
-        '-Dsonar.projectVersion=' + args.commit_id,
-        '-Dsonar.sources=.',
-        '-Dsonar.java.binaries=.',
-        '-Dsonar.java.libraries=.',
-        '-Dsonar.host.url=https://sonarcloud.io',
-        '-Dsonar.login=' + credential],
-    cwd=os.getenv('BUILD_WORKSPACE_DIRECTORY'))
+    sp.check_call(
+        os.path.join(tmpdir, 'bin', 'sonar-scanner') + \
+            ' -Dsonar.projectKey=' + args.project_key + \
+            ' -Dsonar.organization=' + args.organisation + \
+            ' -Dsonar.projectVersion=' + args.commit_id + \
+            ' -Dsonar.sources=. -Dsonar.java.binaries=. ' + \
+            ' -Dsonar.java.libraries=.' + \
+            ' -Dsonar.host.url=https://sonarcloud.io' + \
+            ' -Dsonar.login=$SONARCLOUD_CODE_ANALYSIS_CREDENTIAL',
+        cwd=os.getenv('BUILD_WORKSPACE_DIRECTORY'), shell=True)
 finally:
     shutil.rmtree(tmpdir)
