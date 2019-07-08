@@ -21,10 +21,14 @@
 import argparse
 import glob
 import os
+import shutil
 import subprocess as sp
 
+credential = os.getenv('SONARCLOUD_ANALYSE_CREDENTIAL')
+if not credential:
+    raise Exception('$SONARCLOUD_ANALYSE_CREDENTIAL must be defined')
+
 parser = argparse.ArgumentParser()
-parser.add_argument('--credential', help='Sonarcloud credential', required=True) # TODO(lolski): pass via environment variable for security
 parser.add_argument('--project-key', help='Sonarcloud project key', required=True)
 parser.add_argument('--organisation', help='Sonarcloud organisation', required=True)
 args = parser.parse_args()
@@ -32,9 +36,17 @@ args = parser.parse_args()
 tmpdir = None
 try:
     tmpdir = sp.check_output(['mktemp', '-d']).strip()
-    sp.check_call(['unzip', os.path.join('external', 'sonarscanner_zip', 'file', 'downloaded'), '-d', tmpdir])
+    sp.check_call(['unzip', '-qq',
+        os.path.join('external', 'sonarscanner_zip', 'file', 'downloaded'), '-d', tmpdir])
     sp.check_call(['mv'] + glob.glob(os.path.join(tmpdir, 'sonar-scanner-*', '*')) + ['.'], cwd=tmpdir)
-    sp.check_call([os.path.join(tmpdir, 'bin', 'sonar-scanner'), '-Dsonar.projectKey=' + args.project_key, '-Dsonar.organization=' + args.organisation, '-Dsonar.sources=.', '-Dsonar.java.binaries=.', '-Dsonar.java.libraries=.', '-Dsonar.host.url=https://sonarcloud.io', '-Dsonar.login=' + args.credential], cwd=os.getenv('BUILD_WORKSPACE_DIRECTORY'))
+    sp.check_call([os.path.join(tmpdir, 'bin', 'sonar-scanner'),
+        '-Dsonar.projectKey=' + args.project_key,
+        '-Dsonar.organization=' + args.organisation,
+        '-Dsonar.sources=.',
+        '-Dsonar.java.binaries=.',
+        '-Dsonar.java.libraries=.',
+        '-Dsonar.host.url=https://sonarcloud.io',
+        '-Dsonar.login=' + credential],
+    cwd=os.getenv('BUILD_WORKSPACE_DIRECTORY'))
 finally:
-    # sp.check_call(['rm', '-rf', tmpdir]) # TODO(lolski): delete directory
-    pass
+    shutil.rmtree(tmpdir)
