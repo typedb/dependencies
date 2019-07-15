@@ -82,7 +82,7 @@ _java_lib_deps = aspect(
         "runtime_deps"
     ],
     doc = """
-    Collects the Maven coordinats of a java_library, and its direct dependencies.
+    Collects the Maven coordinates of a java_library, and its direct dependencies.
     """,
     implementation = _java_lib_deps_impl,
     provides = [JavaLibInfo]
@@ -226,11 +226,23 @@ def _generate_pom_xml(ctx, maven_coordinates):
         }
     )
 
+    if not ctx.attr.version_file:
+        version_file = ctx.actions.declare_file(ctx.attr.name + "__do_not_reference.version")
+        version = ctx.var.get('version', '0.0.0')
+
+        ctx.actions.run_shell(
+            inputs = [],
+            outputs = [version_file],
+            command = "echo {} > {}".format(version, version_file.path)
+        )
+    else:
+        version_file = ctx.file.version_file
+
     # Step 2: fill in {pom_version} from version_file
     ctx.actions.run(
-        inputs = [preprocessed_template, ctx.file.workspace_refs, ctx.file.version_file],
+        inputs = [preprocessed_template, ctx.file.workspace_refs, version_file],
         executable = ctx.file._pom_replace_version,
-        arguments = [preprocessed_template.path, ctx.file.workspace_refs.path, ctx.file.version_file.path, pom_file.path],
+        arguments = [preprocessed_template.path, ctx.file.workspace_refs.path, version_file.path, pom_file.path],
         outputs = [pom_file],
     )
 
@@ -256,7 +268,7 @@ def _assemble_maven_impl(ctx):
     output_jar = ctx.actions.declare_file("{}:{}.jar".format(maven_coordinates.group_id, maven_coordinates.artifact_id))
 
     ctx.actions.run(
-        inputs = [jar, pom_file, ctx.file.version_file],
+        inputs = [jar, pom_file],
         outputs = [output_jar],
         arguments = [output_jar.path, jar.path, pom_file.path],
         executable = ctx.executable._assemble_script,
@@ -281,9 +293,12 @@ assemble_maven = rule(
             doc = "Bazel package of this target. Must match one defined in `_maven_packages`"
         ),
         "version_file": attr.label(
-            mandatory = True,
             allow_single_file = True,
-            doc = "File containing version string"
+            doc = """
+            File containing version string.
+            Alternatively, pass --define version=VERSION to Bazel invocation.
+            Not specifying version at all defaults to '0.0.0'
+            """
         ),
         "workspace_refs": attr.label(
             mandatory = True,
