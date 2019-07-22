@@ -15,6 +15,8 @@ function install_dependencies() {
     fi
 }
 
+install_dependencies
+
 echo "Installing RBE credential..."
 if [[ -n "$BAZEL_RBE_CREDENTIAL" ]]; then
     BAZEL_RBE_CREDENTIAL_LOCATION=~/.config/gcloud/application_default_credentials.json
@@ -24,5 +26,4 @@ if [[ -n "$BAZEL_RBE_CREDENTIAL" ]]; then
     echo "The RBE credential has been installed!"
 else
     echo "No RBE credential found. Bazel will be executed locally without RBE support."
-    install_dependencies
 fi
