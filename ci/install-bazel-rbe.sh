@@ -2,7 +2,7 @@
 
 set -e
 
-function install_rpmbuild() {
+function install_dependencies() {
     echo "Installing rpmbuild..."
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
         sudo apt-get update
@@ -24,5 +24,5 @@ if [[ -n "$BAZEL_RBE_CREDENTIAL" ]]; then
     echo "The RBE credential has been installed!"
 else
     echo "No RBE credential found. Bazel will be executed locally without RBE support."
-    install_rpmbuild
+    install_dependencies
 fi
