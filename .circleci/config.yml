@@ -54,7 +54,7 @@ jobs:
           graql:master grakn:master grakn-kgms:master protocol:master \
           client-java:master client-python:master client-nodejs:master \
           benchmark:master biograkn:master workbase:master \
-          docs:master examples:master
+          docs:master examples:master kglib:master
 
 workflows:
   build-tools:
