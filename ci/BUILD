@@ -76,8 +76,3 @@ py_binary(
     srcs = ["test-cache.py"],
     main = "test-cache.py"
 )
-
-sh_binary(
-    name = "apt-wait",
-    srcs = ["apt-wait.sh"],
-)
