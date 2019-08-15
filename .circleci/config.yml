@@ -20,6 +20,7 @@ version: 2.1
 commands:
   install-bazel-linux-rbe:
     steps:
+      - run: bash ./ci/apt-wait.sh
       - run: bash ./ci/install-bazel-linux.sh
       - run: bash ./ci/install-bazel-rbe.sh
   
