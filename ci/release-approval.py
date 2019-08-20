@@ -48,7 +48,7 @@ common.shell_execute([
 status = 'no-status'
 
 while status == 'no-status':
-    get_release_status_signature = hmac.new(git_token, '', hashlib.sha1).hexdigest()
+    get_release_status_signature = hmac.new(git_token.encode(), ''.encode(), hashlib.sha1).hexdigest()
     status, _ = common.shell_execute(['curl', '--silent', '--show-error', '--fail', '-H', 'X-Hub-Signature: ' + get_release_status_signature, grabl_url_status])
 
     if status == 'deploy':
