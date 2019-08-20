@@ -38,7 +38,7 @@ grabl_data = {
 grabl_url_new = '{GRABL_HOST}/release/new'.format(GRABL_HOST=GRABL_HOST)
 grabl_url_status = '{GRABL_HOST}/release/{commit}/status'.format(GRABL_HOST=GRABL_HOST, commit=workflow_id)
 
-new_release_signature = hmac.new(git_token, json.dumps(grabl_data), hashlib.sha1).hexdigest()
+new_release_signature = hmac.new(git_token.encode(), json.dumps(grabl_data).encode(), hashlib.sha1).hexdigest()
 print("Tests have been ran and everything is in a good, releasable state. "
     "It is possible to proceed with the release process. Waiting for approval.")
 common.shell_execute([
