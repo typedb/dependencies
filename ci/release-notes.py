@@ -4,6 +4,7 @@ import github
 import os
 import re
 import sys
+from io import open
 
 GITHUB_TOKEN = os.getenv('RELEASE_NOTES_TOKEN')
 if GITHUB_TOKEN is None:
@@ -106,7 +107,7 @@ if __name__ == '__main__':
 
     release_notes_content = re.sub(release_notes_template_regex, release_notes, release_notes_content, 1, flags=re.IGNORECASE)
 
-    with open(release_template_filepath, 'w') as filepath:
+    with open(release_template_filepath, 'w', encoding='utf-8') as filepath:
         filepath.write(release_notes_content)
 
     release_milestone.edit(release_milestone.title, state="closed")
