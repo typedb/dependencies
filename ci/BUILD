@@ -57,6 +57,7 @@ py_binary(
         requirement("chardet"),
         requirement("idna"),
         requirement("wrapt"),
+        requirement("certifi"),
     ]
 )
 
