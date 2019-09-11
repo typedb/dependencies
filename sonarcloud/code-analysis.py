@@ -30,7 +30,7 @@ if not credential:
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--project-key', help='Sonarcloud project key', required=True)
-parser.add_argument('--organisation', help='Sonarcloud organisation', required=True)
+parser.add_argument('--organisation', help='Sonarcloud organisation', default='graknlabs')
 parser.add_argument('--commit-id', help='git commit id', required=True)
 parser.add_argument('--branch', help='git branch name', required=True)
 args = parser.parse_args()
