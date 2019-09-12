@@ -28,15 +28,15 @@ if git_token is None:
     raise Exception('Environment variable $RELEASE_APPROVAL_TOKEN is not set!')
 
 
-workflow_id = os.getenv('CIRCLE_WORKFLOW_ID')
+commit_id = os.getenv('CIRCLE_SHA1')
 
 grabl_data = {
-    'workflow-id': workflow_id,
+    'commit-id': commit_id,
     'repo': '{}/{}'.format(os.getenv('CIRCLE_PROJECT_USERNAME'), os.getenv('CIRCLE_PROJECT_REPONAME'))
 }
 
 grabl_url_new = '{GRABL_HOST}/release/new'.format(GRABL_HOST=GRABL_HOST)
-grabl_url_status = '{GRABL_HOST}/release/{commit}/status'.format(GRABL_HOST=GRABL_HOST, commit=workflow_id)
+grabl_url_status = '{GRABL_HOST}/release/{commit}/status'.format(GRABL_HOST=GRABL_HOST, commit=commit_id)
 
 new_release_signature = hmac.new(git_token.encode(), json.dumps(grabl_data).encode(), hashlib.sha1).hexdigest()
 print("Tests have been ran and everything is in a good, releasable state. "
