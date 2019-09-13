@@ -71,6 +71,6 @@ while status == 'no-status':
         break
 
     # print '...' to provide a visual indication that it's waiting for an input
-    sys.stdout.write('.')
+    sys.stdout.write('...\n')
     sys.stdout.flush()
-    time.sleep(1)
+    time.sleep(60)
