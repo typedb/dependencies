@@ -46,6 +46,7 @@ common.shell_execute([
 ])
 
 status = 'no-status'
+counter = 0
 
 while status == 'no-status':
     get_release_status_signature = hmac.new(git_token.encode(), ''.encode(), hashlib.sha1).hexdigest()
@@ -70,7 +71,9 @@ while status == 'no-status':
         print("This version won't be released as the approval has timed out.")
         break
 
-    # print '...' to provide a visual indication that it's waiting for an input
-    sys.stdout.write('...\n')
-    sys.stdout.flush()
-    time.sleep(60)
+    if counter % 60 == 0:
+        # print '...' to provide a visual indication that it's waiting for an input
+        sys.stdout.write('...\n')
+        sys.stdout.flush()
+    counter += 1
+    time.sleep(1)
