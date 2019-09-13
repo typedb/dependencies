@@ -2,9 +2,25 @@
 
 set -e
 
+# TODO: Remove once CircleCI fixes the issue with apt
+function apt_wait() {
+    echo -n 'Waiting for the initial apt-get process to finish...'
+    init_wait=0
+    while [[ $init_wait -eq 0 ]]; do
+        set +e
+        ps -C apt-get > /dev/null
+        init_wait=$?
+        set -e
+        echo -n '.'
+        sleep 1
+    done
+    echo 'done.'
+}
+
 function install_dependencies() {
     echo "Installing rpmbuild..."
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        apt_wait
         sudo apt-get update
         sudo apt-get install rpm
     elif [[ "$OSTYPE" == "darwin"* ]]; then
