@@ -18,6 +18,7 @@
 
 workspace(name = "graknlabs_build_tools")
 
+
 ###########################
 # Load Bazel dependencies #
 ###########################
@@ -41,6 +42,7 @@ bazel_rules_python()
 
 load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip_import")
 pip_repositories()
+
 
 #################################
 # Load Build Tools dependencies #
