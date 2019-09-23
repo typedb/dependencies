@@ -29,10 +29,10 @@ def bazel_common():
 def bazel_toolchain():
     http_archive(
       name = "bazel_toolchains",
-      sha256 = "70bb7ff38a2e93b192dbb07f42f5d974d934cd31ad091fa482c4f2e50ece9c51",
-      strip_prefix = "bazel-toolchains-e703fbf6eac46761d58765b30030ed5501b49211",
+      sha256 = "a1e273b6159ae858f53046f5bab9678cffa82a72f0bf0c0a9e4af8fddb91209c",
+      strip_prefix = "bazel-toolchains-0.29.6",
       urls = [
-        "https://github.com/bazelbuild/bazel-toolchains/archive/e703fbf6eac46761d58765b30030ed5501b49211.tar.gz",
+        "https://github.com/bazelbuild/bazel-toolchains/releases/download/0.29.6/bazel-toolchains-0.29.6.tar.gz",
       ],
     )
 

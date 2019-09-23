@@ -23,7 +23,7 @@ exports_files(["deployment.properties"], visibility = ["//visibility:public"])
 # but with an additional setting dockerNetwork = standard because our tests need network access
 platform(
     name = "rbe-ubuntu1604-network-standard",
-    parents = ["@bazel_toolchains//configs/ubuntu16_04_clang/9.0.0/bazel_0.25.2/config:platform"],
+    parents = ["@bazel_toolchains//configs/ubuntu16_04_clang/10.0.0/bazel_0.29.1/config:platform"],
     remote_execution_properties = """
         properties: {
             name: "container-image"
