@@ -61,6 +61,12 @@ py_binary(
     ]
 )
 
+py_binary(
+    name = "release-validate-deps",
+    srcs = ["release-validate-deps.py"],
+    main = "release-validate-deps.py",
+)
+
 sh_binary(
     name = "install-bazel-rbe",
     srcs = ["install-bazel-rbe.sh"]
