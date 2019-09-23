@@ -17,11 +17,11 @@ if __name__ == '__main__':
                                    'There is supposed to be exactly one sync-marker '
                                    'but {} occurrences found.'.format(arg, len(dependency)))
     if len(snapshot_dependencies) == 0:
-        print('This repository is releasable because the dependencies are '
-              'all release dependencies: {}'.format(sys.argv[1:]))
+        print('This commit is releasable because the dependencies are '
+              'all released dependencies: {}'.format(sys.argv[1:]))
     else:
         raise RuntimeError('This commit is not releasable because '
                            'there are one or more snapshot dependencies: {}. '
-                           'Check that every dependencies listed in {} are all release dependencies '
+                           'Check that every dependencies listed in {} are all released dependencies '
                            '(ie., depends on a tag instead of a commit).'
                            .format(snapshot_dependencies, dependencies_bzl))
