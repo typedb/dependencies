@@ -44,4 +44,5 @@ else
 fi
 
 echo "Configuring Python..."
+# setting the exact version of Python 3 and Python 2, respectively
 pyenv global 3.5.2 2.7.12
