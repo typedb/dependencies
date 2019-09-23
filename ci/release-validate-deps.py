@@ -2,12 +2,12 @@ import os
 import sys
 
 if __name__ == '__main__':
-    dependencies_bzl = os.path.join('dependencies', 'graknlabs', 'dependencies.bzl')
+    deps_path = os.path.join('dependencies', 'graknlabs', 'dependencies.bzl')
     snapshot_dependencies = []
-    with open(os.path.join(os.getenv("BUILD_WORKSPACE_DIRECTORY"), dependencies_bzl)) as dependencies_bzl_:
-        dependencies_bzl__ = dependencies_bzl_.read().splitlines()
+    with open(os.path.join(os.getenv("BUILD_WORKSPACE_DIRECTORY"), deps_path)) as deps_file_object:
+        deps_content = deps_file_object.read().splitlines()
         for arg in sys.argv[1:]:
-            dependency = filter(lambda line: line.endswith('@' + arg), dependencies_bzl__)
+            dependency = list(filter(lambda line: line.endswith('@' + arg), deps_content))
             if len(dependency) == 1:
                 depend_by_tag = dependency[0].strip().startswith('tag')
                 if not depend_by_tag:
@@ -24,4 +24,4 @@ if __name__ == '__main__':
                            'there are one or more snapshot dependencies: {}. '
                            'Check that every dependencies listed in {} are all released dependencies '
                            '(ie., depends on a tag instead of a commit).'
-                           .format(snapshot_dependencies, dependencies_bzl))
+                           .format(snapshot_dependencies, deps_path))
