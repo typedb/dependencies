@@ -20,8 +20,8 @@ if __name__ == '__main__':
         print('This repository is releasable because the dependencies are '
               'all release dependencies: {}'.format(sys.argv[1:]))
     else:
-        raise RuntimeError('Error: This commit is not releasable because '
+        raise RuntimeError('This commit is not releasable because '
                            'there are one or more snapshot dependencies: {}. '
                            'Check that every dependencies listed in {} are all release dependencies '
-                           '(ie., depends on a tag instead of a commit)'
+                           '(ie., depends on a tag instead of a commit).'
                            .format(snapshot_dependencies, dependencies_bzl))
