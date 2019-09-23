@@ -42,3 +42,6 @@ else
     echo "No RBE credential found. Bazel will be executed locally without RBE support."
     install_dependencies
 fi
+
+echo "Configuring Python..."
+pyenv global 3.5.2 2.7.12
