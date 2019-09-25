@@ -124,7 +124,7 @@ def main():
     print(str(sync_data))
 
     sync_data_json = json.dumps(sync_data)
-    signature = hmac.new(GITHUB_TOKEN, sync_data_json, hashlib.sha1).hexdigest()
+    signature = hmac.new(GITHUB_TOKEN.encode(), sync_data_json.encode(), hashlib.sha1).hexdigest()
 
     print('Sending post request to: ' + GRABL_SYNC_DEPS)
     common.shell_execute([
