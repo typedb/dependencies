@@ -23,6 +23,7 @@ import glob
 import os
 import shutil
 import subprocess as sp
+import tempfile
 
 credential = os.getenv('SONARCLOUD_CODE_ANALYSIS_CREDENTIAL')
 if not credential:
@@ -37,7 +38,7 @@ args = parser.parse_args()
 
 tmpdir = None
 try:
-    tmpdir = sp.check_output(['mktemp', '-d']).strip()
+    tmpdir = tempfile.mkdtemp()
     sp.check_call(['unzip', '-qq',
         os.path.join('external', 'sonarscanner_zip', 'file', 'downloaded'), '-d', tmpdir])
     sp.check_call(['mv'] + glob.glob(os.path.join(tmpdir, 'sonar-scanner-*', '*')) + ['.'], cwd=tmpdir)
