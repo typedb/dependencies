@@ -97,7 +97,7 @@ elif args.store:
         'build_url': os.getenv('CIRCLE_BUILD_URL'),
         'commit': os.getenv('CIRCLE_SHA1')
     }
-    signature = hmac.new(git_token, json.dumps(data), hashlib.sha1).hexdigest()
+    signature = hmac.new(git_token.encode(), json.dumps(data).encode(), hashlib.sha1).hexdigest()
 
     check_output_discarding_stderr([
         'curl',
