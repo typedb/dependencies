@@ -69,7 +69,7 @@ def check_output_discarding_stderr(*args, **kwargs):
 
 
 args = CMDLINE_PARSER.parse_args(sys.argv[1:])
-file_checksum = hashlib.sha256(open(args.file).read()).hexdigest()
+file_checksum = hashlib.sha256(open(args.file, 'rb').read()).hexdigest()
 
 if args.get:
     response = json.loads(check_output_discarding_stderr([
