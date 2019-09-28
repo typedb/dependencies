@@ -92,4 +92,3 @@ node_repositories()
 
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 sass_repositories()
-
