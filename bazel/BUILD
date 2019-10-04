@@ -23,11 +23,3 @@ java_binary(
     runtime_deps = ["@bazel_deps//jar:jar"],
 )
 
-sh_binary(
-    name = "unused-deps",
-    srcs = ["unused-deps.sh"],
-    data = [
-        "@unused_deps//file",
-        "@unused_deps_osx//file",
-    ],
-)
