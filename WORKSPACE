@@ -30,11 +30,6 @@ bazel_common()
 bazel_deps()
 bazel_toolchain()
 
-load("//bazel:dependencies.bzl", "buildifier", "buildozer", "unused_deps")
-buildifier()
-buildozer()
-unused_deps()
-
 load("//bazel:dependencies.bzl", "bazel_rules_docker", "bazel_rules_nodejs", "bazel_rules_python")
 bazel_rules_docker()
 bazel_rules_nodejs()
