@@ -52,6 +52,9 @@ sonarcloud_dependencies()
 load("//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
 graknlabs_bazel_distribution()
 
+load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
+bazelbuild_rules_pkg()
+
 load("//grpc:dependencies.bzl", "grpc_dependencies")
 grpc_dependencies()
 
