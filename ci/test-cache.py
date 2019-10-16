@@ -35,10 +35,10 @@ CMDLINE_GROUP_PARSER.add_argument('--get', dest='get', action='store_true')
 CMDLINE_GROUP_PARSER.add_argument('--save-success', dest='store', action='store_true')
 CMDLINE_GROUP_PARSER.set_defaults(store=None)
 
-git_token = os.getenv('RELEASE_APPROVAL_TOKEN')
+git_token = os.getenv('TEST_CACHE_TOKEN')
 
 if not git_token:
-    raise Exception('Environment variable $RELEASE_APPROVAL_TOKEN is not set!')
+    raise Exception('Environment variable $TEST_CACHE_TOKEN is not set!')
 
 if not os.getenv('CIRCLE_SHA1'):
     raise Exception('Environment variable $CIRCLE_SHA1 is not set!')
