@@ -90,3 +90,6 @@ node_repositories()
 
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 sass_repositories()
+
+load("//unused_deps:dependencies.bzl", "unused_deps_dependencies")
+unused_deps_dependencies()
