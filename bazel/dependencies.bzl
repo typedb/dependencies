@@ -45,9 +45,9 @@ def bazel_deps():
 def bazel_rules_docker():
     http_archive(
         name = "io_bazel_rules_docker",
-        sha256 = "e6d8897e34d0a9564d3764b52354a8a614fd727df10fe13f3e06b6406b8acdd9",
-        strip_prefix = "rules_docker-fb1ec3c13895d7723d5a784ba861629cc7392265",
-        urls = ["https://github.com/bazelbuild/rules_docker/archive/fb1ec3c13895d7723d5a784ba861629cc7392265.tar.gz"],
+        sha256 = "14ac30773fdb393ddec90e158c9ec7ebb3f8a4fd533ec2abbfd8789ad81a284b",
+        strip_prefix = "rules_docker-0.12.1",
+        urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.12.1/rules_docker-v0.12.1.tar.gz"],
     )
 
 def bazel_rules_nodejs():
