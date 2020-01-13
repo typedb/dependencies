@@ -25,6 +25,11 @@ def grpc_dependencies():
         commit = "4a1528f6f20a8aa68bdbdc9a66286ec2394fc170"
     )
     git_repository(
+        name = "io_grpc_grpc_java",
+        remote = "https://github.com/grpc/grpc-java",
+        commit = "b13d31c972fa5adf48a665659adc005c74d83024"
+    )
+    git_repository(
         name = "stackb_rules_proto",
         remote = "https://github.com/stackb/rules_proto",
         commit = "d9a123032f8436dbc34069cfc3207f2810a494ee",
