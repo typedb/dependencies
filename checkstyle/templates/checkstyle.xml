@@ -105,7 +105,7 @@
         </module>
 
         <!-- Allow only one statement per line -->
-        <module name="OneStatementPerLine"/>
+        <!--<module name="OneStatementPerLine"/>-->
 
         <!-- Require JavaDoc on types (classes, interfaces, etc.) -->
         <!--<module name="JavadocType">-->
