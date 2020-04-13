@@ -27,7 +27,7 @@ platform(
     remote_execution_properties = """
         properties: {
             name: "container-image"
-            value: "docker://gcr.io/grakn-dev/rbe_platform@sha256:c64a67d102e1842563f46c0be534a52e0138e5ec90bf74e2047471019e107bc6"
+            value: "docker://gcr.io/grakn-dev/rbe_platform@sha256:435403f84a20db7ac779bf2688dce6bd6463d62608c0731cfb944cd0b74b35d8"
         }
         properties: {
           name: "dockerNetwork"
