@@ -53,7 +53,7 @@ jobs:
           --targets \
           common:master protocol:master graql:master grakn:master grakn-kgms:master \
           client-java:master client-python:master client-nodejs:master \
-          console:master workbase:master benchmark:master biograkn:master \
+          console:master workbase:master biograkn:master \
           docs:master examples:master kglib:master
 
 workflows:
