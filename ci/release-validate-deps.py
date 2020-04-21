@@ -2,6 +2,7 @@ import os
 import sys
 
 if __name__ == '__main__':
+    print('Further usage of this script is discouraged. Please use release_validate_deps_test from //ci:rules.bzl instead')
     deps_path = os.path.join('dependencies', 'graknlabs', 'dependencies.bzl')
     snapshot_dependencies = []
     with open(os.path.join(os.getenv("BUILD_WORKSPACE_DIRECTORY"), deps_path)) as deps_file_object:
