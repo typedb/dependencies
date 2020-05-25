@@ -45,4 +45,7 @@ fi
 
 echo "Configuring Python..."
 # setting the exact version of Python 3 and Python 2, respectively
-pyenv global 3.5.2 2.7.12
+cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
+pyenv install 3.6.10
+pyenv global 3.6.10 2.7.12
+
