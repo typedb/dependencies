@@ -35,7 +35,7 @@ bazel_rules_docker()
 bazel_rules_nodejs()
 bazel_rules_python()
 
-load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip_import")
+load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
 pip_repositories()
 
 
@@ -58,7 +58,7 @@ bazelbuild_rules_pkg()
 load("//grpc:dependencies.bzl", "grpc_dependencies")
 grpc_dependencies()
 
-pip_import(
+pip3_import(
     name = "graknlabs_build_tools_ci_pip",
     requirements = "//ci:requirements.txt",
 )
