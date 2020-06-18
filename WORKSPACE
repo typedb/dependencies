@@ -42,19 +42,19 @@ pip_repositories()
 # Load Build Tools dependencies #
 #################################
 
-load("//_tools/checkstyle:dependencies.bzl", "checkstyle_dependencies")
+load("//tools/checkstyle:dependencies.bzl", "checkstyle_dependencies")
 checkstyle_dependencies()
 
-load("//_tools/sonarcloud:dependencies.bzl", "sonarcloud_dependencies")
+load("//tools/sonarcloud:dependencies.bzl", "sonarcloud_dependencies")
 sonarcloud_dependencies()
 
-load("//_distribution:dependencies.bzl", "graknlabs_bazel_distribution")
+load("//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
 graknlabs_bazel_distribution()
 
 load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
 bazelbuild_rules_pkg()
 
-load("//grpc:dependencies.bzl", "grpc_dependencies")
+load("//_build/grpc:dependencies.bzl", "grpc_dependencies")
 grpc_dependencies()
 
 pip3_import(
@@ -90,5 +90,5 @@ node_repositories()
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 sass_repositories()
 
-load("//_tools/unused_deps:dependencies.bzl", "unused_deps_dependencies")
+load("//tools/unused_deps:dependencies.bzl", "unused_deps_dependencies")
 unused_deps_dependencies()
