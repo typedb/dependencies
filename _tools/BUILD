@@ -15,27 +15,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
-exports_files(["requirements.txt", "sync-version.py"])
-load("@graknlabs_build_tools_ci_pip//:requirements.bzl", "requirement")
-
-py_binary(
-    name = "sync-dependencies",
-    srcs = ["sync-dependencies.py"],
-    main = "sync-dependencies.py",
-    deps = [
-        "//:common",
-        requirement("PyGithub"),
-        requirement("urllib3"),
-        requirement("chardet"),
-        requirement("idna"),
-        requirement("wrapt"),
-        requirement("certifi"),
-    ],
-)
-
-py_binary(
-    name = "test-cache",
-    srcs = ["test-cache.py"],
-    main = "test-cache.py"
-)
