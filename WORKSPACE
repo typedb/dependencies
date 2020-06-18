@@ -48,8 +48,8 @@ checkstyle_dependencies()
 load("//_tools/sonarcloud:dependencies.bzl", "sonarcloud_dependencies")
 sonarcloud_dependencies()
 
-# load("//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
-# graknlabs_bazel_distribution()
+load("//_distribution:dependencies.bzl", "graknlabs_bazel_distribution")
+graknlabs_bazel_distribution()
 
 # load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
 # bazelbuild_rules_pkg()
@@ -72,14 +72,14 @@ graknlabs_build_tools_ci_pip_install()
 #     name = "graknlabs_build_tools_workspace_refs"
 # )
 
-# git_repository(
-#     name = "io_bazel_skydoc",
-#     remote = "https://github.com/graknlabs/skydoc.git",
-#     branch = "experimental-skydoc-allow-dep-on-bazel-tools",
-# )
+git_repository(
+    name = "io_bazel_skydoc",
+    remote = "https://github.com/graknlabs/skydoc.git",
+    branch = "experimental-skydoc-allow-dep-on-bazel-tools",
+)
 
-# load("@io_bazel_skydoc//:setup.bzl", "skydoc_repositories")
-# skydoc_repositories()
+load("@io_bazel_skydoc//:setup.bzl", "skydoc_repositories")
+skydoc_repositories()
 
 # load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
 # rules_sass_dependencies()
