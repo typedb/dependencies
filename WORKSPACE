@@ -23,16 +23,19 @@ workspace(name = "graknlabs_build_tools")
 ###########################
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-load("//builder/bazel:dependencies.bzl","bazel_common", "bazel_deps", "bazel_toolchain",
-     "bazel_rules_nodejs", "bazel_rules_python")
+load("//builder/bazel:deps.bzl","bazel_common", "bazel_deps", "bazel_toolchain")
 bazel_common()
 bazel_deps()
 bazel_toolchain()
 
-load("//builder/bazel:dependencies.bzl", "bazel_rules_docker", "bazel_rules_nodejs", "bazel_rules_python")
-bazel_rules_docker()
-bazel_rules_nodejs()
-bazel_rules_python()
+load("//builder/nodejs:deps.bzl", nodejs_deps = "deps")
+nodejs_deps()
+
+load("//builder/python:deps.bzl", python_deps = "deps")
+python_deps()
+
+load("//distribution/docker:deps.bzl", docker_deps = "deps")
+docker_deps()
 
 load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
 pip_repositories()
@@ -54,8 +57,8 @@ graknlabs_bazel_distribution()
 load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
 bazelbuild_rules_pkg()
 
-load("//builder/grpc:dependencies.bzl", "grpc_dependencies")
-grpc_dependencies()
+load("//builder/grpc:deps.bzl", grpc_deps = "deps")
+grpc_deps()
 
 pip3_import(
     name = "graknlabs_build_tools_ci_pip",

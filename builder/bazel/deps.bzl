@@ -16,21 +16,28 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_jar")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-def grpc_dependencies():
+def bazel_common():
     git_repository(
-        name = "com_github_grpc_grpc",
-        remote = "https://github.com/graknlabs/grpc",
-        commit = "4a1528f6f20a8aa68bdbdc9a66286ec2394fc170"
+        name="com_github_google_bazel_common",
+        remote="https://github.com/graknlabs/bazel-common",
+        commit="5cf83ccbb4b184f282380fe2c1f47b13336ffcdd",
     )
-    git_repository(
-        name = "io_grpc_grpc_java",
-        remote = "https://github.com/grpc/grpc-java",
-        commit = "62e8655f1bc4dfb474afbf332ca7571c1454e6ef"
+
+def bazel_toolchain():
+    http_archive(
+      name = "bazel_toolchains",
+      sha256 = "239a1a673861eabf988e9804f45da3b94da28d1aff05c373b013193c315d9d9e",
+      strip_prefix = "bazel-toolchains-3.0.1",
+      urls = [
+        "https://github.com/bazelbuild/bazel-toolchains/releases/download/3.0.1/bazel-toolchains-3.0.1.tar.gz",
+      ],
     )
-    git_repository(
-        name = "stackb_rules_proto",
-        remote = "https://github.com/graknlabs/rules_proto",
-        commit = "fd3aa227fdaa178c077ef9d72156b772d3b8c05d",
+
+def bazel_deps():
+    http_jar(
+        name = "bazel_deps",
+        urls = ["https://github.com/graknlabs/bazel-deps/releases/download/0.3/grakn-bazel-deps-0.3.jar"],
     )
