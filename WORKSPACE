@@ -45,14 +45,14 @@ pip_repositories()
 # Load Build Tools dependencies #
 #################################
 
-load("//tools/checkstyle:dependencies.bzl", "checkstyle_dependencies")
-checkstyle_dependencies()
+load("//tools/checkstyle:deps.bzl", checkstyle_deps = "deps")
+checkstyle_deps()
 
-load("//tools/sonarcloud:dependencies.bzl", "sonarcloud_dependencies")
+load("//tools/sonarcloud:deps.bzl", "sonarcloud_dependencies")
 sonarcloud_dependencies()
 
-load("//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
-graknlabs_bazel_distribution()
+load("//distribution:deps.bzl", distribution_deps = "deps")
+distribution_deps()
 
 load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
 bazelbuild_rules_pkg()
@@ -93,5 +93,5 @@ node_repositories()
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 sass_repositories()
 
-load("//tools/unused_deps:dependencies.bzl", "unused_deps_dependencies")
-unused_deps_dependencies()
+load("//tools/unused_deps:deps.bzl", unused_deps_deps = "deps")
+unused_deps_deps()

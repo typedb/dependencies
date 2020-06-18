@@ -18,7 +18,7 @@
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 
-def unused_deps_dependencies():
+def deps():
     http_file(
         name = "unused_deps_mac",
         urls = ["https://repo.grakn.ai/repository/meta/unused_deps-mac-7e793330b31d465f6bffe101ace2ab25d75e2eec"],

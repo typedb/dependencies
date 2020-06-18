@@ -19,5 +19,5 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("//dependencies/graknlabs:dependencies.bzl", graknlabs_bazel_distribution_synced = "graknlabs_bazel_distribution")
 
-def graknlabs_bazel_distribution():
+def deps():
     graknlabs_bazel_distribution_synced()

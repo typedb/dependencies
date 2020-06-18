@@ -19,7 +19,7 @@
 load("@bazel_tools//tools/build_defs/repo:jvm.bzl", "jvm_maven_import_external")
 
 
-def checkstyle_dependencies(
+def deps(
     omit = [],
     versions = {
       "antlr_antlr": "2.7.7",
