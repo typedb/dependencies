@@ -18,38 +18,35 @@
 
 workspace(name = "graknlabs_build_tools")
 
-load("//_build/bazel:dependencies.bzl", "bazel_toolchain")
+###########################
+# Load Bazel dependencies #
+###########################
+
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("//_build/bazel:dependencies.bzl","bazel_common", "bazel_deps", "bazel_toolchain",
+     "bazel_rules_nodejs", "bazel_rules_python")
+bazel_common()
+bazel_deps()
 bazel_toolchain()
 
-# ###########################
-# # Load Bazel dependencies #
-# ###########################
+load("//_build/bazel:dependencies.bzl", "bazel_rules_docker", "bazel_rules_nodejs", "bazel_rules_python")
+bazel_rules_docker()
+bazel_rules_nodejs()
+bazel_rules_python()
 
-# load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-# load("//_build/bazel:dependencies.bzl","bazel_common", "bazel_deps", "bazel_toolchain",
-#      "bazel_rules_nodejs", "bazel_rules_python")
-# bazel_common()
-# bazel_deps()
-# bazel_toolchain()
-
-# load("//_build/bazel:dependencies.bzl", "bazel_rules_docker", "bazel_rules_nodejs", "bazel_rules_python")
-# bazel_rules_docker()
-# bazel_rules_nodejs()
-# bazel_rules_python()
-
-# load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
-# pip_repositories()
+load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
+pip_repositories()
 
 
-# #################################
-# # Load Build Tools dependencies #
-# #################################
+#################################
+# Load Build Tools dependencies #
+#################################
 
-# load("//_tools/checkstyle:dependencies.bzl", "checkstyle_dependencies")
-# checkstyle_dependencies()
+load("//_tools/checkstyle:dependencies.bzl", "checkstyle_dependencies")
+checkstyle_dependencies()
 
-# load("//_tools/sonarcloud:dependencies.bzl", "sonarcloud_dependencies")
-# sonarcloud_dependencies()
+load("//_tools/sonarcloud:dependencies.bzl", "sonarcloud_dependencies")
+sonarcloud_dependencies()
 
 # load("//distribution:dependencies.bzl", "graknlabs_bazel_distribution")
 # graknlabs_bazel_distribution()
@@ -60,14 +57,14 @@ bazel_toolchain()
 # load("//grpc:dependencies.bzl", "grpc_dependencies")
 # grpc_dependencies()
 
-# pip3_import(
-#     name = "graknlabs_build_tools_ci_pip",
-#     requirements = "//ci:requirements.txt",
-# )
+pip3_import(
+    name = "graknlabs_build_tools_ci_pip",
+    requirements = "//:requirements.txt",
+)
 
-# load("@graknlabs_build_tools_ci_pip//:requirements.bzl",
-# graknlabs_build_tools_ci_pip_install = "pip_install")
-# graknlabs_build_tools_ci_pip_install()
+load("@graknlabs_build_tools_ci_pip//:requirements.bzl",
+graknlabs_build_tools_ci_pip_install = "pip_install")
+graknlabs_build_tools_ci_pip_install()
 
 # # Generate a JSON document of commit hashes of all external workspace dependencies
 # load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")

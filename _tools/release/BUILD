@@ -1,3 +1,4 @@
+load("@graknlabs_build_tools_ci_pip//:requirements.bzl", "requirement")
 
 py_binary(
     name = "release-docs",
