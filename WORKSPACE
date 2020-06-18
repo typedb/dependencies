@@ -51,11 +51,11 @@ sonarcloud_dependencies()
 load("//_distribution:dependencies.bzl", "graknlabs_bazel_distribution")
 graknlabs_bazel_distribution()
 
-# load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
-# bazelbuild_rules_pkg()
+load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
+bazelbuild_rules_pkg()
 
-# load("//grpc:dependencies.bzl", "grpc_dependencies")
-# grpc_dependencies()
+load("//grpc:dependencies.bzl", "grpc_dependencies")
+grpc_dependencies()
 
 pip3_import(
     name = "graknlabs_build_tools_ci_pip",
@@ -66,11 +66,11 @@ load("@graknlabs_build_tools_ci_pip//:requirements.bzl",
 graknlabs_build_tools_ci_pip_install = "pip_install")
 graknlabs_build_tools_ci_pip_install()
 
-# # Generate a JSON document of commit hashes of all external workspace dependencies
-# load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")
-# workspace_refs(
-#     name = "graknlabs_build_tools_workspace_refs"
-# )
+# Generate a JSON document of commit hashes of all external workspace dependencies
+load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")
+workspace_refs(
+    name = "graknlabs_build_tools_workspace_refs"
+)
 
 git_repository(
     name = "io_bazel_skydoc",
@@ -81,14 +81,14 @@ git_repository(
 load("@io_bazel_skydoc//:setup.bzl", "skydoc_repositories")
 skydoc_repositories()
 
-# load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
-# rules_sass_dependencies()
+load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
+rules_sass_dependencies()
 
-# load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
-# node_repositories()
+load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
+node_repositories()
 
-# load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
-# sass_repositories()
+load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
+sass_repositories()
 
 load("//_tools/unused_deps:dependencies.bzl", "unused_deps_dependencies")
 unused_deps_dependencies()
