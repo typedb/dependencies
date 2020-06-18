@@ -1,5 +1,1 @@
-exports_files([
-  "install-bazel-linux.sh",
-  "install-bazel-mac.sh",
-  "install-bazel-rbe.sh"
-])
+exports_files([ "linux.sh", "mac.sh", "rbe.sh" ])
