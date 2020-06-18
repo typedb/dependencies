@@ -90,5 +90,5 @@ graknlabs_build_tools_ci_pip_install()
 # load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 # sass_repositories()
 
-# load("//unused_deps:dependencies.bzl", "unused_deps_dependencies")
-# unused_deps_dependencies()
+load("//_tools/unused_deps:dependencies.bzl", "unused_deps_dependencies")
+unused_deps_dependencies()

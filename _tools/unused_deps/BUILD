@@ -1,6 +1,6 @@
 py_binary(
     name = "unused-deps",
-    srcs = ["unused_deps.py"],
+    srcs = ["unused-deps.py"],
     data = [
         "@unused_deps_mac//file",
         "@unused_deps_linux//file",
