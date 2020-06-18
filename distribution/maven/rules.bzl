@@ -465,7 +465,7 @@ def _deploy_maven_impl(ctx):
         })
     )
 
-_default_deployment_properties = None if 'deployment_properties_placeholder' in "@graknlabs_build_tools//:deployment.properties" else "@graknlabs_build_tools//:deployment.properties"
+_default_deployment_properties = None if 'deployment_properties_placeholder' in "@graknlabs_build_tools//distribution:deployment.properties" else "@graknlabs_build_tools//distribution:deployment.properties"
 deploy_maven = rule(
     attrs = {
         "target": attr.label(
