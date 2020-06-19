@@ -1,9 +1,9 @@
 load("@graknlabs_build_tools_ci_pip//:requirements.bzl", "requirement")
 
 py_binary(
-    name = "sync-dependencies",
-    srcs = ["sync-dependencies.py"],
-    main = "sync-dependencies.py",
+    name = "dependencies",
+    srcs = ["dependencies.py"],
+    main = "dependencies.py",
     deps = [
         "//tools:common",
         requirement("PyGithub"),
