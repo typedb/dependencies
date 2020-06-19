@@ -1,22 +1,22 @@
 load("@graknlabs_build_tools_ci_pip//:requirements.bzl", "requirement")
 
 py_binary(
-    name = "release-docs",
-    srcs = ["release-docs.py"],
-    main = "release-docs.py"
+    name = "docs",
+    srcs = ["docs.py"],
+    main = "docs.py"
 )
 
 py_binary(
-    name = "release-approval",
-    srcs = ["release-approval.py"],
-    main = "release-approval.py",
+    name = "approval",
+    srcs = ["approval.py"],
+    main = "approval.py",
     deps = [ "//:common"]
 )
 
 py_binary(
-    name = "release-notes",
-    srcs = ["release-notes.py"],
-    main = "release-notes.py",
+    name = "create-notes",
+    srcs = ["create-notes.py"],
+    main = "create-notes.py",
     deps = [
         requirement("PyGithub"),
         requirement("urllib3"),
@@ -28,7 +28,7 @@ py_binary(
 )
 
 py_binary(
-    name = "release-validate-deps",
-    srcs = ["release-validate-deps.py"],
-    main = "release-validate-deps.py",
+    name = "validate-deps",
+    srcs = ["validate-deps.py"],
+    main = "validate-deps.py",
 )
