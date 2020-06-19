@@ -93,5 +93,5 @@ node_repositories()
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 sass_repositories()
 
-load("//tools/unused_deps:deps.bzl", unused_deps_deps = "deps")
-unused_deps_deps()
+load("//tools/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
+unuseddeps_deps()

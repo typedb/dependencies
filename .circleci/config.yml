@@ -20,15 +20,15 @@ version: 2.1
 commands:
   bazel-install:
     steps:
-      - run: bash ./tools/bazel-install/linux.sh
-      - run: bash ./tools/bazel-install/rbe.sh
+      - run: bash ./tools/bazelinstall/linux.sh
+      - run: bash ./tools/bazelinstall/rbe.sh
   
   bazel-run:
     parameters:
       command:
           type: string
     steps:
-      - run: bazel run @graknlabs_build_tools//tools/bazel_run:rbe -- << parameters.command >>
+      - run: bazel run @graknlabs_build_tools//tools/bazelrun:rbe -- << parameters.command >>
 
 jobs:
   build:
