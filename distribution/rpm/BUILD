@@ -16,4 +16,28 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-exports_files(["grakn-bin.spec"])
+load("@graknlabs_bazel_distribution//rpm:rules.bzl", "assemble_rpm", "deploy_rpm")
+
+assemble_rpm(
+    name = "assemble-linux-rpm",
+    package_name = "grakn-bin",
+    installation_dir = "/opt/grakn/core/",
+    spec_file = ":grakn-bin.spec",
+    empty_dirs = [
+        "var/log/grakn/",
+    ],
+    archives = ["//distribution:assemble-bash-targz"],
+    permissions = {
+        "var/log/grakn/": "0777",
+    },
+    symlinks = {
+        "usr/local/bin/grakn": "/opt/grakn/core/grakn",
+        "opt/grakn/core/logs": "/var/log/grakn/",
+    },
+)
+
+deploy_rpm(
+    name = "deploy-rpm",
+    target = ":assemble-linux-rpm",
+    deployment_properties = "//distribution:deployment.properties",
+)
