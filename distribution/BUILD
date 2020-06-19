@@ -23,7 +23,7 @@ exports_files(["deployment.properties"], visibility = ["//visibility:public"])
 assemble_targz(
     name = "assemble-bash-targz",
     additional_files = {
-        "//bin:grakn": 'grakn',
+        "//binary:grakn": 'grakn',
     },
     permissions = {
         "grakn": "0755",
@@ -34,7 +34,7 @@ assemble_targz(
 assemble_targz(
     name = "assemble-bat-targz",
     additional_files = {
-        "//bin:grakn.bat": 'grakn.bat',
+        "//binary:grakn.bat": 'grakn.bat',
     },
     visibility = ["//visibility:public"]
 )
