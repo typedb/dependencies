@@ -10,7 +10,7 @@ py_binary(
     name = "approval",
     srcs = ["approval.py"],
     main = "approval.py",
-    deps = [ "//:common"]
+    deps = [ "//tools:common" ]
 )
 
 py_binary(

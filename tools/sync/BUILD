@@ -5,7 +5,7 @@ py_binary(
     srcs = ["sync-dependencies.py"],
     main = "sync-dependencies.py",
     deps = [
-        "//:common",
+        "//tools:common",
         requirement("PyGithub"),
         requirement("urllib3"),
         requirement("chardet"),
