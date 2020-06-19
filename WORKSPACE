@@ -18,63 +18,21 @@
 
 workspace(name = "graknlabs_dependencies")
 
-###########################
-# Load Bazel dependencies #
-###########################
-
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-load("//builder/bazel:deps.bzl","bazel_common", "bazel_deps", "bazel_toolchain")
-bazel_common()
-bazel_deps()
-bazel_toolchain()
-
-load("//builder/nodejs:deps.bzl", nodejs_deps = "deps")
-nodejs_deps()
-
-load("//builder/python:deps.bzl", python_deps = "deps")
-python_deps()
-
-load("//distribution/docker:deps.bzl", docker_deps = "deps")
-docker_deps()
-
-load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
-pip_repositories()
-
-
-#################################
-# Load Build Tools dependencies #
-#################################
-
-load("//tools/checkstyle:deps.bzl", checkstyle_deps = "deps")
-checkstyle_deps()
-
-load("//tools/sonarcloud:deps.bzl", "sonarcloud_dependencies")
-sonarcloud_dependencies()
+################################
+# Load @graknlabs dependencies #
+################################
 
 load("//distribution:deps.bzl", distribution_deps = "deps")
 distribution_deps()
 
-load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
-bazelbuild_rules_pkg()
+###################################################
+# Load @graknlabs_bazel_distribution's dependencies #
+###################################################
 
-load("//builder/grpc:deps.bzl", grpc_deps = "deps")
-grpc_deps()
+load("@graknlabs_bazel_distribution//github:dependencies.bzl", "tcnksm_ghr")
+tcnksm_ghr()
 
-pip3_import(
-    name = "graknlabs_dependencies_ci_pip",
-    requirements = "//tools:requirements.txt",
-)
-
-load("@graknlabs_dependencies_ci_pip//:requirements.bzl",
-graknlabs_dependencies_ci_pip_install = "pip_install")
-graknlabs_dependencies_ci_pip_install()
-
-# Generate a JSON document of commit hashes of all external workspace dependencies
-load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")
-workspace_refs(
-    name = "graknlabs_dependencies_workspace_refs"
-)
-
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 git_repository(
     name = "io_bazel_skydoc",
     remote = "https://github.com/graknlabs/skydoc.git",
@@ -93,5 +51,55 @@ node_repositories()
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 sass_repositories()
 
+load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
+bazelbuild_rules_pkg()
+
+load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
+rules_pkg_dependencies()
+
+###############################################
+# Load @graknlabs_dependencies's dependencies #
+###############################################
+
+load("//builder/bazel:deps.bzl","bazel_common", "bazel_deps", "bazel_toolchain")
+bazel_common()
+bazel_deps()
+bazel_toolchain()
+
+load("//builder/grpc:deps.bzl", grpc_deps = "deps")
+grpc_deps()
+
+load("//builder/nodejs:deps.bzl", nodejs_deps = "deps")
+nodejs_deps()
+load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
+node_repositories()
+
+load("//builder/python:deps.bzl", python_deps = "deps")
+python_deps()
+load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
+pip_repositories()
+pip3_import(
+    name = "graknlabs_dependencies_ci_pip",
+    requirements = "//tools:requirements.txt",
+)
+load("@graknlabs_dependencies_ci_pip//:requirements.bzl",
+graknlabs_dependencies_ci_pip_install = "pip_install")
+graknlabs_dependencies_ci_pip_install()
+
+load("//distribution/docker:deps.bzl", docker_deps = "deps")
+docker_deps()
+
+load("//tools/checkstyle:deps.bzl", checkstyle_deps = "deps")
+checkstyle_deps()
+
+load("//tools/sonarcloud:deps.bzl", "sonarcloud_dependencies")
+sonarcloud_dependencies()
+
 load("//tools/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
+
+# Generate a JSON document of commit hashes of all external workspace dependencies
+load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")
+workspace_refs(
+    name = "graknlabs_dependencies_workspace_refs"
+)
