@@ -48,7 +48,7 @@ release_validate_deps_test = rule(
         ),
         "_release_validate_deps_template": attr.label(
             allow_single_file=True,
-            default = "@graknlabs_build_tools//ci/templates:release_validate_deps.py"
+            default = "@graknlabs_dependencies//ci/templates:release_validate_deps.py"
         )
     },
     implementation = _release_validate_deps_test_impl,

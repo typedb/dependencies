@@ -3,5 +3,5 @@
 .ijwb/
 bazel-bin
 bazel-out
-bazel-build-tools
+bazel-dependencies
 bazel-testlogs

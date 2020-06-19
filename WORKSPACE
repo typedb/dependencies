@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-workspace(name = "graknlabs_build_tools")
+workspace(name = "graknlabs_dependencies")
 
 ###########################
 # Load Bazel dependencies #
@@ -61,18 +61,18 @@ load("//builder/grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
 
 pip3_import(
-    name = "graknlabs_build_tools_ci_pip",
+    name = "graknlabs_dependencies_ci_pip",
     requirements = "//tools:requirements.txt",
 )
 
-load("@graknlabs_build_tools_ci_pip//:requirements.bzl",
-graknlabs_build_tools_ci_pip_install = "pip_install")
-graknlabs_build_tools_ci_pip_install()
+load("@graknlabs_dependencies_ci_pip//:requirements.bzl",
+graknlabs_dependencies_ci_pip_install = "pip_install")
+graknlabs_dependencies_ci_pip_install()
 
 # Generate a JSON document of commit hashes of all external workspace dependencies
 load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")
 workspace_refs(
-    name = "graknlabs_build_tools_workspace_refs"
+    name = "graknlabs_dependencies_workspace_refs"
 )
 
 git_repository(

@@ -4,7 +4,7 @@
 sync-dependencies.py updates bazel dependencies between @graknlabs repositories
 
 Example usage:
-bazel run @graknlabs_build_tools//ci:sync-dependencies -- \
+bazel run @graknlabs_dependencies//ci:sync-dependencies -- \
 --source client-python@1a2s3d4f1a2s3d4f1a2s3d4f1a2s3d4f1a2s3d4f \
 --targets docs:development examples:development
 """

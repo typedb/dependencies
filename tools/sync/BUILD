@@ -1,4 +1,4 @@
-load("@graknlabs_build_tools_ci_pip//:requirements.bzl", "requirement")
+load("@graknlabs_dependencies_ci_pip//:requirements.bzl", "requirement")
 
 py_binary(
     name = "dependencies",
