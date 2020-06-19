@@ -62,7 +62,7 @@ grpc_deps()
 
 pip3_import(
     name = "graknlabs_build_tools_ci_pip",
-    requirements = "//:requirements.txt",
+    requirements = "//tools:requirements.txt",
 )
 
 load("@graknlabs_build_tools_ci_pip//:requirements.bzl",
