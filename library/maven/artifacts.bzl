@@ -1,5 +1,6 @@
 artifacts = {
     "ch.qos.logback:logback-classic": "1.2.3",
+    "com.google.code.findbugs:jsr305": "2.0.2",
     "com.google.guava:guava": "23.0",
     "com.google.protobuf:protobuf-java": "3.5.1",
     "io.grpc:grpc-api": "1.24.1",
@@ -12,7 +13,9 @@ artifacts = {
     "io.netty:netty-handler": "4.1.38.Final",
     "io.netty:netty-tcnative-boringssl-static": "2.0.25.Final",
     "junit:junit": "4.12",
+    "org.antlr:antlr4-runtime": "4.7.1",
     "org.hamcrest:hamcrest": "2.2",
+    "org.hamcrest:hamcrest-library": "1.3",
     "org.mockito:mockito-core": "2.6.4",
-    "org.slf4j:slf4j-api": "1.7.28"   
+    "org.slf4j:slf4j-api": "1.7.28"
 }
