@@ -18,31 +18,31 @@
 
 workspace(name = "graknlabs_dependencies")
 
-###########################
-# Load Bazel dependencies #
-###########################
+##############
+# Load Bazel #
+##############
 load("//builder/bazel:deps.bzl","bazel_common", "bazel_deps", "bazel_toolchain")
 bazel_common()
 bazel_deps()
 bazel_toolchain()
 
-##########################
-# Load gRPC dependencies #
-##########################
+#############
+# Load gRPC #
+#############
 load("//builder/grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
 
-############################
-# Load NodeJS dependencies #
-############################
+###############
+# Load NodeJS #
+###############
 load("//builder/nodejs:deps.bzl", nodejs_deps = "deps")
 nodejs_deps()
 load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
 node_repositories()
 
-############################
-# Load Python dependencies #
-############################
+###############
+# Load Python #
+###############
 load("//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
 load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
@@ -55,9 +55,9 @@ load("@graknlabs_dependencies_ci_pip//:requirements.bzl",
 graknlabs_dependencies_ci_pip_install = "pip_install")
 graknlabs_dependencies_ci_pip_install()
 
-########################################
-# Load Bazel Distribution dependencies #
-########################################
+################################
+# Load @graknlabs_distribution #
+################################
 load("//distribution:deps.bzl", distribution_deps = "deps")
 distribution_deps()
 
@@ -89,31 +89,33 @@ bazelbuild_rules_pkg()
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
-############################
-# Load Docker dependencies #
-############################
+###############
+# Load Docker #
+###############
 load("//distribution/docker:deps.bzl", docker_deps = "deps")
 docker_deps()
 
-################################
-# Load Checkstyle dependencies #
-################################
+###################
+# Load Checkstyle #
+###################
 load("//tools/checkstyle:deps.bzl", checkstyle_deps = "deps")
 checkstyle_deps()
 
-################################
-# Load Sonarcloud dependencies #
-################################
+###################
+# Load Sonarcloud #
+###################
 load("//tools/sonarcloud:deps.bzl", "sonarcloud_dependencies")
 sonarcloud_dependencies()
 
-#################################
-# Load Unused Deps dependencies #
-#################################
+####################
+# Load Unused Deps #
+####################
 load("//tools/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
-# Generate a JSON document of commit hashes of all external workspace dependencies
+#########################
+# Create Workspace Refs #
+#########################
 load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")
 workspace_refs(
     name = "graknlabs_dependencies_workspace_refs"
