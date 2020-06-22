@@ -52,11 +52,11 @@ def _checkstyle_test_impl(ctx):
     config = ctx.actions.declare_file("checkstyle.xml")
 
     if ctx.attr.license_type == "apache":
-        license_file = "external/graknlabs_dependencies/checkstyle/config/checkstyle-file-header-apache.txt"
+        license_file = "external/graknlabs_dependencies/tools/checkstyle/config/checkstyle-file-header-apache.txt"
     elif ctx.attr.license_type == "grakn-kgms":
-        license_file = "external/graknlabs_dependencies/checkstyle/config/checkstyle-file-header-grakn-kgms.txt"
+        license_file = "external/graknlabs_dependencies/tools/checkstyle/config/checkstyle-file-header-grakn-kgms.txt"
     else:
-        license_file = "external/graknlabs_dependencies/checkstyle/config/checkstyle-file-header-agpl.txt"
+        license_file = "external/graknlabs_dependencies/tools/checkstyle/config/checkstyle-file-header-agpl.txt"
 
     ctx.actions.expand_template(
         template = ctx.file._checkstyle_xml_template,
@@ -164,7 +164,7 @@ checkstyle_test = rule(
         "_license_files": attr.label_list(
             allow_files=True,
             doc = "License file(s) that can be used with the checkstyle license target",
-            default = ["@graknlabs_dependencies//checkstyle/config:license_files"]
+            default = ["@graknlabs_dependencies//tools/checkstyle/config:license_files"]
         ),
     },
     outputs = {
