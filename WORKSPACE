@@ -31,6 +31,19 @@ bazel_toolchain()
 #############
 load("//builder/grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
+load("@com_github_grpc_grpc//bazel:grpc_deps.bzl",
+com_github_grpc_grpc_deps = "grpc_deps")
+com_github_grpc_grpc_deps()
+load("@stackb_rules_proto//java:deps.bzl", "java_grpc_compile")
+java_grpc_compile()
+load("@stackb_rules_proto//node:deps.bzl", "node_grpc_compile")
+node_grpc_compile()
+
+#############
+# Load Java #
+#############
+load("@graknlabs_dependencies//builder/java:deps.bzl", java_deps = "deps")
+java_deps()
 
 ###############
 # Load NodeJS #
@@ -60,6 +73,14 @@ graknlabs_dependencies_ci_pip_install()
 ################################
 load("//distribution:deps.bzl", distribution_deps = "deps")
 distribution_deps()
+
+pip3_import(
+    name = "graknlabs_bazel_distribution_pip",
+    requirements = "@graknlabs_bazel_distribution//pip:requirements.txt",
+)
+load("@graknlabs_bazel_distribution_pip//:requirements.bzl",
+graknlabs_bazel_distribution_pip_install = "pip_install")
+graknlabs_bazel_distribution_pip_install()
 
 load("@graknlabs_bazel_distribution//github:dependencies.bzl", "tcnksm_ghr")
 tcnksm_ghr()
