@@ -19,7 +19,7 @@
 #
 
 from __future__ import print_function
-import common
+import tools.common as tc
 import os
 import sys
 from xml.etree import ElementTree
@@ -34,14 +34,14 @@ def try_decode(s):
 if __name__ == '__main__':
     print('Checking if there are any source files not covered by checkstyle...')
 
-    java_targets, _ = common.shell_execute([
+    java_targets, _ = tc.shell_execute([
         'bazel', 'query',
         '(kind(java_library, //...) union kind(java_test, //...)) '
         'except //dependencies/... except attr("tags", "checkstyle_ignore", //...)'
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
     java_targets = java_targets.split()
 
-    checkstyle_targets_xml, _ = common.shell_execute([
+    checkstyle_targets_xml, _ = tc.shell_execute([
         'bazel', 'query', 'kind(checkstyle_test, //...)', '--output', 'xml'
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
     checkstyle_targets_tree = ElementTree.fromstring(checkstyle_targets_xml)
