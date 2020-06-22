@@ -144,11 +144,11 @@ checkstyle_test = rule(
         ),
         "_checkstyle_py_template": attr.label(
              allow_single_file=True,
-             default = "//checkstyle/templates:checkstyle.py"
+             default = "//tools/checkstyle/templates:checkstyle.py"
         ),
         "_checkstyle_xml_template": attr.label(
              allow_single_file=True,
-             default = "//checkstyle/templates:checkstyle.xml"
+             default = "//tools/checkstyle/templates:checkstyle.xml"
         ),
         "_classpath": attr.label_list(default=[
             Label("@com_puppycrawl_tools_checkstyle//jar"),
