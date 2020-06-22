@@ -31,6 +31,8 @@ function install_dependencies() {
     fi
 }
 
+cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
+
 if [[ -n "$BAZEL_RBE_CREDENTIAL" ]]; then
     echo "Installing RBE credential..."
     BAZEL_RBE_CREDENTIAL_LOCATION=~/.config/gcloud/application_default_credentials.json
@@ -38,14 +40,14 @@ if [[ -n "$BAZEL_RBE_CREDENTIAL" ]]; then
     mkdir -p ~/.config/gcloud/
     echo $BAZEL_RBE_CREDENTIAL > "$BAZEL_RBE_CREDENTIAL_LOCATION"
     echo "The RBE credential has been installed!"
+    echo "Configuring Python..."
+    # setting the exact version of Python 3 and Python 2, respectively
+    pyenv install 3.6.10
+    pyenv global 3.6.10 2.7.12
 else
     echo "No RBE credential found. Bazel will be executed locally without RBE support."
     install_dependencies
+    echo "Configuring Python..."
+    # uses system version of python, according to the image that is set
+    pyenv global system system
 fi
-
-echo "Configuring Python..."
-# setting the exact version of Python 3 and Python 2, respectively
-cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
-pyenv install 3.6.10
-pyenv global 3.6.10 2.7.12
-
