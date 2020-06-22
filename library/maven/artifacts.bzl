@@ -1,5 +1,6 @@
 artifacts = {
-    "com.google.protobuf:protobuf-java": "com.google.protobuf:protobuf-java:3.5.1",
+    "com.google.guava:guava": "23.0",
+    "com.google.protobuf:protobuf-java": "3.5.1",
 
     "io.grpc:grpc-api": "1.24.1",
     "io.grpc:grpc-core": "1.24.1",
