@@ -19,6 +19,14 @@
 workspace(name = "graknlabs_dependencies")
 
 ##############
+# Load Antlr #
+##############
+load("//builder/antlr:deps.bzl", antlr_deps = "deps")
+antlr_deps()
+load("@rules_antlr//antlr:deps.bzl", "antlr_dependencies")
+antlr_dependencies()
+
+##############
 # Load Bazel #
 ##############
 load("//builder/bazel:deps.bzl","bazel_common", "bazel_deps", "bazel_toolchain")
