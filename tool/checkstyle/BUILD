@@ -22,5 +22,5 @@ py_binary(
     name = "test-coverage",
     srcs = ["test-coverage.py"],
     main = "test-coverage.py",
-    deps = [ "//tools:common" ]
+    deps = [ "//tool:common" ]
 )

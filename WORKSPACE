@@ -18,25 +18,23 @@
 
 workspace(name = "graknlabs_dependencies")
 
-##############
-# Load Antlr #
-##############
+################################
+# Load @graknlabs_dependencies #
+################################
+
+# Load Antlr
 load("//builder/antlr:deps.bzl", antlr_deps = "deps")
 antlr_deps()
 load("@rules_antlr//antlr:deps.bzl", "antlr_dependencies")
 antlr_dependencies()
 
-##############
-# Load Bazel #
-##############
+# Load Bazel
 load("//builder/bazel:deps.bzl","bazel_common", "bazel_deps", "bazel_toolchain")
 bazel_common()
 bazel_deps()
 bazel_toolchain()
 
-#############
-# Load gRPC #
-#############
+# Load gRPC
 load("//builder/grpc:deps.bzl", grpc_deps = "deps")
 grpc_deps()
 load("@com_github_grpc_grpc//bazel:grpc_deps.bzl",
@@ -47,39 +45,33 @@ java_grpc_compile()
 load("@stackb_rules_proto//node:deps.bzl", "node_grpc_compile")
 node_grpc_compile()
 
-#############
-# Load Java #
-#############
+# Load Java
 load("//builder/java:deps.bzl", java_deps = "deps")
 java_deps()
 load("//library/maven:rules.bzl", "maven")
 
-###############
-# Load NodeJS #
-###############
+# Load NodeJS
 load("//builder/nodejs:deps.bzl", nodejs_deps = "deps")
 nodejs_deps()
 load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
 node_repositories()
 
-###############
-# Load Python #
-###############
+# Load Python
 load("//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
 load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
 pip_repositories()
 pip3_import(
     name = "graknlabs_dependencies_ci_pip",
-    requirements = "//tools:requirements.txt",
+    requirements = "//tool:requirements.txt",
 )
 load("@graknlabs_dependencies_ci_pip//:requirements.bzl",
 graknlabs_dependencies_ci_pip_install = "pip_install")
 graknlabs_dependencies_ci_pip_install()
 
-################################
-# Load @graknlabs_distribution #
-################################
+######################################
+# Load @graknlabs_bazel_distribution #
+######################################
 load("//distribution:deps.bzl", distribution_deps = "deps")
 distribution_deps()
 
@@ -119,28 +111,20 @@ bazelbuild_rules_pkg()
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
-###############
-# Load Docker #
-###############
+# Load Docker
 load("//distribution/docker:deps.bzl", docker_deps = "deps")
 docker_deps()
 
-###################
-# Load Checkstyle #
-###################
-load("//tools/checkstyle:deps.bzl", checkstyle_deps = "deps")
+# Load Checkstyle
+load("//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
 checkstyle_deps()
 
-###################
-# Load Sonarcloud #
-###################
-load("//tools/sonarcloud:deps.bzl", "sonarcloud_dependencies")
+# Load Sonarcloud
+load("//tool/sonarcloud:deps.bzl", "sonarcloud_dependencies")
 sonarcloud_dependencies()
 
-####################
-# Load Unused Deps #
-####################
-load("//tools/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
+# Load Unused Deps
+load("//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
 #########################

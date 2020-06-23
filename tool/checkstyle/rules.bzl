@@ -144,11 +144,11 @@ checkstyle_test = rule(
         ),
         "_checkstyle_py_template": attr.label(
              allow_single_file=True,
-             default = "//tools/checkstyle/templates:checkstyle.py"
+             default = "//tool/checkstyle/templates:checkstyle.py"
         ),
         "_checkstyle_xml_template": attr.label(
              allow_single_file=True,
-             default = "//tools/checkstyle/templates:checkstyle.xml"
+             default = "//tool/checkstyle/templates:checkstyle.xml"
         ),
         "_classpath": attr.label_list(default=[
             Label("@com_puppycrawl_tools_checkstyle//jar"),
@@ -164,7 +164,7 @@ checkstyle_test = rule(
         "_license_files": attr.label_list(
             allow_files=True,
             doc = "License file(s) that can be used with the checkstyle license target",
-            default = ["@graknlabs_dependencies//tools/checkstyle/config:license_files"]
+            default = ["@graknlabs_dependencies//tool/checkstyle/config:license_files"]
         ),
     },
     outputs = {
