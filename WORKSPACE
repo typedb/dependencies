@@ -50,8 +50,9 @@ node_grpc_compile()
 #############
 # Load Java #
 #############
-load("@graknlabs_dependencies//builder/java:deps.bzl", java_deps = "deps")
+load("//builder/java:deps.bzl", java_deps = "deps")
 java_deps()
+load("//library/maven:rules.bzl", "maven")
 
 ###############
 # Load NodeJS #
