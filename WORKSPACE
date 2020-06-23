@@ -21,7 +21,6 @@ workspace(name = "graknlabs_dependencies")
 ################################
 # Load @graknlabs_dependencies #
 ################################
-
 # Load Antlr
 load("//builder/antlr:deps.bzl", antlr_deps = "deps")
 antlr_deps()
