@@ -68,6 +68,22 @@ load("@graknlabs_dependencies_ci_pip//:requirements.bzl",
 graknlabs_dependencies_ci_pip_install = "pip_install")
 graknlabs_dependencies_ci_pip_install()
 
+# Load Docker
+load("//distribution/docker:deps.bzl", docker_deps = "deps")
+docker_deps()
+
+# Load Checkstyle
+load("//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
+checkstyle_deps()
+
+# Load Sonarcloud
+load("//tool/sonarcloud:deps.bzl", "sonarcloud_dependencies")
+sonarcloud_dependencies()
+
+# Load Unused Deps
+load("//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
+unuseddeps_deps()
+
 ######################################
 # Load @graknlabs_bazel_distribution #
 ######################################
@@ -109,22 +125,6 @@ bazelbuild_rules_pkg()
 
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
-
-# Load Docker
-load("//distribution/docker:deps.bzl", docker_deps = "deps")
-docker_deps()
-
-# Load Checkstyle
-load("//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
-checkstyle_deps()
-
-# Load Sonarcloud
-load("//tool/sonarcloud:deps.bzl", "sonarcloud_dependencies")
-sonarcloud_dependencies()
-
-# Load Unused Deps
-load("//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
-unuseddeps_deps()
 
 #########################
 # Create Workspace Refs #
