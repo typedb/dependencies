@@ -18,12 +18,12 @@
 
 version: 2.1
 commands:
-  bazel-install:
+  install-bazel:
     steps:
       - run: bash ./tools/bazelinstall/linux.sh
       - run: bash ./tools/bazelinstall/rbe.sh
   
-  bazel-run:
+  run-bazel:
     parameters:
       command:
           type: string
@@ -37,8 +37,8 @@ jobs:
     working_directory: ~/build-tools
     steps:
       - checkout
-      - bazel-install
-      - bazel-run:
+      - install-bazel
+      - run-bazel:
           command: bazel build //...
 
   sync-dependencies:
@@ -47,7 +47,7 @@ jobs:
     working_directory: ~/build-tools
     steps:
       - checkout
-      - bazel-install
+      - install-bazel
       - run: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run //ci:sync-dependencies -- \
