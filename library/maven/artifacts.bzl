@@ -19,6 +19,7 @@ artifacts = {
     "io.netty:netty-handler": "4.1.38.Final",
     "io.netty:netty-handler-proxy": "4.1.38.Final",
     "io.netty:netty-tcnative-boringssl-static": "2.0.25.Final",
+    "javax.annotation:javax.annotation-api":"1.3.2",
     "junit:junit": "4.12",
     "org.antlr:antlr4-runtime": "4.7.1",
     "org.hamcrest:hamcrest": "2.2",
