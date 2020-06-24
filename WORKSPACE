@@ -54,6 +54,7 @@ load("//builder/nodejs:deps.bzl", nodejs_deps = "deps")
 nodejs_deps()
 load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
 node_repositories()
+load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories", "yarn_install")
 
 # Load Python
 load("//builder/python:deps.bzl", python_deps = "deps")
