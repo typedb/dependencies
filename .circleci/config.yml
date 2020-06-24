@@ -20,8 +20,8 @@ version: 2.1
 commands:
   install-bazel:
     steps:
-      - run: bash ./tools/bazelinstall/linux.sh
-      - run: bash ./tools/bazelinstall/rbe.sh
+      - run: bash ./tool/bazelinstall/linux.sh
+      - run: bash ./tool/bazelinstall/rbe.sh
   
   run-bazel:
     parameters:
