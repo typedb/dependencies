@@ -34,7 +34,7 @@ jobs:
   build:
     machine: 
       image: ubuntu-1604:201903-01
-    working_directory: ~/build-tools
+    working_directory: ~/dependencies
     steps:
       - checkout
       - install-bazel
@@ -44,14 +44,14 @@ jobs:
   sync-dependencies:
     machine: 
       image: ubuntu-1604:201903-01
-    working_directory: ~/build-tools
+    working_directory: ~/dependencies
     steps:
       - checkout
       - install-bazel
       - run: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run //tool/sync:dependencies -- \
-          --source build-tools@$CIRCLE_SHA1 \
+          --source dependencies@$CIRCLE_SHA1 \
           --targets \
           common:master protocol:master graql:master grakn:master grakn-kgms:master \
           client-java:master client-python:master client-nodejs:master \
@@ -59,7 +59,7 @@ jobs:
           docs:master examples:master kglib:master
 
 workflows:
-  build-tools:
+  dependencies:
     jobs:
       - build
       - sync-dependencies:
