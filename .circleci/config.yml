@@ -50,7 +50,7 @@ jobs:
       - install-bazel
       - run: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
-          bazel run //tools/sync:dependencies -- \
+          bazel run //tool/sync:dependencies -- \
           --source build-tools@$CIRCLE_SHA1 \
           --targets \
           common:master protocol:master graql:master grakn:master grakn-kgms:master \
