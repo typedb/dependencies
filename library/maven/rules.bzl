@@ -10,11 +10,9 @@ def maven(artifacts_list):
         if artifact not in artifacts_registered.keys():
             fail("'" + artifact + "' has not been declared in @graknlabs_dependencies")
     artifacts_selected = []
-    for key in artifacts_registered.keys():
-        if key in artifacts_list:
-            artifact_id = key
-            version = artifacts_registered[key]
-            artifacts_selected.append(artifact_id + ":" + version)
+    for artifact in artifacts_list:
+        version = artifacts_registered[artifact]
+        artifacts_selected.append(artifact + ":" + version)
     maven_install(
         artifacts = artifacts_selected,
         repositories = [
