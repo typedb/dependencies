@@ -46,8 +46,8 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/dependencies
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
       - run: |
           export DEPLOY_APT_USERNAME=$REPO_GRAKN_USERNAME
           export DEPLOY_APT_PASSWORD=$REPO_GRAKN_PASSWORD
@@ -58,8 +58,8 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/dependencies
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
       - run: sudo apt-get update && sudo apt-get install rpm
       - run: |
           export DEPLOY_RPM_USERNAME=$REPO_GRAKN_USERNAME
@@ -87,8 +87,8 @@ jobs:
     machine: 
       image: ubuntu-1604:201903-01
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
       - run: |
           export RELEASE_APPROVAL_USERNAME=$REPO_GITHUB_USERNAME
           export RELEASE_APPROVAL_TOKEN=$REPO_GITHUB_TOKEN
@@ -99,8 +99,8 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/dependencies
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
       - run: |
           pip install certifi
           export RELEASE_NOTES_TOKEN=$REPO_GITHUB_TOKEN
@@ -114,8 +114,8 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/dependencies
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
       - run: cat VERSION
       - run: |
           export DEPLOY_APT_USERNAME=$REPO_GRAKN_USERNAME
@@ -127,8 +127,8 @@ jobs:
       image: ubuntu-1604:201903-01
     working_directory: ~/dependencies
     steps:
-      - install-bazel
       - checkout
+      - install-bazel
       - run: sudo apt-get update && sudo apt-get install rpm
       - run: |
           export DEPLOY_RPM_USERNAME=$REPO_GRAKN_USERNAME
