@@ -22,4 +22,3 @@ java_binary(
     visibility = ["//visibility:public"],
     runtime_deps = ["@bazel_deps//jar:jar"],
 )
-

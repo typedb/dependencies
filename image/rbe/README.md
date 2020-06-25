@@ -37,4 +37,3 @@ latest: digest: sha256:e45b81a193c7b783c92db389655664d353ffb1fdf219577c5ced7b7d8
 Then, the value in `platform` of `container-image` value should be replaced:
 
 `docker://gcr.io/grakn-dev/rbe_platform@sha256:<sha_digest>`
-
