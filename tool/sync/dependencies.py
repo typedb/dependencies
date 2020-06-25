@@ -12,7 +12,7 @@ bazel run @graknlabs_dependencies//ci:sync-dependencies -- \
 from __future__ import print_function
 
 import argparse
-import common
+import tool.common.common as tc
 import github
 import hashlib
 import hmac
@@ -127,7 +127,7 @@ def main():
     signature = hmac.new(GITHUB_TOKEN.encode(), sync_data_json.encode(), hashlib.sha1).hexdigest()
 
     print('Sending post request to: ' + GRABL_SYNC_DEPS)
-    common.shell_execute([
+    tc.shell_execute([
         'curl', '-X', 'POST', '--data', sync_data_json, '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
     ])
     print('DONE!')

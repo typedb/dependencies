@@ -2,7 +2,7 @@
 
 from __future__ import print_function
 
-import common
+import tool.common.common as tc
 import hashlib
 import hmac
 import json
@@ -41,7 +41,7 @@ grabl_url_status = '{GRABL_HOST}/release/{commit}/status'.format(GRABL_HOST=GRAB
 new_release_signature = hmac.new(git_token.encode(), json.dumps(grabl_data).encode(), hashlib.sha1).hexdigest()
 print("Tests have been ran and everything is in a good, releasable state. "
     "It is possible to proceed with the release process. Waiting for approval.")
-common.shell_execute([
+tc.shell_execute([
     'curl', '--silent', '--show-error', '--fail', '-X', 'POST', '--data', json.dumps(grabl_data), '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + new_release_signature, grabl_url_new
 ])
 
@@ -50,7 +50,7 @@ counter = 0
 
 while status == 'no-status':
     get_release_status_signature = hmac.new(git_token.encode(), ''.encode(), hashlib.sha1).hexdigest()
-    status, _ = common.shell_execute(['curl', '--silent', '--show-error', '--fail', '-H', 'X-Hub-Signature: ' + get_release_status_signature, grabl_url_status])
+    status, _ = tc.shell_execute(['curl', '--silent', '--show-error', '--fail', '-H', 'X-Hub-Signature: ' + get_release_status_signature, grabl_url_status])
 
     if status == 'deploy':
         organisation = os.getenv('CIRCLE_PROJECT_USERNAME')
