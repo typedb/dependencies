@@ -166,7 +166,7 @@ workflows:
       - deploy-apt-snapshot:
           filters:
             branches:
-              only: master
+              only: release-pipeline # TODO: revert to master
           requires:
             - build
             - build-analysis
@@ -174,7 +174,7 @@ workflows:
       - deploy-rpm-snapshot:
           filters:
             branches:
-              only: master
+              only: release-pipeline # TODO: revert to master
           requires:
             - build
             - build-analysis
@@ -182,14 +182,14 @@ workflows:
       - sync-dependencies-snapshot:
           filters:
             branches:
-              only: master
+              only: release-pipeline # TODO: revert to master
           requires:
             - deploy-apt-snapshot
             - deploy-rpm-snapshot
       - release-approval:
           filters:
             branches:
-              only: master
+              only: release-pipeline # TODO: revert to master
           requires:
             - sync-dependencies-snapshot
   dependencies-release:
