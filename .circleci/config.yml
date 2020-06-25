@@ -162,13 +162,13 @@ jobs:
 workflows:
   dependencies:
     jobs:
-      # - build
+      - build
       - deploy-apt-snapshot:
           filters:
             branches:
               only: release-pipeline # TODO: revert to master
-          # requires:
-          #   - build
+          requires:
+            - build
       - deploy-rpm-snapshot:
           filters:
             branches:
