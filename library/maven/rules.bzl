@@ -2,10 +2,6 @@ load("@rules_jvm_external//:defs.bzl", "maven_install")
 load(":artifacts.bzl", artifacts_registered = "artifacts")
 
 def maven(artifacts_list):
-    deduplicate = {}
-    for artifact in artifacts_list:
-        deduplicate[artifact] = True
-    artifacts_list = deduplicate.keys()
     for artifact in artifacts_list:
         if artifact not in artifacts_registered.keys():
             fail("'" + artifact + "' has not been declared in @graknlabs_dependencies")
