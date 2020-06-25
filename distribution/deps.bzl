@@ -15,3 +15,12 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
+
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+def deps():
+    git_repository(
+        name = "graknlabs_bazel_distribution",
+        remote = "https://github.com/graknlabs/bazel-distribution",
+        commit = "48d56085dcfc78fa6f6363f66dcec4ca11b592e3" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
+    )

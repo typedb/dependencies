@@ -1,6 +1,6 @@
 #
 # GRAKN.AI - THE KNOWLEDGE GRAPH
-# Copyright (C) 2018 Grakn Labs Ltd
+# Copyright (C) 2019 Grakn Labs Ltd
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -16,25 +16,28 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@graknlabs_bazel_distribution//common:rules.bzl", "assemble_targz")
+load("@graknlabs_bazel_distribution//rpm:rules.bzl", "assemble_rpm", "deploy_rpm")
 
-exports_files(["deployment.properties"], visibility = ["//visibility:public"])
-
-assemble_targz(
-    name = "assemble-bash-targz",
-    additional_files = {
-        "//binary:grakn": 'grakn',
-    },
+assemble_rpm(
+    name = "assemble-linux-rpm",
+    package_name = "grakn-bin",
+    installation_dir = "/opt/grakn/core/",
+    spec_file = ":grakn-bin.spec",
+    empty_dirs = [
+        "var/log/grakn/",
+    ],
+    archives = ["//distribution:assemble-bash-targz"],
     permissions = {
-        "grakn": "0755",
+        "var/log/grakn/": "0777",
     },
-    visibility = ["//visibility:public"]
+    symlinks = {
+        "usr/local/bin/grakn": "/opt/grakn/core/grakn",
+        "opt/grakn/core/logs": "/var/log/grakn/",
+    },
 )
 
-assemble_targz(
-    name = "assemble-bat-targz",
-    additional_files = {
-        "//binary:grakn.bat": 'grakn.bat',
-    },
-    visibility = ["//visibility:public"]
+deploy_rpm(
+    name = "deploy-rpm",
+    target = ":assemble-linux-rpm",
+    deployment_properties = "//distribution:deployment.properties",
 )

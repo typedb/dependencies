@@ -18,17 +18,17 @@
 
 version: 2.1
 commands:
-  install-bazel-linux-rbe:
+  install-bazel:
     steps:
-      - run: bash ./ci/install-bazel-linux.sh
-      - run: bash ./ci/install-bazel-rbe.sh
+      - run: bash ./tool/bazelinstall/linux.sh
+      - run: bash ./tool/bazelinstall/rbe.sh
   
-  run-bazel-rbe:
+  run-bazel:
     parameters:
       command:
           type: string
     steps:
-      - run: bazel run @graknlabs_build_tools//ci:run-bazel-rbe -- << parameters.command >>
+      - run: bazel run @graknlabs_dependencies//tool/bazelrun:rbe -- << parameters.command >>
 
 jobs:
   build:
@@ -37,8 +37,8 @@ jobs:
     working_directory: ~/build-tools
     steps:
       - checkout
-      - install-bazel-linux-rbe
-      - run-bazel-rbe:
+      - install-bazel
+      - run-bazel:
           command: bazel build //...
 
   sync-dependencies:
@@ -47,7 +47,7 @@ jobs:
     working_directory: ~/build-tools
     steps:
       - checkout
-      - install-bazel-linux-rbe
+      - install-bazel
       - run: |
           export SYNC_DEPENDENCIES_TOKEN=$REPO_GITHUB_TOKEN
           bazel run //ci:sync-dependencies -- \
