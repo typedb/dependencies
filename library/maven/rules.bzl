@@ -2,6 +2,10 @@ load("@rules_jvm_external//:defs.bzl", "maven_install")
 load(":artifacts.bzl", "artifacts")
 
 def maven(selections):
+    deduplicate = {}
+    for selection in selections:
+        deduplicate[selection] = True
+    selections = deduplicate.keys()
     for selection in selections:
         if selection not in artifacts.keys():
             fail("'" + selection + "' has not been declared in @graknlabs_dependencies")
