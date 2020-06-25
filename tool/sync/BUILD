@@ -5,7 +5,7 @@ py_binary(
     srcs = ["dependencies.py"],
     main = "dependencies.py",
     deps = [
-        "//tool:common",
+        "//tool/common:common",
         requirement("PyGithub"),
         requirement("urllib3"),
         requirement("chardet"),

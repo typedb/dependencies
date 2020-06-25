@@ -19,7 +19,7 @@
 #
 
 from __future__ import print_function
-import tool.common as tc
+import tool.common.common as tc
 import os
 import sys
 from xml.etree import ElementTree
