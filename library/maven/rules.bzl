@@ -1,22 +1,22 @@
 load("@rules_jvm_external//:defs.bzl", "maven_install")
-load(":artifacts.bzl", "artifacts")
+load(":artifacts.bzl", artifacts_registered = "artifacts")
 
-def maven(selections):
+def maven(artifacts_list):
     deduplicate = {}
-    for selection in selections:
-        deduplicate[selection] = True
-    selections = deduplicate.keys()
-    for selection in selections:
-        if selection not in artifacts.keys():
-            fail("'" + selection + "' has not been declared in @graknlabs_dependencies")
-    selected = []
-    for key in artifacts.keys():
-        if key in selections:
+    for artifact in artifacts_list:
+        deduplicate[artifact] = True
+    artifacts_list = deduplicate.keys()
+    for artifact in artifacts_list:
+        if artifact not in artifacts_registered.keys():
+            fail("'" + artifact + "' has not been declared in @graknlabs_dependencies")
+    artifacts_selected = []
+    for key in artifacts_registered.keys():
+        if key in artifacts_list:
             artifact_id = key
-            version = artifacts[key]
-            selected.append(artifact_id + ":" + version)
+            version = artifacts_registered[key]
+            artifacts_selected.append(artifact_id + ":" + version)
     maven_install(
-        artifacts = selected,
+        artifacts = artifacts_selected,
         repositories = [
             "https://repo1.maven.org/maven2",
             "http://maven.grakn.ai/nexus/content/repositories/snapshots"
