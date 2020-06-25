@@ -1,6 +1,6 @@
 #
 # GRAKN.AI - THE KNOWLEDGE GRAPH
-# Copyright (C) 2018 Grakn Labs Ltd
+# Copyright (C) 2019 Grakn Labs Ltd
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -15,13 +15,6 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
+#
 
-load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
-
-deploy_github(
-    name = "deploy-github",
-    deployment_properties = "//:deployment.properties",
-    title = "Grakn Dependencies",
-    title_append_version = True,
-    release_description = "//:RELEASE_TEMPLATE.md",
-)
+exports_files(["grakn", "grakn.bat", "grakn-docker.sh"])

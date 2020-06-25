@@ -16,12 +16,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
+exports_files(["rules.bzl"])
 
-deploy_github(
-    name = "deploy-github",
-    deployment_properties = "//:deployment.properties",
-    title = "Grakn Dependencies",
-    title_append_version = True,
-    release_description = "//:RELEASE_TEMPLATE.md",
+py_binary(
+    name = "test-coverage",
+    srcs = ["test-coverage.py"],
+    main = "test-coverage.py",
+    deps = [ "//tool/common:common" ]
 )

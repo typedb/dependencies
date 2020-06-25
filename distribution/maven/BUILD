@@ -20,12 +20,12 @@ genrule(
     name = "rules",
     srcs = [
         "@graknlabs_bazel_distribution//maven/templates:rules.bzl",
-        "@graknlabs_build_tools//:deployment.properties"
+        "@graknlabs_dependencies//distribution:deployment.properties"
     ],
     tools = ["@graknlabs_bazel_distribution//maven:deployment_rules_builder"],
     cmd = "$(location @graknlabs_bazel_distribution//maven:deployment_rules_builder) " +
         "$(location @graknlabs_bazel_distribution//maven/templates:rules.bzl) $@ " +
-        "$(location @graknlabs_build_tools//:deployment.properties) " +
-        "@graknlabs_build_tools//:deployment.properties",
+        "$(location @graknlabs_dependencies//distribution:deployment.properties) " +
+        "@graknlabs_dependencies//distribution:deployment.properties",
     outs = ["rules.bzl"]
 )

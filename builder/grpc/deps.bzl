@@ -16,12 +16,21 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-deploy_github(
-    name = "deploy-github",
-    deployment_properties = "//:deployment.properties",
-    title = "Grakn Dependencies",
-    title_append_version = True,
-    release_description = "//:RELEASE_TEMPLATE.md",
-)
+def deps():
+    git_repository(
+        name = "com_github_grpc_grpc",
+        remote = "https://github.com/graknlabs/grpc",
+        commit = "4a1528f6f20a8aa68bdbdc9a66286ec2394fc170"
+    )
+    git_repository(
+        name = "io_grpc_grpc_java",
+        remote = "https://github.com/grpc/grpc-java",
+        commit = "62e8655f1bc4dfb474afbf332ca7571c1454e6ef"
+    )
+    git_repository(
+        name = "stackb_rules_proto",
+        remote = "https://github.com/graknlabs/rules_proto",
+        commit = "fd3aa227fdaa178c077ef9d72156b772d3b8c05d",
+    )

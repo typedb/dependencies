@@ -16,12 +16,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
-
-deploy_github(
-    name = "deploy-github",
-    deployment_properties = "//:deployment.properties",
-    title = "Grakn Dependencies",
-    title_append_version = True,
-    release_description = "//:RELEASE_TEMPLATE.md",
+java_binary(
+    name = "bazel-deps",
+    main_class = "com.github.johnynek.bazel_deps.ParseProject",
+    visibility = ["//visibility:public"],
+    runtime_deps = ["@bazel_deps//jar:jar"],
 )

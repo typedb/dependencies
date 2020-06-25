@@ -16,12 +16,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@graknlabs_bazel_distribution//github:rules.bzl", "deploy_github")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-deploy_github(
-    name = "deploy-github",
-    deployment_properties = "//:deployment.properties",
-    title = "Grakn Dependencies",
-    title_append_version = True,
-    release_description = "//:RELEASE_TEMPLATE.md",
-)
+def deps():
+    git_repository(
+        name = "graknlabs_bazel_distribution",
+        remote = "https://github.com/graknlabs/bazel-distribution",
+        commit = "6c817967b84744440f028aedfa1b7bb3c879fc68" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
+    )
