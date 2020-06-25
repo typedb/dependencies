@@ -157,7 +157,7 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - run: git push --delete https://$REPO_GITHUB_TOKEN@github.com/graknlabs/common common-release-branch
+      - run: git push --delete https://$REPO_GITHUB_TOKEN@github.com/graknlabs/dependencies dependencies-release-branch
 
 workflows:
   dependencies:
