@@ -173,8 +173,8 @@ workflows:
           filters:
             branches:
               only: release-pipeline # TODO: revert to master
-          # requires:
-          #   - build
+          requires:
+            - build
       - sync-dependencies-snapshot:
           filters:
             branches:
