@@ -169,16 +169,12 @@ workflows:
               only: release-pipeline # TODO: revert to master
           requires:
             - build
-            - build-analysis
-            - build-checkstyle
       - deploy-rpm-snapshot:
           filters:
             branches:
               only: release-pipeline # TODO: revert to master
           requires:
             - build
-            - build-analysis
-            - build-checkstyle
       - sync-dependencies-snapshot:
           filters:
             branches:
