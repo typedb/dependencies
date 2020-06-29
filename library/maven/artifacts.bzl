@@ -5,6 +5,7 @@ artifacts = {
     "com.google.code.findbugs:jsr305": "2.0.2",
     "com.google.guava:guava": "23.0",
     "com.google.protobuf:protobuf-java": "3.5.1",
+    "commons-cli:commons-cli":"1.4",
     "commons-io:commons-io": "2.3",
     "io.cucumber:cucumber-java": "5.1.3",
     "io.cucumber:cucumber-junit": "5.1.3",
@@ -22,6 +23,8 @@ artifacts = {
     "javax.annotation:javax.annotation-api":"1.3.2",
     "junit:junit": "4.12",
     "org.antlr:antlr4-runtime": "4.7.1",
+    "org.apache.commons:commons-csv": "1.7",
+    "org.apache.commons:commons-lang3": "3.9",
     "org.hamcrest:hamcrest": "2.2",
     "org.hamcrest:hamcrest-all": "1.3",
     "org.hamcrest:hamcrest-core": "1.3",
@@ -31,5 +34,6 @@ artifacts = {
     "org.slf4j:log4j-over-slf4j": "1.7.20",
     "org.slf4j:slf4j-api": "1.7.28",
     "org.slf4j:slf4j-simple": "1.7.20",
-    "org.zeroturnaround:zt-exec": "1.10" # exclude: - "commons-io:commons-io"
+    "org.yaml:snakeyaml":"1.25",
+    "org.zeroturnaround:zt-exec": "1.10"
 }
