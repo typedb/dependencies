@@ -5,5 +5,3 @@ bazel-bin
 bazel-out
 bazel-dependencies
 bazel-testlogs
-.terraform
-*.tfstate*
