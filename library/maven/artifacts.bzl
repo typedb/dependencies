@@ -9,7 +9,6 @@ artifacts = {
   "com.google.code.findbugs:jsr305": "2.0.2",
   "com.google.guava:guava": "23.0",
   "com.google.protobuf:protobuf-java": "3.5.1",
-  # "commons-cli:commons-cli": "1.3",
   "commons-cli:commons-cli": "1.4",
   "commons-collections:commons-collections": "3.2.1",
   "commons-configuration:commons-configuration": "1.10",
@@ -54,7 +53,6 @@ artifacts = {
     ]
   },
   "org.apache.commons:commons-csv": "1.7",
-  # "org.apache.commons:commons-lang3": "3.3.1",
   "org.apache.commons:commons-lang3": "3.9",
   "org.apache.commons:commons-math3": "3.6.1",
   "org.apache.hadoop:hadoop-annotations": "2.7.2",
@@ -110,7 +108,6 @@ artifacts = {
   "org.scala-lang:scala-library": "2.11.8",
   "org.slf4j:jcl-over-slf4j": "1.7.20",
   "org.slf4j:log4j-over-slf4j": "1.7.20",
-  # "org.slf4j:slf4j-api": "1.7.20",
   "org.slf4j:slf4j-api": "1.7.28",
   "org.slf4j:slf4j-simple": "1.7.20",
   "org.yaml:snakeyaml": "1.25",
@@ -154,6 +151,7 @@ artifacts = {
       "org.slf4j:slf4j-log4j12",
     ],
   },
+  "org.rocksdb:rocksdbjni": "6.8.1",
   "org.zeroturnaround:zt-exec": {
     "version": "1.10",
     "exclude": [
