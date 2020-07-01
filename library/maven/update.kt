@@ -1,6 +1,8 @@
 package library.maven
 
+import java.lang.System.lineSeparator
 import java.nio.file.Files
+import java.nio.file.Files.write
 import java.nio.file.Paths
 
 fun main() {
@@ -15,7 +17,7 @@ fun main() {
     val snapshotNew = snapshotUpdateProc.inputStream
             .use { inStr -> inStr.reader().readLines() }
             .toSortedSet()
-    Files.write(snapshotFile, snapshotNew.joinToString(System.lineSeparator()).toByteArray())
+    write(snapshotFile, (snapshotNew.joinToString(lineSeparator()) + lineSeparator()).toByteArray())
     if (snapshotUpdateProc.exitValue() != 0) {
         throw RuntimeException("'$snapshotCommand' failed with exit code '${snapshotUpdateProc.exitValue()}'")
     }
