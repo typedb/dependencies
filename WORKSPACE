@@ -49,6 +49,13 @@ load("//builder/java:deps.bzl", java_deps = "deps")
 java_deps()
 load("//library/maven:rules.bzl", "maven")
 
+# Load Kotlin
+load("//builder/kotlin:deps.bzl", kotlin_deps = "deps")
+kotlin_deps()
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
+kotlin_repositories()
+kt_register_toolchains()
+
 # Load NodeJS
 load("//builder/nodejs:deps.bzl", nodejs_deps = "deps")
 nodejs_deps()
