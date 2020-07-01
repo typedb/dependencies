@@ -31,7 +31,6 @@ fun main() {
     else {
         println(" none.")
     }
-
     print("Removed dependencies:")
     if (removed.isNotEmpty()) {
         println()
