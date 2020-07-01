@@ -33,12 +33,13 @@ function install_dependencies() {
 
 cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
 
-if [[ -n "$BAZEL_RBE_CREDENTIAL" ]]; then
-    echo "Installing RBE credential..."
-    BAZEL_RBE_CREDENTIAL_LOCATION=~/.config/gcloud/application_default_credentials.json
-    echo "An RBE credential is found and will be saved to $BAZEL_RBE_CREDENTIAL_LOCATION. Bazel will be executed with RBE support."
-    mkdir -p ~/.config/gcloud/
-    echo $BAZEL_RBE_CREDENTIAL > "$BAZEL_RBE_CREDENTIAL_LOCATION"
+if [[ -n "$BAZEL_BUILDBUDDY_CERT" && -n "$BAZEL_BUILDBUDDY_KEY" ]]; then
+    echo "Installing BuildBuddy credential..."
+    BAZEL_BUILDBUDDY_CREDENTIAL=/home/circleci/.credentials/
+    echo "A BuildBuddy credential is found and will be saved to $BAZEL_BUILDBUDDY_CREDENTIAL. Targets will be built and tested remotely."
+    mkdir -p $BAZEL_BUILDBUDDY_CREDENTIAL
+    echo $BAZEL_BUILDBUDDY_CERT | base64 -d > "$BAZEL_BUILDBUDDY_CREDENTIAL/buildbuddy-cert.pem"
+    echo $BAZEL_BUILDBUDDY_KEY | base64 -d > "$BAZEL_BUILDBUDDY_CREDENTIAL/buildbuddy-key.pem"
     echo "The RBE credential has been installed!"
     echo "Configuring Python..."
     # setting the exact version of Python 3 and Python 2, respectively
