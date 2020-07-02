@@ -1,14 +1,28 @@
 artifacts = {
   "ch.qos.logback:logback-classic": "1.2.3",
   "ch.qos.logback:logback-core": "1.2.3",
+  "com.datastax.oss:java-driver-core": {
+    "version": "4.3.0",
+    "exclude": [
+      "com.github.jnr:jnr-ffi",
+    ],
+  },
+  "com.datastax.oss:java-driver-query-builder": {
+    "version": "4.3.0",
+    "exclude": [
+      "com.github.jnr:jnr-ffi",
+    ],
+  },
   "com.fasterxml.jackson.core:jackson-core": "2.9.10",
   "com.fasterxml.jackson.core:jackson-databind": "2.9.10.1",
   "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml": "2.9.9",
   "com.fasterxml.jackson.module:jackson-module-scala_2.11": "2.9.9",
   "com.google.code.findbugs:annotations": "3.0.1",
   "com.google.code.findbugs:jsr305": "2.0.2",
+  "com.google.code.gson:gson": "2.8.5",
   "com.google.guava:guava": "23.0",
   "com.google.protobuf:protobuf-java": "3.5.1",
+  "com.univocity:univocity-parsers": "2.8.1",
   "commons-cli:commons-cli": "1.4",
   "commons-collections:commons-collections": "3.2.1",
   "commons-configuration:commons-configuration": "1.10",
@@ -31,6 +45,7 @@ artifacts = {
   "io.vavr:vavr": "0.9.0",
   "javax.annotation:javax.annotation-api": "1.3.2",
   "javax.servlet:javax.servlet-api": "3.1.0",
+  "javax.xml.stream:stax-api": "1.0-2",
   "jline:jline": "2.12",
   "junit:junit": "4.12",
   "org.antlr:antlr4-runtime": "4.7.1",
@@ -56,7 +71,6 @@ artifacts = {
   "org.apache.commons:commons-lang3": "3.9",
   "org.apache.commons:commons-math3": "3.6.1",
   "org.apache.hadoop:hadoop-annotations": "2.7.2",
-  "org.apache.thrift:libthrift": "0.9.2",
   "org.apache.hadoop:hadoop-common": {
     "version": "2.7.2",
     "exclude": [
@@ -99,18 +113,7 @@ artifacts = {
       "org.slf4j:slf4j-log4j12"
     ]
   },
-  "org.hamcrest:hamcrest": "2.2",
-  "org.hamcrest:hamcrest-all": "1.3",
-  "org.hamcrest:hamcrest-core": "1.3",
-  "org.hamcrest:hamcrest-library": "1.3",
-  "org.javatuples:javatuples": "1.2",
-  "org.mockito:mockito-core": "2.6.4",
-  "org.scala-lang:scala-library": "2.11.8",
-  "org.slf4j:jcl-over-slf4j": "1.7.20",
-  "org.slf4j:log4j-over-slf4j": "1.7.20",
-  "org.slf4j:slf4j-api": "1.7.28",
-  "org.slf4j:slf4j-simple": "1.7.20",
-  "org.yaml:snakeyaml": "1.25",
+  "org.apache.thrift:libthrift": "0.9.2",
   "org.apache.tinkerpop:gremlin-core": {
     "version": "3.4.1",
     "exclude": [
@@ -151,6 +154,19 @@ artifacts = {
       "org.slf4j:slf4j-log4j12",
     ],
   },
+  "org.hamcrest:hamcrest": "2.2",
+  "org.hamcrest:hamcrest-all": "1.3",
+  "org.hamcrest:hamcrest-core": "1.3",
+  "org.hamcrest:hamcrest-library": "1.3",
+  "org.javatuples:javatuples": "1.2",
+  "org.mockito:mockito-core": "2.6.4",
+  "org.scala-lang:scala-library": "2.11.8",
+  "org.sharegov:mjson": "1.4.1",
+  "org.slf4j:jcl-over-slf4j": "1.7.20",
+  "org.slf4j:log4j-over-slf4j": "1.7.20",
+  "org.slf4j:slf4j-api": "1.7.28",
+  "org.slf4j:slf4j-simple": "1.7.20",
+  "org.yaml:snakeyaml": "1.25",
   "org.rocksdb:rocksdbjni": "6.8.1",
   "org.zeroturnaround:zt-exec": {
     "version": "1.10",
@@ -158,16 +174,5 @@ artifacts = {
       "commons-io:commons-io",
     ],
   },
-  "com.datastax.oss:java-driver-core": {
-    "version": "4.3.0",
-    "exclude": [
-      "com.github.jnr:jnr-ffi",
-    ],
-  },
-  "com.datastax.oss:java-driver-query-builder": {
-    "version": "4.3.0",
-    "exclude": [
-      "com.github.jnr:jnr-ffi",
-    ],
-  },
 }
+
