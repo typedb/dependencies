@@ -98,45 +98,52 @@ unuseddeps_deps()
 load("//distribution:deps.bzl", distribution_deps = "deps")
 distribution_deps()
 
-pip3_import(
-    name = "graknlabs_bazel_distribution_pip",
-    requirements = "@graknlabs_bazel_distribution//pip:requirements.txt",
-)
-load("@graknlabs_bazel_distribution_pip//:requirements.bzl",
-graknlabs_bazel_distribution_pip_install = "pip_install")
-graknlabs_bazel_distribution_pip_install()
+# Load Apt and RPM
+load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
+bazelbuild_rules_pkg()
+load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
+rules_pkg_dependencies()
 
-load("@graknlabs_bazel_distribution//github:dependencies.bzl", "tcnksm_ghr")
-tcnksm_ghr()
-
+# Load Docker
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 git_repository(
     name = "io_bazel_skydoc",
     remote = "https://github.com/graknlabs/skydoc.git",
     branch = "experimental-skydoc-allow-dep-on-bazel-tools",
 )
-
 load("@io_bazel_skydoc//:setup.bzl", "skydoc_repositories")
 skydoc_repositories()
-
 load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
 rules_sass_dependencies()
-
-load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
-node_repositories()
-
 load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
 sass_repositories()
 
-load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
-bazelbuild_rules_pkg()
+# Load Github
+load("@graknlabs_bazel_distribution//github:dependencies.bzl", "tcnksm_ghr")
+tcnksm_ghr()
 
-load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
-rules_pkg_dependencies()
+# Load NodeJS
+load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
+node_repositories()
 
-#########################
-# Create Workspace Refs #
-#########################
+# Load Python
+git_repository(
+    name = "io_bazel_rules_python",
+    remote = "https://github.com/bazelbuild/rules_python.git",
+    commit = "fdbb17a4118a1728d19e638a5291b4c4266ea5b8",
+)
+load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip_import")
+pip_repositories()
+pip_import(
+    name = "graknlabs_bazel_distribution_pip",
+    requirements = "@graknlabs_bazel_distribution//pip:requirements.txt",
+)
+load("@graknlabs_bazel_distribution_pip//:requirements.bzl", graknlabs_bazel_distribution_pip_install = "pip_install")
+graknlabs_bazel_distribution_pip_install()
+
+#################################################
+# Create @graknlabs_dependencies_workspace_refs #
+#################################################
 load("@graknlabs_bazel_distribution//common:rules.bzl", "workspace_refs")
 workspace_refs(
     name = "graknlabs_dependencies_workspace_refs"
