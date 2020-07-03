@@ -19,8 +19,8 @@
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 
-GRAKNLABS_ARTIFACT_RELEASE_REPOSITORY_URL = "https://repo.grakn.ai/repository/distribution"
-GRAKNLABS_ARTIFACT_SNAPSHOT_REPOSITORY_URL = "https://repo.grakn.ai/repository/distribution-snapshot"
+GRAKNLABS_ARTIFACT_RELEASE_REPOSITORY_URL = "https://repo.grakn.ai/repository/artifact"
+GRAKNLABS_ARTIFACT_SNAPSHOT_REPOSITORY_URL = "https://repo.grakn.ai/repository/artifact-snapshot"
 
 def _deploy_artifact_impl(ctx):
     _deploy_script = ctx.actions.declare_file("{}_deploy.py".format(ctx.attr.name))
@@ -41,9 +41,9 @@ def _deploy_artifact_impl(ctx):
             "{version_file}": version_file.short_path,
             "{artifact_path}": ctx.file.target.short_path,
             "{artifact_group}": ctx.attr.artifact_group,
-            "{artifact_filename}": ctx.attr.artifact_filename,
-            "{release_repository_url}": ctx.attr._release_repository_url,
-            "{snapshot_repository_url}": ctx.attr._snapshot_repository_url,
+            "{artifact_filename}": ctx.attr.artifact_name,
+            "{release_repository_url}": ctx.attr.release_repository_url,
+            "{snapshot_repository_url}": ctx.attr.snapshot_repository_url,
         },
     )
     files = [
@@ -53,7 +53,6 @@ def _deploy_artifact_impl(ctx):
     ]
 
     symlinks = {
-        "deployment.properties": ctx.file.deployment_properties,
         "common.py": ctx.file._common_py,
         'VERSION': version_file,
     }
@@ -89,14 +88,14 @@ deploy_artifact = rule(
         "artifact_name": attr.string(
             doc = "The artifact filename, automatic from the target file if not specified",
             default = '',
-        )
+        ),
         "_deploy_script": attr.label(
             allow_single_file = True,
             default = "//distribution/artifact/templates:deploy.py",
         ),
         "_common_py": attr.label(
             allow_single_file = True,
-            default = "graknlabs_bazel_distribution//common:common.py",
+            default = "@graknlabs_bazel_distribution//common:common.py",
         ),
         "release_repository_url": attr.string(
             default = GRAKNLABS_ARTIFACT_RELEASE_REPOSITORY_URL,
@@ -111,29 +110,24 @@ deploy_artifact = rule(
 )
 
 def artifact_file(name,
-                  repository_url,
                   group_name,
-                  file_name,
+                  artifact_name,
                   commit = None,
                   tag = None,
                   sha = None,
-                  release_repository_url = None,
-                  snapshot_repository_url = None,
+                  release_repository_url = GRAKNLABS_ARTIFACT_RELEASE_REPOSITORY_URL,
+                  snapshot_repository_url = GRAKNLABS_ARTIFACT_SNAPSHOT_REPOSITORY_URL,
                   tags = []):
 
-    repo_name = "artifact" if tag != None else "artifact-snapshot"
     version = tag if tag != None else commit
     versiontype = "tag" if tag != None else "commit"
-
-    release_repository_url = GRAKNLABS_ARTIFACT_RELEASE_REPOSITORY_URL if not release_repository_url
-    snapshot_repository_url = GRAKNLABS_ARTIFACT_SNAPSHOT_REPOSITORY_URL if not snapshot_repository_url
 
     repository_url = release_repository_url if versiontype == "tag" else snapshot_repository_url
 
     http_file(
         name = name,
-        urls = ["{}/{}/{}/{}/{}/{}".format(repository_url, repo_name, group_name, version, file_name)],
-        downloaded_file_path = file_name,
+        urls = ["{}/{}/{}/{}".format(repository_url, group_name, version, artifact_name)],
+        downloaded_file_path = artifact_name,
         sha = sha,
         tags = tags + ["{}={}".format(versiontype, version)]
     )
