@@ -74,10 +74,10 @@ if repo_type == 'release' and len(re.findall(version_release_regex, version)) ==
                      'must have a version which complies to this regex: {}'
                      .format(version, repo_type, version_snapshot_regex))
 
-artifact_name = os.path.basename('{artifact_path}')
-
-filename = '{artifact_group}/{version}/{artifact_name}'.format(
-    version=version, artifact_name=artifact_name)
+filename = '{artifact_filename}'
+if filename == '':
+    filename = '{artifact_group}/{version}/{artifact_name}'.format(
+        version=version, artifact_name=os.path.basename('{artifact_path}'))
 
 repository_url = None
 if repo_type == 'release':

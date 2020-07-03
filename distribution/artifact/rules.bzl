@@ -41,13 +41,13 @@ def _deploy_artifact_impl(ctx):
             "{version_file}": version_file.short_path,
             "{artifact_path}": ctx.file.target.short_path,
             "{artifact_group}": ctx.attr.artifact_group,
+            "{artifact_filename}": ctx.attr.artifact_filename,
             "{release_repository_url}": ctx.attr._release_repository_url,
             "{snapshot_repository_url}": ctx.attr._snapshot_repository_url,
         },
     )
     files = [
         ctx.file.target,
-        ctx.file.deployment_properties,
         version_file,
         ctx.file._common_py
     ]
@@ -74,11 +74,6 @@ deploy_artifact = rule(
             mandatory = True,
             doc = "File to deploy to repo",
         ),
-        "deployment_properties": attr.label(
-            allow_single_file = True,
-            mandatory = True,
-            doc = "File containing repository url by `repo.artifact` key",
-        ),
         "version_file": attr.label(
             allow_single_file = True,
             doc = """
@@ -91,6 +86,10 @@ deploy_artifact = rule(
             mandatory = True,
             doc = "The group of the artifact.",
         ),
+        "artifact_name": attr.string(
+            doc = "The artifact filename, automatic from the target file if not specified",
+            default = '',
+        )
         "_deploy_script": attr.label(
             allow_single_file = True,
             default = "//distribution/artifact/templates:deploy.py",
@@ -99,10 +98,10 @@ deploy_artifact = rule(
             allow_single_file = True,
             default = "graknlabs_bazel_distribution//common:common.py",
         ),
-        "_release_repository_url": attr.string(
+        "release_repository_url": attr.string(
             default = GRAKNLABS_ARTIFACT_RELEASE_REPOSITORY_URL,
         ),
-        "_snapshot_repository_url": attr.string(
+        "snapshot_repository_url": attr.string(
             default = GRAKNLABS_ARTIFACT_SNAPSHOT_REPOSITORY_URL,
         ),
     },
