@@ -76,13 +76,14 @@ if repo_type == 'release' and len(re.findall(version_release_regex, version)) ==
 
 filename = '{artifact_filename}'
 if filename == '':
-    filename = '{artifact_group}/{version}/{artifact_name}'.format(
-        version=version, artifact_name=os.path.basename('{artifact_path}'))
+    filename = os.path.basename('{artifact_path}')
 
-repository_url = None
+base_url = None
 if repo_type == 'release':
-    repository_url = '{release_repository_url}'
+    base_url = '{release_repository_url}'
 else:
-    repository_url = '{snapshot_repository_url}'
+    base_url = '{snapshot_repository_url}'
 
-upload(repository_url, username, password, '{artifact_path}', filename)
+dir_url = '{base_url}/{artifact_group}/{version}'.format(version=version, base_url=base_url)
+
+upload(dir_url, username, password, '{artifact_path}', filename)
