@@ -27,12 +27,6 @@ import subprocess as sp
 import sys
 from posixpath import join as urljoin
 
-# usual importing is not possible because
-# this script and module with common functions
-# are at different directory levels in sandbox
-from runpy import run_path
-parse_deployment_properties = run_path('common.py')['parse_deployment_properties']
-
 
 def upload(url, username, password, local_fn, remote_fn):
     upload_status_code = sp.check_output([
@@ -85,7 +79,10 @@ artifact_name = os.path.basename('{artifact_path}')
 filename = '{artifact_group}/{version}/{artifact_name}'.format(
     version=version, artifact_name=artifact_name)
 
-deployment_properties = parse_deployment_properties('deployment.properties')
-artifact_url = deployment_properties['repo.artifact.' + repo_type]
+repository_url = None
+if repo_type == 'release':
+    repository_url = '{release_repository_url}'
+else:
+    repository_url = '{snapshot_repository_url}'
 
-upload(artifact_url, username, password, '{artifact_path}', filename)
+upload(repository_url, username, password, '{artifact_path}', filename)

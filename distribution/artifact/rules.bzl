@@ -19,6 +19,9 @@
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 
+GRAKNLABS_ARTIFACT_RELEASE_REPOSITORY_URL = "https://repo.grakn.ai/repository/distribution"
+GRAKNLABS_ARTIFACT_SNAPSHOT_REPOSITORY_URL = "https://repo.grakn.ai/repository/distribution-snapshot"
+
 def _deploy_artifact_impl(ctx):
     _deploy_script = ctx.actions.declare_file("{}_deploy.py".format(ctx.attr.name))
 
@@ -38,6 +41,8 @@ def _deploy_artifact_impl(ctx):
             "{version_file}": version_file.short_path,
             "{artifact_path}": ctx.file.target.short_path,
             "{artifact_group}": ctx.attr.artifact_group,
+            "{release_repository_url}": ctx.attr._release_repository_url,
+            "{snapshot_repository_url}": ctx.attr._snapshot_repository_url,
         },
     )
     files = [
@@ -94,6 +99,12 @@ deploy_artifact = rule(
             allow_single_file = True,
             default = "graknlabs_bazel_distribution//common:common.py",
         ),
+        "_release_repository_url": attr.string(
+            default = GRAKNLABS_ARTIFACT_RELEASE_REPOSITORY_URL,
+        ),
+        "_snapshot_repository_url": attr.string(
+            default = GRAKNLABS_ARTIFACT_SNAPSHOT_REPOSITORY_URL,
+        ),
     },
     executable = True,
     implementation = _deploy_artifact_impl,
@@ -107,11 +118,18 @@ def artifact_file(name,
                   commit = None,
                   tag = None,
                   sha = None,
+                  release_repository_url = None,
+                  snapshot_repository_url = None,
                   tags = []):
 
     repo_name = "artifact" if tag != None else "artifact-snapshot"
     version = tag if tag != None else commit
     versiontype = "tag" if tag != None else "commit"
+
+    release_repository_url = GRAKNLABS_ARTIFACT_RELEASE_REPOSITORY_URL if not release_repository_url
+    snapshot_repository_url = GRAKNLABS_ARTIFACT_SNAPSHOT_REPOSITORY_URL if not snapshot_repository_url
+
+    repository_url = release_repository_url if versiontype == "tag" else snapshot_repository_url
 
     http_file(
         name = name,
