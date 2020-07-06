@@ -109,6 +109,7 @@ deploy_artifact = rule(
     doc = "Deploy archive target into a raw repo",
 )
 
+
 def artifact_file(name,
                   group_name,
                   artifact_name,
@@ -118,11 +119,25 @@ def artifact_file(name,
                   release_repository_url = GRAKNLABS_ARTIFACT_RELEASE_REPOSITORY_URL,
                   snapshot_repository_url = GRAKNLABS_ARTIFACT_SNAPSHOT_REPOSITORY_URL,
                   tags = []):
+    """Macro to assist depending on a deployed artifact by generating urls for http_file.
+
+    Args:
+        name: Target name.
+        group_name: Repo group name used to deploy artifact.
+        artifact_name: Artifact name, use {version} to interpolate the version from tag/commit.
+        commit: Commit sha, for when this was used as the version for upload.
+        tag: Git tag, for when this was used as the version for upload.
+        release_repository_url: The base repository URL for tag releases.
+        snapshot_repository_url: The base repository URL for snapshot/commit sha releases.
+        tags: Tags to forward onto the http_file rule.
+    """
 
     version = tag if tag != None else commit
     versiontype = "tag" if tag != None else "commit"
 
-    repository_url = release_repository_url if versiontype == "tag" else snapshot_repository_url
+    repository_url = release_repository_url if tag != None else snapshot_repository_url
+
+    artifact_name = artifact_name.format(version = version)
 
     http_file(
         name = name,
