@@ -113,6 +113,7 @@ deploy_artifact = rule(
 def artifact_file(name,
                   group_name,
                   artifact_name,
+                  downloaded_file_path = None,
                   commit = None,
                   tag = None,
                   sha = None,
@@ -125,6 +126,7 @@ def artifact_file(name,
         name: Target name.
         group_name: Repo group name used to deploy artifact.
         artifact_name: Artifact name, use {version} to interpolate the version from tag/commit.
+        downloaded_file_path: Equivalent to http_file downloaded_file_path, defaults to artifact_name, includes {version} interpolation.
         commit: Commit sha, for when this was used as the version for upload.
         tag: Git tag, for when this was used as the version for upload.
         release_repository_url: The base repository URL for tag releases.
@@ -137,7 +139,11 @@ def artifact_file(name,
 
     repository_url = release_repository_url if tag != None else snapshot_repository_url
 
+    if downloaded_file_path == None:
+        downloaded_file_path = artifact_name
+
     artifact_name = artifact_name.format(version = version)
+    downloaded_file_path = downloaded_file_path.format(version = version)
 
     http_file(
         name = name,
