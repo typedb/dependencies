@@ -152,3 +152,21 @@ def artifact_file(name,
         sha = sha,
         tags = tags + ["{}={}".format(versiontype, version)]
     )
+
+def generate_extract_artifact_script(name,
+                                     target,
+                                     strip_components = 2):
+    """Macro to assist extracting an artifact from command line (for CI).
+
+    Args:
+        name: Target name.
+        target: Repo group name used to deploy artifact.
+        strip_components: tar --strip-components setting, default is 2 to strip version.
+    """
+
+    native.genrule(
+        name = name,
+        srcs = [target],
+        outs = [name + ".sh"],
+        cmd = "echo \"mkdir -p \$$1 && tar -xzf \$$(bazel info execution_root)/$(location {}) -C \$$1 --strip-components={}\" > $@".format(target, strip_components),
+    )
