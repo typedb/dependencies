@@ -153,7 +153,7 @@ def artifact_file(name,
         tags = tags + ["{}={}".format(versiontype, version)]
     )
 
-def generate_extract_artifact_script(name,
+def artifact_extractor_generator(name,
                                      target,
                                      strip_components = 2):
     """Macro to assist extracting an artifact from command line (for CI).
