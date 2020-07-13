@@ -153,20 +153,40 @@ def artifact_file(name,
         tags = tags + ["{}={}".format(versiontype, version)]
     )
 
-def artifact_extractor(name,
-                       target,
-                       strip_components = 2):
-    """Macro to assist extracting an artifact from command line (for CI).
+script_template = """\
+#!/bin/bash
+set -ex
+mkdir -p $BUILD_WORKSPACE_DIRECTORY/$1
+tar -xzf {artifact_location} -C $BUILD_WORKSPACE_DIRECTORY/$1 --strip-components={strip_components}
+"""
 
-    Args:
-        name: Target name.
-        target: Repo group name used to deploy artifact.
-        strip_components: tar --strip-components setting, default is 2 to strip version.
-    """
+def _extract_artifact_impl(ctx):
+    artifact_file = ctx.file.artifact
 
-    native.genrule(
-        name = name,
-        srcs = [target],
-        outs = [name + ".sh"],
-        cmd = "echo \"mkdir -p \$$1 && tar -xzf \$$(bazel info execution_root)/$(location {}) -C \$$1 --strip-components={}\" > $@".format(target, strip_components),
+    # Emit the executable shell script.
+    script = ctx.actions.declare_file("%s.sh" % ctx.label.name)
+    script_content = script_template.format(
+        artifact_location = artifact_file.short_path,
+        strip_components = ctx.attr.strip_components,
     )
+    ctx.actions.write(script, script_content, is_executable = True)
+
+    # The datafile must be in the runfiles for the executable to see it.
+    runfiles = ctx.runfiles(files = [artifact_file])
+    return [DefaultInfo(executable = script, runfiles = runfiles)]
+
+extract_artifact = rule(
+    implementation = _extract_artifact_impl,
+    attrs = {
+        "artifact": attr.label(
+            mandatory = True,
+            allow_single_file = True,
+            doc = "Artifact archive to extract.",
+        ),
+        "strip_components": attr.int(
+            default = 2,
+            doc = "tar --strip-components argument (default 2).",
+        )
+    },
+    executable = True,
+)
