@@ -2,13 +2,19 @@ load("@rules_jvm_external//:defs.bzl", rje_maven_install = "maven_install")
 load("@rules_jvm_external//:specs.bzl", rje_maven = "maven")
 load(":artifacts.bzl", artifacts_registered = "artifacts")
 
-def maven(artifacts_list):
+def warn(msg):
+    print('{red}{msg}{nc}'.format(red='\033[0;31m', msg=msg, nc='\033[0m'))
+
+
+def maven(artifacts_list, overrides={}):
+    if len(overrides) > 0:
+        warn("There are {} overrides found. Usage of `overrides` attribute of `maven()` is discouraged!".format(len(overrides)))
     for a in artifacts_list:
         if a not in artifacts_registered.keys():
             fail("'" + a + "' has not been declared in @graknlabs_dependencies")
     artifacts_selected = []
     for a in artifacts_list:
-        artifact = maven_artifact(a, artifacts_registered[a])
+        artifact = maven_artifact(a, overrides.get(a, artifacts_registered[a]))
         artifacts_selected.append(artifact)
     rje_maven_install(
         artifacts = artifacts_selected,
