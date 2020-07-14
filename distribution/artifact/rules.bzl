@@ -160,7 +160,7 @@ mkdir -p $BUILD_WORKSPACE_DIRECTORY/$1
 tar -xzf {artifact_location} -C $BUILD_WORKSPACE_DIRECTORY/$1 --strip-components={strip_components}
 """
 
-def _extract_artifact_impl(ctx):
+def _artifact_extractor_impl(ctx):
     artifact_file = ctx.file.artifact
 
     # Emit the executable shell script.
@@ -175,8 +175,8 @@ def _extract_artifact_impl(ctx):
     runfiles = ctx.runfiles(files = [artifact_file])
     return [DefaultInfo(executable = script, runfiles = runfiles)]
 
-extract_artifact = rule(
-    implementation = _extract_artifact_impl,
+artifact_extractor = rule(
+    implementation = _artifact_extractor_impl,
     attrs = {
         "artifact": attr.label(
             mandatory = True,
