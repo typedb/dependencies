@@ -188,7 +188,7 @@ artifact_extractor = rule(
         "strip_components": attr.int(
             default = 2,
             doc = "tar --strip-components argument (default 2).",
-        )
+        ),
     },
     executable = True,
 )
