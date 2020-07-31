@@ -24,7 +24,7 @@ GRAKN_HOME=$(cd "$(dirname "${path}")" && pwd -P)
 GRAKN_CONFIG="server/conf/grakn.properties"
 
 CONSOLE_JAR_FILENAME=(${GRAKN_HOME}/console/services/lib/io-grakn-console-grakn-console*.jar)
-SERVER_JAR_FILENAME=(${GRAKN_HOME}/server/services/lib/io-grakn-core-grakn-server*.jar)
+SERVER_JAR_FILENAME=(${GRAKN_HOME}/server/lib/grakn-core-grakn-core-server*.jar)
 
 # ================================================
 # common helper functions
@@ -62,9 +62,9 @@ elif [ "$1" = "console" ]; then
     fi
 elif [[ "$1" = "server" ]] || [[ "$1" = "version" ]]; then
     if [[ -f "${SERVER_JAR_FILENAME}" ]]; then
-        SERVICE_LIB_CP="server/services/lib/*"
-        CLASSPATH="${GRAKN_HOME}/${SERVICE_LIB_CP}:${GRAKN_HOME}/server/conf/"
-        java ${GRAKN_DAEMON_JAVAOPTS} -cp "${CLASSPATH}" -Dgrakn.dir="${GRAKN_HOME}" -Dgrakn.conf="${GRAKN_HOME}/${GRAKN_CONFIG}" -Dstorage.javaopts="${STORAGE_JAVAOPTS}" -Dserver.javaopts="${SERVER_JAVAOPTS}" grakn.core.daemon.GraknDaemon $@
+        LIB_CP="server/lib/*"
+        CLASSPATH="${GRAKN_HOME}/${LIB_CP}:${GRAKN_HOME}/server/conf/"
+        java ${GRAKN_DAEMON_JAVAOPTS} -cp "${CLASSPATH}" -Dgrakn.dir="${GRAKN_HOME}" -Dgrakn.conf="${GRAKN_HOME}/${GRAKN_CONFIG}" -Dstorage.javaopts="${STORAGE_JAVAOPTS}" -Dserver.javaopts="${SERVER_JAVAOPTS}" grakn.core.server.GraknServer "${@:2}"
     else
         echo "Grakn Core Server is not included in this Grakn distribution."
         echo "You may want to install Grakn Core Server or Grakn Core (all)."
