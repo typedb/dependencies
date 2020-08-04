@@ -43,8 +43,8 @@ if [[ -n "$BAZEL_BUILDBUDDY_CERT" && -n "$BAZEL_BUILDBUDDY_KEY" ]]; then
     echo "The RBE credential has been installed!"
     echo "Configuring Python..."
     # setting the exact version of Python 3 and Python 2, respectively
-    pyenv install 3.6.10
-    pyenv global 3.6.10 2.7.12
+    pyenv install -s 3.6.10
+    pyenv global 3.6.10 system
 else
     echo "No RBE credential found. Bazel will be executed locally without RBE support."
     install_dependencies
