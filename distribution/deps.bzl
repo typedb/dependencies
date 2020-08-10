@@ -23,7 +23,7 @@ def deps():
     git_repository(
         name = "graknlabs_bazel_distribution",
         remote = "https://github.com/graknlabs/bazel-distribution",
-        commit = "d62ce06aacb1f185b1be737b7e6db8168568aa5e" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
+        commit = "17aabcf469e95e572e8c40b0b52f2dfd6b55bbef" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
     )
     http_archive(
         name = "bazel_skylib",
