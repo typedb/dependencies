@@ -19,6 +19,8 @@
 
 # Script for updating Maven dependencies after the dependency list in //dependencies/maven/dependencies.yaml.
 
+set -e
+
 [[ $(readlink $0) ]] && path=$(readlink $0) || path=$0
 WORKSPACE_HOME=$(cd "$(dirname "${path}")" && pwd -P)/../../
 pushd "$WORKSPACE_HOME" > /dev/null

@@ -100,9 +100,9 @@
             maven.willGetAngry();
         ```
         -->
-        <module name="NeedBraces">
-            <property name="allowSingleLineStatement" value="true"/>
-        </module>
+        <!--<module name="NeedBraces">-->
+        <!--    <property name="allowSingleLineStatement" value="true"/>-->
+        <!--</module>-->
 
         <!-- Allow only one statement per line -->
         <!--<module name="OneStatementPerLine"/>-->
