@@ -20,7 +20,8 @@ def maven(artifacts_list, overrides={}):
         artifacts = artifacts_selected,
         repositories = [
             "https://repo1.maven.org/maven2",
-            "http://maven.grakn.ai/nexus/content/repositories/snapshots"
+            "https://repo.grakn.ai/repository/maven",
+            "https://repo.grakn.ai/repository/maven-snapshot",
         ],
         strict_visibility = True,
         version_conflict_policy = "pinned"
