@@ -16,17 +16,31 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+RELEASE_VALIDATE_DEPS_SCRIPT_TEMPLATE = """
+import json
+import sys
+
+with open("{workspace_refs_json_path}") as f:
+    workspace_refs = json.load(f)
+
+tagged_deps = set("{tagged_deps}".split(','))
+snapshot_dependencies = tagged_deps - set(workspace_refs['tags'])
+
+if snapshot_dependencies:
+    print('These dependencies are excepted to be declared by tag instead of commit: {}'.format(snapshot_dependencies))
+    sys.exit(1)
+"""
+
 def _release_validate_deps_test_impl(ctx):
     test_script = ctx.actions.declare_file("{}.py".format(ctx.attr.name))
 
-    ctx.actions.expand_template(
+    ctx.actions.write(
         output = test_script,
-        template = ctx.file._release_validate_deps_template,
+        content = RELEASE_VALIDATE_DEPS_SCRIPT_TEMPLATE.format(
+            workspace_refs_json_path=ctx.file.refs.path,
+            tagged_deps=ctx.attr.tagged_deps
+        ),
         is_executable = True,
-        substitutions = {
-            "{workspace_refs_json_path}": ctx.file.refs.path,
-            "{tagged_deps}": ",".join(ctx.attr.tagged_deps),
-        }
     )
 
     return [
@@ -46,10 +60,6 @@ release_validate_deps_test = rule(
         "tagged_deps": attr.string_list(
             mandatory = True
         ),
-        "_release_validate_deps_template": attr.label(
-            allow_single_file=True,
-            default = "@graknlabs_dependencies//ci/templates:release_validate_deps.py"
-        )
     },
     implementation = _release_validate_deps_test_impl,
     test = True
