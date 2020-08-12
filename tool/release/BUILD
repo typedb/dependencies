@@ -48,6 +48,8 @@ py_binary(
     ]
 )
 
+# this is here to allow compiling and easier development of `ValidateDeps.kt`, otherwise not recognised as a target
+# (is actually just a string template)
 kt_jvm_binary(
     name = "validate-deps-refs",
     main_class = "tool.release.Validate_depsKt",

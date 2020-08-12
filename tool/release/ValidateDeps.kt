@@ -18,7 +18,7 @@ fun main() {
     val snapshotDependencies = taggedDepsSet.subtract(tagDepsFromRefs)
 
     if (snapshotDependencies.size > 0) {
-        print("\nThese dependencies are expected to be declared by tag instead of commit: $snapshotDependencies")
+        System.err.println("\nThese dependencies are expected to be declared by tag instead of commit: $snapshotDependencies")
         System.exit(1)
     }
 }

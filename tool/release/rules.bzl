@@ -16,7 +16,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary", "kt_jvm_test")
 
 def _release_validate_deps_script_impl(ctx):
     test_script = ctx.actions.declare_file("{}.kt".format(ctx.attr.name))
@@ -33,12 +33,12 @@ def _release_validate_deps_script_impl(ctx):
     return [
         DefaultInfo(
             runfiles = ctx.runfiles(files = [ctx.file.refs]),
-            files = depset(direct = [test_script])
+            executable = test_script
         )
     ]
 
 
-_release_validate_deps_script = rule(
+_release_validate_deps_script_test = rule(
     attrs = {
         "refs": attr.label(
             allow_single_file = True,
@@ -53,7 +53,7 @@ _release_validate_deps_script = rule(
         )
     },
     implementation = _release_validate_deps_script_impl,
-
+    test = True
 )
 
 # macro to create the templating rule and binary executable rule
@@ -62,17 +62,17 @@ def release_validate_deps(name, **kwargs):
     target_name = standard_name + "_gen"
 
     # create rule that generates the templated script with the correct inputs
-    release_validate_deps_script(
+    _release_validate_deps_script_test(
         name = target_name,
         **kwargs
     )
 
     # assign this rule as the name that is passed in, so it is called with `bazel run `
-    kt_jvm_binary(
+    kt_jvm_test(
         name = name,
         main_class = "tool.release." + standard_name + "_genKt",
         srcs = [target_name],
         deps = [
             "@maven//:com_eclipsesource_minimal_json_minimal_json"
-        ]
+        ],
     )
