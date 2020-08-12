@@ -38,7 +38,7 @@ def _release_validate_deps_script_impl(ctx):
     ]
 
 
-release_validate_deps_script = rule(
+_release_validate_deps_script = rule(
     attrs = {
         "refs": attr.label(
             allow_single_file = True,
@@ -56,15 +56,18 @@ release_validate_deps_script = rule(
 
 )
 
+# macro to create the templating rule and binary executable rule
 def release_validate_deps(name, **kwargs):
     standard_name = name.capitalize().replace("-","_")
     target_name = standard_name + "_gen"
 
+    # create rule that generates the templated script with the correct inputs
     release_validate_deps_script(
         name = target_name,
         **kwargs
     )
 
+    # assign this rule as the name that is passed in, so it is called with `bazel run `
     kt_jvm_binary(
         name = name,
         main_class = "tool.release." + standard_name + "_genKt",
