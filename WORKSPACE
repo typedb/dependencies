@@ -90,6 +90,9 @@ sonarcloud_dependencies()
 load("//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
+
+load("//dependencies/maven:artifacts.bzl", graknlabs_dependencies_artifacts = "artifacts")
+
 ######################################
 # Load @graknlabs_bazel_distribution #
 ######################################
@@ -138,6 +141,15 @@ pip_import(
 )
 load("@graknlabs_bazel_distribution_pip//:requirements.bzl", graknlabs_bazel_distribution_pip_install = "pip_install")
 graknlabs_bazel_distribution_pip_install()
+
+
+###############
+# Load @maven #
+###############
+maven(
+    graknlabs_dependencies_artifacts,
+)
+
 
 #################################################
 # Create @graknlabs_dependencies_workspace_refs #

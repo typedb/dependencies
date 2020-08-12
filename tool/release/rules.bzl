@@ -16,42 +16,29 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-RELEASE_VALIDATE_DEPS_SCRIPT_TEMPLATE = """
-import json
-import sys
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary", "kt_jvm_test")
 
-with open("{workspace_refs_json_path}") as f:
-    workspace_refs = json.load(f)
+def _release_validate_deps_script_impl(ctx):
+    test_script = ctx.actions.declare_file("{}.kt".format(ctx.attr.name))
 
-tagged_deps = set("{tagged_deps}".split(','))
-snapshot_dependencies = tagged_deps - set(workspace_refs['tags'])
-
-if snapshot_dependencies:
-    print('These dependencies are excepted to be declared by tag instead of commit: {}'.format(snapshot_dependencies))
-    sys.exit(1)
-"""
-
-def _release_validate_deps_test_impl(ctx):
-    test_script = ctx.actions.declare_file("{}.py".format(ctx.attr.name))
-
-    ctx.actions.write(
+    ctx.actions.expand_template(
         output = test_script,
-        content = RELEASE_VALIDATE_DEPS_SCRIPT_TEMPLATE.format(
-            workspace_refs_json_path=ctx.file.refs.path,
-            tagged_deps=ctx.attr.tagged_deps
-        ),
-        is_executable = True,
+        template = ctx.file._release_validate_deps_template,
+        substitutions = {
+            "{workspace_refs_json_path}": ctx.file.refs.path,
+            "{tagged_deps}": ",".join(ctx.attr.tagged_deps),
+        }
     )
 
     return [
         DefaultInfo(
-            executable = test_script,
-            runfiles = ctx.runfiles(files = [test_script, ctx.file.refs])
+            runfiles = ctx.runfiles(files = [ctx.file.refs]),
+            executable = test_script
         )
     ]
 
 
-release_validate_deps_test = rule(
+_release_validate_deps_script_test = rule(
     attrs = {
         "refs": attr.label(
             allow_single_file = True,
@@ -60,7 +47,32 @@ release_validate_deps_test = rule(
         "tagged_deps": attr.string_list(
             mandatory = True
         ),
+        "_release_validate_deps_template": attr.label(
+            allow_single_file=True,
+            default = "@graknlabs_dependencies//tool/release:ValidateDeps.kt"
+        )
     },
-    implementation = _release_validate_deps_test_impl,
+    implementation = _release_validate_deps_script_impl,
     test = True
 )
+
+# macro to create the templating rule and binary executable rule
+def release_validate_deps(name, **kwargs):
+    standard_name = name.capitalize().replace("-","_")
+    target_name = standard_name + "_gen"
+
+    # create rule that generates the templated script with the correct inputs
+    _release_validate_deps_script_test(
+        name = target_name,
+        **kwargs
+    )
+
+    # assign this rule as the name that is passed in, so it is called with `bazel run `
+    kt_jvm_test(
+        name = name,
+        main_class = "tool.release." + standard_name + "_genKt",
+        srcs = [target_name],
+        deps = [
+            "@maven//:com_eclipsesource_minimal_json_minimal_json"
+        ],
+    )
