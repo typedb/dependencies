@@ -21,6 +21,9 @@
 # under the License.
 #
 
+load("//library/maven:artifacts.bzl", master_maven_artifacts = "artifacts")
+
+
 ############################
 ####    JAVA_LIB INFO   ####
 ############################
@@ -95,18 +98,25 @@ _java_lib_deps = aspect(
 
 MavenPomInfo = provider(
     fields = {
-        'maven_pom_deps': 'Maven coordinates for dependencies, transitively collected'
+        'transitive_pom_deps': 'Maven coordinates for dependencies, transitively collected'
     }
 )
 
-def _maven_pom_deps_impl(_target, ctx):
-    deps_coordinates = []
-    # This seems to be all the direct dependencies of this given _target
-    for x in _target[JavaLibInfo].target_deps_coordinates.to_list():
-        deps_coordinates.append(x)
 
-    # Now we traverse all the dependencies of our direct-dependencies,
-    # if our direct-depenencies is a sub-package of ourselves (_target)
+def _maven_pom_deps_impl(_target, ctx):
+    dep_coordinates = []
+
+    # Collect the JavaLibInfo recursed dependencies
+    for direct_dep_coordinate in _target[JavaLibInfo].target_deps_coordinates.to_list():
+        # if the dep is in the master maven artifact file, use that version
+        maven_artifact = _parse_maven_artifact(direct_dep_coordinate)
+        if maven_artifact in master_maven_artifacts:
+            dep_coordinates.append(maven_artifact + ":" + master_maven_artifacts[maven_artifact])
+        else:
+            dep_coordinates.append(direct_dep_coordinate)
+
+    # Now we traverse all the dependencies of our direct-dependencies
+    # The aspect execution will have already collected their dependencies recursively
     deps = \
         getattr(ctx.rule.attr, "jars", []) + \
         getattr(ctx.rule.attr, "deps", []) + \
@@ -116,10 +126,12 @@ def _maven_pom_deps_impl(_target, ctx):
     for dep in deps:
         if dep.label.name.endswith('.jar'):
             continue
-        if dep.label.package.startswith(ctx.attr.package):
-            deps_coordinates += dep[MavenPomInfo].maven_pom_deps
+        for recursive_dep_coordinate in dep[MavenPomInfo].transitive_pom_deps:
+            maven_artifact = _parse_maven_artifact(recursive_dep_coordinate)
+            if recursive_dep_coordinate not in dep_coordinates and maven_artifact in master_maven_artifacts:
+                dep_coordinates.append(maven_artifact + ":" + master_maven_artifacts[maven_artifact])
 
-    return [MavenPomInfo(maven_pom_deps = deps_coordinates)]
+    return [MavenPomInfo(transitive_pom_deps = dep_coordinates)]
 
 # Filled in by deployment_rules_builder
 _maven_packages = "api,client-java,common,concept,console,daemon,grammar,grpc,java,,server".split(",")
@@ -206,6 +218,10 @@ mit_license_text = """
 -->
 """
 
+def _parse_maven_artifact(coordinate_string):
+    group_id, artifact_id, _ = coordinate_string.split(':')
+    return group_id + ":" + artifact_id
+
 def _parse_maven_coordinates(coordinate_string):
     group_id, artifact_id, version = coordinate_string.split(':')
     if version != '{pom_version}':
@@ -221,7 +237,7 @@ def _generate_pom_xml(ctx, maven_coordinates):
 
     pom_file = ctx.actions.declare_file("{}_pom.xml".format(ctx.attr.name))
 
-    maven_pom_deps = ctx.attr.target[MavenPomInfo].maven_pom_deps
+    maven_pom_deps = ctx.attr.target[MavenPomInfo].transitive_pom_deps
     deps_coordinates = depset(maven_pom_deps).to_list()
 
     # Indentation of the DEP_BLOCK string is such, so that it renders nicely in the output pom.xml
@@ -321,7 +337,6 @@ def _assemble_maven_impl(ctx):
     target_string = target[JavaLibInfo].target_coordinates.to_list()[-1]
 
     maven_coordinates = _parse_maven_coordinates(target_string)
-
     pom_file = _generate_pom_xml(ctx, maven_coordinates)
 
     # there is also .source_jar which produces '.srcjar'

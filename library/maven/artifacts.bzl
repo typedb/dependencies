@@ -76,6 +76,8 @@ artifacts = {
     "io.netty:netty-codec-http": "4.1.50.Final",
     "io.netty:netty-codec-socks": "4.1.50.Final",
     "io.netty:netty-common": "4.1.50.Final",
+    "io.netty:netty-transport": "4.1.50.Final",
+    "io.netty:netty-resolver": "4.1.50.Final",
     "io.netty:netty-tcnative-boringssl-static": "2.0.25.Final",
     "io.opencensus:opencensus-api": "0.24.0",
     "io.opencensus:opencensus-contrib-grpc-metrics": "0.24.0",
