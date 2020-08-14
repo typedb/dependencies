@@ -12,7 +12,7 @@ fun main() {
     val refFileReader = FileReader(refs.toFile())
     val parsed = Json.parse(refFileReader).asObject()
 
-    val taggedDepsSet = taggedDeps.split(",").toSet()
+    val taggedDepsSet = taggedDeps.split(",").toSet().map { w -> w.replace("@", "") }
 
     val tagDepsFromRefs = parsed["tags"].asObject().names().toSet()
     val snapshotDependencies = taggedDepsSet.subtract(tagDepsFromRefs)
