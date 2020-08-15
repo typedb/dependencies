@@ -1,3 +1,22 @@
+def maven_overrides(maven_overrides_org, maven_overrides_repo={}):
+    """ Merge org artifact versions with repo artifact versions """
+    overriden = {}
+    normalised_artifacts_org = _artifact_versions(maven_overrides_org)
+    for artifact in normalised_artifacts_org:
+        overriden[artifact] = maven_overrides_repo.get(artifact, normalised_artifacts_org[artifact])
+    return overriden
+
+def _artifact_versions(artifacts_with_excludes):
+    """ Normalise the provided master maven artifacts versions to just artifact : version """
+    just_versions = {}
+    for artifact, value in artifacts_with_excludes.items():
+        if type(value) == type({}):
+            just_versions[artifact] = value["version"]
+        else:
+            just_versions[artifact] = value
+    return just_versions
+
+
 artifacts = {
     "ch.qos.logback:logback-classic": "1.2.3",
     "ch.qos.logback:logback-core": "1.2.3",

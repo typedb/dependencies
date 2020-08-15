@@ -108,12 +108,7 @@ def _maven_pom_deps_impl(_target, ctx):
 
     # Collect the JavaLibInfo recursed dependencies
     for direct_dep_coordinate in _target[JavaLibInfo].target_deps_coordinates.to_list():
-        # if the dep is in the master maven artifact file, use that version
-        maven_artifact = _parse_maven_artifact(direct_dep_coordinate)
-        if maven_artifact in master_maven_artifacts:
-            dep_coordinates.append(maven_artifact + ":" + master_maven_artifacts[maven_artifact])
-        else:
-            dep_coordinates.append(direct_dep_coordinate)
+        dep_coordinates.append(direct_dep_coordinate)
 
     # Now we traverse all the dependencies of our direct-dependencies
     # The aspect execution will have already collected their dependencies recursively
@@ -127,14 +122,12 @@ def _maven_pom_deps_impl(_target, ctx):
         if dep.label.name.endswith('.jar'):
             continue
         for recursive_dep_coordinate in dep[MavenPomInfo].transitive_pom_deps:
-            maven_artifact = _parse_maven_artifact(recursive_dep_coordinate)
-            if recursive_dep_coordinate not in dep_coordinates and maven_artifact in master_maven_artifacts:
-                dep_coordinates.append(maven_artifact + ":" + master_maven_artifacts[maven_artifact])
+            if recursive_dep_coordinate not in dep_coordinates:
+                dep_coordinates.append(recursive_dep_coordinate)
 
+    # collect all transitive pom dependencies of all versions into one list
     return [MavenPomInfo(transitive_pom_deps = dep_coordinates)]
 
-# Filled in by deployment_rules_builder
-_maven_packages = "api,client-java,common,concept,console,daemon,grammar,grpc,java,,server".split(",")
 _maven_pom_deps = aspect(
     attr_aspects = [
         "jars",
@@ -145,9 +138,6 @@ _maven_pom_deps = aspect(
     ],
     required_aspect_providers = [JavaLibInfo],
     implementation = _maven_pom_deps_impl,
-    attrs = {
-        "package": attr.string(values = _maven_packages)
-    },
     provides = [MavenPomInfo]
 )
 
