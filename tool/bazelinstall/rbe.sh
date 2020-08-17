@@ -31,6 +31,7 @@ function install_dependencies() {
     fi
 }
 
+cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull && cd -
 if [[ -n "$BAZEL_BUILDBUDDY_CERT" && -n "$BAZEL_BUILDBUDDY_KEY" ]]; then
     echo "Installing BuildBuddy credential..."
     BAZEL_BUILDBUDDY_CREDENTIAL=/opt/.credentials/
