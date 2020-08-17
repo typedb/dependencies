@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 #
 # Copyright (C) 2020 Grakn Labs
 #
@@ -15,16 +14,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
-# Script for updating Maven dependencies after the dependency list in //dependencies/maven/dependencies.yaml.
-
-set -e
-
-[[ $(readlink $0) ]] && path=$(readlink $0) || path=$0
-WORKSPACE_HOME=$(cd "$(dirname "${path}")" && pwd -P)/../../
-pushd "$WORKSPACE_HOME" > /dev/null
-
-bazel build //distribution/maven:rules
-install -m 644 $(bazel info bazel-genfiles)/distribution/maven/rules.bzl $WORKSPACE_HOME/distribution/maven/rules.bzl
-
-popd > /dev/null

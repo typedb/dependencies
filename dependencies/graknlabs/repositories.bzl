@@ -15,16 +15,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-genrule(
-    name = "rules",
-    srcs = [
-        "@graknlabs_bazel_distribution//maven/templates:rules.bzl",
-        "@graknlabs_dependencies//distribution:deployment.properties"
-    ],
-    tools = ["@graknlabs_bazel_distribution//maven:deployment_rules_builder"],
-    cmd = "$(location @graknlabs_bazel_distribution//maven:deployment_rules_builder) " +
-        "$(location @graknlabs_bazel_distribution//maven/templates:rules.bzl) $@ " +
-        "$(location @graknlabs_dependencies//distribution:deployment.properties) " +
-        "@graknlabs_dependencies//distribution:deployment.properties",
-    outs = ["rules.bzl"]
-)
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+def graknlabs_bazel_distribution():
+    git_repository(
+        name = "graknlabs_bazel_distribution",
+        remote = "https://github.com/graknlabs/bazel-distribution",
+        commit = "30e30cec9e3fe4821103cafbd240ee9862e262ea" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
+    )

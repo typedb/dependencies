@@ -89,14 +89,17 @@ sonarcloud_dependencies()
 load("//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
-
+# Load Kotlin Build Deps
 load("//dependencies/maven:artifacts.bzl", graknlabs_dependencies_artifacts = "artifacts")
+
+load("//distribution:deps.bzl", distribution_deps = "deps")
+distribution_deps()
 
 ######################################
 # Load @graknlabs_bazel_distribution #
 ######################################
-load("//distribution:deps.bzl", distribution_deps = "deps")
-distribution_deps()
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_bazel_distribution")
+graknlabs_bazel_distribution()
 
 # Load Apt and RPM
 load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
