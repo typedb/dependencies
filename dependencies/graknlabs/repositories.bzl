@@ -1,6 +1,5 @@
 #
-# GRAKN.AI - THE KNOWLEDGE GRAPH
-# Copyright (C) 2020 Grakn Labs Ltd
+# Copyright (C) 2020 Grakn Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -16,9 +15,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-py_binary(
-    name = "code-analysis",
-    srcs = ["code-analysis.py"],
-    main = "code-analysis.py",
-    data = [ "@sonarscanner_zip//file"]
-)
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
+def graknlabs_bazel_distribution():
+    git_repository(
+        name = "graknlabs_bazel_distribution",
+        remote = "https://github.com/graknlabs/bazel-distribution",
+        commit = "17aabcf469e95e572e8c40b0b52f2dfd6b55bbef" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
+    )

@@ -1,6 +1,6 @@
 #
 # GRAKN.AI - THE KNOWLEDGE GRAPH
-# Copyright (C) 2018 Grakn Labs Ltd
+# Copyright (C) 2020 Grakn Labs Ltd
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -94,11 +94,13 @@ unuseddeps_deps()
 load("//dependencies/maven:artifacts.bzl", graknlabs_dependencies_artifacts = "artifacts")
 
 load("//distribution:deps.bzl", distribution_deps = "deps")
-distribution_deps() # creates graknlabs_bazel_distribution
+distribution_deps()
 
 ######################################
 # Load @graknlabs_bazel_distribution #
 ######################################
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_bazel_distribution")
+graknlabs_bazel_distribution()
 
 # Load Apt and RPM
 load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
