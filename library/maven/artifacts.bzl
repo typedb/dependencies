@@ -18,7 +18,7 @@ def _artifact_versions(artifacts_with_excludes):
     """ Normalise the provided master maven artifacts versions to just artifact : version """
     just_versions = {}
     for artifact, value in artifacts_with_excludes.items():
-        if type(value) == type({}):
+        if type(value) == dict:
             just_versions[artifact] = value["version"]
         else:
             just_versions[artifact] = value
