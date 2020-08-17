@@ -15,15 +15,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def deps():
-    git_repository(
-        name = "graknlabs_bazel_distribution",
-        remote = "https://github.com/graknlabs/bazel-distribution",
-        commit = "17aabcf469e95e572e8c40b0b52f2dfd6b55bbef" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
-    )
     http_archive(
         name = "bazel_skylib",
         urls = ["https://github.com/bazelbuild/bazel-skylib/releases/download/0.8.0/bazel-skylib.0.8.0.tar.gz"],
