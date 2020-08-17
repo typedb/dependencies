@@ -15,28 +15,16 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@graknlabs_bazel_distribution//rpm:rules.bzl", "assemble_rpm", "deploy_rpm")
-
-assemble_rpm(
-    name = "assemble-linux-rpm",
-    package_name = "grakn-bin",
-    installation_dir = "/opt/grakn/core/",
-    spec_file = ":grakn-bin.spec",
-    empty_dirs = [
-        "var/log/grakn/",
+genrule(
+    name = "rules",
+    srcs = [
+        "@graknlabs_bazel_distribution//maven/templates:rules.bzl",
+        "@graknlabs_dependencies//distribution:deployment.properties"
     ],
-    archives = ["//distribution:assemble-bash-targz"],
-    permissions = {
-        "var/log/grakn/": "0777",
-    },
-    symlinks = {
-        "usr/local/bin/grakn": "/opt/grakn/core/grakn",
-        "opt/grakn/core/logs": "/var/log/grakn/",
-    },
-)
-
-deploy_rpm(
-    name = "deploy-rpm",
-    target = ":assemble-linux-rpm",
-    deployment_properties = "//distribution:deployment.properties",
+    tools = ["@graknlabs_bazel_distribution//maven:deployment_rules_builder"],
+    cmd = "$(location @graknlabs_bazel_distribution//maven:deployment_rules_builder) " +
+        "$(location @graknlabs_bazel_distribution//maven/templates:rules.bzl) $@ " +
+        "$(location @graknlabs_dependencies//distribution:deployment.properties) " +
+        "@graknlabs_dependencies//distribution:deployment.properties",
+    outs = ["rules.bzl"]
 )

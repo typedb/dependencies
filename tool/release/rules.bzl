@@ -1,5 +1,4 @@
 #
-# GRAKN.AI - THE KNOWLEDGE GRAPH
 # Copyright (C) 2020 Grakn Labs Ltd
 #
 # This program is free software: you can redistribute it and/or modify
