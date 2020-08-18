@@ -164,28 +164,16 @@ workflows:
     jobs:
       - build
       - deploy-apt-snapshot:
-          filters:
-            branches:
-              only: master
           requires:
             - build
       - deploy-rpm-snapshot:
-          filters:
-            branches:
-              only: master
           requires:
             - build
       - sync-dependencies-snapshot:
-          filters:
-            branches:
-              only: master
           requires:
             - deploy-apt-snapshot
             - deploy-rpm-snapshot
       - release-approval:
-          filters:
-            branches:
-              only: master
           requires:
             - sync-dependencies-snapshot
   dependencies-release:
