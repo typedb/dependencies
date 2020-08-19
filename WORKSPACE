@@ -92,9 +92,6 @@ unuseddeps_deps()
 # Load Kotlin Build Deps
 load("//dependencies/maven:artifacts.bzl", graknlabs_dependencies_artifacts = "artifacts")
 
-load("//distribution:deps.bzl", distribution_deps = "deps")
-distribution_deps()
-
 ######################################
 # Load @graknlabs_bazel_distribution #
 ######################################
