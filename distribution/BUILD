@@ -15,25 +15,4 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@graknlabs_bazel_distribution//common:rules.bzl", "assemble_targz")
-
-exports_files(["deployment.properties"], visibility = ["//visibility:public"])
-
-assemble_targz(
-    name = "assemble-bash-targz",
-    additional_files = {
-        "//binary:grakn": 'grakn',
-    },
-    permissions = {
-        "grakn": "0755",
-    },
-    visibility = ["//visibility:public"]
-)
-
-assemble_targz(
-    name = "assemble-bat-targz",
-    additional_files = {
-        "//binary:grakn.bat": 'grakn.bat',
-    },
-    visibility = ["//visibility:public"]
-)
+exports_files(["deployment.bzl"], visibility = ["//visibility:public"])
