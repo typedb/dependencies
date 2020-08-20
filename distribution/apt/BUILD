@@ -1,5 +1,4 @@
 load("@graknlabs_bazel_distribution//apt:rules.bzl", "assemble_apt", "deploy_apt")
-load("@graknlabs_bazel_distribution//common:rules.bzl", "assemble_targz")
 
 assemble_apt(
     name = "assemble-linux-apt",
