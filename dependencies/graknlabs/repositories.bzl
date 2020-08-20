@@ -1,7 +1,5 @@
-#!/usr/bin/env bash
 #
-# GRAKN.AI - THE KNOWLEDGE GRAPH
-# Copyright (C) 2018 Grakn Labs Ltd
+# Copyright (C) 2020 Grakn Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -17,13 +15,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-# Script for updating Maven dependencies after the dependency list in //dependencies/maven/dependencies.yaml.
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-[[ $(readlink $0) ]] && path=$(readlink $0) || path=$0
-WORKSPACE_HOME=$(cd "$(dirname "${path}")" && pwd -P)/../../
-pushd "$WORKSPACE_HOME" > /dev/null
-
-bazel build //distribution/maven:rules
-install -m 644 $(bazel info bazel-genfiles)/distribution/maven/rules.bzl $WORKSPACE_HOME/distribution/maven/rules.bzl
-
-popd > /dev/null
+def graknlabs_bazel_distribution():
+    git_repository(
+        name = "graknlabs_bazel_distribution",
+        remote = "https://github.com/graknlabs/bazel-distribution",
+        commit = "732c5b0359e32543e266e7a7c74f73515c03d9f7" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
+    )

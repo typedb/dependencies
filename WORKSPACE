@@ -1,6 +1,5 @@
 #
-# GRAKN.AI - THE KNOWLEDGE GRAPH
-# Copyright (C) 2018 Grakn Labs Ltd
+# Copyright (C) 2020 Grakn Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -18,6 +17,8 @@
 
 workspace(name = "graknlabs_dependencies")
 
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+
 ################################
 # Load @graknlabs_dependencies #
 ################################
@@ -28,9 +29,7 @@ load("@rules_antlr//antlr:deps.bzl", "antlr_dependencies")
 antlr_dependencies()
 
 # Load Bazel
-load("//builder/bazel:deps.bzl","bazel_common", "bazel_deps", "bazel_toolchain")
-bazel_common()
-bazel_deps()
+load("//builder/bazel:deps.bzl", "bazel_toolchain")
 bazel_toolchain()
 
 # Load gRPC
@@ -59,13 +58,13 @@ kt_register_toolchains()
 # Load NodeJS
 load("//builder/nodejs:deps.bzl", nodejs_deps = "deps")
 nodejs_deps()
-load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
+load("@build_bazel_rules_nodejs//:index.bzl", "node_repositories", "yarn_install")
 node_repositories()
-load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories", "yarn_install")
 
 # Load Python
 load("//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
+
 load("@rules_python//python:pip.bzl", "pip_repositories", "pip3_import")
 pip_repositories()
 pip3_import(
@@ -92,11 +91,17 @@ sonarcloud_dependencies()
 load("//tool/unuseddeps:deps.bzl", unuseddeps_deps = "deps")
 unuseddeps_deps()
 
+# Load Kotlin Build Deps
+load("//dependencies/maven:artifacts.bzl", graknlabs_dependencies_artifacts = "artifacts")
+
+load("//distribution:deps.bzl", distribution_deps = "deps")
+distribution_deps()
+
 ######################################
 # Load @graknlabs_bazel_distribution #
 ######################################
-load("//distribution:deps.bzl", distribution_deps = "deps")
-distribution_deps()
+load("//dependencies/graknlabs:repositories.bzl", "graknlabs_bazel_distribution")
+graknlabs_bazel_distribution()
 
 # Load Apt and RPM
 load("@graknlabs_bazel_distribution//common:dependencies.bzl", "bazelbuild_rules_pkg")
@@ -104,35 +109,12 @@ bazelbuild_rules_pkg()
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
-# Load Docker
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-git_repository(
-    name = "io_bazel_skydoc",
-    remote = "https://github.com/graknlabs/skydoc.git",
-    branch = "experimental-skydoc-allow-dep-on-bazel-tools",
-)
-load("@io_bazel_skydoc//:setup.bzl", "skydoc_repositories")
-skydoc_repositories()
-load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
-rules_sass_dependencies()
-load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
-sass_repositories()
-
 # Load Github
 load("@graknlabs_bazel_distribution//github:dependencies.bzl", "tcnksm_ghr")
 tcnksm_ghr()
 
-# Load NodeJS
-load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
-node_repositories()
-
 # Load Python
-git_repository(
-    name = "io_bazel_rules_python",
-    remote = "https://github.com/bazelbuild/rules_python.git",
-    commit = "fdbb17a4118a1728d19e638a5291b4c4266ea5b8",
-)
-load("@io_bazel_rules_python//python:pip.bzl", "pip_repositories", "pip_import")
+load("@rules_python//python:pip.bzl", "pip_repositories", "pip_import")
 pip_repositories()
 pip_import(
     name = "graknlabs_bazel_distribution_pip",
@@ -140,6 +122,15 @@ pip_import(
 )
 load("@graknlabs_bazel_distribution_pip//:requirements.bzl", graknlabs_bazel_distribution_pip_install = "pip_install")
 graknlabs_bazel_distribution_pip_install()
+
+
+###############
+# Load @maven #
+###############
+maven(
+    graknlabs_dependencies_artifacts,
+)
+
 
 #################################################
 # Create @graknlabs_dependencies_workspace_refs #

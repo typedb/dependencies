@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 
 #
-# GRAKN.AI - THE KNOWLEDGE GRAPH
-# Copyright (C) 2018 Grakn Labs Ltd
+# Copyright (C) 2020 Grakn Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -39,7 +38,7 @@ def add_rbe_param(cmd):
 command = ' '.join(sys.argv[1:])
 is_linux = platform.system() == 'Linux'
 
-if is_linux and os.path.isfile('/home/circleci/.credentials/buildbuddy-cert.pem') and os.path.isfile('/home/circleci/.credentials/buildbuddy-key.pem'):
+if is_linux and os.path.isfile('/opt/.credentials/buildbuddy-cert.pem') and os.path.isfile('/opt/.credentials/buildbuddy-key.pem'):
     print('Bazel will be executed with RBE support. '
           'This means the build is remotely executed '
           'and the cache will be re-used by subsequent CI jobs.')

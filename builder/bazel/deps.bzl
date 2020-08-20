@@ -1,6 +1,5 @@
 #
-# GRAKN.AI - THE KNOWLEDGE GRAPH
-# Copyright (C) 2018 Grakn Labs Ltd
+# Copyright (C) 2020 Grakn Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -16,15 +15,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_jar")
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-def bazel_common():
-    git_repository(
-        name="com_github_google_bazel_common",
-        remote="https://github.com/graknlabs/bazel-common",
-        commit="5cf83ccbb4b184f282380fe2c1f47b13336ffcdd",
-    )
 
 def bazel_toolchain():
     http_archive(
@@ -34,10 +26,4 @@ def bazel_toolchain():
       urls = [
         "https://github.com/bazelbuild/bazel-toolchains/releases/download/3.0.1/bazel-toolchains-3.0.1.tar.gz",
       ],
-    )
-
-def bazel_deps():
-    http_jar(
-        name = "bazel_deps",
-        urls = ["https://github.com/graknlabs/bazel-deps/releases/download/0.3/grakn-bazel-deps-0.3.jar"],
     )

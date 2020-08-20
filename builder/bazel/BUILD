@@ -1,6 +1,5 @@
 #
-# GRAKN.AI - THE KNOWLEDGE GRAPH
-# Copyright (C) 2018 Grakn Labs Ltd
+# Copyright (C) 2020 Grakn Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -15,10 +14,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
-java_binary(
-    name = "bazel-deps",
-    main_class = "com.github.johnynek.bazel_deps.ParseProject",
-    visibility = ["//visibility:public"],
-    runtime_deps = ["@bazel_deps//jar:jar"],
-)

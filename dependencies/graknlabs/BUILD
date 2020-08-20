@@ -1,8 +1,5 @@
-#!/usr/bin/env python
-
 #
-# GRAKN.AI - THE KNOWLEDGE GRAPH
-# Copyright (C) 2020 Grakn Labs Ltd
+# Copyright (C) 2020 Grakn Labs
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -17,16 +14,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
-import json
-import sys
-
-with open("{workspace_refs_json_path}") as f:
-    workspace_refs = json.load(f)
-
-tagged_deps = set("{tagged_deps}".split(','))
-snapshot_dependencies = tagged_deps - set(workspace_refs['tags'])
-
-if snapshot_dependencies:
-    print('These dependencies are excepted to be declared by tag instead of commit: {}'.format(snapshot_dependencies))
-    sys.exit(1)
