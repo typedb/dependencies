@@ -56,9 +56,8 @@ kt_register_toolchains()
 # Load NodeJS
 load("//builder/nodejs:deps.bzl", nodejs_deps = "deps")
 nodejs_deps()
-load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
-node_repositories()
 load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories", "yarn_install")
+node_repositories()
 
 # Load Python
 load("//builder/python:deps.bzl", python_deps = "deps")
@@ -121,10 +120,6 @@ sass_repositories()
 # Load Github
 load("@graknlabs_bazel_distribution//github:dependencies.bzl", "tcnksm_ghr")
 tcnksm_ghr()
-
-# Load NodeJS
-load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories")
-node_repositories()
 
 # Load Python
 git_repository(
