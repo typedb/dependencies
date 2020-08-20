@@ -17,8 +17,6 @@
 
 workspace(name = "graknlabs_dependencies")
 
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-
 ################################
 # Load @graknlabs_dependencies #
 ################################
@@ -93,9 +91,6 @@ unuseddeps_deps()
 
 # Load Kotlin Build Deps
 load("//dependencies/maven:artifacts.bzl", graknlabs_dependencies_artifacts = "artifacts")
-
-load("//distribution:deps.bzl", distribution_deps = "deps")
-distribution_deps()
 
 ######################################
 # Load @graknlabs_bazel_distribution #

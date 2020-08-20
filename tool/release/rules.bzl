@@ -66,7 +66,7 @@ def release_validate_deps(name, **kwargs):
         **kwargs
     )
 
-    # assign this rule as the name that is passed in, so it is called with `bazel run `
+    # assign this rule instance as the name that is passed in, so it is called with `bazel run `
     kt_jvm_test(
         name = name,
         main_class = "tool.release." + standard_name + "_genKt",
