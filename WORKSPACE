@@ -109,20 +109,6 @@ bazelbuild_rules_pkg()
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
-# Load Docker
-# load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-# git_repository(
-#     name = "io_bazel_skydoc",
-#     remote = "https://github.com/graknlabs/skydoc.git",
-#     branch = "experimental-skydoc-allow-dep-on-bazel-tools",
-# )
-# load("@io_bazel_skydoc//:setup.bzl", "skydoc_repositories")
-# skydoc_repositories()
-# load("@io_bazel_rules_sass//:package.bzl", "rules_sass_dependencies")
-# rules_sass_dependencies()
-# load("@io_bazel_rules_sass//:defs.bzl", "sass_repositories")
-# sass_repositories()
-
 # Load Github
 load("@graknlabs_bazel_distribution//github:dependencies.bzl", "tcnksm_ghr")
 tcnksm_ghr()
