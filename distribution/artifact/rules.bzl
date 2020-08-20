@@ -119,7 +119,8 @@ def artifact_file(name,
                   sha = None,
                   release_repository_url = GRAKNLABS_ARTIFACT_RELEASE_REPOSITORY_URL,
                   snapshot_repository_url = GRAKNLABS_ARTIFACT_SNAPSHOT_REPOSITORY_URL,
-                  tags = []):
+                  tags = [],
+                  **kwargs):
     """Macro to assist depending on a deployed artifact by generating urls for http_file.
 
     Args:
@@ -150,7 +151,8 @@ def artifact_file(name,
         urls = ["{}/{}/{}/{}".format(repository_url, group_name, version, artifact_name)],
         downloaded_file_path = artifact_name,
         sha = sha,
-        tags = tags + ["{}={}".format(versiontype, version)]
+        tags = tags + ["{}={}".format(versiontype, version)],
+        **kwargs
     )
 
 script_template = """\
@@ -186,7 +188,7 @@ artifact_extractor = rule(
         "strip_components": attr.int(
             default = 2,
             doc = "tar --strip-components argument (default 2).",
-        )
+        ),
     },
     executable = True,
 )
