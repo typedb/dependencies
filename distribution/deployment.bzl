@@ -37,3 +37,8 @@ deployment = {
     "artifact.snapshot" : "https://repo.grakn.ai/repository/artifact-snapshot",
     "artifact.release" : "https://repo.grakn.ai/repository/artifact",
 }
+
+deployment_private = {
+    "artifact.snapshot" : "https://repo.grakn.ai/repository/private-artifact-snapshot",
+    "artifact.release" : "https://repo.grakn.ai/repository/private-artifact",
+}
