@@ -22,8 +22,8 @@ workspace(name = "graknlabs_dependencies")
 ################################
 
 # Load //builder/python
-load("//builder/python:deps.bzl", "rules_python")
-rules_python()
+load("//builder/python:deps.bzl", python_deps = "deps")
+python_deps()
 
 load("@rules_python//python:pip.bzl", "pip_repositories")
 pip_repositories()

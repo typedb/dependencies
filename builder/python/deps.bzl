@@ -1,6 +1,6 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file", "http_jar")
 
-def rules_python(use_patched_version=False):
+def deps(use_patched_version=False):
     if not use_patched_version:
         http_archive(
             name = "rules_python",
