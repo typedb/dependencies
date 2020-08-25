@@ -17,7 +17,7 @@
 
 
 load("@graknlabs_dependencies_ci_pip//:requirements.bzl", "requirement")
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
 
 exports_files(["ValidateDeps.kt"])
 
@@ -45,5 +45,13 @@ py_binary(
         requirement("idna"),
         requirement("wrapt"),
         requirement("certifi"),
+    ]
+)
+
+kt_jvm_library(
+    name = "x",
+    srcs = ["ValidateDeps.kt"],
+    deps = [
+        "@maven//:com_eclipsesource_minimal_json_minimal_json"
     ]
 )
