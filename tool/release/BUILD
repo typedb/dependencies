@@ -17,7 +17,6 @@
 
 
 load("@graknlabs_dependencies_ci_pip//:requirements.bzl", "requirement")
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
 
 exports_files(["ValidateDeps.kt"])
 
