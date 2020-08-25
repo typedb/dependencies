@@ -12,7 +12,7 @@ fun main() {
     val malformedDepsSet = taggedDepsSet.filter { dep -> !dep.startsWith("@") }
     if (malformedDepsSet.isNotEmpty()) {
         System.err.println("\nThe following dependencies do not start with an '@': $malformedDepsSet")
-        System.err.println("They must be declared with an '@', eg., ${malformedDepsSet.map { dep -> "@" + dep }}'")
+        System.err.println("Please prefix them with '@', ie., ${malformedDepsSet.map { dep -> "@" + dep }}'")
         System.exit(1)
     }
 
