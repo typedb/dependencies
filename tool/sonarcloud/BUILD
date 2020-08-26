@@ -15,6 +15,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+package(default_visibility = ["//visibility:public"])
+
 py_binary(
     name = "code-analysis",
     srcs = ["code-analysis.py"],

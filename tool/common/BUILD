@@ -15,8 +15,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+package(default_visibility = ["//visibility:public"])
+
 py_library(
     name = "common",
     srcs = ["common.py"],
-    visibility = ["//visibility:public"]
 )

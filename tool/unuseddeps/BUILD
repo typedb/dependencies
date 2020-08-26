@@ -1,3 +1,5 @@
+package(default_visibility = ["//visibility:public"])
+
 py_binary(
     name = "unused-deps",
     srcs = ["unused-deps.py"],

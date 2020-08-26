@@ -1,5 +1,7 @@
 load("@graknlabs_dependencies_ci_pip//:requirements.bzl", "requirement")
 
+package(default_visibility = ["//visibility:public"])
+
 py_binary(
     name = "dependencies",
     srcs = ["dependencies.py"],
