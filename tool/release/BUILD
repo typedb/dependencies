@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+package(default_visibility = ["//visibility:public"])
 
 load("@graknlabs_dependencies_ci_pip//:requirements.bzl", "requirement")
 

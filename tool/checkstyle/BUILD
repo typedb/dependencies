@@ -15,6 +15,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+package(default_visibility = ["//visibility:public"])
+
 exports_files(["rules.bzl"])
 
 py_binary(
