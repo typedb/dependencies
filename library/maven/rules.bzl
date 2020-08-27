@@ -5,7 +5,6 @@ load(":artifacts.bzl", maven_artifacts_org = "artifacts")
 def warn(msg):
     print('{red}{msg}{nc}'.format(red='\033[0;31m', msg=msg, nc='\033[0m'))
 
-
 def maven(artifacts_list, overrides={}):
     if len(overrides) > 0:
         warn("There are {} overrides found. Usage of `overrides` attribute of `maven()` is discouraged!".format(len(overrides)))
