@@ -1,4 +1,4 @@
-def maven_overrides(maven_overrides_org, maven_overrides_repo={}):
+def overrides(maven_overrides_org, maven_overrides_repo={}):
     """ Merge org artifact versions with repo artifact versions """
     normalised_artifacts_org = _artifact_versions(maven_overrides_org)
 
