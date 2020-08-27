@@ -182,61 +182,29 @@ robocopy %DEST_PATH%\\{artifact_unpacked_name} %DEST_PATH% /E /MOVE
 
 def _artifact_extractor_impl(ctx):
     supported_extensions_map = {
-        'zip': {
-            'cmd': cmd_script_template_unzip,
-            'bash': bash_script_template_unzip,
+        'cmd': {
+            'zip': cmd_script_template_unzip
         },
-        'tar': {
-            'bash': bash_script_template_tar
+        'bash': {
+            'zip': bash_script_template_unzip,
+            'tar': bash_script_template_tar,
+            'tar.gz': bash_script_template_tar,
+            'tgz': bash_script_template_tar,
+            'taz': bash_script_template_tar,
+            'tar.bz2': bash_script_template_tar,
+            'tb2': bash_script_template_tar,
+            'tbz': bash_script_template_tar,
+            'tbz2': bash_script_template_tar,
+            'tz2': bash_script_template_tar,
+            'tar.lz': bash_script_template_tar,
+            'tar.lzma': bash_script_template_tar,
+            'tlz': bash_script_template_tar,
+            'tar.lzo': bash_script_template_tar,
+            'tar.xz': bash_script_template_tar,
+            'txz': bash_script_template_tar,
+            'tar.Z': bash_script_template_tar,
+            'tar.zst': bash_script_template_tar
         },
-        'tar.gz': {
-            'bash': bash_script_template_tar
-        },
-        'tgz': {
-            'bash': bash_script_template_tar
-        },
-        'taz': {
-            'bash': bash_script_template_tar
-        },
-        'tar.bz2': {
-            'bash': bash_script_template_tar
-        },
-        'tb2': {
-            'bash': bash_script_template_tar
-        },
-        'tbz': {
-            'bash': bash_script_template_tar
-        },
-        'tbz2': {
-            'bash': bash_script_template_tar
-        },
-        'tz2': {
-            'bash': bash_script_template_tar
-        },
-        'tar.lz': {
-            'bash': bash_script_template_tar
-        },
-        'tar.lzma': {
-            'bash': bash_script_template_tar
-        },
-        'tlz': {
-            'bash': bash_script_template_tar
-        },
-        'tar.lzo': {
-            'bash': bash_script_template_tar
-        },
-        'tar.xz': {
-            'bash': bash_script_template_tar
-        },
-        'txz': {
-            'bash': bash_script_template_tar
-        },
-        'tar.Z': {
-            'bash': bash_script_template_tar
-        },
-        'tar.zst': {
-            'bash': bash_script_template_tar
-        }
     }
 
     artifact_file = ctx.file.artifact
@@ -244,21 +212,26 @@ def _artifact_extractor_impl(ctx):
     extraction_method = ctx.attr.extraction_method
     executor = ctx.attr.executor
 
+    supported_extentions = []
+    for executor_extentions in supported_extensions_map.values():
+        for ext in executor_extentions.keys():
+            if ext not in supported_extentions: supported_extentions.append(ext)
+
     if (extraction_method == 'auto'):
         artifact_extention = None
-        for ext in supported_extensions_map.keys():
+        for ext in supported_extentions:
             if artifact_filename.rfind(ext) == len(artifact_filename) - len(ext):
                 artifact_extention = ext
-                target_script_template = supported_extensions_map.get(ext).get(executor)
+                target_script_template = supported_extensions_map.get(executor).get(ext)
                 artifact_unpacked_name = artifact_filename.replace('.' + ext, '')
                 break
         
         if artifact_extention == None:
-            fail("Extention [{extention}] is not supported by the artifiact_etractor.".format(extention = artifact_file.extension))
+            fail("Extention [{extention}] is not supported by the artifiact-etractor.".format(extention = artifact_file.extension))
     elif (extraction_method == 'tar'):
-        target_script_template = supported_extensions_map.get('tar').get(executor)
+        target_script_template = supported_extensions_map.get(executor).get('tar')
     elif (extraction_method == 'unzip'):
-        target_script_template = supported_extensions_map.get('zip').get(executor)
+        target_script_template = supported_extensions_map.get(executor).get('zip')
 
     if target_script_template == None:
         fail('Extracting a [{extension}] with [{executor}] is not yet supported by artifact-extractor.'.format(extension=artifact_extention, executor=executor))
@@ -305,3 +278,4 @@ artifact_extractor = rule(
     },
     executable = True,
 )
+
