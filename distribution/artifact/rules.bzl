@@ -257,7 +257,7 @@ def _artifact_extractor_impl(ctx):
     runfiles = ctx.runfiles(files = [artifact_file])
     return [DefaultInfo(executable = script, runfiles = runfiles)]
 
-artifact_extractor = rule(
+_artifact_extractor = rule(
     implementation = _artifact_extractor_impl,
     attrs = {
         "artifact": attr.label(
@@ -278,4 +278,3 @@ artifact_extractor = rule(
     },
     executable = True,
 )
-
