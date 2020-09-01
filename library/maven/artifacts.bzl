@@ -87,7 +87,7 @@ artifacts = {
     "javax.servlet:javax.servlet-api": "3.1.0",
     "javax.xml.stream:stax-api": "1.0-2",
     "jline:jline": "2.12",
-    "junit:junit": "4.12",
+    "junit:junit": "4.13",
     "net.minidev:json-smart": "2.3",
     "org.antlr:antlr4-runtime": "4.7.1",
     "org.apache.cassandra:cassandra-all": {
