@@ -38,7 +38,7 @@ def add_rbe_param(cmd):
 command = ' '.join(sys.argv[1:])
 is_linux = platform.system() == 'Linux'
 
-if is_linux and os.path.isfile('/opt/.credentials/buildbuddy-cert.pem') and os.path.isfile('/opt/.credentials/buildbuddy-key.pem'):
+if is_linux and os.path.isfile('/opt/credentials/buildbuddy-cert.pem') and os.path.isfile('/opt/credentials/buildbuddy-key.pem'):
     print('Bazel will be executed with RBE support. '
           'This means the build is remotely executed '
           'and the cache will be re-used by subsequent CI jobs.')
