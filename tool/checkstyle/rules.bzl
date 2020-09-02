@@ -121,7 +121,7 @@ checkstyle_test = rule(
         "license_type": attr.string(
             doc = "Type of license to produce the header for every source code",
             values = ["agpl", "apache", "grakn-kgms"],
-            default = "agpl",
+            mandatory = True,
         ),
         "properties": attr.label(
             allow_single_file=True,
