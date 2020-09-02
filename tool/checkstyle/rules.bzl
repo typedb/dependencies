@@ -22,18 +22,18 @@ JavaSourceFiles = provider(
 )
 
 
-def collect_sources_impl(target, ctx):
-    files = []
+def collect_java_sources_impl(target, ctx):
+    javaSources = []
     if hasattr(ctx.rule.attr, 'srcs'):
         for src in ctx.rule.attr.srcs:
             for f in src.files.to_list():
                 if f.extension == 'java':
-                    files.append(f)
-    return [JavaSourceFiles(files = files)]
+                    javaSources.append(f)
+    return [JavaSourceFiles(files = javaSources)]
 
 
-collect_sources = aspect(
-    implementation = collect_sources_impl,
+collect_java_sources = aspect(
+    implementation = collect_java_sources_impl,
 )
 
 
@@ -76,17 +76,21 @@ def _checkstyle_test_impl(ctx):
       args += " -p %s" % properties.path
       inputs.append(properties)
 
-    all_java_files = []
+    files = []
     for target in ctx.attr.targets + [ctx.attr.target]:
         if target:
-            all_java_files.extend(target[JavaSourceFiles].files)
+            files.extend(target[JavaSourceFiles].files)
+    print(files)
+    for target in ctx.attr.files:
+        if target:
+            files.extend(target.files.to_list())
 
     cmd = " ".join(
         ["java -cp %s com.puppycrawl.tools.checkstyle.Main" % classpath] +
         [args] +
         ["--%s" % x for x in opts] +
         ["--%s %s" % (k, sopts[k]) for k in sopts] +
-        [file.path for file in all_java_files]
+        [file.path for file in files]
     )
 
     ctx.actions.expand_template(
@@ -99,7 +103,7 @@ def _checkstyle_test_impl(ctx):
         is_executable = True,
     )
 
-    files = [ctx.outputs.checkstyle_script] + ctx.files._license_files + all_java_files + ctx.files._classpath + inputs
+    files = [ctx.outputs.checkstyle_script] + ctx.files._license_files + files + ctx.files._classpath + inputs
     runfiles = ctx.runfiles(
         files = files,
         collect_data = True,
@@ -131,11 +135,15 @@ checkstyle_test = rule(
         ),
         "target": attr.label(
             doc = "The java_library target to check sources on",
-            aspects = [collect_sources],
+            aspects = [collect_java_sources],
         ),
         "targets": attr.label_list(
             doc = "A list of java_library targets to check sources on",
-            aspects = [collect_sources],
+            aspects = [collect_java_sources],
+        ),
+        "files": attr.label_list(
+            doc = "A list of files to check",
+            allow_files = True,
         ),
         "allow_failure": attr.bool(
             default = False,
