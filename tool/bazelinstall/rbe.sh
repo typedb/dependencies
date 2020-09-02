@@ -34,7 +34,7 @@ function install_dependencies() {
 (cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull) || true
 if [[ -n "$BAZEL_BUILDBUDDY_CERT" && -n "$BAZEL_BUILDBUDDY_KEY" ]]; then
     echo "Installing BuildBuddy credential..."
-    BAZEL_BUILDBUDDY_CREDENTIAL=/opt/.credentials/
+    BAZEL_BUILDBUDDY_CREDENTIAL=/opt/credentials/
     echo "A BuildBuddy credential is found and will be saved to $BAZEL_BUILDBUDDY_CREDENTIAL. Targets will be built and tested remotely."
     sudo mkdir -p $BAZEL_BUILDBUDDY_CREDENTIAL && sudo chmod a+rwx $BAZEL_BUILDBUDDY_CREDENTIAL
     echo $BAZEL_BUILDBUDDY_CERT | base64 -d > "$BAZEL_BUILDBUDDY_CREDENTIAL/buildbuddy-cert.pem"
