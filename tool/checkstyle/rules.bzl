@@ -15,31 +15,30 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-JavaSourceFiles = provider(
+SourceFiles = provider(
     fields = {
-        'files' : 'java source files'
+        'files' : 'source files'
     }
 )
 
 
-def collect_java_sources_impl(target, ctx):
-    javaSources = []
+def collect_sources_impl(target, ctx):
+    sources = []
     if hasattr(ctx.rule.attr, 'srcs'):
         for src in ctx.rule.attr.srcs:
             for f in src.files.to_list():
-                if f.extension == 'java':
-                    javaSources.append(f)
-    return [JavaSourceFiles(files = javaSources)]
+                sources.append(f)
+    return [SourceFiles(files = sources)]
 
 
-collect_java_sources = aspect(
-    implementation = collect_java_sources_impl,
+collect_sources = aspect(
+    implementation = collect_sources_impl,
 )
 
 
 def _checkstyle_test_impl(ctx):
     if ctx.attr.target and "{}-checkstyle".format(ctx.attr.target.label.name) != ctx.attr.name:
-        fail("target should follow `{java_library target name}-checkstyle` pattern")
+        fail("target should follow `{target name}-checkstyle` pattern")
     properties = ctx.file.properties
     opts = ctx.attr.opts
     sopts = ctx.attr.string_opts
@@ -79,11 +78,9 @@ def _checkstyle_test_impl(ctx):
     files = []
     for target in ctx.attr.targets + [ctx.attr.target]:
         if target:
-            files.extend(target[JavaSourceFiles].files)
-    print(files)
+            files.extend(target[SourceFiles].files)
     for target in ctx.attr.files:
-        if target:
-            files.extend(target.files.to_list())
+        files.extend(target.files.to_list())
 
     cmd = " ".join(
         ["java -cp %s com.puppycrawl.tools.checkstyle.Main" % classpath] +
@@ -134,12 +131,12 @@ checkstyle_test = rule(
             doc = "Options to be passed on the command line that have an argument"
         ),
         "target": attr.label(
-            doc = "The java_library target to check sources on",
-            aspects = [collect_java_sources],
+            doc = "The target to check sources on",
+            aspects = [collect_sources],
         ),
         "targets": attr.label_list(
-            doc = "A list of java_library targets to check sources on",
-            aspects = [collect_java_sources],
+            doc = "A list of targets to check sources on",
+            aspects = [collect_sources],
         ),
         "files": attr.label_list(
             doc = "A list of files to check",
