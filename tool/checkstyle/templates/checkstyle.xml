@@ -34,7 +34,6 @@
     <module name="RegexpHeader">
         <property name="id" value="licenseHeader"/>
         <property name="headerFile" value="{licenseFile}"/>
-        <property name="fileExtensions" value="java"/>
     </module>
 
     <module name="TreeWalker">

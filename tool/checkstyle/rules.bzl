@@ -15,21 +15,20 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-JavaSourceFiles = provider(
+SourceFiles = provider(
     fields = {
-        'files' : 'java source files'
+        'files' : 'source files'
     }
 )
 
 
 def collect_sources_impl(target, ctx):
-    files = []
+    sources = []
     if hasattr(ctx.rule.attr, 'srcs'):
         for src in ctx.rule.attr.srcs:
             for f in src.files.to_list():
-                if f.extension == 'java':
-                    files.append(f)
-    return [JavaSourceFiles(files = files)]
+                sources.append(f)
+    return [SourceFiles(files = sources)]
 
 
 collect_sources = aspect(
@@ -39,7 +38,7 @@ collect_sources = aspect(
 
 def _checkstyle_test_impl(ctx):
     if ctx.attr.target and "{}-checkstyle".format(ctx.attr.target.label.name) != ctx.attr.name:
-        fail("target should follow `{java_library target name}-checkstyle` pattern")
+        fail("target should follow `{target name}-checkstyle` pattern")
     properties = ctx.file.properties
     opts = ctx.attr.opts
     sopts = ctx.attr.string_opts
@@ -76,17 +75,19 @@ def _checkstyle_test_impl(ctx):
       args += " -p %s" % properties.path
       inputs.append(properties)
 
-    all_java_files = []
+    files = []
     for target in ctx.attr.targets + [ctx.attr.target]:
         if target:
-            all_java_files.extend(target[JavaSourceFiles].files)
+            files.extend(target[SourceFiles].files)
+    for target in ctx.attr.files:
+        files.extend(target.files.to_list())
 
     cmd = " ".join(
         ["java -cp %s com.puppycrawl.tools.checkstyle.Main" % classpath] +
         [args] +
         ["--%s" % x for x in opts] +
         ["--%s %s" % (k, sopts[k]) for k in sopts] +
-        [file.path for file in all_java_files]
+        [file.path for file in files]
     )
 
     ctx.actions.expand_template(
@@ -99,7 +100,7 @@ def _checkstyle_test_impl(ctx):
         is_executable = True,
     )
 
-    files = [ctx.outputs.checkstyle_script] + ctx.files._license_files + all_java_files + ctx.files._classpath + inputs
+    files = [ctx.outputs.checkstyle_script] + ctx.files._license_files + files + ctx.files._classpath + inputs
     runfiles = ctx.runfiles(
         files = files,
         collect_data = True,
@@ -117,7 +118,7 @@ checkstyle_test = rule(
         "license_type": attr.string(
             doc = "Type of license to produce the header for every source code",
             values = ["agpl", "apache", "grakn-kgms"],
-            default = "agpl",
+            mandatory = True,
         ),
         "properties": attr.label(
             allow_single_file=True,
@@ -130,12 +131,16 @@ checkstyle_test = rule(
             doc = "Options to be passed on the command line that have an argument"
         ),
         "target": attr.label(
-            doc = "The java_library target to check sources on",
+            doc = "The target to check sources on",
             aspects = [collect_sources],
         ),
         "targets": attr.label_list(
-            doc = "A list of java_library targets to check sources on",
+            doc = "A list of targets to check sources on",
             aspects = [collect_sources],
+        ),
+        "files": attr.label_list(
+            doc = "A list of files to check",
+            allow_files = True,
         ),
         "allow_failure": attr.bool(
             default = False,
