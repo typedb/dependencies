@@ -40,6 +40,7 @@ if __name__ == '__main__':
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
     java_targets = java_targets.split()
 
+    # Get all BUILD and *.bzl files that are declared in the current repository
     build_files, _ = tc.shell_execute([
         'bazel', 'query', 'filter("^//.*", buildfiles(//...))'
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
