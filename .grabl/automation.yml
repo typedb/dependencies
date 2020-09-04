@@ -24,3 +24,5 @@ build:
         machine: graknlabs-ubuntu-20.04
         script: |
           bazel build //...
+    execution:
+      - build
