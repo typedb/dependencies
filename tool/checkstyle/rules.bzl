@@ -54,7 +54,8 @@ def _checkstyle_test_impl(ctx):
 
     files = []
     for target in ctx.attr.include:
-        if target not in ctx.attr.exclude:
+        path = target.files.to_list()[0].path;
+        if target not in ctx.attr.exclude and path not in ['.bazelversion', 'VERSION', 'RELEASE_TEMPLATE.md']:
             files.extend(target.files.to_list())
 
     cmd = " ".join(
