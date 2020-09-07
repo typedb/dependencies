@@ -51,12 +51,21 @@ if __name__ == '__main__':
     # - '//test/behaviour:BUILD' transforms to './test/behaviour/BUILD'
     # - '//:README.md' transforms to './README.md'
     checkstyle_files = list(map(lambda x: x.get('value').replace('//:', './').replace('//', './').replace(':', '/'), included_checkstyle_files + excluded_checkstyle_files))
-    unique_checkstyle_files = set(checkstyle_files)
+    unique_included_checkstyle_files = set(included_checkstyle_files)
+    unique_excluded_checkstyle_files = set(excluded_checkstyle_files)
 
-    if len(unique_checkstyle_files) != len(checkstyle_files):
-        non_unique_checkstyle_file = set([x for x in checkstyle_files if checkstyle_files.count(x) > 1])
+    if len(unique_included_checkstyle_files) != len(included_checkstyle_files):
+        non_unique_checkstyle_file = set([x for x in included_checkstyle_files if included_checkstyle_files.count(x) > 1])
         non_unique_checkstyle_file_count = len(non_unique_checkstyle_file)
-        print('ERROR: Found %d workspace files which are covered more than once:' % non_unique_checkstyle_file_count)
+        print('ERROR: Found %d workspace files which are included more than once:' % non_unique_checkstyle_file_count)
+        for i, target_label in enumerate(non_unique_checkstyle_file, start=1):
+            print('%d: %s' % (i, target_label))
+        sys.exit(1)
+
+    if len(unique_excluded_checkstyle_files) != len(excluded_checkstyle_files):
+        non_unique_checkstyle_file = set([x for x in excluded_checkstyle_files if excluded_checkstyle_files.count(x) > 1])
+        non_unique_checkstyle_file_count = len(non_unique_checkstyle_file)
+        print('ERROR: Found %d workspace files which are excluded more than once:' % non_unique_checkstyle_file_count)
         for i, target_label in enumerate(non_unique_checkstyle_file, start=1):
             print('%d: %s' % (i, target_label))
         sys.exit(1)
