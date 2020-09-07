@@ -46,11 +46,11 @@ if __name__ == '__main__':
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
     checkstyle_targets_tree = ElementTree.fromstring(checkstyle_targets_xml)
     included_checkstyle_files = checkstyle_targets_tree.findall(".//list[@name='include']//label[@value]")
-    # TODO: support exclusions
+    excluded_checkstyle_files = checkstyle_targets_tree.findall(".//list[@name='exclude']//label[@value]")
     # examples:
     # - '//test/behaviour:BUILD' transforms to './test/behaviour/BUILD'
     # - '//:README.md' transforms to './README.md'
-    checkstyle_files = list(map(lambda x: x.get('value').replace('//:', './').replace('//', './').replace(':', '/'), included_checkstyle_files))
+    checkstyle_files = list(map(lambda x: x.get('value').replace('//:', './').replace('//', './').replace(':', '/'), included_checkstyle_files + excluded_checkstyle_files))
     unique_checkstyle_files = set(checkstyle_files)
 
     if len(unique_checkstyle_files) != len(checkstyle_files):
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     file_count = len(workspace_files_with_no_checkstyle)
 
     if workspace_files_with_no_checkstyle:
-        print('ERROR: Found %d workspace files which are not covered by a `checkstyle_test`:' % file_count)
+        print('ERROR: Found %d workspace files which are not covered by a `checkstyle_test`. They must be placed in either `include` or `exclude` in a `checkstyle_test`.' % file_count)
         for i, file_label in enumerate(workspace_files_with_no_checkstyle, start=1):
             print('%d: %s' % (i, file_label))
         sys.exit(1)

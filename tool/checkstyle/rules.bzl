@@ -54,7 +54,8 @@ def _checkstyle_test_impl(ctx):
 
     files = []
     for target in ctx.attr.include:
-        files.extend(target.files.to_list())
+        if target not in ctx.attr.exclude:
+            files.extend(target.files.to_list())
 
     cmd = " ".join(
         ["java -cp %s com.puppycrawl.tools.checkstyle.Main" % classpath] +
@@ -111,6 +112,7 @@ checkstyle_test = rule(
         "exclude": attr.label_list(
             doc = "A list of files that should be excluded from checking (in addition to the default exclusions)",
             allow_files = True,
+            default = [],
         ),
         "allow_failure": attr.bool(
             default = False,
