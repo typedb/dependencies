@@ -15,30 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-SourceFiles = provider(
-    fields = {
-        'files' : 'source files'
-    }
-)
-
-
-def collect_sources_impl(target, ctx):
-    sources = []
-    if hasattr(ctx.rule.attr, 'srcs'):
-        for src in ctx.rule.attr.srcs:
-            for f in src.files.to_list():
-                sources.append(f)
-    return [SourceFiles(files = sources)]
-
-
-collect_sources = aspect(
-    implementation = collect_sources_impl,
-)
-
-
 def _checkstyle_test_impl(ctx):
-    if ctx.attr.target and "{}-checkstyle".format(ctx.attr.target.label.name) != ctx.attr.name:
-        fail("target should follow `{target name}-checkstyle` pattern")
     properties = ctx.file.properties
     opts = ctx.attr.opts
     sopts = ctx.attr.string_opts
@@ -76,10 +53,7 @@ def _checkstyle_test_impl(ctx):
       inputs.append(properties)
 
     files = []
-    for target in ctx.attr.targets + [ctx.attr.target]:
-        if target:
-            files.extend(target[SourceFiles].files)
-    for target in ctx.attr.files:
+    for target in ctx.attr.include:
         files.extend(target.files.to_list())
 
     cmd = " ".join(
@@ -130,16 +104,12 @@ checkstyle_test = rule(
         "string_opts": attr.string_dict(
             doc = "Options to be passed on the command line that have an argument"
         ),
-        "target": attr.label(
-            doc = "The target to check sources on",
-            aspects = [collect_sources],
+        "include": attr.label_list(
+            doc = "A list of files that should be checked",
+            allow_files = True,
         ),
-        "targets": attr.label_list(
-            doc = "A list of targets to check sources on",
-            aspects = [collect_sources],
-        ),
-        "files": attr.label_list(
-            doc = "A list of files to check",
+        "exclude": attr.label_list(
+            doc = "A list of files that should be excluded from checking (in addition to the default exclusions)",
             allow_files = True,
         ),
         "allow_failure": attr.bool(
