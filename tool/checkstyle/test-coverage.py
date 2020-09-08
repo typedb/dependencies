@@ -31,66 +31,51 @@ def try_decode(s):
 
 
 if __name__ == '__main__':
-    print('Checking if there are any source files not covered by checkstyle...')
+    print('Checking if there are any workspace files not covered by checkstyle...')
 
-    java_targets, _ = tc.shell_execute([
-        'bazel', 'query',
-        '(kind(java_library, //...) union kind(java_test, //...)) '
-        'except //dependencies/... except attr("tags", "checkstyle_ignore", //...)'
+    workspace_files, _ = tc.shell_execute([
+         'find', '.',
+         '(', '-name', '.git', '-o', '-name', '.ijwb', '-o', '-name', '.github', '-o', '-name', 'RELEASE_TEMPLATE.md', '-o', '-name', 'VERSION', '-o', '-name', '.bazelversion', ')', '-prune', '-o', # files to always exclude
+         '-type', 'f', '-print'
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
-    java_targets = java_targets.split()
-
-    # Get all BUILD and *.bzl files that are declared in the current repository
-    build_files, _ = tc.shell_execute([
-        'bazel', 'query', 'filter("^//.*", buildfiles(//...))'
-    ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
-    build_files = build_files.split()
+    workspace_files = workspace_files.split()
 
     checkstyle_targets_xml, _ = tc.shell_execute([
         'bazel', 'query', 'kind(checkstyle_test, //...)', '--output', 'xml'
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
     checkstyle_targets_tree = ElementTree.fromstring(checkstyle_targets_xml)
-    java_targets_covered_by_target_attr = checkstyle_targets_tree.findall(".//label[@name='target'][@value]")
-    java_targets_covered_by_targets_attr = checkstyle_targets_tree.findall(".//list[@name='targets']//label[@value]")
-    checkstyle_targets = list(map(
-        lambda x: x.get('value'), java_targets_covered_by_target_attr + java_targets_covered_by_targets_attr))
-    unique_checkstyle_targets = set(checkstyle_targets)
-    files = checkstyle_targets_tree.findall(".//list[@name='files']//label[@value]")
-    checkstyle_files = list(map(lambda x: x.get('value'), files))
-    unique_checkstyle_files = set(checkstyle_files)
+    included_checkstyle_files = checkstyle_targets_tree.findall(".//list[@name='include']//label[@value]")
+    excluded_checkstyle_files = checkstyle_targets_tree.findall(".//list[@name='exclude']//label[@value]")
+    # examples:
+    # - '//test/behaviour:BUILD' transforms to './test/behaviour/BUILD'
+    # - '//:README.md' transforms to './README.md'
+    checkstyle_files = list(map(lambda x: x.get('value').replace('//:', './').replace('//', './').replace(':', '/'), included_checkstyle_files + excluded_checkstyle_files))
+    unique_included_checkstyle_files = set(included_checkstyle_files)
+    unique_excluded_checkstyle_files = set(excluded_checkstyle_files)
 
-    if len(unique_checkstyle_targets) != len(checkstyle_targets):
-        non_unique_checkstyle_target = set([x for x in checkstyle_targets if checkstyle_targets.count(x) > 1])
-        non_unique_checkstyle_target_count = len(non_unique_checkstyle_target)
-        print('ERROR: Found %d bazel targets which are covered more than once:' % non_unique_checkstyle_target_count)
-        for i, target_label in enumerate(non_unique_checkstyle_target, start=1):
-            print('%d: %s' % (i, target_label))
-        sys.exit(1)
-
-    if len(unique_checkstyle_files) != len(checkstyle_files):
-        non_unique_checkstyle_file = set([x for x in checkstyle_files if checkstyle_files.count(x) > 1])
+    if len(unique_included_checkstyle_files) != len(included_checkstyle_files):
+        non_unique_checkstyle_file = set([x for x in included_checkstyle_files if included_checkstyle_files.count(x) > 1])
         non_unique_checkstyle_file_count = len(non_unique_checkstyle_file)
-        print('ERROR: Found %d build files which are covered more than once:' % non_unique_checkstyle_file_count)
+        print('ERROR: Found %d workspace files which are included more than once:' % non_unique_checkstyle_file_count)
         for i, target_label in enumerate(non_unique_checkstyle_file, start=1):
             print('%d: %s' % (i, target_label))
         sys.exit(1)
 
-    java_targets_with_no_checkstyle = set(java_targets) - set(checkstyle_targets)
-    target_count = len(java_targets_with_no_checkstyle)
-
-    if java_targets_with_no_checkstyle:
-        print('ERROR: Found %d bazel targets which are not covered by a `checkstyle_test`:' % target_count)
-        for i, target_label in enumerate(java_targets_with_no_checkstyle, start=1):
+    if len(unique_excluded_checkstyle_files) != len(excluded_checkstyle_files):
+        non_unique_checkstyle_file = set([x for x in excluded_checkstyle_files if excluded_checkstyle_files.count(x) > 1])
+        non_unique_checkstyle_file_count = len(non_unique_checkstyle_file)
+        print('ERROR: Found %d workspace files which are excluded more than once:' % non_unique_checkstyle_file_count)
+        for i, target_label in enumerate(non_unique_checkstyle_file, start=1):
             print('%d: %s' % (i, target_label))
         sys.exit(1)
 
-    build_files_with_no_checkstyle = set(build_files) - set(checkstyle_files)
-    file_count = len(build_files_with_no_checkstyle)
+    workspace_files_with_no_checkstyle = set(workspace_files) - set(checkstyle_files)
+    file_count = len(workspace_files_with_no_checkstyle)
 
-    if build_files_with_no_checkstyle:
-        print('ERROR: Found %d build files which are not covered by a `checkstyle_test`:' % file_count)
-        for i, file_label in enumerate(build_files_with_no_checkstyle, start=1):
+    if workspace_files_with_no_checkstyle:
+        print('ERROR: Found %d workspace files which are not covered by a `checkstyle_test`. They must be placed in either `include` or `exclude` in a `checkstyle_test`.' % file_count)
+        for i, file_label in enumerate(workspace_files_with_no_checkstyle, start=1):
             print('%d: %s' % (i, file_label))
         sys.exit(1)
 
-    print('SUCCESS: Every Java source and build file is covered by a `checkstyle_test`!')
+    print('SUCCESS: Every workspace file is covered by a `checkstyle_test`!')
