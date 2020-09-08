@@ -34,9 +34,15 @@ if __name__ == '__main__':
     print('Checking if there are any workspace files not covered by checkstyle...')
 
     workspace_files, _ = tc.shell_execute([
-         'find', '.',
-         '(', '-name', '.git', '-o', '-name', '.ijwb', '-o', '-name', '.github', '-o', '-name', 'RELEASE_TEMPLATE.md', '-o', '-name', 'VERSION', '-o', '-name', '.bazelversion', ')', '-prune', '-o', # files to always exclude
-         '-type', 'f', '-print'
+        'find', '.',
+            '(', '-name', '.git',
+            '-o', '-name', '.ijwb',
+            '-o', '-name', '.github',
+            '-o', '-name', '.bazelversion',
+            '-o', '-name', '.gitkeep',
+            '-o', '-name', 'RELEASE_TEMPLATE.md',
+            '-o', '-name', 'VERSION',
+        ')', '-prune', '-o', '-type', 'f', '-print'
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
     workspace_files = workspace_files.split()
 

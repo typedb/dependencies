@@ -55,7 +55,7 @@ def _checkstyle_test_impl(ctx):
     files = []
     for target in ctx.attr.include:
         path = target.files.to_list()[0].path;
-        if target not in ctx.attr.exclude and path not in ['.DS_Store', '.bazelversion', 'LICENSE', 'RELEASE_TEMPLATE.md', 'VERSION']:
+        if target not in ctx.attr.exclude and path not in ['.DS_Store', '.bazelversion', '.gitkeep', 'LICENSE', 'RELEASE_TEMPLATE.md', 'VERSION']:
             files.extend(target.files.to_list())
 
     cmd = " ".join(
