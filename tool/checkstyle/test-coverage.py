@@ -40,8 +40,8 @@ if __name__ == '__main__':
             '-o', '-name', '.github',
             '-o', '-name', '.bazelversion',
             '-o', '-name', '.gitkeep',
-            '-o', '-name', 'RELEASE_TEMPLATE.md',
             '-o', '-name', 'VERSION',
+            '-o', '-name', '*.md',
         ')', '-prune', '-o', '-type', 'f', '-print'
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
     workspace_files = workspace_files.split()
