@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
     workspace_files, _ = tc.shell_execute([
          'find', '.',
-         '(', '-name', '.git', '-o', '-name', '.ijwb', '-o', '-name', '.github', '-name', 'RELEASE_TEMPLATE.md', '-o', '-name', 'VERSION', '-o', '-name', '.bazelversion', ')', '-prune', '-o', # files to always exclude
+         '(', '-name', '.git', '-o', '-name', '.ijwb', '-o', '-name', '.github', '-o', '-name', 'RELEASE_TEMPLATE.md', '-o', '-name', 'VERSION', '-o', '-name', '.bazelversion', ')', '-prune', '-o', # files to always exclude
          '-type', 'f', '-print'
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
     workspace_files = workspace_files.split()
