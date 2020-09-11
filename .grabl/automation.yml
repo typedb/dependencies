@@ -19,10 +19,7 @@
 
 build:
   correctness:
-    jobs:
-      build:
-        machine: graknlabs-ubuntu-20.04
-        script: |
-          bazel build //...
-    execution:
-      - build
+    build:
+      machine: graknlabs-ubuntu-20.04
+      script: |
+        bazel build //...
