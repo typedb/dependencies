@@ -1,6 +1,6 @@
 # Grakn Dependencies
 
-[![CircleCI](https://circleci.com/gh/graknlabs/dependencies/tree/master.svg?style=shield)](https://circleci.com/gh/graknlabs/dependencies/tree/master)
+[![Grabl](https://grabl.io/api/status/graknlabs/dependencies/badge.svg)](https://grabl.io/graknlabs/dependencies)
 
 Bazel dependency declarations for build tools reused across @graknlabs repositories.
 
