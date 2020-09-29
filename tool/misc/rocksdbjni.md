@@ -27,7 +27,7 @@ The steps to build the JNI are as follows:
 
 0. If not already installed, install `cmake` using `brew install cmake`.
 
-0. To clean, run `make jclean`.
+0. To clean, run `make clean jclean`.
 
 0. To build the JNI into a JAR, run `make -j8 rocksdbjava`. This will configure `DEBUG_LEVEL` to the default of 1,
 which is debug mode enabled. To get a production build, run `DEBUG_LEVEL=0 make -j8 rocksdbjava` instead.
