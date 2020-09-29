@@ -18,10 +18,11 @@ The steps to build the JNI are as follows:
 0. Checkout the tag that matches the version that you want. For example, `git checkout v6.8.1`.
 
 0. Check that the `JAVA_HOME` environment variable is set. It should point to the location where the JDK is installed
-(which must be Java 1.7+). To set it permanently, go to your `.profile` or `.bash_profile` and add:
+(which must be Java 1.7+). To set it permanently, go to your `.profile` or `.bash_profile` (if neither exist, create
+`.bash_profile`) and add this line:
 
     ```
-    export JAVA_HOME=`/usr/libexec/java_home -v <version>`
+    export JAVA_HOME=`/usr/libexec/java_home`
     ```
 
 0. If not already installed, install `cmake` using `brew install cmake`.
