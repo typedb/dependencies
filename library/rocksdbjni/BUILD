@@ -19,6 +19,7 @@ package(default_visibility = ["//visibility:public"])
 
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
 load("@graknlabs_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
+load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
 
 kt_jvm_binary(
     name = "build-rocksdb",
@@ -37,10 +38,15 @@ genrule(
     tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":build-rocksdb"],
 )
 
-#assemble_maven(
-#
-#)
-#
-#deploy_maven(
-#
-#)
+assemble_maven(
+    name = "assemble-maven",
+    target = ":rocksdbjni-jar",
+    version_file = "VERSION",
+)
+
+deploy_maven(
+    name = "deploy-maven",
+    target = ":assemble-maven",
+    snapshot = deployment["maven.snapshot"],
+    release = deployment["maven.release"],
+)
