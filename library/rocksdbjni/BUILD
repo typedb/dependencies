@@ -32,8 +32,8 @@ kt_jvm_binary(
 
 genrule(
     name = "rocksdbjni-jar",
-    outs = ["rocksdbjni-6.8.1-osx.jar"],
-    cmd = "$(execpath :build-rocksdb) && mv rocksdbjni-*-osx.jar \"$@\"",
+    outs = ["rocksdbjni-osx.jar"],
+    cmd = "$(execpath :build-rocksdb) && mv rocksdbjni-osx.jar \"$@\"",
     tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":build-rocksdb"],
 )
 

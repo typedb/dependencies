@@ -22,9 +22,9 @@ fun main() {
 
     shellScript("make -j8 rocksdbjava", gitRepoDir.toFile(), javaHome)
 
-    val jarName = "rocksdbjni-$VERSION-osx.jar"
-    val jar = gitRepoDir.resolve("java").resolve("target").resolve(jarName).toFile()
-    val destPath = Paths.get(jarName).toFile()
+    val versionedJarName = "rocksdbjni-$VERSION-osx.jar"
+    val jar = gitRepoDir.resolve("java").resolve("target").resolve(versionedJarName).toFile()
+    val destPath = Paths.get("rocksdbjni-osx.jar").toFile()
     jar.copyTo(destPath)
 }
 
