@@ -9,11 +9,12 @@ used in production.
 
 ## Deploying RocksDB JNI with Bazel
 
-\<TODO\>
+Run `bazel run --define version=$(cat library/rocksdbjni/VERSION) //library/rocksdbjni:deploy-maven -- snapshot`.
+You'll need the correct credentials in order to deploy to the Grakn Maven repository.
 
-## Building RocksDB JNI manually
+## The RocksDB JNI build process
 
-In case the Bazel target fails to build, here is everything it does. The official documentation for compiling RocksDB JNI can be found in RocksDB's [GitHub wiki page](https://github.com/facebook/rocksdb/wiki/RocksJava-Basics).
+For reference, the steps to build RocksDB JNI manually are listed here. The official documentation for compiling RocksDB JNI can be found in RocksDB's [GitHub wiki page](https://github.com/facebook/rocksdb/wiki/RocksJava-Basics).
 
 0. Clone the [RocksDB repository from GitHub](https://github.com/facebook/rocksdb).
 
@@ -35,4 +36,4 @@ In case the Bazel target fails to build, here is everything it does. The officia
 which is debug mode enabled. To get a production build, run `DEBUG_LEVEL=0 make -j8 rocksdbjava` instead.
 
 0. The output JAR will be created in `rocksdb/java/target` as (for example) `rocksdbjni-6.8.1-osx.jar` and is now
-ready to be used in Grakn Core.
+ready to be used.
