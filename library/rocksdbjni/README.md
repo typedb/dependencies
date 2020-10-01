@@ -7,11 +7,13 @@ The RocksDB JNI has two modes of operation: "debug mode", which enables code ass
 disables them and runs significantly faster. Debug mode should be used in development; the production mode should be
 used in production.
 
-## Building RocksDB JNI from source
+## Deploying RocksDB JNI with Bazel
 
-The official documentation for compiling RocksDB JNI can be found in RocksDB's [GitHub wiki page](https://github.com/facebook/rocksdb/wiki/RocksJava-Basics).
+\<TODO\>
 
-The steps to build the JNI are as follows:
+## Building RocksDB JNI manually
+
+In case the Bazel target fails to build, here is everything it does. The official documentation for compiling RocksDB JNI can be found in RocksDB's [GitHub wiki page](https://github.com/facebook/rocksdb/wiki/RocksJava-Basics).
 
 0. Clone the [RocksDB repository from GitHub](https://github.com/facebook/rocksdb).
 

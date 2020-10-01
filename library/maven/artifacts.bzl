@@ -213,8 +213,5 @@ artifacts = {
     "org.slf4j:slf4j-simple": "1.7.20",
     "org.yaml:snakeyaml": "1.25",
     "org.zeromq:jeromq": "0.5.2",
-    "org.zeroturnaround:zt-exec": {
-        "exclude": ["commons-io:commons-io"],
-        "version": "1.10",
-    },
+    "org.zeroturnaround:zt-exec": "1.10",
 }
