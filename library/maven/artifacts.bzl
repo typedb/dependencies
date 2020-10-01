@@ -204,7 +204,7 @@ artifacts = {
     "org.mockito:mockito-core": "2.6.4",
     "org.openjdk.jmh:jmh-core": "1.23",
     "org.openjdk.jmh:jmh-generator-annprocess": "1.23",
-    "org.rocksdb:rocksdbjni": "6.8.1",
+    "org.rocksdb:rocksdbjni": "6.11.4",
     "org.scala-lang:scala-library": "2.12.10",
     "org.sharegov:mjson": "1.4.1",
     "org.slf4j:jcl-over-slf4j": "1.7.20",
