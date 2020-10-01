@@ -62,5 +62,11 @@ sonarcloud_dependencies()
 load("//distribution:deps.bzl", "graknlabs_bazel_distribution")
 graknlabs_bazel_distribution()
 
+# Load //@graknlabs_bazel_distribution//common
+load("@graknlabs_bazel_distribution//common:deps.bzl", "rules_pkg")
+rules_pkg()
+load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
+rules_pkg_dependencies()
+
 load("//library/maven:rules.bzl", "maven")
 maven(["org.zeroturnaround:zt-exec"])

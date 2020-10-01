@@ -38,9 +38,23 @@ genrule(
     tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":build-rocksdb"],
 )
 
+java_import(
+    name = "rocksdbjni-java-import",
+    jars = ["rocksdbjni-osx.jar"],
+)
+
+java_library(
+    name = "rocksdbjni-java-lib",
+    srcs = [],
+    runtime_deps = [
+        ":rocksdbjni-java-import"
+    ],
+    tags = ["maven_coordinates=org.rocksdb:rocksdbjni:{pom_version}"],
+)
+
 assemble_maven(
     name = "assemble-maven",
-    target = ":rocksdbjni-jar",
+    target = ":rocksdbjni-java-lib",
     version_file = "VERSION",
 )
 
