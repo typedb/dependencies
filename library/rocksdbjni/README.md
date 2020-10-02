@@ -16,6 +16,8 @@ used in production.
 0. Finally, deploy it with `bazel run //library/rocksdbjni:deploy-maven -- release`.
 You'll need the correct credentials in order to deploy to the Grakn Maven repository.
 
+(!) **Important** - When upgrading RocksDB JNI, remember to also update the version specified in `library/maven/artifacts.bzl`.
+
 ## The RocksDB JNI build process
 
 For reference, the steps to build RocksDB JNI manually are listed here, but `assemble_maven` does all these steps automatically.
