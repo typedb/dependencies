@@ -40,25 +40,14 @@ genrule(
 )
 
 java_import(
-    name = "rocksdbjni-java-import",
-    jars = [":rocksdbjni-jar"],
-    tags = ["maven_coordinates=org.rocksdb:rocksdbjni-dev:{pom_version}"],
-)
-
-java_library(
     name = "rocksdbjni-java-lib",
-    srcs = [
-        "RocksDbJni.java",
-    ],
-    deps = [
-        ":rocksdbjni-java-import"
-    ],
+    jars = [":rocksdbjni-jar"],
     tags = ["maven_coordinates=org.rocksdb:rocksdbjni-dev:{pom_version}"],
 )
 
 assemble_maven(
     name = "assemble-maven",
-    target = ":rocksdbjni-java-import",
+    target = ":rocksdbjni-java-lib",
     version_file = "VERSION",
 )
 

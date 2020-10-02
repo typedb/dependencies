@@ -9,14 +9,17 @@ used in production.
 
 ## Deploying RocksDB JNI with Bazel
 
-First run `cat library/rocksdbjni/VERSION` to check that the version number is correct.
+0. First run `cat library/rocksdbjni/VERSION` to check that the version number is correct.
 
-Then run `bazel run --define version=$(cat library/rocksdbjni/VERSION) //library/rocksdbjni:deploy-maven -- snapshot`.
+0. Then, run `bazel build //library/rocksdbjni:assemble-maven` to build the Maven artifact.
+
+0. Finally, deploy it with `bazel run //library/rocksdbjni:deploy-maven -- release`.
 You'll need the correct credentials in order to deploy to the Grakn Maven repository.
 
 ## The RocksDB JNI build process
 
-For reference, the steps to build RocksDB JNI manually are listed here. The official documentation for compiling RocksDB JNI can be found in RocksDB's [GitHub wiki page](https://github.com/facebook/rocksdb/wiki/RocksJava-Basics).
+For reference, the steps to build RocksDB JNI manually are listed here, but `assemble_maven` does all these steps automatically.
+The official documentation for compiling RocksDB JNI can be found in RocksDB's [GitHub wiki page](https://github.com/facebook/rocksdb/wiki/RocksJava-Basics).
 
 0. Clone the [RocksDB repository from GitHub](https://github.com/facebook/rocksdb).
 
