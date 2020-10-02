@@ -30,7 +30,7 @@ kt_jvm_binary(
         "@maven//:org_zeroturnaround_zt_exec"
     ]
 )
-
+"""
 genrule(
     name = "rocksdbjni-jar",
     outs = ["rocksdbjni-osx.jar"],
@@ -38,10 +38,11 @@ genrule(
     cmd = "$(execpath :build-rocksdb) && mv rocksdbjni-osx.jar \"$@\"",
     tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":build-rocksdb"],
 )
+"""
 
 java_import(
     name = "rocksdbjni-java-import",
-    jars = [":rocksdbjni-jar"],
+    jars = ["rocksdbjni-osx.jar"],
     tags = ["maven_coordinates=org.rocksdb:rocksdbjni-dev:{pom_version}"],
 )
 
