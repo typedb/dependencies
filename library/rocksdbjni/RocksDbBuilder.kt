@@ -6,9 +6,8 @@ import java.io.File
 import java.nio.file.Paths
 
 fun main() {
-    val version = Paths.get("VERSION").toFile().useLines { it.firstOrNull() }
-
     val baseDir = Paths.get(".")
+    val version = Paths.get("library").resolve("rocksdbjni").resolve("VERSION").toFile().useLines { it.firstOrNull() }
     val javaHome = "/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home"
 
     shellScript("git clone git@github.com:facebook/rocksdb.git", baseDir.toFile(), javaHome)

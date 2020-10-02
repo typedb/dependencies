@@ -34,6 +34,7 @@ kt_jvm_binary(
 genrule(
     name = "rocksdbjni-jar",
     outs = ["rocksdbjni-osx.jar"],
+    srcs = ["VERSION"],
     cmd = "$(execpath :build-rocksdb) && mv rocksdbjni-osx.jar \"$@\"",
     tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":build-rocksdb"],
 )
@@ -45,11 +46,13 @@ java_import(
 
 java_library(
     name = "rocksdbjni-java-lib",
-    srcs = [],
-    runtime_deps = [
+    srcs = [
+        "RocksDbJni.java",
+    ],
+    deps = [
         ":rocksdbjni-java-import"
     ],
-    tags = ["maven_coordinates=org.rocksdb:rocksdbjni:{pom_version}"],
+    tags = ["maven_coordinates=org.rocksdb:rocksdbjni-dev:{pom_version}"],
 )
 
 assemble_maven(

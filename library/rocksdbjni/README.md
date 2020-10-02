@@ -9,7 +9,9 @@ used in production.
 
 ## Deploying RocksDB JNI with Bazel
 
-Run `bazel run --define version=$(cat library/rocksdbjni/VERSION) //library/rocksdbjni:deploy-maven -- snapshot`.
+First run `cat library/rocksdbjni/VERSION` to check that the version number is correct.
+
+Then run `bazel run --define version=$(cat library/rocksdbjni/VERSION) //library/rocksdbjni:deploy-maven -- snapshot`.
 You'll need the correct credentials in order to deploy to the Grakn Maven repository.
 
 ## The RocksDB JNI build process
