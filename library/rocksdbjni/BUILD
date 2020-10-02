@@ -41,7 +41,8 @@ genrule(
 
 java_import(
     name = "rocksdbjni-java-import",
-    jars = ["rocksdbjni-osx.jar"],
+    jars = [":rocksdbjni-jar"],
+    tags = ["maven_coordinates=org.rocksdb:rocksdbjni-dev:{pom_version}"],
 )
 
 java_library(
@@ -57,7 +58,7 @@ java_library(
 
 assemble_maven(
     name = "assemble-maven",
-    target = ":rocksdbjni-java-lib",
+    target = ":rocksdbjni-java-import",
     version_file = "VERSION",
 )
 
