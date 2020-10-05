@@ -40,6 +40,7 @@ genrule(
     srcs = ["VERSION"],
     cmd = "$(execpath :build-script) && read -a outs <<< '$(OUTS)' && mv rocksdbjni-osx.jar $${outs[0]} && mv rocksdbjni-sources.jar $${outs[1]}",
     tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":build-script"],
+    tags = ["manual"],
 )
 
 java_import(
