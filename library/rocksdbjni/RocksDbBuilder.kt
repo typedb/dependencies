@@ -12,19 +12,27 @@ fun main() {
 
     shellScript("git clone git@github.com:facebook/rocksdb.git", baseDir.toFile(), javaHome)
 
-    val gitRepoDir = Paths.get("rocksdb")
-    shellScript("git checkout v$version", gitRepoDir.toFile(), javaHome)
+    val rocksDbDir = Paths.get("rocksdb")
+    shellScript("git checkout v$version", rocksDbDir.toFile(), javaHome)
 
-    shellScript("brew install cmake", gitRepoDir.toFile(), javaHome)
+    shellScript("brew install cmake", rocksDbDir.toFile(), javaHome)
 
-    shellScript("make clean jclean", gitRepoDir.toFile(), javaHome)
+    shellScript("make clean jclean", rocksDbDir.toFile(), javaHome)
 
-    shellScript("make -j8 rocksdbjava", gitRepoDir.toFile(), javaHome)
+    shellScript("make -j8 rocksdbjava", rocksDbDir.toFile(), javaHome)
+
+    val srcMainJavaDir = Paths.get("rocksdb", "java", "src", "main", "java")
+    val sourcesJarName = "rocksdbjni-$version-sources.jar"
+    shellScript("jar -cf ../../../target/$sourcesJarName org", srcMainJavaDir.toFile(), javaHome)
 
     val versionedJarName = "rocksdbjni-$version-osx.jar"
-    val jar = gitRepoDir.resolve("java").resolve("target").resolve(versionedJarName).toFile()
+    val jar = rocksDbDir.resolve("java").resolve("target").resolve(versionedJarName).toFile()
     val destPath = Paths.get("rocksdbjni-osx.jar").toFile()
     jar.copyTo(destPath)
+
+    val sourcesJar = rocksDbDir.resolve("java").resolve("target").resolve(sourcesJarName).toFile()
+    val sourcesDestPath = Paths.get("rocksdbjni-sources.jar").toFile()
+    sourcesJar.copyTo(sourcesDestPath)
 }
 
 fun shellScript(cmd: String, baseDir: File, javaHome: String): ProcessResult? {

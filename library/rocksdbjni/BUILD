@@ -22,7 +22,7 @@ load("@graknlabs_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
 
 kt_jvm_binary(
-    name = "build-rocksdb",
+    name = "build-script",
     main_class = "library.rocksdbjni.RocksDbBuilderKt",
     srcs = ["RocksDbBuilder.kt"],
     deps = [
@@ -32,16 +32,20 @@ kt_jvm_binary(
 )
 
 genrule(
-    name = "rocksdbjni-jar",
-    outs = ["rocksdbjni-osx.jar"],
+    name = "builder",
+    outs = [
+        "rocksdbjni-osx.jar",
+        "rocksdbjni-sources.jar",
+    ],
     srcs = ["VERSION"],
-    cmd = "$(execpath :build-rocksdb) && mv rocksdbjni-osx.jar \"$@\"",
-    tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":build-rocksdb"],
+    cmd = "$(execpath :build-script) && read -a outs <<< '$(OUTS)' && mv rocksdbjni-osx.jar $${outs[0]} && mv rocksdbjni-sources.jar $${outs[1]}",
+    tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":build-script"],
 )
 
 java_import(
     name = "rocksdbjni-java-lib",
-    jars = [":rocksdbjni-jar"],
+    jars = ["rocksdbjni-osx.jar"],
+    srcjar = "rocksdbjni-sources.jar",
     tags = ["maven_coordinates=org.rocksdb:rocksdbjni-dev:{pom_version}"],
 )
 
