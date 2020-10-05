@@ -42,5 +42,8 @@ The official documentation for compiling RocksDB JNI can be found in RocksDB's [
 0. To build the JNI into a JAR, run `make -j8 rocksdbjava`. This will configure `DEBUG_LEVEL` to the default of 1,
 which is debug mode enabled. To get a production build, run `DEBUG_LEVEL=0 make -j8 rocksdbjava` instead.
 
-0. The output JAR will be created in `rocksdb/java/target` as (for example) `rocksdbjni-6.8.1-osx.jar` and is now
-ready to be used.
+0. To build the JNI's source code into a sources JAR, run the following command (with the correct version number):
+`cd java/src/main/java;jar -cf ../../../target/rocksdbjni-6.8.1-sources.jar`
+
+0. The output JARs will be created in `rocksdb/java/target` as (for example) `rocksdbjni-6.8.1-osx.jar` and
+`rocksdbjni-6.8.1-sources.jar` and are now ready to be used.
