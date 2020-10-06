@@ -28,7 +28,7 @@ kt_jvm_binary(
     deps = [
         # Maven dependencies
         "@maven//:org_zeroturnaround_zt_exec"
-    ]
+    ],
 )
 
 genrule(
@@ -43,15 +43,15 @@ genrule(
 )
 
 java_import(
-    name = "rocksdbjni-java-lib",
+    name = "java-lib",
     jars = ["rocksdbjni-osx.jar"],
     srcjar = "rocksdbjni-sources.jar",
-    tags = ["maven_coordinates=org.rocksdb:rocksdbjni-dev:{pom_version}"],
+    tags = ["no-ide", "maven_coordinates=org.rocksdb:rocksdbjni-dev:{pom_version}"],
 )
 
 assemble_maven(
     name = "assemble-maven",
-    target = ":rocksdbjni-java-lib",
+    target = ":java-lib",
     version_file = "VERSION",
 )
 
