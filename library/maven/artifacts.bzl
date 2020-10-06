@@ -204,7 +204,8 @@ artifacts = {
     "org.mockito:mockito-core": "2.6.4",
     "org.openjdk.jmh:jmh-core": "1.23",
     "org.openjdk.jmh:jmh-generator-annprocess": "1.23",
-    "org.rocksdb:rocksdbjni": "6.8.1",
+    "org.rocksdb:rocksdbjni": "6.11.4",
+    "org.rocksdb:rocksdbjni-dev": "6.11.4",
     "org.scala-lang:scala-library": "2.12.10",
     "org.sharegov:mjson": "1.4.1",
     "org.slf4j:jcl-over-slf4j": "1.7.20",
@@ -213,8 +214,5 @@ artifacts = {
     "org.slf4j:slf4j-simple": "1.7.20",
     "org.yaml:snakeyaml": "1.25",
     "org.zeromq:jeromq": "0.5.2",
-    "org.zeroturnaround:zt-exec": {
-        "exclude": ["commons-io:commons-io"],
-        "version": "1.10",
-    },
+    "org.zeroturnaround:zt-exec": "1.10",
 }
