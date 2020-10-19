@@ -8,5 +8,6 @@ kt_jvm_binary(
     main_class = "grabl.analysis.DependencyAnalysisKt",
     deps = [
         "@maven//:com_eclipsesource_minimal_json_minimal_json",
+        "@maven//:org_zeroturnaround_zt_exec",
     ],
 )
