@@ -7,8 +7,8 @@ import java.util.regex.Pattern
 
 
 fun main() {
-    val remotePattern = Pattern.compile("(remote) = \"https://github.com/(.*)\"(?:.*)");
-    val refPattern = Pattern.compile("(commit|tag) = \"(.*)\"(?:.*)");
+    val remotePattern = Pattern.compile("remote = \"(https://github.com/|git@github.com:)(?<remote>[^.\"]*)(?:.git)?\"(?:.*)");
+    val refPattern = Pattern.compile("(?<type>commit|tag) = \"(?<ref>.*)\"(?:.*)");
 
     var workspaceDirectory = System.getenv("BUILD_WORKSPACE_DIRECTORY")
     var dependencies = Paths.get(workspaceDirectory, "dependencies", "graknlabs", "dependencies.bzl")
@@ -24,8 +24,8 @@ fun main() {
             return@mapNotNull null
         }
         mapOf(
-                remotePatternMatcher.group(1) to remotePatternMatcher.group(2),
-                refPatternMatcher.group(1) to refPatternMatcher.group(2)
+                "remote" to remotePatternMatcher.group("remote"),
+                refPatternMatcher.group("type") to refPatternMatcher.group("ref")
         )
     }.map {
         println(it)
