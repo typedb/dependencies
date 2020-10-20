@@ -69,4 +69,4 @@ load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
 load("//library/maven:rules.bzl", "maven")
-maven(["org.zeroturnaround:zt-exec"])
+maven(["org.zeroturnaround:zt-exec", "com.eclipsesource.minimal-json:minimal-json"])
