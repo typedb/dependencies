@@ -54,7 +54,6 @@ fun main() {
                 refPatternMatcher.group("type") to refPatternMatcher.group("ref")
         )
     }.map {
-        println(it)
         var obj = Json.`object`()
         for ((k, v) in it) {
             obj = obj.add(k, v)
@@ -64,7 +63,5 @@ fun main() {
 
     val dependencyAnalysis = Json.`object`().add("workflow", workflow).add("commit-dependency", repositoriesArray)
     val payload = Json.`object`().add("dependency-analysis", dependencyAnalysis)
-
-    println(payload)
     httpPost(grablUrl + grablEndpoint, payload)
 }
