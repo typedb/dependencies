@@ -26,7 +26,6 @@ kt_jvm_binary(
     main_class = "library.rocksdbjni.RocksDbBuilderKt",
     srcs = ["RocksDbBuilder.kt"],
     deps = [
-        # Maven dependencies
         "@maven//:org_zeroturnaround_zt_exec"
     ],
 )
