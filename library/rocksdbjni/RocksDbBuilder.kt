@@ -8,7 +8,8 @@ import java.nio.file.Paths
 fun main() {
     val baseDir = Paths.get(".")
     val version = Paths.get("library").resolve("rocksdbjni").resolve("VERSION").toFile().useLines { it.firstOrNull() }
-    val javaHome = "/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home"
+
+    val javaHome = shellScript("/usr/libexec/java_home", Paths.get(".").toFile(), ".")!!.outputUTF8().trim()
 
     shellScript("git clone git@github.com:facebook/rocksdb.git", baseDir.toFile(), javaHome)
 
@@ -38,6 +39,7 @@ fun main() {
 fun shellScript(cmd: String, baseDir: File, javaHome: String): ProcessResult? {
     println(cmd)
     return ProcessExecutor(cmd.split(" "))
+            .readOutput(true)
             .redirectOutput(System.out).redirectError(System.err)
             .environment("JAVA_HOME", javaHome)
             .directory(baseDir).execute()
