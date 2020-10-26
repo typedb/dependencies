@@ -8,9 +8,7 @@ import java.nio.file.Paths
 fun main() {
     val baseDir = Paths.get(".")
     val version = Paths.get("library").resolve("rocksdbjni").resolve("VERSION").toFile().useLines { it.firstOrNull() }
-    val javaHome = Paths.get(
-            shellScript("/usr/libexec/java_home", baseDir, null)!!.outputUTF8().trim()
-    )
+    val javaHome = Paths.get(shellScript("/usr/libexec/java_home", baseDir, null)!!.outputUTF8().trim())
 
     shellScript("git clone git@github.com:facebook/rocksdb.git", baseDir, javaHome)
 
