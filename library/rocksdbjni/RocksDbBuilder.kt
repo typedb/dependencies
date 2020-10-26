@@ -39,7 +39,8 @@ fun shellScript(script: String, baseDir: Path, javaHome: Path?): ProcessResult? 
     println(script)
     var builder = ProcessExecutor(script.split(" "))
             .readOutput(true)
-            .redirectOutput(System.out).redirectError(System.err)
+            .redirectOutput(System.out)
+            .redirectError(System.err)
             .directory(baseDir.toFile())
     if (javaHome != null) {
         builder = builder.environment("JAVA_HOME", javaHome.toAbsolutePath().toString())
