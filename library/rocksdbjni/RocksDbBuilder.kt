@@ -8,8 +8,9 @@ import java.nio.file.Paths
 fun main() {
     val baseDir = Paths.get(".")
     val version = Paths.get("library").resolve("rocksdbjni").resolve("VERSION").toFile().useLines { it.firstOrNull() }
-
-    val javaHome = shellScript("/usr/libexec/java_home", Paths.get(".").toFile(), ".")!!.outputUTF8().trim()
+    val javaHome = Paths.get(
+            shellScript("/usr/libexec/java_home", baseDir.toFile(), null)!!.outputUTF8().trim()
+    ).toFile()
 
     shellScript("git clone git@github.com:facebook/rocksdb.git", baseDir.toFile(), javaHome)
 
@@ -36,11 +37,14 @@ fun main() {
     sourcesJar.copyTo(sourcesDestPath)
 }
 
-fun shellScript(cmd: String, baseDir: File, javaHome: String): ProcessResult? {
+fun shellScript(cmd: String, baseDir: File, javaHome: File?): ProcessResult? {
     println(cmd)
-    return ProcessExecutor(cmd.split(" "))
+    var builder = ProcessExecutor(cmd.split(" "))
             .readOutput(true)
             .redirectOutput(System.out).redirectError(System.err)
-            .environment("JAVA_HOME", javaHome)
-            .directory(baseDir).execute()
+            .directory(baseDir)
+    if (javaHome != null) {
+        builder = builder.environment("JAVA_HOME", javaHome.toPath().toAbsolutePath().toString())
+    }
+    return builder.execute()
 }
