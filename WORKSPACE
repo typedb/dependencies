@@ -70,3 +70,11 @@ rules_pkg_dependencies()
 
 load("//library/maven:rules.bzl", "maven")
 maven(["org.zeroturnaround:zt-exec", "com.eclipsesource.minimal-json:minimal-json"])
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+http_archive(
+    name = "ortools_osx",
+    urls = ["https://github.com/google/or-tools/releases/download/v8.0/or-tools_MacOsX-10.15.7_v8.0.8283.tar.gz"],
+    strip_prefix = "or-tools_MacOsX-10.15.7_v8.0.8283",
+    build_file = "@//:library/ortools/build-content"
+)

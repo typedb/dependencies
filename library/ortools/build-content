@@ -1,0 +1,6 @@
+exports_files([
+  "ortools-darwin-8.0.8283.jar",
+  "ortools-darwin-8.0.8283-sources.jar",
+  "ortools-java-8.0.8283.jar",
+  "ortools-java-8.0.8283-sources.jar"
+])
