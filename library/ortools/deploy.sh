@@ -1,15 +1,29 @@
 #!/usr/bin/env sh
 
-POM_PATH=
-JAR_PATH=
-SRCJAR_PATH=
+set -ex
 
 REPOSITORY_URL=https://repo.grakn.ai/repository/maven
 GROUP_ID=com/google/ortools
-ARTIFACT_ID=ortools-java
 VERSION=8.0.8283
 
-curl --silent --output /dev/stderr --write-out "%{http_code}" -u "$DEPLOY_MAVEN_USERNAME":"$DEPLOY_MAVEN_PASSWORD" --upload-file "$POM_PATH" "$REPOSITORY_URL"/"$GROUP_ID"/"$ARTIFACT_ID"/"$VERSION"/"$ARTIFACT_ID"-"$VERSION".pom
-curl --silent --output /dev/stderr --write-out "%{http_code}" -u "$DEPLOY_MAVEN_USERNAME":"$DEPLOY_MAVEN_PASSWORD" --upload-file "$JAR_PATH" "$REPOSITORY_URL"/"$GROUP_ID"/"$ARTIFACT_ID"/"$VERSION"/"$ARTIFACT_ID"-"$VERSION".jar
-curl --silent --output /dev/stderr --write-out "%{http_code}" -u "$DEPLOY_MAVEN_USERNAME":"$DEPLOY_MAVEN_PASSWORD" --upload-file "$SRCJAR_PATH" "$REPOSITORY_URL"/"$GROUP_ID"/"$ARTIFACT_ID"/"$VERSION"/"$ARTIFACT_ID"-"$VERSION"-sources.jar
-#curl --silent --output /dev/stderr --write-out "%{http_code}" -u "$DEPLOY_MAVEN_USERNAME":"$DEPLOY_MAVEN_PASSWORD" --upload-file lib.srcjar "$REPOSITORY_URL"/"$GROUP_ID"/"$ARTIFACT_ID"/"$VERSION"/"$ARTIFACT_ID"-"$VERSION"-javadoc.jar
+# ortools-darwin
+ORTOOLS_DARWIN_ARTIFACT_ID=ortools-darwin
+ORTOOLS_DARWIN_POM_PATH=external/ortools_osx/pom-runtime.xml
+ORTOOLS_DARWIN_JAR_PATH=external/ortools_osx/$ORTOOLS_DARWIN_ARTIFACT_ID-$VERSION.jar
+ORTOOLS_DARWIN_SRCJAR_PATH=external/ortools_osx/$ORTOOLS_DARWIN_ARTIFACT_ID-$VERSION-sources.jar
+
+curl --write-out "%{http_code}" -u "$DEPLOY_MAVEN_USERNAME":"$DEPLOY_MAVEN_PASSWORD" --upload-file "$ORTOOLS_DARWIN_POM_PATH" "$REPOSITORY_URL"/"$GROUP_ID"/"$ORTOOLS_DARWIN_ARTIFACT_ID"/"$VERSION"/"$ORTOOLS_DARWIN_ARTIFACT_ID"-"$VERSION".pom
+curl --write-out "%{http_code}" -u "$DEPLOY_MAVEN_USERNAME":"$DEPLOY_MAVEN_PASSWORD" --upload-file "$ORTOOLS_DARWIN_JAR_PATH" "$REPOSITORY_URL"/"$GROUP_ID"/"$ORTOOLS_DARWIN_ARTIFACT_ID"/"$VERSION"/"$ORTOOLS_DARWIN_ARTIFACT_ID"-"$VERSION".jar
+curl --write-out "%{http_code}" -u "$DEPLOY_MAVEN_USERNAME":"$DEPLOY_MAVEN_PASSWORD" --upload-file "$ORTOOLS_DARWIN_SRCJAR_PATH" "$REPOSITORY_URL"/"$GROUP_ID"/"$ORTOOLS_DARWIN_ARTIFACT_ID"/"$VERSION"/"$ORTOOLS_DARWIN_ARTIFACT_ID"-"$VERSION"-sources.jar
+
+# ortools-java
+ORTOOLS_JAVA_ARTIFACT_ID=ortools-java-darwin
+ORTOOLS_JAVA_POM_PATH=external/ortools_osx/pom-local.xml
+ORTOOLS_JAVA_JAR_PATH=external/ortools_osx/ortools-java-$VERSION.jar
+ORTOOLS_JAVA_SRCJAR_PATH=external/ortools_osx/ortools-java-$VERSION-sources.jar
+ORTOOLS_JAVA_JAVADOC_PATH=external/ortools_osx/ortools-java-$VERSION-javadoc.jar
+
+curl --write-out "%{http_code}" -u "$DEPLOY_MAVEN_USERNAME":"$DEPLOY_MAVEN_PASSWORD" --upload-file "$ORTOOLS_JAVA_POM_PATH" "$REPOSITORY_URL"/"$GROUP_ID"/"$ORTOOLS_JAVA_ARTIFACT_ID"/"$VERSION"/"$ORTOOLS_JAVA_ARTIFACT_ID"-"$VERSION".pom
+curl --write-out "%{http_code}" -u "$DEPLOY_MAVEN_USERNAME":"$DEPLOY_MAVEN_PASSWORD" --upload-file "$ORTOOLS_JAVA_JAR_PATH" "$REPOSITORY_URL"/"$GROUP_ID"/"$ORTOOLS_JAVA_ARTIFACT_ID"/"$VERSION"/"$ORTOOLS_JAVA_ARTIFACT_ID"-"$VERSION".jar
+curl --write-out "%{http_code}" -u "$DEPLOY_MAVEN_USERNAME":"$DEPLOY_MAVEN_PASSWORD" --upload-file "$ORTOOLS_JAVA_SRCJAR_PATH" "$REPOSITORY_URL"/"$GROUP_ID"/"$ORTOOLS_JAVA_ARTIFACT_ID"/"$VERSION"/"$ORTOOLS_JAVA_ARTIFACT_ID"-"$VERSION"-sources.jar
+curl --write-out "%{http_code}" -u "$DEPLOY_MAVEN_USERNAME":"$DEPLOY_MAVEN_PASSWORD" --upload-file "$ORTOOLS_JAVA_JAVADOC_PATH" "$REPOSITORY_URL"/"$GROUP_ID"/"$ORTOOLS_JAVA_ARTIFACT_ID"/"$VERSION"/"$ORTOOLS_JAVA_ARTIFACT_ID"-"$VERSION"-javadoc.jar
