@@ -4,7 +4,6 @@ import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
 import java.nio.file.Path
 import java.nio.file.Paths
-import kotlin.test.assertNotNull
 
 fun main() {
     val baseDir = Paths.get(".")
