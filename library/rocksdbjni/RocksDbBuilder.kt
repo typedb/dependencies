@@ -2,28 +2,29 @@ package library.rocksdbjni
 
 import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
-import java.io.File
+import java.nio.file.Path
 import java.nio.file.Paths
 
 fun main() {
     val baseDir = Paths.get(".")
     val version = Paths.get("library").resolve("rocksdbjni").resolve("VERSION").toFile().useLines { it.firstOrNull() }
-    val javaHome = "/Library/Java/JavaVirtualMachines/adoptopenjdk-8.jdk/Contents/Home"
 
-    shellScript("git clone git@github.com:facebook/rocksdb.git", baseDir.toFile(), javaHome)
+    val javaHome = Paths.get(shellScript("/usr/libexec/java_home", baseDir, null).outputUTF8().trim())
+
+    shellScript("git clone git@github.com:facebook/rocksdb.git", baseDir, javaHome)
 
     val rocksDbDir = Paths.get("rocksdb")
-    shellScript("git checkout v$version", rocksDbDir.toFile(), javaHome)
+    shellScript("git checkout v$version", rocksDbDir, javaHome)
 
-    shellScript("brew install cmake", rocksDbDir.toFile(), javaHome)
+    shellScript("brew install cmake", rocksDbDir, javaHome)
 
-    shellScript("make clean jclean", rocksDbDir.toFile(), javaHome)
+    shellScript("make clean jclean", rocksDbDir, javaHome)
 
-    shellScript("make -j8 rocksdbjava", rocksDbDir.toFile(), javaHome)
+    shellScript("make -j8 rocksdbjava", rocksDbDir, javaHome)
 
     val srcMainJavaDir = Paths.get("rocksdb", "java", "src", "main", "java")
     val sourcesJarName = "rocksdbjni-$version-sources.jar"
-    shellScript("jar -cf ../../../target/$sourcesJarName org", srcMainJavaDir.toFile(), javaHome)
+    shellScript("jar -cf ../../../target/$sourcesJarName org", srcMainJavaDir, javaHome)
 
     val versionedJarName = "rocksdbjni-$version-osx.jar"
     val jar = rocksDbDir.resolve("java").resolve("target").resolve(versionedJarName).toFile()
@@ -35,10 +36,15 @@ fun main() {
     sourcesJar.copyTo(sourcesDestPath)
 }
 
-fun shellScript(cmd: String, baseDir: File, javaHome: String): ProcessResult? {
-    println(cmd)
-    return ProcessExecutor(cmd.split(" "))
-            .redirectOutput(System.out).redirectError(System.err)
-            .environment("JAVA_HOME", javaHome)
-            .directory(baseDir).execute()
+fun shellScript(script: String, baseDir: Path, javaHome: Path?): ProcessResult {
+    println("RocksDbBuilder.kt: '$script'")
+    var builder = ProcessExecutor(script.split(" "))
+            .readOutput(true)
+            .redirectOutput(System.out)
+            .redirectError(System.err)
+            .directory(baseDir.toFile())
+    if (javaHome != null) {
+        builder = builder.environment("JAVA_HOME", javaHome.toAbsolutePath().toString())
+    }
+    return builder.execute()
 }
