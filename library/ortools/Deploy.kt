@@ -19,7 +19,7 @@ fun main() {
     val GROUP_ID = "com/google/ortools"
     val VERSION = "8.0.8283"
 
-    val ORTOOLS_DARWIN_ARTIFACT_ID = "ortools-darwin-test-7"
+    val ORTOOLS_DARWIN_ARTIFACT_ID = "ortools-darwin-test-8"
     val ORTOOLS_DARWIN_POM_PATH = Paths.get("external/ortools_osx/pom-runtime.xml")
 //    val ORTOOLS_DARWIN_JAR_PATH = Paths.get("external/ortools_osx/$ORTOOLS_DARWIN_ARTIFACT_ID-$VERSION.jar")
     val ORTOOLS_DARWIN_JAR_PATH = Paths.get("external/ortools_osx/ortools-darwin-8.0.8283.jar")
@@ -53,6 +53,14 @@ fun deployMaven(source: Path, username: String, password: String, repository: St
                     "$repository/$groupId/$artifactId/$version/$artifactId-$version$modifier.$extension.md5"
     )
 
+    val sha1File = sha1(source)
+    shell(
+            "curl " +
+                    "--write-out \"%{http_code}\" " +
+                    "-u $username:$password " +
+                    "--upload-file $sha1File " +
+                    "$repository/$groupId/$artifactId/$version/$artifactId-$version$modifier.$extension.sha1"
+    )
 }
 
 fun md5(source: Path): Path {
@@ -62,6 +70,16 @@ fun md5(source: Path): Path {
     val digest = hasher.digest()
     val md5 = toHex(digest).toUpperCase()
     Files.write(destination, md5.toByteArray(UTF_8))
+    return destination
+}
+
+fun sha1(source: Path): Path {
+    val destination = Paths.get(source.toAbsolutePath().toString() + ".sha1")
+    val hasher = MessageDigest.getInstance("SHA-1");
+    hasher.update(Files.readAllBytes(source));
+    val digest = hasher.digest()
+    val sha1 = toHex(digest).toUpperCase()
+    Files.write(destination, sha1.toByteArray(UTF_8))
     return destination
 }
 
