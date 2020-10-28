@@ -38,9 +38,9 @@ fun main() {
     val orToolsDarwin_JarFile = Paths.get("external/ortools_osx/$orToolsDarwin_ArtifcatId-$version.jar")
     val orToolsDarwin_SrcJarFile = Paths.get("external/ortools_osx/$orToolsDarwin_ArtifcatId-$version-sources.jar")
 
-    deployMaven(orToolsDarwin_PomFile, username, password, repository, groupId, orToolsDarwin_ArtifcatId, version, "", "pom")
-    deployMaven(orToolsDarwin_JarFile, username, password, repository, groupId, orToolsDarwin_ArtifcatId, version,  "", "jar")
-    deployMaven(orToolsDarwin_SrcJarFile, username, password, repository, groupId, orToolsDarwin_ArtifcatId, version, "-sources","jar")
+    deployMaven(orToolsDarwin_PomFile, username, password, repository, groupId, orToolsDarwin_ArtifcatId, version, "pom")
+    deployMaven(orToolsDarwin_JarFile, username, password, repository, groupId, orToolsDarwin_ArtifcatId, version, "jar")
+    deployMaven(orToolsDarwin_SrcJarFile, username, password, repository, groupId, orToolsDarwin_ArtifcatId, version, "srcjar")
 
     /*
      * ortools-java-darwin
@@ -52,23 +52,26 @@ fun main() {
     val orToolsJava_JavadocFile = Paths.get("external/ortools_osx/ortools-java-$version-javadoc.jar")
 
 
-    deployMaven(orToolsJava_PomFile, username, password, repository, groupId, orToolsJava_ArtifactId, version, "", "pom")
-    deployMaven(orToolsJava_JarFile, username, password, repository, groupId, orToolsJava_ArtifactId, version,  "", "jar")
-    deployMaven(orToolsJava_SrcJarFile, username, password, repository, groupId, orToolsJava_ArtifactId, version, "-sources","jar")
-    deployMaven(orToolsJava_JavadocFile, username, password, repository, groupId, orToolsJava_ArtifactId, version, "-javadoc","jar")
+    deployMaven(orToolsJava_PomFile, username, password, repository, groupId, orToolsJava_ArtifactId, version, "pom")
+    deployMaven(orToolsJava_JarFile, username, password, repository, groupId, orToolsJava_ArtifactId, version,  "jar")
+    deployMaven(orToolsJava_SrcJarFile, username, password, repository, groupId, orToolsJava_ArtifactId, version, "srcjar")
+    deployMaven(orToolsJava_JavadocFile, username, password, repository, groupId, orToolsJava_ArtifactId, version, "javadoc")
 }
 
-fun deployMaven(source: Path, username: String, password: String, repository: String, groupId: String, artifactId: String, version: String, modifier: String, extension: String) {
-    val acceptedExtensions = listOf("pom", "jar", "md5", "sha1", "asc")
-    if (!acceptedExtensions.contains(extension))
-        throw RuntimeException("Unable to upload a file of type $extension. Only $acceptedExtensions are allowed.")
-
+fun deployMaven(source: Path, username: String, password: String, repository: String, groupId: String, artifactId: String, version: String, type: String) {
+    val artifactFileName = when (type) {
+        "pom" -> "$artifactId-$version.pom"
+        "jar" -> "$artifactId-$version.jar"
+        "srcjar" -> "$artifactId-$version-sources.jar"
+        "javadoc" -> "$artifactId-$version-javadoc.jar"
+        else -> throw RuntimeException("Unable to upload a file of type '$type'.")
+    }
     shell(
             "curl " +
                     "--write-out \"%{http_code}\" " +
                     "-u $username:$password " +
                     "--upload-file $source " +
-                    "$repository/$groupId/$artifactId/$version/$artifactId-$version$modifier.$extension"
+                    "$repository/$groupId/$artifactId/$version/$artifactFileName"
     )
 
     val md5File = md5(source)
@@ -77,7 +80,7 @@ fun deployMaven(source: Path, username: String, password: String, repository: St
                     "--write-out \"%{http_code}\" " +
                     "-u $username:$password " +
                     "--upload-file $md5File " +
-                    "$repository/$groupId/$artifactId/$version/$artifactId-$version$modifier.$extension.md5"
+                    "$repository/$groupId/$artifactId/$version/$artifactFileName.md5"
     )
 
     val sha1File = sha1(source)
@@ -86,7 +89,7 @@ fun deployMaven(source: Path, username: String, password: String, repository: St
                     "--write-out \"%{http_code}\" " +
                     "-u $username:$password " +
                     "--upload-file $sha1File " +
-                    "$repository/$groupId/$artifactId/$version/$artifactId-$version$modifier.$extension.sha1"
+                    "$repository/$groupId/$artifactId/$version/$artifactFileName.sha1"
     )
 }
 
