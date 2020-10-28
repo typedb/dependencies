@@ -2,6 +2,15 @@
 
 set -ex
 
+if [[ -z "$DEPLOY_MAVEN_USERNAME" ]]; then
+    echo "username should be passed via \$DEPLOY_MAVEN_USERNAME env variable";
+    exit 1;
+fi
+if [[ -z "$DEPLOY_MAVEN_PASSWORD" ]]; then
+    echo "password should be passed via \$DEPLOY_MAVEN_PASSWORD env variable";
+    exit 1;
+fi
+
 REPOSITORY_URL=https://repo.grakn.ai/repository/maven
 GROUP_ID=com/google/ortools
 VERSION=8.0.8283
