@@ -10,10 +10,21 @@ import java.nio.file.Paths
 import java.security.MessageDigest
 import java.util.*
 
+// TODO:
+//  - refactor and use HttpUrlConnection rather than curl
+//  - get ortools-java-darwin named ortools-java
+//  - deploy ortools for linux and windows
+//  - get bazel to depend on the right ortools depending on the OS
 
 fun main() {
-    val DEPLOY_MAVEN_USERNAME = Objects.requireNonNull(System.getenv("DEPLOY_MAVEN_USERNAME"), "username should be passed via \$DEPLOY_MAVEN_USERNAME env variable")
-    val DEPLOY_MAVEN_PASSWORD = Objects.requireNonNull(System.getenv("DEPLOY_MAVEN_PASSWORD"), "password should be passed via \$DEPLOY_MAVEN_PASSWORD env variable")
+    val DEPLOY_MAVEN_USERNAME = Objects.requireNonNull(
+            System.getenv("DEPLOY_MAVEN_USERNAME"),
+            "username should be passed via \$DEPLOY_MAVEN_USERNAME env variable"
+    )
+    val DEPLOY_MAVEN_PASSWORD = Objects.requireNonNull(
+            System.getenv("DEPLOY_MAVEN_PASSWORD"),
+            "password should be passed via \$DEPLOY_MAVEN_PASSWORD env variable"
+    )
 
     val REPOSITORY_URL = "https://repo.grakn.ai/repository/maven"
     val GROUP_ID = "com/google/ortools"
