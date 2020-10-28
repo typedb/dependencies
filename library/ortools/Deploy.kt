@@ -2,10 +2,14 @@ package library.ortools
 
 import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
-import java.lang.RuntimeException
+import java.math.BigInteger
+import java.nio.charset.StandardCharsets.UTF_8
+import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import java.security.MessageDigest
 import java.util.*
+
 
 fun main() {
     val DEPLOY_MAVEN_USERNAME = Objects.requireNonNull(System.getenv("DEPLOY_MAVEN_USERNAME"), "username should be passed via \$DEPLOY_MAVEN_USERNAME env variable")
@@ -15,7 +19,7 @@ fun main() {
     val GROUP_ID = "com/google/ortools"
     val VERSION = "8.0.8283"
 
-    val ORTOOLS_DARWIN_ARTIFACT_ID = "ortools-darwin-test-6"
+    val ORTOOLS_DARWIN_ARTIFACT_ID = "ortools-darwin-test-7"
     val ORTOOLS_DARWIN_POM_PATH = Paths.get("external/ortools_osx/pom-runtime.xml")
 //    val ORTOOLS_DARWIN_JAR_PATH = Paths.get("external/ortools_osx/$ORTOOLS_DARWIN_ARTIFACT_ID-$VERSION.jar")
     val ORTOOLS_DARWIN_JAR_PATH = Paths.get("external/ortools_osx/ortools-darwin-8.0.8283.jar")
@@ -32,16 +36,36 @@ fun deployMaven(source: Path, username: String, password: String, repository: St
     if (!acceptedExtensions.contains(extension))
         throw RuntimeException("Unable to upload a file of type $extension. Only $acceptedExtensions are allowed.")
 
-    shellScript(
+    shell(
             "curl " +
-            "--write-out \"%{http_code}\" " +
-            "-u $username:$password " +
-            "--upload-file $source " +
-            "$repository/$groupId/$artifactId/$version/$artifactId-$version$modifier.$extension"
+                    "--write-out \"%{http_code}\" " +
+                    "-u $username:$password " +
+                    "--upload-file $source " +
+                    "$repository/$groupId/$artifactId/$version/$artifactId-$version$modifier.$extension"
     )
+
+    val md5File = md5(source)
+    shell(
+            "curl " +
+                    "--write-out \"%{http_code}\" " +
+                    "-u $username:$password " +
+                    "--upload-file $md5File " +
+                    "$repository/$groupId/$artifactId/$version/$artifactId-$version$modifier.$extension.md5"
+    )
+
 }
 
-fun shellScript(script: String): ProcessResult {
+fun md5(source: Path): Path {
+    val destination = Paths.get(source.toAbsolutePath().toString() + ".md5")
+    val hasher = MessageDigest.getInstance("MD5");
+    hasher.update(Files.readAllBytes(source));
+    val digest = hasher.digest()
+    val md5 = toHex(digest).toUpperCase()
+    Files.write(destination, md5.toByteArray(UTF_8))
+    return destination
+}
+
+fun shell(script: String): ProcessResult {
     val scriptArray = script.split(" ")
     val builder = ProcessExecutor(scriptArray)
             .readOutput(true)
@@ -49,4 +73,9 @@ fun shellScript(script: String): ProcessResult {
             .redirectError(System.err)
             .exitValueNormal()
     return builder.execute()
+}
+
+fun toHex(bytes: ByteArray): String {
+    val bigInteger = BigInteger(1, bytes)
+    return bigInteger.toString(16)
 }
