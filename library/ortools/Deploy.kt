@@ -40,6 +40,7 @@ fun main() {
     val ORTOOLS_JAVA_SRCJAR_PATH = Paths.get("external/ortools_osx/ortools-java-$VERSION-sources.jar")
     val ORTOOLS_JAVA_JAVADOC_PATH = Paths.get("external/ortools_osx/ortools-java-$VERSION-javadoc.jar")
 
+
     deployMaven(ORTOOLS_JAVA_POM_PATH, DEPLOY_MAVEN_USERNAME, DEPLOY_MAVEN_PASSWORD, REPOSITORY_URL, GROUP_ID, ORTOOLS_JAVA_ARTIFACT_ID, VERSION, "", "pom")
     deployMaven(ORTOOLS_JAVA_JAR_PATH, DEPLOY_MAVEN_USERNAME, DEPLOY_MAVEN_PASSWORD, REPOSITORY_URL, GROUP_ID, ORTOOLS_JAVA_ARTIFACT_ID, VERSION,  "", "jar")
     deployMaven(ORTOOLS_JAVA_SRCJAR_PATH, DEPLOY_MAVEN_USERNAME, DEPLOY_MAVEN_PASSWORD, REPOSITORY_URL, GROUP_ID, ORTOOLS_JAVA_ARTIFACT_ID, VERSION, "-sources","jar")
@@ -83,8 +84,8 @@ fun md5(source: Path): Path {
     val hasher = MessageDigest.getInstance("MD5");
     hasher.update(Files.readAllBytes(source));
     val digest = hasher.digest()
-    val md5 = toHex(digest).toUpperCase()
-    Files.write(destination, md5.toByteArray(UTF_8))
+    val md5Padded = String.format("%1$32s", toHex(digest).toLowerCase()).replace(" ", "0")
+    Files.write(destination, md5Padded.toByteArray(UTF_8))
     return destination
 }
 
@@ -93,12 +94,13 @@ fun sha1(source: Path): Path {
     val hasher = MessageDigest.getInstance("SHA-1");
     hasher.update(Files.readAllBytes(source));
     val digest = hasher.digest()
-    val sha1 = toHex(digest).toUpperCase()
-    Files.write(destination, sha1.toByteArray(UTF_8))
+    val sha1Padded = String.format("%1$40s", toHex(digest).toLowerCase()).replace(" ", "0")
+    Files.write(destination, sha1Padded.toByteArray(UTF_8))
     return destination
 }
 
 fun shell(script: String): ProcessResult {
+    println("script: $script")
     val scriptArray = script.split(" ")
     val builder = ProcessExecutor(scriptArray)
             .readOutput(true)
