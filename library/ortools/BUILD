@@ -4,6 +4,7 @@ kt_jvm_binary(
     name = "deploy-maven",
     main_class = "library.ortools.DeployKt",
     srcs = ["Deploy.kt"],
+    deps = ["@maven//:org_zeroturnaround_zt_exec"]
 )
 
 #sh_binary(
