@@ -17,45 +17,45 @@ import java.util.*
 //  - get bazel to depend on the right ortools depending on the OS
 
 fun main() {
-    val DEPLOY_MAVEN_USERNAME = Objects.requireNonNull(
+    val username = Objects.requireNonNull(
             System.getenv("DEPLOY_MAVEN_USERNAME"),
             "username should be passed via \$DEPLOY_MAVEN_USERNAME env variable"
     )
-    val DEPLOY_MAVEN_PASSWORD = Objects.requireNonNull(
+    val password = Objects.requireNonNull(
             System.getenv("DEPLOY_MAVEN_PASSWORD"),
             "password should be passed via \$DEPLOY_MAVEN_PASSWORD env variable"
     )
 
-    val REPOSITORY_URL = "https://repo.grakn.ai/repository/maven"
-    val GROUP_ID = "com/google/ortools"
-    val VERSION = "8.0.8283"
+    val repository = "https://repo.grakn.ai/repository/maven"
+    val groupId = "com/google/ortools"
+    val version = "8.0.8283"
 
     /*
      * ortools-darwin
      */
-    val ORTOOLS_DARWIN_ARTIFACT_ID = "ortools-darwin"
-    val ORTOOLS_DARWIN_POM_PATH = Paths.get("external/ortools_osx/pom-runtime.xml")
-    val ORTOOLS_DARWIN_JAR_PATH = Paths.get("external/ortools_osx/$ORTOOLS_DARWIN_ARTIFACT_ID-$VERSION.jar")
-    val ORTOOLS_DARWIN_SRCJAR_PATH = Paths.get("external/ortools_osx/$ORTOOLS_DARWIN_ARTIFACT_ID-$VERSION-sources.jar")
+    val orToolsDarwin_ArtifcatId = "ortools-darwin"
+    val orToolsDarwin_PomFile = Paths.get("external/ortools_osx/pom-runtime.xml")
+    val orToolsDarwin_JarFile = Paths.get("external/ortools_osx/$orToolsDarwin_ArtifcatId-$version.jar")
+    val orToolsDarwin_SrcJarFile = Paths.get("external/ortools_osx/$orToolsDarwin_ArtifcatId-$version-sources.jar")
 
-    deployMaven(ORTOOLS_DARWIN_POM_PATH, DEPLOY_MAVEN_USERNAME, DEPLOY_MAVEN_PASSWORD, REPOSITORY_URL, GROUP_ID, ORTOOLS_DARWIN_ARTIFACT_ID, VERSION, "", "pom")
-    deployMaven(ORTOOLS_DARWIN_JAR_PATH, DEPLOY_MAVEN_USERNAME, DEPLOY_MAVEN_PASSWORD, REPOSITORY_URL, GROUP_ID, ORTOOLS_DARWIN_ARTIFACT_ID, VERSION,  "", "jar")
-    deployMaven(ORTOOLS_DARWIN_SRCJAR_PATH, DEPLOY_MAVEN_USERNAME, DEPLOY_MAVEN_PASSWORD, REPOSITORY_URL, GROUP_ID, ORTOOLS_DARWIN_ARTIFACT_ID, VERSION, "-sources","jar")
+    deployMaven(orToolsDarwin_PomFile, username, password, repository, groupId, orToolsDarwin_ArtifcatId, version, "", "pom")
+    deployMaven(orToolsDarwin_JarFile, username, password, repository, groupId, orToolsDarwin_ArtifcatId, version,  "", "jar")
+    deployMaven(orToolsDarwin_SrcJarFile, username, password, repository, groupId, orToolsDarwin_ArtifcatId, version, "-sources","jar")
 
     /*
      * ortools-java-darwin
      */
-    val ORTOOLS_JAVA_ARTIFACT_ID = "ortools-java-darwin"
-    val ORTOOLS_JAVA_POM_PATH = Paths.get("external/ortools_osx/pom-local.xml")
-    val ORTOOLS_JAVA_JAR_PATH = Paths.get("external/ortools_osx/ortools-java-$VERSION.jar")
-    val ORTOOLS_JAVA_SRCJAR_PATH = Paths.get("external/ortools_osx/ortools-java-$VERSION-sources.jar")
-    val ORTOOLS_JAVA_JAVADOC_PATH = Paths.get("external/ortools_osx/ortools-java-$VERSION-javadoc.jar")
+    val orToolsJava_ArtifactId = "ortools-java-darwin"
+    val orToolsJava_PomFile = Paths.get("external/ortools_osx/pom-local.xml")
+    val orToolsJava_JarFile = Paths.get("external/ortools_osx/ortools-java-$version.jar")
+    val orToolsJava_SrcJarFile = Paths.get("external/ortools_osx/ortools-java-$version-sources.jar")
+    val orToolsJava_JavadocFile = Paths.get("external/ortools_osx/ortools-java-$version-javadoc.jar")
 
 
-    deployMaven(ORTOOLS_JAVA_POM_PATH, DEPLOY_MAVEN_USERNAME, DEPLOY_MAVEN_PASSWORD, REPOSITORY_URL, GROUP_ID, ORTOOLS_JAVA_ARTIFACT_ID, VERSION, "", "pom")
-    deployMaven(ORTOOLS_JAVA_JAR_PATH, DEPLOY_MAVEN_USERNAME, DEPLOY_MAVEN_PASSWORD, REPOSITORY_URL, GROUP_ID, ORTOOLS_JAVA_ARTIFACT_ID, VERSION,  "", "jar")
-    deployMaven(ORTOOLS_JAVA_SRCJAR_PATH, DEPLOY_MAVEN_USERNAME, DEPLOY_MAVEN_PASSWORD, REPOSITORY_URL, GROUP_ID, ORTOOLS_JAVA_ARTIFACT_ID, VERSION, "-sources","jar")
-    deployMaven(ORTOOLS_JAVA_JAVADOC_PATH, DEPLOY_MAVEN_USERNAME, DEPLOY_MAVEN_PASSWORD, REPOSITORY_URL, GROUP_ID, ORTOOLS_JAVA_ARTIFACT_ID, VERSION, "-javadoc","jar")
+    deployMaven(orToolsJava_PomFile, username, password, repository, groupId, orToolsJava_ArtifactId, version, "", "pom")
+    deployMaven(orToolsJava_JarFile, username, password, repository, groupId, orToolsJava_ArtifactId, version,  "", "jar")
+    deployMaven(orToolsJava_SrcJarFile, username, password, repository, groupId, orToolsJava_ArtifactId, version, "-sources","jar")
+    deployMaven(orToolsJava_JavadocFile, username, password, repository, groupId, orToolsJava_ArtifactId, version, "-javadoc","jar")
 }
 
 fun deployMaven(source: Path, username: String, password: String, repository: String, groupId: String, artifactId: String, version: String, modifier: String, extension: String) {
