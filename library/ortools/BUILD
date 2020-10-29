@@ -6,15 +6,20 @@ kt_jvm_binary(
     srcs = ["Deploy.kt"],
     deps = ["@maven//:org_zeroturnaround_zt_exec"],
     data = [
-        # ortools-darwin
         "@google_ortools_osx//:pom-runtime.xml",
         "@google_ortools_osx//:ortools-darwin-8.0.8283.jar",
         "@google_ortools_osx//:ortools-darwin-8.0.8283-sources.jar",
-
-        # ortools-java
         "@google_ortools_osx//:pom-local.xml",
         "@google_ortools_osx//:ortools-java-8.0.8283.jar",
         "@google_ortools_osx//:ortools-java-8.0.8283-sources.jar",
         "@google_ortools_osx//:ortools-java-8.0.8283-javadoc.jar",
+
+        "@google_ortools_linux//:pom-runtime.xml",
+        "@google_ortools_linux//:ortools-linux-x86-64-8.0.8283.jar",
+        "@google_ortools_linux//:ortools-linux-x86-64-8.0.8283-sources.jar",
+        "@google_ortools_linux//:pom-local.xml",
+        "@google_ortools_linux//:ortools-java-8.0.8283.jar",
+        "@google_ortools_linux//:ortools-java-8.0.8283-sources.jar",
+        "@google_ortools_linux//:ortools-java-8.0.8283-javadoc.jar",
     ]
 )

@@ -25,8 +25,17 @@ fun main() {
     val otVersion = "8.0.8283"
 
     /*
-     * Google OT Darwin artifacts
+     * Google OT Mac OS X artifacts
      */
+    deployGoogleOrTools(otVersion, username, password, repository, otGroupId)
+
+    /*
+     * Google OT Mac OS X artifacts
+     */
+
+}
+
+private fun deployGoogleOrTools(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
     val otDarwin_ArtifcatId = "ortools-darwin"
     val otDarwin_PomFile = Paths.get("external", "google_ortools_osx", "pom-runtime.xml")
     val otDarwin_JarFile = Paths.get("external", "google_ortools_osx", "$otDarwin_ArtifcatId-$otVersion.jar")
@@ -34,17 +43,13 @@ fun main() {
     deployMaven(otDarwin_PomFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "pom")
     deployMaven(otDarwin_JarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "jar")
     deployMaven(otDarwin_SrcJarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "srcjar")
-
-    /*
-     * Google OT Java artifacts (for Darwin / Mac)
-     */
     val otJava_ArtifactId = "ortools-java-darwin"
     val otJava_PomFile = Paths.get("external", "google_ortools_osx", "pom-local.xml")
     val otJava_JarFile = Paths.get("external", "google_ortools_osx", "ortools-java-$otVersion.jar")
     val otJava_SrcJarFile = Paths.get("external", "google_ortools_osx", "ortools-java-$otVersion-sources.jar")
     val otJava_JavadocFile = Paths.get("external", "google_ortools_osx", "ortools-java-$otVersion-javadoc.jar")
     deployMaven(otJava_PomFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "pom")
-    deployMaven(otJava_JarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion,  "jar")
+    deployMaven(otJava_JarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "jar")
     deployMaven(otJava_SrcJarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "srcjar")
     deployMaven(otJava_JavadocFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "javadoc")
 }
