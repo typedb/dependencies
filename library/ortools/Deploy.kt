@@ -27,38 +27,38 @@ fun main() {
     )
 
     val repository = "https://repo.grakn.ai/repository/maven"
-    val groupId = "com/google/ortools"
-    val version = "8.0.8283"
+    val otGroupId = "com/google/ortools"
+    val otVersion = "8.0.8283"
 
     /*
-     * ortools-darwin
+     * Google OT Darwin artifacts
      */
-    val orToolsDarwin_ArtifcatId = "ortools-darwin"
-    val orToolsDarwin_PomFile = Paths.get("external/ortools_osx/pom-runtime.xml")
-    val orToolsDarwin_JarFile = Paths.get("external/ortools_osx/$orToolsDarwin_ArtifcatId-$version.jar")
-    val orToolsDarwin_SrcJarFile = Paths.get("external/ortools_osx/$orToolsDarwin_ArtifcatId-$version-sources.jar")
+    val otDarwin_ArtifcatId = "ortools-darwin"
+    val otDarwin_PomFile = Paths.get("external", "ortools_osx", "pom-runtime.xml")
+    val otDarwin_JarFile = Paths.get("external", "ortools_osx", "$otDarwin_ArtifcatId-$otVersion.jar")
+    val otDarwin_SrcJarFile = Paths.get("external", "ortools_osx", "$otDarwin_ArtifcatId-$otVersion-sources.jar")
 
-    deployMaven(orToolsDarwin_PomFile, username, password, repository, groupId, orToolsDarwin_ArtifcatId, version, "pom")
-    deployMaven(orToolsDarwin_JarFile, username, password, repository, groupId, orToolsDarwin_ArtifcatId, version, "jar")
-    deployMaven(orToolsDarwin_SrcJarFile, username, password, repository, groupId, orToolsDarwin_ArtifcatId, version, "srcjar")
+    deployMavenArtifact(otDarwin_PomFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "pom")
+    deployMavenArtifact(otDarwin_JarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "jar")
+    deployMavenArtifact(otDarwin_SrcJarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "srcjar")
 
     /*
-     * ortools-java-darwin
+     * Google OT Java artifacts
      */
-    val orToolsJava_ArtifactId = "ortools-java-darwin"
-    val orToolsJava_PomFile = Paths.get("external/ortools_osx/pom-local.xml")
-    val orToolsJava_JarFile = Paths.get("external/ortools_osx/ortools-java-$version.jar")
-    val orToolsJava_SrcJarFile = Paths.get("external/ortools_osx/ortools-java-$version-sources.jar")
-    val orToolsJava_JavadocFile = Paths.get("external/ortools_osx/ortools-java-$version-javadoc.jar")
+    val otJava_ArtifactId = "ortools-java-darwin"
+    val otJava_PomFile = Paths.get("external", "ortools_osx", "pom-local.xml")
+    val otJava_JarFile = Paths.get("external", "ortools_osx", "ortools-java-$otVersion.jar")
+    val otJava_SrcJarFile = Paths.get("external", "ortools_osx", "ortools-java-$otVersion-sources.jar")
+    val otJava_JavadocFile = Paths.get("external", "ortools_osx", "ortools-java-$otVersion-javadoc.jar")
 
 
-    deployMaven(orToolsJava_PomFile, username, password, repository, groupId, orToolsJava_ArtifactId, version, "pom")
-    deployMaven(orToolsJava_JarFile, username, password, repository, groupId, orToolsJava_ArtifactId, version,  "jar")
-    deployMaven(orToolsJava_SrcJarFile, username, password, repository, groupId, orToolsJava_ArtifactId, version, "srcjar")
-    deployMaven(orToolsJava_JavadocFile, username, password, repository, groupId, orToolsJava_ArtifactId, version, "javadoc")
+    deployMavenArtifact(otJava_PomFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "pom")
+    deployMavenArtifact(otJava_JarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion,  "jar")
+    deployMavenArtifact(otJava_SrcJarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "srcjar")
+    deployMavenArtifact(otJava_JavadocFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "javadoc")
 }
 
-fun deployMaven(source: Path, username: String, password: String, repository: String, groupId: String, artifactId: String, version: String, type: String) {
+fun deployMavenArtifact(source: Path, username: String, password: String, repository: String, groupId: String, artifactId: String, version: String, type: String) {
     val artifactFileName = when (type) {
         "pom" -> "$artifactId-$version.pom"
         "jar" -> "$artifactId-$version.jar"
@@ -66,6 +66,17 @@ fun deployMaven(source: Path, username: String, password: String, repository: St
         "javadoc" -> "$artifactId-$version-javadoc.jar"
         else -> throw RuntimeException("Unable to upload a file of type '$type'.")
     }
+
+    deployMavenFile(username, password, source, repository, groupId, artifactId, version, artifactFileName)
+
+    val md5File = md5(source)
+    deployMavenFile(username, password, md5File, repository, groupId, artifactId, version, "$artifactFileName.md5")
+
+    val sha1File = sha1(source)
+    deployMavenFile(username, password, sha1File, repository, groupId, artifactId, version, "$artifactFileName.sha1")
+}
+
+private fun deployMavenFile(username: String, password: String, source: Path, repository: String, groupId: String, artifactId: String, version: String, artifactFileName: String) {
     shell(
             "curl " +
                     "--write-out \"%{http_code}\" " +
@@ -73,47 +84,9 @@ fun deployMaven(source: Path, username: String, password: String, repository: St
                     "--upload-file $source " +
                     "$repository/$groupId/$artifactId/$version/$artifactFileName"
     )
-
-    val md5File = md5(source)
-    shell(
-            "curl " +
-                    "--write-out \"%{http_code}\" " +
-                    "-u $username:$password " +
-                    "--upload-file $md5File " +
-                    "$repository/$groupId/$artifactId/$version/$artifactFileName.md5"
-    )
-
-    val sha1File = sha1(source)
-    shell(
-            "curl " +
-                    "--write-out \"%{http_code}\" " +
-                    "-u $username:$password " +
-                    "--upload-file $sha1File " +
-                    "$repository/$groupId/$artifactId/$version/$artifactFileName.sha1"
-    )
 }
 
-fun md5(source: Path): Path {
-    val destination = Paths.get(source.toAbsolutePath().toString() + ".md5")
-    val hasher = MessageDigest.getInstance("MD5");
-    hasher.update(Files.readAllBytes(source));
-    val digest = hasher.digest()
-    val md5Padded = String.format("%1$32s", toHex(digest).toLowerCase()).replace(" ", "0")
-    Files.write(destination, md5Padded.toByteArray(UTF_8))
-    return destination
-}
-
-fun sha1(source: Path): Path {
-    val destination = Paths.get(source.toAbsolutePath().toString() + ".sha1")
-    val hasher = MessageDigest.getInstance("SHA-1");
-    hasher.update(Files.readAllBytes(source));
-    val digest = hasher.digest()
-    val sha1Padded = String.format("%1$40s", toHex(digest).toLowerCase()).replace(" ", "0")
-    Files.write(destination, sha1Padded.toByteArray(UTF_8))
-    return destination
-}
-
-fun shell(script: String): ProcessResult {
+private fun shell(script: String): ProcessResult {
     println("script: $script")
     val scriptArray = script.split(" ")
     val builder = ProcessExecutor(scriptArray)
@@ -124,7 +97,27 @@ fun shell(script: String): ProcessResult {
     return builder.execute()
 }
 
-fun toHex(bytes: ByteArray): String {
+private fun md5(source: Path): Path {
+    val destination = Paths.get(source.toAbsolutePath().toString() + ".md5")
+    val hasher = MessageDigest.getInstance("MD5");
+    hasher.update(Files.readAllBytes(source));
+    val digest = hasher.digest()
+    val md5Padded = String.format("%1$32s", toHex(digest).toLowerCase()).replace(" ", "0")
+    Files.write(destination, md5Padded.toByteArray(UTF_8))
+    return destination
+}
+
+private fun sha1(source: Path): Path {
+    val destination = Paths.get(source.toAbsolutePath().toString() + ".sha1")
+    val hasher = MessageDigest.getInstance("SHA-1");
+    hasher.update(Files.readAllBytes(source));
+    val digest = hasher.digest()
+    val sha1Padded = String.format("%1$40s", toHex(digest).toLowerCase()).replace(" ", "0")
+    Files.write(destination, sha1Padded.toByteArray(UTF_8))
+    return destination
+}
+
+private fun toHex(bytes: ByteArray): String {
     val bigInteger = BigInteger(1, bytes)
     return bigInteger.toString(16)
 }
