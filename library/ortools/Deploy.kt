@@ -38,9 +38,9 @@ fun main() {
     val otDarwin_JarFile = Paths.get("external", "ortools_osx", "$otDarwin_ArtifcatId-$otVersion.jar")
     val otDarwin_SrcJarFile = Paths.get("external", "ortools_osx", "$otDarwin_ArtifcatId-$otVersion-sources.jar")
 
-    deployMavenArtifact(otDarwin_PomFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "pom")
-    deployMavenArtifact(otDarwin_JarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "jar")
-    deployMavenArtifact(otDarwin_SrcJarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "srcjar")
+    deployMaven(otDarwin_PomFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "pom")
+    deployMaven(otDarwin_JarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "jar")
+    deployMaven(otDarwin_SrcJarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "srcjar")
 
     /*
      * Google OT Java artifacts
@@ -52,13 +52,13 @@ fun main() {
     val otJava_JavadocFile = Paths.get("external", "ortools_osx", "ortools-java-$otVersion-javadoc.jar")
 
 
-    deployMavenArtifact(otJava_PomFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "pom")
-    deployMavenArtifact(otJava_JarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion,  "jar")
-    deployMavenArtifact(otJava_SrcJarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "srcjar")
-    deployMavenArtifact(otJava_JavadocFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "javadoc")
+    deployMaven(otJava_PomFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "pom")
+    deployMaven(otJava_JarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion,  "jar")
+    deployMaven(otJava_SrcJarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "srcjar")
+    deployMaven(otJava_JavadocFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "javadoc")
 }
 
-fun deployMavenArtifact(source: Path, username: String, password: String, repository: String, groupId: String, artifactId: String, version: String, type: String) {
+fun deployMaven(source: Path, username: String, password: String, repository: String, groupId: String, artifactId: String, version: String, type: String) {
     val sourceChecksumMd5 = md5(source)
     val sourceChecksumSha1 = sha1(source)
     val targetArtifact = when (type) {
@@ -70,12 +70,12 @@ fun deployMavenArtifact(source: Path, username: String, password: String, reposi
     }
     val target = "$repository/$groupId/$artifactId/$version/$targetArtifact"
 
-    deployMavenFile(username, password, source, target)
-    deployMavenFile(username, password, sourceChecksumMd5, "$target.md5")
-    deployMavenFile(username, password, sourceChecksumSha1, "$target.sha1")
+    deployFile(username, password, source, target)
+    deployFile(username, password, sourceChecksumMd5, "$target.md5")
+    deployFile(username, password, sourceChecksumSha1, "$target.sha1")
 }
 
-private fun deployMavenFile(username: String, password: String, source: Path, target: String) {
+private fun deployFile(username: String, password: String, source: Path, target: String) {
     print("uploading '$source' to '$target'. exit code: ")
     shell(
             "curl " +
