@@ -10,12 +10,6 @@ import java.nio.file.Paths
 import java.security.MessageDigest
 import java.util.*
 
-// TODO:
-//  - refactor and use HttpUrlConnection rather than curl
-//  - get ortools-java-darwin named ortools-java
-//  - deploy ortools for linux and windows
-//  - get bazel to depend on the right ortools depending on the OS
-
 fun main() {
     val username = Objects.requireNonNull(
             System.getenv("DEPLOY_MAVEN_USERNAME"),
@@ -37,28 +31,25 @@ fun main() {
     val otDarwin_PomFile = Paths.get("external", "ortools_osx", "pom-runtime.xml")
     val otDarwin_JarFile = Paths.get("external", "ortools_osx", "$otDarwin_ArtifcatId-$otVersion.jar")
     val otDarwin_SrcJarFile = Paths.get("external", "ortools_osx", "$otDarwin_ArtifcatId-$otVersion-sources.jar")
-
     deployMaven(otDarwin_PomFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "pom")
     deployMaven(otDarwin_JarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "jar")
     deployMaven(otDarwin_SrcJarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "srcjar")
 
     /*
-     * Google OT Java artifacts
+     * Google OT Java artifacts (for Darwin / Mac)
      */
     val otJava_ArtifactId = "ortools-java-darwin"
     val otJava_PomFile = Paths.get("external", "ortools_osx", "pom-local.xml")
     val otJava_JarFile = Paths.get("external", "ortools_osx", "ortools-java-$otVersion.jar")
     val otJava_SrcJarFile = Paths.get("external", "ortools_osx", "ortools-java-$otVersion-sources.jar")
     val otJava_JavadocFile = Paths.get("external", "ortools_osx", "ortools-java-$otVersion-javadoc.jar")
-
-
     deployMaven(otJava_PomFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "pom")
     deployMaven(otJava_JarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion,  "jar")
     deployMaven(otJava_SrcJarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "srcjar")
     deployMaven(otJava_JavadocFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "javadoc")
 }
 
-fun deployMaven(source: Path, username: String, password: String, repository: String, groupId: String, artifactId: String, version: String, type: String) {
+private fun deployMaven(source: Path, username: String, password: String, repository: String, groupId: String, artifactId: String, version: String, type: String) {
     val sourceChecksumMd5 = md5(source)
     val sourceChecksumSha1 = sha1(source)
     val targetArtifact = when (type) {
@@ -104,6 +95,7 @@ private fun md5(source: Path): Path {
     val hasher = MessageDigest.getInstance("MD5");
     hasher.update(Files.readAllBytes(source));
     val digest = hasher.digest()
+    // the resulting hash must have 32 characters. it is padded by leading zeros when it's less than that
     val md5Padded = String.format("%1$32s", toHex(digest).toLowerCase()).replace(" ", "0")
     Files.write(destination, md5Padded.toByteArray(UTF_8))
     return destination
@@ -114,6 +106,7 @@ private fun sha1(source: Path): Path {
     val hasher = MessageDigest.getInstance("SHA-1");
     hasher.update(Files.readAllBytes(source));
     val digest = hasher.digest()
+    // the resulting hash must have 40 characters. it is padded by leading zeros when it's less than that
     val sha1Padded = String.format("%1$40s", toHex(digest).toLowerCase()).replace(" ", "0")
     Files.write(destination, sha1Padded.toByteArray(UTF_8))
     return destination
