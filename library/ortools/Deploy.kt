@@ -59,41 +59,43 @@ fun main() {
 }
 
 fun deployMavenArtifact(source: Path, username: String, password: String, repository: String, groupId: String, artifactId: String, version: String, type: String) {
-    val artifactFileName = when (type) {
+    val sourceChecksumMd5 = md5(source)
+    val sourceChecksumSha1 = sha1(source)
+    val targetArtifact = when (type) {
         "pom" -> "$artifactId-$version.pom"
         "jar" -> "$artifactId-$version.jar"
         "srcjar" -> "$artifactId-$version-sources.jar"
         "javadoc" -> "$artifactId-$version-javadoc.jar"
         else -> throw RuntimeException("Unable to upload a file of type '$type'.")
     }
+    val target = "$repository/$groupId/$artifactId/$version/$targetArtifact"
 
-    deployMavenFile(username, password, source, repository, groupId, artifactId, version, artifactFileName)
-
-    val md5File = md5(source)
-    deployMavenFile(username, password, md5File, repository, groupId, artifactId, version, "$artifactFileName.md5")
-
-    val sha1File = sha1(source)
-    deployMavenFile(username, password, sha1File, repository, groupId, artifactId, version, "$artifactFileName.sha1")
+    deployMavenFile(username, password, source, target)
+    deployMavenFile(username, password, sourceChecksumMd5, "$target.md5")
+    deployMavenFile(username, password, sourceChecksumSha1, "$target.sha1")
 }
 
-private fun deployMavenFile(username: String, password: String, source: Path, repository: String, groupId: String, artifactId: String, version: String, artifactFileName: String) {
+private fun deployMavenFile(username: String, password: String, source: Path, target: String) {
+    print("uploading '$source' to '$target'. exit code: ")
     shell(
             "curl " +
+                    "--silent " +
                     "--write-out \"%{http_code}\" " +
                     "-u $username:$password " +
                     "--upload-file $source " +
-                    "$repository/$groupId/$artifactId/$version/$artifactFileName"
+                    target
     )
+    println() // print newline after the exit code is printed
 }
 
 private fun shell(script: String): ProcessResult {
-    println("script: $script")
     val scriptArray = script.split(" ")
     val builder = ProcessExecutor(scriptArray)
             .readOutput(true)
             .redirectOutput(System.out)
             .redirectError(System.err)
             .exitValueNormal()
+
     return builder.execute()
 }
 
