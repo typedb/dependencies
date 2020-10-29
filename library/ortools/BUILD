@@ -7,14 +7,14 @@ kt_jvm_binary(
     deps = ["@maven//:org_zeroturnaround_zt_exec"],
     data = [
         # ortools-darwin
-        "@ortools_osx//:pom-runtime.xml",
-        "@ortools_osx//:ortools-darwin-8.0.8283.jar",
-        "@ortools_osx//:ortools-darwin-8.0.8283-sources.jar",
+        "@google_ortools_osx//:pom-runtime.xml",
+        "@google_ortools_osx//:ortools-darwin-8.0.8283.jar",
+        "@google_ortools_osx//:ortools-darwin-8.0.8283-sources.jar",
 
         # ortools-java
-        "@ortools_osx//:pom-local.xml",
-        "@ortools_osx//:ortools-java-8.0.8283.jar",
-        "@ortools_osx//:ortools-java-8.0.8283-sources.jar",
-        "@ortools_osx//:ortools-java-8.0.8283-javadoc.jar",
+        "@google_ortools_osx//:pom-local.xml",
+        "@google_ortools_osx//:ortools-java-8.0.8283.jar",
+        "@google_ortools_osx//:ortools-java-8.0.8283-sources.jar",
+        "@google_ortools_osx//:ortools-java-8.0.8283-javadoc.jar",
     ]
 )

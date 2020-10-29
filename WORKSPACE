@@ -40,6 +40,10 @@ load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_reg
 kotlin_repositories()
 kt_register_toolchains()
 
+# Load //library/ortools
+load("//library/ortools:deps.bzl", "google_or_tools_osx")
+google_or_tools_osx()
+
 # Load //tool/common
 load("//tool/common:deps.bzl", "graknlabs_dependencies_ci_pip")
 graknlabs_dependencies_ci_pip()
@@ -68,13 +72,5 @@ rules_pkg()
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
-load("//library/maven:rules.bzl", "maven")
+# Load Maven artifacts
 maven(["org.zeroturnaround:zt-exec", "com.eclipsesource.minimal-json:minimal-json"])
-
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-http_archive(
-    name = "ortools_osx",
-    urls = ["https://github.com/google/or-tools/releases/download/v8.0/or-tools_MacOsX-10.15.7_v8.0.8283.tar.gz"],
-    strip_prefix = "or-tools_MacOsX-10.15.7_v8.0.8283",
-    build_file = "@//:library/ortools/archive-exports-files"
-)
