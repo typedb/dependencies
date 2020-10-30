@@ -25,9 +25,9 @@ fun main() {
     val otVersion = "8.0.8283"
 
     /*
-     * Google OT Darwin artifacts
+     * Google OT Native artifacts (Darwin)
      */
-    val otDarwin_ArtifcatId = "ortools-darwin"
+    val otDarwin_ArtifcatId = "ortools-native-darwin"
     val otDarwin_PomFile = Paths.get("external", "google_ortools_osx", "pom-runtime.xml")
     val otDarwin_JarFile = Paths.get("external", "google_ortools_osx", "$otDarwin_ArtifcatId-$otVersion.jar")
     val otDarwin_SrcJarFile = Paths.get("external", "google_ortools_osx", "$otDarwin_ArtifcatId-$otVersion-sources.jar")
@@ -36,9 +36,9 @@ fun main() {
     deployMaven(otDarwin_SrcJarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "srcjar")
 
     /*
-     * Google OT Java artifacts (for Darwin / Mac)
+     * Google OT JNI artifacts (Darwin)
      */
-    val otJava_ArtifactId = "ortools-java-darwin"
+    val otJava_ArtifactId = "ortools-jni-darwin"
     val otJava_PomFile = Paths.get("external", "google_ortools_osx", "pom-local.xml")
     val otJava_JarFile = Paths.get("external", "google_ortools_osx", "ortools-java-$otVersion.jar")
     val otJava_SrcJarFile = Paths.get("external", "google_ortools_osx", "ortools-java-$otVersion-sources.jar")
