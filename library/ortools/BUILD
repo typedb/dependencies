@@ -21,5 +21,10 @@ kt_jvm_binary(
         "@google_ortools_linux//:pom-runtime.xml",
         "@google_ortools_linux//:ortools-linux-x86-64-8.0.8283.jar",
         "@google_ortools_linux//:ortools-linux-x86-64-8.0.8283-sources.jar",
+
+        # ortools-windows
+        "@google_ortools_windows//:pom-runtime.xml",
+        "@google_ortools_windows//:ortools-win32-x86-64-8.0.8283.jar",
+        "@google_ortools_windows//:ortools-win32-x86-64-8.0.8283-sources.jar",
     ]
 )

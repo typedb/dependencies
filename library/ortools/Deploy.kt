@@ -51,6 +51,19 @@ fun main() {
     deployMaven(otLinux_SrcJar, username, password, repository, otGroupId, otLinux_ArtifactId, otVersion, "srcjar")
 
     /*
+ * Google OT Native artifacts (Windows)
+ */
+    val otWindows_ArtifactId = "ortools-win32-x86-64"
+    val otWindows_JarName = "$otWindows_ArtifactId-$otVersion.jar"
+    val otWindows_SrcjarName = "$otWindows_ArtifactId-$otVersion-sources.jar"
+    val otWindows_Pom = Paths.get("external", "google_ortools_windows", "pom-runtime.xml")
+    val otWindows_Jar = Paths.get("external", "google_ortools_windows", otWindows_JarName)
+    val otWindows_SrcJar = Paths.get("external", "google_ortools_windows", otWindows_SrcjarName)
+    deployMaven(otWindows_Pom, username, password, repository, otGroupId, otWindows_ArtifactId, otVersion, "pom")
+    deployMaven(otWindows_Jar, username, password, repository, otGroupId, otWindows_ArtifactId, otVersion, "jar")
+    deployMaven(otWindows_SrcJar, username, password, repository, otGroupId, otWindows_ArtifactId, otVersion, "srcjar")
+
+    /*
      * Google OT JNI artifacts
      */
     val otJava_ArtifactId = "ortools-java"

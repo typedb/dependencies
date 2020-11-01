@@ -41,9 +41,10 @@ kotlin_repositories()
 kt_register_toolchains()
 
 # Load //library/ortools
-load("//library/ortools:deps.bzl", "google_or_tools_darwin", "google_or_tools_linux")
+load("//library/ortools:deps.bzl", "google_or_tools_darwin", "google_or_tools_linux", "google_or_tools_windows")
 google_or_tools_darwin()
 google_or_tools_linux()
+google_or_tools_windows()
 
 # Load //tool/common
 load("//tool/common:deps.bzl", "graknlabs_dependencies_ci_pip")
