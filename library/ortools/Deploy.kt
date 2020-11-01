@@ -25,33 +25,46 @@ fun main() {
     val otVersion = "8.0.8283"
 
     /*
-     * Google OT Mac OS X artifacts
+     * Google OT Native artifacts (Darwin)
      */
-    deployGoogleOrTools(otVersion, username, password, repository, otGroupId)
+    val otDarwin_ArtifactId = "ortools-darwin"
+    val otDarwin_JarName = "$otDarwin_ArtifactId-$otVersion.jar"
+    val otDarwin_SrcjarName = "$otDarwin_ArtifactId-$otVersion-sources.jar"
+    val otDarwin_Pom = Paths.get("external", "google_ortools_darwin", "pom-runtime.xml")
+    val otDarwin_Jar = Paths.get("external", "google_ortools_darwin", otDarwin_JarName)
+    val otDarwin_SrcJar = Paths.get("external", "google_ortools_darwin", otDarwin_SrcjarName)
+    deployMaven(otDarwin_Pom, username, password, repository, otGroupId, otDarwin_ArtifactId, otVersion, "pom")
+    deployMaven(otDarwin_Jar, username, password, repository, otGroupId, otDarwin_ArtifactId, otVersion, "jar")
+    deployMaven(otDarwin_SrcJar, username, password, repository, otGroupId, otDarwin_ArtifactId, otVersion, "srcjar")
 
     /*
-     * Google OT Mac OS X artifacts
+     * Google OT Native artifacts (Linux)
      */
+    val otLinux_ArtifactId = "ortools-linux-x86-64"
+    val otLinux_JarName = "$otLinux_ArtifactId-$otVersion.jar"
+    val otLinux_SrcjarName = "$otLinux_ArtifactId-$otVersion-sources.jar"
+    val otLinux_Pom = Paths.get("external", "google_ortools_linux", "pom-runtime.xml")
+    val otLinux_Jar = Paths.get("external", "google_ortools_linux", otLinux_JarName)
+    val otLinux_SrcJar = Paths.get("external", "google_ortools_linux", otLinux_SrcjarName)
+    deployMaven(otLinux_Pom, username, password, repository, otGroupId, otLinux_ArtifactId, otVersion, "pom")
+    deployMaven(otLinux_Jar, username, password, repository, otGroupId, otLinux_ArtifactId, otVersion, "jar")
+    deployMaven(otLinux_SrcJar, username, password, repository, otGroupId, otLinux_ArtifactId, otVersion, "srcjar")
 
-}
-
-private fun deployGoogleOrTools(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
-    val otDarwin_ArtifcatId = "ortools-darwin"
-    val otDarwin_PomFile = Paths.get("external", "google_ortools_osx", "pom-runtime.xml")
-    val otDarwin_JarFile = Paths.get("external", "google_ortools_osx", "$otDarwin_ArtifcatId-$otVersion.jar")
-    val otDarwin_SrcJarFile = Paths.get("external", "google_ortools_osx", "$otDarwin_ArtifcatId-$otVersion-sources.jar")
-    deployMaven(otDarwin_PomFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "pom")
-    deployMaven(otDarwin_JarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "jar")
-    deployMaven(otDarwin_SrcJarFile, username, password, repository, otGroupId, otDarwin_ArtifcatId, otVersion, "srcjar")
-    val otJava_ArtifactId = "ortools-java-darwin"
-    val otJava_PomFile = Paths.get("external", "google_ortools_osx", "pom-local.xml")
-    val otJava_JarFile = Paths.get("external", "google_ortools_osx", "ortools-java-$otVersion.jar")
-    val otJava_SrcJarFile = Paths.get("external", "google_ortools_osx", "ortools-java-$otVersion-sources.jar")
-    val otJava_JavadocFile = Paths.get("external", "google_ortools_osx", "ortools-java-$otVersion-javadoc.jar")
-    deployMaven(otJava_PomFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "pom")
-    deployMaven(otJava_JarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "jar")
-    deployMaven(otJava_SrcJarFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "srcjar")
-    deployMaven(otJava_JavadocFile, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "javadoc")
+    /*
+     * Google OT JNI artifacts
+     */
+    val otJava_ArtifactId = "ortools-java"
+    val otJava_JarName = "$otJava_ArtifactId-$otVersion.jar"
+    val otJava_SrcjarName = "$otJava_ArtifactId-$otVersion-sources.jar"
+    val otJava_JavadocName = "$otJava_ArtifactId-$otVersion-javadoc.jar"
+    val otJava_Pom = Paths.get("external", "google_ortools_darwin", "pom-local.xml")
+    val otJava_Jar = Paths.get("external", "google_ortools_darwin", otJava_JarName)
+    val otJava_SrcJar = Paths.get("external", "google_ortools_darwin", otJava_SrcjarName)
+    val otJava_Javadoc = Paths.get("external", "google_ortools_darwin", otJava_JavadocName)
+    deployMaven(otJava_Pom, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "pom")
+    deployMaven(otJava_Jar, username, password, repository, otGroupId, otJava_ArtifactId, otVersion,  "jar")
+    deployMaven(otJava_SrcJar, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "srcjar")
+    deployMaven(otJava_Javadoc, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "javadoc")
 }
 
 private fun deployMaven(source: Path, username: String, password: String, repository: String, groupId: String, artifactId: String, version: String, type: String) {

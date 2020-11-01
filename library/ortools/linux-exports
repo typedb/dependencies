@@ -1,0 +1,5 @@
+exports_files([
+    "ortools-linux-x86-64-8.0.8283-sources.jar",
+    "ortools-linux-x86-64-8.0.8283.jar",
+    "pom-runtime.xml",
+])
