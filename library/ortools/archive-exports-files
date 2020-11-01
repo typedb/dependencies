@@ -1,0 +1,10 @@
+exports_files([
+  "pom-runtime.xml",
+  "ortools-darwin-8.0.8283.jar",
+  "ortools-darwin-8.0.8283-sources.jar",
+
+  "pom-local.xml",
+  "ortools-java-8.0.8283.jar",
+  "ortools-java-8.0.8283-sources.jar",
+  "ortools-java-8.0.8283-javadoc.jar",
+])
