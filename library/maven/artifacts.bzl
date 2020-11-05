@@ -20,6 +20,7 @@ artifacts = {
     "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml": "2.9.9",
     "com.fasterxml.jackson.module:jackson-module-scala_2.11": "2.9.9",
     "com.github.rholder:guava-retrying": "2.0.0",
+    "com.github.ben-manes.caffeine:caffeine": "2.8.6",
     "com.google.code.findbugs:annotations": "3.0.1",
     "com.google.code.findbugs:jsr305": "2.0.2",
     "com.google.code.gson:gson": "2.8.5",
