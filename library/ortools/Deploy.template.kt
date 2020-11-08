@@ -22,7 +22,7 @@ fun main() {
 
     val repository = "https://repo.grakn.ai/repository/maven"
     val otGroupId = "com/google/ortools"
-    val otVersion = "8.0.8283"
+    val otVersion = "{google_or_tools_version}"
 
     /*
      * Google OT Native artifacts (Darwin)
