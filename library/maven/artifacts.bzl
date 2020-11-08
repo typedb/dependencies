@@ -29,7 +29,7 @@ artifacts = {
     "com.google.http-client:google-http-client": "1.34.2",
     "com.google.inject:guice": "4.2.2",
     "com.google.ortools:ortools-darwin": "8.0.8283",
-    "com.google.ortools:ortools-java": "8.0.8283",
+    "com.google.ortools:ortools-java-linux": "8.0.8283",
     "com.google.ortools:ortools-linux": "8.0.8283",
     "com.google.ortools:ortools-windows": "8.0.8283",
     "com.google.protobuf:protobuf-java": "3.5.1",
