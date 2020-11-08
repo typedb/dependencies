@@ -30,9 +30,9 @@ fun main() {
     val otDarwin_ArtifactId = "ortools-darwin"
     val otDarwin_JarName = "$otDarwin_ArtifactId-$otVersion.jar"
     val otDarwin_SrcjarName = "$otDarwin_ArtifactId-$otVersion-sources.jar"
-    val otDarwin_Pom = Paths.get("external", "google_ortools_darwin", "pom-runtime.xml")
-    val otDarwin_Jar = Paths.get("external", "google_ortools_darwin", otDarwin_JarName)
-    val otDarwin_SrcJar = Paths.get("external", "google_ortools_darwin", otDarwin_SrcjarName)
+    val otDarwin_Pom = Paths.get("external", "google_or_tools_darwin", "pom-runtime.xml")
+    val otDarwin_Jar = Paths.get("external", "google_or_tools_darwin", otDarwin_JarName)
+    val otDarwin_SrcJar = Paths.get("external", "google_or_tools_darwin", otDarwin_SrcjarName)
     deployMaven(otDarwin_Pom, username, password, repository, otGroupId, otDarwin_ArtifactId, otVersion, "pom")
     deployMaven(otDarwin_Jar, username, password, repository, otGroupId, otDarwin_ArtifactId, otVersion, "jar")
     deployMaven(otDarwin_SrcJar, username, password, repository, otGroupId, otDarwin_ArtifactId, otVersion, "srcjar")
@@ -43,9 +43,9 @@ fun main() {
     val otLinux_ArtifactId = "ortools-linux-x86-64"
     val otLinux_JarName = "$otLinux_ArtifactId-$otVersion.jar"
     val otLinux_SrcjarName = "$otLinux_ArtifactId-$otVersion-sources.jar"
-    val otLinux_Pom = Paths.get("external", "google_ortools_linux", "pom-runtime.xml")
-    val otLinux_Jar = Paths.get("external", "google_ortools_linux", otLinux_JarName)
-    val otLinux_SrcJar = Paths.get("external", "google_ortools_linux", otLinux_SrcjarName)
+    val otLinux_Pom = Paths.get("external", "google_or_tools_linux", "pom-runtime.xml")
+    val otLinux_Jar = Paths.get("external", "google_or_tools_linux", otLinux_JarName)
+    val otLinux_SrcJar = Paths.get("external", "google_or_tools_linux", otLinux_SrcjarName)
     deployMaven(otLinux_Pom, username, password, repository, otGroupId, otLinux_ArtifactId, otVersion, "pom")
     deployMaven(otLinux_Jar, username, password, repository, otGroupId, otLinux_ArtifactId, otVersion, "jar")
     deployMaven(otLinux_SrcJar, username, password, repository, otGroupId, otLinux_ArtifactId, otVersion, "srcjar")
@@ -56,9 +56,9 @@ fun main() {
     val otWindows_ArtifactId = "ortools-win32-x86-64"
     val otWindows_JarName = "$otWindows_ArtifactId-$otVersion.jar"
     val otWindows_SrcjarName = "$otWindows_ArtifactId-$otVersion-sources.jar"
-    val otWindows_Pom = Paths.get("external", "google_ortools_windows", "pom-runtime.xml")
-    val otWindows_Jar = Paths.get("external", "google_ortools_windows", otWindows_JarName)
-    val otWindows_SrcJar = Paths.get("external", "google_ortools_windows", otWindows_SrcjarName)
+    val otWindows_Pom = Paths.get("external", "google_or_tools_windows", "pom-runtime.xml")
+    val otWindows_Jar = Paths.get("external", "google_or_tools_windows", otWindows_JarName)
+    val otWindows_SrcJar = Paths.get("external", "google_or_tools_windows", otWindows_SrcjarName)
     deployMaven(otWindows_Pom, username, password, repository, otGroupId, otWindows_ArtifactId, otVersion, "pom")
     deployMaven(otWindows_Jar, username, password, repository, otGroupId, otWindows_ArtifactId, otVersion, "jar")
     deployMaven(otWindows_SrcJar, username, password, repository, otGroupId, otWindows_ArtifactId, otVersion, "srcjar")
@@ -70,10 +70,10 @@ fun main() {
     val otJava_JarName = "$otJava_ArtifactId-$otVersion.jar"
     val otJava_SrcjarName = "$otJava_ArtifactId-$otVersion-sources.jar"
     val otJava_JavadocName = "$otJava_ArtifactId-$otVersion-javadoc.jar"
-    val otJava_Pom = Paths.get("external", "google_ortools_darwin", "pom-local.xml")
-    val otJava_Jar = Paths.get("external", "google_ortools_darwin", otJava_JarName)
-    val otJava_SrcJar = Paths.get("external", "google_ortools_darwin", otJava_SrcjarName)
-    val otJava_Javadoc = Paths.get("external", "google_ortools_darwin", otJava_JavadocName)
+    val otJava_Pom = Paths.get("external", "google_or_tools_darwin", "pom-local.xml")
+    val otJava_Jar = Paths.get("external", "google_or_tools_darwin", otJava_JarName)
+    val otJava_SrcJar = Paths.get("external", "google_or_tools_darwin", otJava_SrcjarName)
+    val otJava_Javadoc = Paths.get("external", "google_or_tools_darwin", otJava_JavadocName)
     deployMaven(otJava_Pom, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "pom")
     deployMaven(otJava_Jar, username, password, repository, otGroupId, otJava_ArtifactId, otVersion,  "jar")
     deployMaven(otJava_SrcJar, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "srcjar")
