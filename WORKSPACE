@@ -41,7 +41,7 @@ kotlin_repositories()
 kt_register_toolchains()
 
 # Load //library/ortools
-load("//library/ortools:deps.bzl", "google_or_tools_darwin", "google_or_tools_linux", "google_or_tools_windows")
+load("//library/ortools/deploy:deps.bzl", "google_or_tools_darwin", "google_or_tools_linux", "google_or_tools_windows")
 google_or_tools_darwin()
 google_or_tools_linux()
 google_or_tools_windows()
