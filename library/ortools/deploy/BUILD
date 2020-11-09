@@ -1,5 +1,5 @@
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
-load(":deps.bzl", "version", "archive_import")
+load(":deps.bzl", "version", "google_or_tools_import_files")
 load("//distribution:deployment.bzl", "deployment")
 
 # fills the deployment url and OR-Tools version with 'sed'
@@ -19,5 +19,7 @@ kt_jvm_binary(
     main_class = "library.ortools.deploy.DeployKt",
     srcs = [":script"],
     deps = ["@maven//:org_zeroturnaround_zt_exec"],
-    data = archive_import("darwin", "darwin") + archive_import("linux", "linux-x86-64") + archive_import("windows", "win32-x86-64")
+    data = google_or_tools_import_files("@google_or_tools_darwin", "darwin") +
+           google_or_tools_import_files("@google_or_tools_linux", "linux-x86-64") +
+           google_or_tools_import_files("@google_or_tools_windows", "win32-x86-64")
 )
