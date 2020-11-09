@@ -25,13 +25,13 @@ fun main() {
     val otVersion = "{google_or_tools_version}"
 
     deployOrToolsDarwin(otVersion, username, password, repository, otGroupId)
-    deployOrToolsJavaDarwin(otVersion, username, password, repository, otGroupId)
+    deployOrToolsDarwinJava(otVersion, username, password, repository, otGroupId)
 
     deployOrToolsLinux(otVersion, username, password, repository, otGroupId)
-    deployOrToolsJavaLinux(otVersion, username, password, repository, otGroupId)
+    deployOrToolsLinuxJava(otVersion, username, password, repository, otGroupId)
 
     deployOrToolsWindows(otVersion, username, password, repository, otGroupId)
-    deployOrToolsJavaWindows(otVersion, username, password, repository, otGroupId)
+    deployOrToolsWindowsJava(otVersion, username, password, repository, otGroupId)
 }
 
 private fun deployOrToolsDarwin(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
@@ -47,7 +47,7 @@ private fun deployOrToolsDarwin(otVersion: String, username: String, password: S
     deployMaven(otDarwin_SrcJar, username, password, repository, otGroupId, otDarwin_ArtifactId, otVersion, "srcjar")
 }
 
-private fun deployOrToolsJavaDarwin(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
+private fun deployOrToolsDarwinJava(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
     val bazelWorkspace = "google_or_tools_darwin"
     val otJava_ArtifactId = "ortools-java"
     val otJava_ArtifactIdRenamed = "ortools-darwin-java"
@@ -77,7 +77,7 @@ private fun deployOrToolsLinux(otVersion: String, username: String, password: St
     deployMaven(otLinux_SrcJar, username, password, repository, otGroupId, otLinux_ArtifactId, otVersion, "srcjar")
 }
 
-private fun deployOrToolsJavaLinux(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
+private fun deployOrToolsLinuxJava(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
     val bazelWorkspace = "google_or_tools_linux"
     val otJava_ArtifactId = "ortools-java"
     val otJava_ArtifactIdRenamed = "ortools-linux-x86-64-java"
@@ -106,7 +106,7 @@ private fun deployOrToolsWindows(otVersion: String, username: String, password: 
     deployMaven(otWindows_SrcJar, username, password, repository, otGroupId, otWindows_ArtifactId, otVersion, "srcjar")
 }
 
-private fun deployOrToolsJavaWindows(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
+private fun deployOrToolsWindowsJava(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
     val bazelWorkspace = "google_or_tools_windows"
     val otJava_ArtifactId = "ortools-java"
     val otJava_ArtifactIdRenamed = "ortools-win32-x86-64-java"
