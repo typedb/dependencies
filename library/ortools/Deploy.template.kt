@@ -50,7 +50,7 @@ private fun deployOrToolsDarwin(otVersion: String, username: String, password: S
 private fun deployOrToolsJavaDarwin(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
     val bazelWorkspace = "google_or_tools_darwin"
     val otJava_ArtifactId = "ortools-java"
-    val otJava_ArtifactIdRenamed = "$otJava_ArtifactId-darwin"
+    val otJava_ArtifactIdRenamed = "ortools-darwin-java"
     val otJava_JarName = "$otJava_ArtifactId-$otVersion.jar"
     val otJava_SrcjarName = "$otJava_ArtifactId-$otVersion-sources.jar"
     val otJava_JavadocName = "$otJava_ArtifactId-$otVersion-javadoc.jar"
@@ -80,7 +80,7 @@ private fun deployOrToolsLinux(otVersion: String, username: String, password: St
 private fun deployOrToolsJavaLinux(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
     val bazelWorkspace = "google_or_tools_linux"
     val otJava_ArtifactId = "ortools-java"
-    val otJava_ArtifactIdRenamed = "$otJava_ArtifactId-linux"
+    val otJava_ArtifactIdRenamed = "ortools-linux-x86-64-java"
     val otJava_JarName = "$otJava_ArtifactId-$otVersion.jar"
     val otJava_SrcjarName = "$otJava_ArtifactId-$otVersion-sources.jar"
     val otJava_JavadocName = "$otJava_ArtifactId-$otVersion-javadoc.jar"
@@ -109,7 +109,7 @@ private fun deployOrToolsWindows(otVersion: String, username: String, password: 
 private fun deployOrToolsJavaWindows(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
     val bazelWorkspace = "google_or_tools_windows"
     val otJava_ArtifactId = "ortools-java"
-    val otJava_ArtifactIdRenamed = "$otJava_ArtifactId-windows"
+    val otJava_ArtifactIdRenamed = "ortools-win32-x86-64-java"
     val otJava_JarName = "$otJava_ArtifactId-$otVersion.jar"
     val otJava_SrcjarName = "$otJava_ArtifactId-$otVersion-sources.jar"
     val otJava_JavadocName = "$otJava_ArtifactId-$otVersion-javadoc.jar"
