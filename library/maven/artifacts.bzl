@@ -30,7 +30,6 @@ artifacts = {
     "com.google.inject:guice": "4.2.2",
     "com.google.ortools:ortools-darwin": "8.0.8283",
     "com.google.ortools:ortools-darwin-java": "8.0.8283",
-    "com.google.ortools:ortools-java-darwin": "8.0.8283",
     "com.google.ortools:ortools-linux-x86-64": "8.0.8283",
     "com.google.ortools:ortools-linux-x86-64-java": "8.0.8283",
     "com.google.ortools:ortools-win32-x86-64": "8.0.8283",
