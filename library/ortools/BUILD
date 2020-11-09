@@ -1,17 +1,23 @@
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
 load(":deps.bzl", "version")
+load("//distribution:deployment.bzl", "deployment")
 
+# fills the deployment url and OR-Tools version with 'sed'
 genrule(
-    name = "deploy-versioned",
+    name = "deploy-generated",
     srcs = ["Deploy.template.kt"],
     outs = ["Deploy.kt"],
-    cmd = "sed 's/{google_or_tools_version}/" + version + "/g' $(SRCS) > $(OUTS)"
+    cmd = "sed '{}; {}' $(SRCS) > $(OUTS)"
+        .format(
+            "s/{google_or_tools_version}/" + version + "/g",
+            "s/{repository}/" + deployment['maven.release'].replace('/', '\/') + "/g"
+        )
 )
 
 kt_jvm_binary(
     name = "deploy-maven",
     main_class = "library.ortools.DeployKt",
-    srcs = [":deploy-versioned"],
+    srcs = [":deploy-generated"],
     deps = ["@maven//:org_zeroturnaround_zt_exec"],
     data = [
         # ortools-darwin

@@ -20,7 +20,7 @@ fun main() {
             "password should be passed via \$DEPLOY_MAVEN_PASSWORD env variable"
     )
 
-    val repository = "https://repo.grakn.ai/repository/maven"
+    val repository = "{repository}"
     val otGroupId = "com/google/ortools"
     val otVersion = "{google_or_tools_version}"
 
