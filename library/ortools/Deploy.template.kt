@@ -24,35 +24,77 @@ fun main() {
     val otGroupId = "com/google/ortools"
     val otVersion = "{google_or_tools_version}"
 
-    /*
-     * Google OT Native artifacts (Darwin)
-     */
+    deployOrToolsDarwin(otVersion, username, password, repository, otGroupId)
+    deployOrToolsJavaDarwin(otVersion, username, password, repository, otGroupId)
+
+    deployOrToolsLinux(otVersion, username, password, repository, otGroupId)
+    deployOrToolsJavaLinux(otVersion, username, password, repository, otGroupId)
+
+    deployOrToolsWindows(otVersion, username, password, repository, otGroupId)
+    deployOrToolsJavaWindows(otVersion, username, password, repository, otGroupId)
+}
+
+private fun deployOrToolsDarwin(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
+    val bazelWorkspace = "google_or_tools_darwin"
     val otDarwin_ArtifactId = "ortools-darwin"
     val otDarwin_JarName = "$otDarwin_ArtifactId-$otVersion.jar"
     val otDarwin_SrcjarName = "$otDarwin_ArtifactId-$otVersion-sources.jar"
-    val otDarwin_Pom = Paths.get("external", "google_or_tools_darwin", "pom-runtime.xml")
-    val otDarwin_Jar = Paths.get("external", "google_or_tools_darwin", otDarwin_JarName)
-    val otDarwin_SrcJar = Paths.get("external", "google_or_tools_darwin", otDarwin_SrcjarName)
+    val otDarwin_Pom = Paths.get("external", bazelWorkspace, "pom-runtime.xml")
+    val otDarwin_Jar = Paths.get("external", bazelWorkspace, otDarwin_JarName)
+    val otDarwin_SrcJar = Paths.get("external", bazelWorkspace, otDarwin_SrcjarName)
     deployMaven(otDarwin_Pom, username, password, repository, otGroupId, otDarwin_ArtifactId, otVersion, "pom")
     deployMaven(otDarwin_Jar, username, password, repository, otGroupId, otDarwin_ArtifactId, otVersion, "jar")
     deployMaven(otDarwin_SrcJar, username, password, repository, otGroupId, otDarwin_ArtifactId, otVersion, "srcjar")
+}
 
-    /*
-     * Google OT Native artifacts (Linux)
-     */
+private fun deployOrToolsJavaDarwin(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
+    val bazelWorkspace = "google_or_tools_darwin"
+    val otJava_ArtifactId = "ortools-java"
+    val otJava_ArtifactIdRenamed = "$otJava_ArtifactId-darwin"
+    val otJava_JarName = "$otJava_ArtifactId-$otVersion.jar"
+    val otJava_SrcjarName = "$otJava_ArtifactId-$otVersion-sources.jar"
+    val otJava_JavadocName = "$otJava_ArtifactId-$otVersion-javadoc.jar"
+    val otJava_Pom = Paths.get("external", bazelWorkspace, "pom-local.xml")
+    val otJava_Jar = Paths.get("external", bazelWorkspace, otJava_JarName)
+    val otJava_SrcJar = Paths.get("external", bazelWorkspace, otJava_SrcjarName)
+    val otJava_Javadoc = Paths.get("external", bazelWorkspace, otJava_JavadocName)
+    deployMaven(otJava_Pom, username, password, repository, otGroupId, otJava_ArtifactIdRenamed, otVersion, "pom")
+    deployMaven(otJava_Jar, username, password, repository, otGroupId, otJava_ArtifactIdRenamed, otVersion, "jar")
+    deployMaven(otJava_SrcJar, username, password, repository, otGroupId, otJava_ArtifactIdRenamed, otVersion, "srcjar")
+    deployMaven(otJava_Javadoc, username, password, repository, otGroupId, otJava_ArtifactIdRenamed, otVersion, "javadoc")
+}
+
+private fun deployOrToolsLinux(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
+    val bazelWorkspace = "google_or_tools_linux"
     val otLinux_ArtifactId = "ortools-linux-x86-64"
     val otLinux_JarName = "$otLinux_ArtifactId-$otVersion.jar"
     val otLinux_SrcjarName = "$otLinux_ArtifactId-$otVersion-sources.jar"
-    val otLinux_Pom = Paths.get("external", "google_or_tools_linux", "pom-runtime.xml")
-    val otLinux_Jar = Paths.get("external", "google_or_tools_linux", otLinux_JarName)
-    val otLinux_SrcJar = Paths.get("external", "google_or_tools_linux", otLinux_SrcjarName)
+    val otLinux_Pom = Paths.get("external", bazelWorkspace, "pom-runtime.xml")
+    val otLinux_Jar = Paths.get("external", bazelWorkspace, otLinux_JarName)
+    val otLinux_SrcJar = Paths.get("external", bazelWorkspace, otLinux_SrcjarName)
     deployMaven(otLinux_Pom, username, password, repository, otGroupId, otLinux_ArtifactId, otVersion, "pom")
     deployMaven(otLinux_Jar, username, password, repository, otGroupId, otLinux_ArtifactId, otVersion, "jar")
     deployMaven(otLinux_SrcJar, username, password, repository, otGroupId, otLinux_ArtifactId, otVersion, "srcjar")
+}
 
-    /*
- * Google OT Native artifacts (Windows)
- */
+private fun deployOrToolsJavaLinux(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
+    val bazelWorkspace = "google_or_tools_linux"
+    val otJava_ArtifactId = "ortools-java"
+    val otJava_ArtifactIdRenamed = "$otJava_ArtifactId-linux"
+    val otJava_JarName = "$otJava_ArtifactId-$otVersion.jar"
+    val otJava_SrcjarName = "$otJava_ArtifactId-$otVersion-sources.jar"
+    val otJava_JavadocName = "$otJava_ArtifactId-$otVersion-javadoc.jar"
+    val otJava_Pom = Paths.get("external", bazelWorkspace, "pom-local.xml")
+    val otJava_Jar = Paths.get("external", bazelWorkspace, otJava_JarName)
+    val otJava_SrcJar = Paths.get("external", bazelWorkspace, otJava_SrcjarName)
+    val otJava_Javadoc = Paths.get("external", bazelWorkspace, otJava_JavadocName)
+    deployMaven(otJava_Pom, username, password, repository, otGroupId, otJava_ArtifactIdRenamed, otVersion, "pom")
+    deployMaven(otJava_Jar, username, password, repository, otGroupId, otJava_ArtifactIdRenamed, otVersion, "jar")
+    deployMaven(otJava_SrcJar, username, password, repository, otGroupId, otJava_ArtifactIdRenamed, otVersion, "srcjar")
+    deployMaven(otJava_Javadoc, username, password, repository, otGroupId, otJava_ArtifactIdRenamed, otVersion, "javadoc")
+}
+
+private fun deployOrToolsWindows(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
     val otWindows_ArtifactId = "ortools-win32-x86-64"
     val otWindows_JarName = "$otWindows_ArtifactId-$otVersion.jar"
     val otWindows_SrcjarName = "$otWindows_ArtifactId-$otVersion-sources.jar"
@@ -62,22 +104,23 @@ fun main() {
     deployMaven(otWindows_Pom, username, password, repository, otGroupId, otWindows_ArtifactId, otVersion, "pom")
     deployMaven(otWindows_Jar, username, password, repository, otGroupId, otWindows_ArtifactId, otVersion, "jar")
     deployMaven(otWindows_SrcJar, username, password, repository, otGroupId, otWindows_ArtifactId, otVersion, "srcjar")
+}
 
-    /*
-     * Google OT JNI artifacts
-     */
+private fun deployOrToolsJavaWindows(otVersion: String, username: String, password: String, repository: String, otGroupId: String) {
+    val bazelWorkspace = "google_or_tools_windows"
     val otJava_ArtifactId = "ortools-java"
+    val otJava_ArtifactIdRenamed = "$otJava_ArtifactId-windows"
     val otJava_JarName = "$otJava_ArtifactId-$otVersion.jar"
     val otJava_SrcjarName = "$otJava_ArtifactId-$otVersion-sources.jar"
     val otJava_JavadocName = "$otJava_ArtifactId-$otVersion-javadoc.jar"
-    val otJava_Pom = Paths.get("external", "google_or_tools_darwin", "pom-local.xml")
-    val otJava_Jar = Paths.get("external", "google_or_tools_darwin", otJava_JarName)
-    val otJava_SrcJar = Paths.get("external", "google_or_tools_darwin", otJava_SrcjarName)
-    val otJava_Javadoc = Paths.get("external", "google_or_tools_darwin", otJava_JavadocName)
-    deployMaven(otJava_Pom, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "pom")
-    deployMaven(otJava_Jar, username, password, repository, otGroupId, otJava_ArtifactId, otVersion,  "jar")
-    deployMaven(otJava_SrcJar, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "srcjar")
-    deployMaven(otJava_Javadoc, username, password, repository, otGroupId, otJava_ArtifactId, otVersion, "javadoc")
+    val otJava_Pom = Paths.get("external", bazelWorkspace, "pom-local.xml")
+    val otJava_Jar = Paths.get("external", bazelWorkspace, otJava_JarName)
+    val otJava_SrcJar = Paths.get("external", bazelWorkspace, otJava_SrcjarName)
+    val otJava_Javadoc = Paths.get("external", bazelWorkspace, otJava_JavadocName)
+    deployMaven(otJava_Pom, username, password, repository, otGroupId, otJava_ArtifactIdRenamed, otVersion, "pom")
+    deployMaven(otJava_Jar, username, password, repository, otGroupId, otJava_ArtifactIdRenamed, otVersion, "jar")
+    deployMaven(otJava_SrcJar, username, password, repository, otGroupId, otJava_ArtifactIdRenamed, otVersion, "srcjar")
+    deployMaven(otJava_Javadoc, username, password, repository, otGroupId, otJava_ArtifactIdRenamed, otVersion, "javadoc")
 }
 
 private fun deployMaven(source: Path, username: String, password: String, repository: String, groupId: String, artifactId: String, version: String, type: String) {
