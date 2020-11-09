@@ -33,6 +33,11 @@ exports_files([
     "ortools-linux-x86-64-{0}-sources.jar",
     "ortools-linux-x86-64-{0}.jar",
     "pom-runtime.xml",
+
+    "pom-local.xml",
+    "ortools-java-{0}.jar",
+    "ortools-java-{0}-sources.jar",
+    "ortools-java-{0}-javadoc.jar"
 ])
 """.format(version)
     )
@@ -48,6 +53,11 @@ exports_files([
     "ortools-win32-x86-64-{0}-sources.jar",
     "ortools-win32-x86-64-{0}.jar",
     "pom-runtime.xml",
+
+    "pom-local.xml",
+    "ortools-java-{0}.jar",
+    "ortools-java-{0}-sources.jar",
+    "ortools-java-{0}-javadoc.jar"
 ])
 """.format(version)
     )
