@@ -62,8 +62,8 @@ def host_compatible_java_test(name, deps = [], native_libraries_deps = [], **kwa
 
 def native_dep_for_host_platform(name):
     return select({
-         "@graknlabs_dependencies//library/ortools:is_mac": [name + "-mac"],
-         "@graknlabs_dependencies//library/ortools:is_linux": [name + "-linux"],
-         "@graknlabs_dependencies//library/ortools:is_windows": [name + "-windows"],
+         "@graknlabs_dependencies//util/platform:is_mac": [name + "-mac"],
+         "@graknlabs_dependencies//util/platform:is_linux": [name + "-linux"],
+         "@graknlabs_dependencies//util/platform:is_windows": [name + "-windows"],
          "//conditions:default": [name + "-mac"],
      })
