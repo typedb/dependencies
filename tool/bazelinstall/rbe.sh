@@ -21,8 +21,11 @@ function install_dependencies() {
     echo "Installing rpmbuild..."
     if [[ "$OSTYPE" == "linux-gnu" ]]; then
         apt_wait
-        sudo apt-get update
-        sudo apt-get install rpm
+        if ! command -v rpmbuild &> /dev/null
+        then
+            sudo apt-get update
+            sudo apt-get install rpm
+        fi
     elif [[ "$OSTYPE" == "darwin"* ]]; then
         brew install rpm
     else
