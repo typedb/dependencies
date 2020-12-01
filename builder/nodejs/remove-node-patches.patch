@@ -10,7 +10,7 @@ index 486ea55..209e85f 100755
      name = "packager",
      data = ["//third_party/github.com/gjtorikian/isBinaryFile"],
      entry_point = ":packager.js",
-+    templated_args = ["--nobazel_patch_module_resolver", "--nobazel_node_patches"],
++    templated_args = ["--nobazel_node_patches"],
  )
  
  nodejs_binary(
