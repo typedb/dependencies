@@ -10,7 +10,7 @@ import java.util.regex.Pattern
 
 fun httpPost(url: String, json: JsonObject) {
     val output = ByteArrayOutputStream()
-    val expectedCode = "202"
+    val expectedCode = "201"
     ProcessExecutor(
             "curl", "--silent",
             "--output", "-",
@@ -23,7 +23,7 @@ fun httpPost(url: String, json: JsonObject) {
             .exitValueNormal()
             .execute()
     if (!output.toString().equals(expectedCode)) {
-        throw RuntimeException("Error while posting status!")
+        throw RuntimeException("Error while posting status; got '${output.toString()}' instead!")
     }
 }
 
