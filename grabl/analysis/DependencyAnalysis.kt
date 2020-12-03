@@ -37,7 +37,7 @@ fun main() {
     val grablEndpoint = "/api/analysis/dependency-analysis"
     val workflow = System.getenv("GRABL_WORKFLOW")
             ?: throw RuntimeException("GRABL_WORKFLOW environment variable is not set")
-    val dependencies = Paths.get(workspaceDirectory, "dependencies", "graknlabs", "dependencies.bzl")
+    val dependencies = Paths.get(workspaceDirectory, "dependencies", "graknlabs", "repositories.bzl")
 
     var repositoriesArray = Json.array()
 
