@@ -13,7 +13,7 @@ fun httpPost(url: String, json: JsonObject) {
     val expectedCode = "202"
     ProcessExecutor(
             "curl", "--silent",
-            "--output", "/dev/stderr",
+            "--output", "-",
             "--write-out", "%{http_code}",
             "-H", "Content-Type: application/json",
             "--data", json.toString(),
