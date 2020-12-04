@@ -47,7 +47,7 @@ google_or_tools_linux()
 google_or_tools_windows()
 
 # Load //tool/common
-load("//tool/common:deps.bzl", "graknlabs_dependencies_ci_pip")
+load("//tool/common:deps.bzl", "graknlabs_dependencies_ci_pip", graknlabs_dependencies_tool_maven_artifacts = "maven_artifacts")
 graknlabs_dependencies_ci_pip()
 load("@graknlabs_dependencies_ci_pip//:requirements.bzl",graknlabs_dependencies_ci_pip_install = "pip_install")
 graknlabs_dependencies_ci_pip_install()
@@ -75,4 +75,4 @@ load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
 # Load Maven artifacts
-maven(["org.zeroturnaround:zt-exec", "com.eclipsesource.minimal-json:minimal-json"])
+maven(graknlabs_dependencies_tool_maven_artifacts)
