@@ -22,4 +22,4 @@ build:
     build:
       machine: graknlabs-ubuntu-20.04
       script: |
-        bazel build //... --deleted_packages=library/rocksdbjni
+        bazel build --config=rbe //... --deleted_packages=library/rocksdbjni
