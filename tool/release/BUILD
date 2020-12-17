@@ -18,6 +18,8 @@
 package(default_visibility = ["//visibility:public"])
 
 load("@graknlabs_dependencies_ci_pip//:requirements.bzl", "requirement")
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
+
 
 exports_files(["ValidateDeps.kt"])
 
@@ -46,4 +48,14 @@ py_binary(
         requirement("wrapt"),
         requirement("certifi"),
     ]
+)
+
+kt_jvm_binary(
+    name = "bump",
+    srcs = ["Bump.kt"],
+    main_class = "tool.release.BumpKt",
+    deps = [
+        "@maven//:com_eclipsesource_minimal_json_minimal_json",
+        "@maven//:com_google_http_client_google_http_client",
+    ],
 )
