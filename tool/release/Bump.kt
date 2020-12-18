@@ -16,7 +16,7 @@ fun postJson(url: String?, authorization: String, accept: String, content: Strin
     .execute()
 }
 
-fun increaseVersion(version: String): String {
+fun bumpVersion(version: String): String {
     return try {
         // regular version component ("0")
         (Integer.parseInt(version) + 1).toString()
@@ -51,7 +51,7 @@ fun main() {
     if (versionComponents.size != 3) {
         throw RuntimeException("Version is supposed to have three components: x.y.z")
     }
-    versionComponents[versionComponents.lastIndex] = increaseVersion(versionComponents[versionComponents.lastIndex])
+    versionComponents[versionComponents.lastIndex] = bumpVersion(versionComponents[versionComponents.lastIndex])
 
     val newVersion = versionComponents.joinToString(".")
     println("Bumping the version to ${newVersion}")
