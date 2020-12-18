@@ -36,7 +36,7 @@ fun bumpVersion(version: String): String {
                     ).toString()
             lastVersionComponent = versionSubComponents.joinToString("-")
         } catch (b: NumberFormatException) {
-            throw RuntimeException("unparseable version component: ${version}")
+            throw RuntimeException("invalid version: ${version}")
         }
     }
     versionComponents[versionComponents.lastIndex] = lastVersionComponent
