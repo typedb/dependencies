@@ -10,28 +10,37 @@ import java.nio.file.Paths
 
 fun postJson(url: String?, authorization: String, accept: String, content: String) {
     NetHttpTransport()
-    .createRequestFactory()
-    .buildPostRequest(GenericUrl(url), ByteArrayContent.fromString("application/json", content))
-    .setHeaders(HttpHeaders().setAuthorization(authorization).setAccept(accept))
-    .execute()
+            .createRequestFactory()
+            .buildPostRequest(GenericUrl(url), ByteArrayContent.fromString("application/json", content))
+            .setHeaders(HttpHeaders().setAuthorization(authorization).setAccept(accept))
+            .execute()
 }
 
 fun bumpVersion(version: String): String {
-    return try {
+    val versionComponents = version.split(".").toTypedArray()
+
+    if (versionComponents.size != 3) {
+        throw RuntimeException("Version is supposed to have three components: x.y.z")
+    }
+    var lastVersionComponent = versionComponents[versionComponents.lastIndex]
+
+    try {
         // regular version component ("0")
-        (Integer.parseInt(version) + 1).toString()
+        lastVersionComponent = (Integer.parseInt(lastVersionComponent) + 1).toString()
     } catch (a: NumberFormatException) {
         // must be a snapshot version "0-alpha-X" where X needs to be incremented
-        val versionComponents = version.split("-").toTypedArray()
+        val versionSubComponents = lastVersionComponent.split("-").toTypedArray()
         try {
-            versionComponents[versionComponents.lastIndex] = (
-                    Integer.parseInt(versionComponents[versionComponents.lastIndex]) + 1
-            ).toString()
-            versionComponents.joinToString("-")
+            versionSubComponents[versionSubComponents.lastIndex] = (
+                    Integer.parseInt(versionSubComponents[versionSubComponents.lastIndex]) + 1
+                    ).toString()
+            lastVersionComponent = versionSubComponents.joinToString("-")
         } catch (b: NumberFormatException) {
             throw RuntimeException("unparseable version component: ${version}")
         }
     }
+    versionComponents[versionComponents.lastIndex] = lastVersionComponent
+    return versionComponents.joinToString(".")
 }
 
 fun main() {
@@ -45,15 +54,9 @@ fun main() {
             ?: throw RuntimeException("GRABL_REPO environment variable is not set")
 
     val versionFile = Paths.get(workspaceDirectory, "VERSION")
-    val content = String(Files.readAllBytes(versionFile)).trim()
-    val versionComponents = content.split(".").toTypedArray()
+    val version = String(Files.readAllBytes(versionFile)).trim()
+    val newVersion = bumpVersion(version)
 
-    if (versionComponents.size != 3) {
-        throw RuntimeException("Version is supposed to have three components: x.y.z")
-    }
-    versionComponents[versionComponents.lastIndex] = bumpVersion(versionComponents[versionComponents.lastIndex])
-
-    val newVersion = versionComponents.joinToString(".")
     println("Bumping the version to ${newVersion}")
     Files.write(versionFile, newVersion.toByteArray())
 
