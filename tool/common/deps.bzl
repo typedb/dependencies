@@ -9,4 +9,5 @@ def graknlabs_dependencies_ci_pip():
 maven_artifacts = [
   "com.eclipsesource.minimal-json:minimal-json",
   "org.zeroturnaround:zt-exec",
+  "com.google.http-client:google-http-client",
 ]
