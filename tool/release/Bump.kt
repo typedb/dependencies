@@ -16,6 +16,24 @@ fun postJson(url: String?, authorization: String, accept: String, content: Strin
     .execute()
 }
 
+fun increaseVersion(version: String): String {
+    return try {
+        // regular version component ("0")
+        (Integer.parseInt(version) + 1).toString()
+    } catch (a: NumberFormatException) {
+        // must be a snapshot version "0-alpha-X" where X needs to be incremented
+        val versionComponents = version.split("-").toTypedArray()
+        try {
+            versionComponents[versionComponents.lastIndex] = (
+                    Integer.parseInt(versionComponents[versionComponents.lastIndex]) + 1
+            ).toString()
+            versionComponents.joinToString("-")
+        } catch (b: NumberFormatException) {
+            throw RuntimeException("unparseable version component: ${version}")
+        }
+    }
+}
+
 fun main() {
     val workspaceDirectory = System.getenv("BUILD_WORKSPACE_DIRECTORY")
             ?: throw RuntimeException("Not running from within Bazel workspace")
@@ -28,12 +46,12 @@ fun main() {
 
     val versionFile = Paths.get(workspaceDirectory, "VERSION")
     val content = String(Files.readAllBytes(versionFile)).trim()
-    val versionComponents = content.split(".").map { it -> Integer.parseInt(it)}.toTypedArray()
+    val versionComponents = content.split(".").toTypedArray()
 
     if (versionComponents.size != 3) {
         throw RuntimeException("Version is supposed to have three components: x.y.z")
     }
-    versionComponents[versionComponents.lastIndex] += 1
+    versionComponents[versionComponents.lastIndex] = increaseVersion(versionComponents[versionComponents.lastIndex])
 
     val newVersion = versionComponents.joinToString(".")
     println("Bumping the version to ${newVersion}")
