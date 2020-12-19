@@ -28,8 +28,8 @@ def _checkstyle_test_impl(ctx):
 
     if ctx.attr.license_type == "apache":
         license_file = "external/graknlabs_dependencies/tool/checkstyle/config/checkstyle-file-header-apache.txt"
-    elif ctx.attr.license_type == "grakn-kgms":
-        license_file = "external/graknlabs_dependencies/tool/checkstyle/config/checkstyle-file-header-grakn-kgms.txt"
+    elif ctx.attr.license_type == "commercial":
+        license_file = "external/graknlabs_dependencies/tool/checkstyle/config/checkstyle-file-header-commercial.txt"
     else:
         license_file = "external/graknlabs_dependencies/tool/checkstyle/config/checkstyle-file-header-agpl.txt"
 
@@ -93,7 +93,7 @@ checkstyle_test = rule(
     attrs = {
         "license_type": attr.string(
             doc = "Type of license to produce the header for every source code",
-            values = ["agpl", "apache", "grakn-kgms"],
+            values = ["agpl", "apache", "commercial"],
             mandatory = True,
         ),
         "properties": attr.label(
