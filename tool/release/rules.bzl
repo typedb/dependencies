@@ -75,3 +75,25 @@ def release_validate_deps(name, **kwargs):
             "@maven//:com_eclipsesource_minimal_json_minimal_json"
         ],
     )
+
+
+def release_validate_nodejs_deps(
+        name,
+        package_json,
+        tagged_deps,
+    ):
+        kt_jvm_test(
+            name = name,
+            main_class = "tool.release.ValidateNodeJsDepsKt",
+            srcs = [
+                "@graknlabs_dependencies//tool/release:ValidateNodeJsDeps.kt"
+            ],
+            data = [
+                package_json,
+            ],
+            deps = [
+                "@maven//:com_eclipsesource_minimal_json_minimal_json",
+                "@maven//:com_google_http_client_google_http_client",
+            ],
+            args = ["$(location {})".format(package_json)] + tagged_deps
+        )
