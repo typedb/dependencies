@@ -20,6 +20,6 @@
 build:
   correctness:
     build:
-      machine: graknlabs-ubuntu-20.04
+      image: graknlabs-ubuntu-20.04
       script: |
         bazel build --config=rbe //... --deleted_packages=library/rocksdbjni
