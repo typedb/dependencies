@@ -21,7 +21,7 @@ load("@graknlabs_dependencies_ci_pip//:requirements.bzl", "requirement")
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
 
 
-exports_files(["ValidateDeps.kt", "ValidateNodeJsDeps.kt"])
+exports_files(["ValidateDeps.kt", "ValidateNodeJsDeps.kt", "ValidatePythonDeps.kt"])
 
 py_binary(
     name = "docs",
