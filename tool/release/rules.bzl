@@ -95,5 +95,29 @@ def release_validate_nodejs_deps(
                 "@maven//:com_eclipsesource_minimal_json_minimal_json",
                 "@maven//:com_google_http_client_google_http_client",
             ],
-            args = ["$(location {})".format(package_json)] + tagged_deps
+            args = ["$(location {})".format(package_json)] + tagged_deps,
+            tags = ["manual"],
+        )
+
+
+def release_validate_python_deps(
+        name,
+        requirements,
+        tagged_deps,
+    ):
+        kt_jvm_test(
+            name = name,
+            main_class = "tool.release.ValidatePythonDepsKt",
+            srcs = [
+                "@graknlabs_dependencies//tool/release:ValidatePythonDeps.kt"
+            ],
+            data = [
+                requirements,
+            ],
+            deps = [
+                "@maven//:com_eclipsesource_minimal_json_minimal_json",
+                "@maven//:com_google_http_client_google_http_client",
+            ],
+            args = ["$(location {})".format(requirements)] + tagged_deps,
+            tags = ["manual"],
         )
