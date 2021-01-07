@@ -20,7 +20,7 @@ github_org = github_connection.get_organization(graknlabs)
 release_notes_template_regex = r'{.*release notes.*}'
 
 def pull_request_notes(pull_request):
-    pull_notes = "- **{0}.**\n".format(pull_request.title)
+    pull_notes = "- **{0}**\n".format(pull_request.title)
     header = 0
     for line in pull_request.body.splitlines():
         if line[:2] == "##":
