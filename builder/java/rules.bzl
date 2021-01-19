@@ -1,3 +1,5 @@
+load("@graknlabs_dependencies//util:rules.bzl", "expand_label")
+
 def native_java_libraries(name, deps = [], mac_deps = [], linux_deps = [], windows_deps = [], native_libraries_deps = [], **kwargs):
     all_mac_deps = []
     for dep in deps + mac_deps:
@@ -61,6 +63,7 @@ def host_compatible_java_test(name, deps = [], native_libraries_deps = [], **kwa
 
 
 def native_dep_for_host_platform(name):
+    name = expand_label(name)
     return select({
          "@graknlabs_dependencies//util/platform:is_mac": [name + "-mac"],
          "@graknlabs_dependencies//util/platform:is_linux": [name + "-linux"],
