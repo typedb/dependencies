@@ -1,4 +1,13 @@
-load("@graknlabs_dependencies//util:rules.bzl", "expand_label")
+def _expand_label(name):
+    """
+    Expands incomplete labels without target names into full ones, e.g.:
+    "//pattern" -> "//pattern:pattern"
+    """
+    if ":" not in name:
+        name = name + ":" + name[name.rfind("/")+1:]
+    return name
+
+
 
 def native_java_libraries(name, deps = [], mac_deps = [], linux_deps = [], windows_deps = [], native_libraries_deps = [], **kwargs):
     all_mac_deps = []
@@ -63,7 +72,7 @@ def host_compatible_java_test(name, deps = [], native_libraries_deps = [], **kwa
 
 
 def native_dep_for_host_platform(name):
-    name = expand_label(name)
+    name = _expand_label(name)
     return select({
          "@graknlabs_dependencies//util/platform:is_mac": [name + "-mac"],
          "@graknlabs_dependencies//util/platform:is_linux": [name + "-linux"],
