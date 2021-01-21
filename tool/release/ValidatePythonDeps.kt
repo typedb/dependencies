@@ -22,7 +22,7 @@ fun httpGetJson(url: String?): JsonObject {
 fun main(args: Array<String>) {
     @Suppress("NAME_SHADOWING") val args = args.toMutableList()
     val requirements = Files.readAllLines(Paths.get(args.removeAt(0))).filter {
-        !it.startsWith("#") && it.trim().isNotBlank()
+        !it.startsWith("#") && !it.startsWith("--") && it.trim().isNotBlank()
     }.associate {
         val items = it.replace(">=", "==").split("==")
         items[0] to items[1]
