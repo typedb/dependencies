@@ -34,7 +34,7 @@ artifacts = {
     "com.google.ortools:ortools-linux-x86-64-java": "8.0.8283",
     "com.google.ortools:ortools-win32-x86-64": "8.0.8283",
     "com.google.ortools:ortools-win32-x86-64-java": "8.0.8283",
-    "com.google.protobuf:protobuf-java": "3.5.1",
+    "com.google.protobuf:protobuf-java": "3.14.0",
     "com.jcraft:jsch": "0.1.55",
     "com.microsoft.azure:azure": "1.33.1",
     "com.microsoft.azure:azure-client-authentication": "1.7.4",
