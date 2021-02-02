@@ -22,4 +22,4 @@ build:
     build:
       image: graknlabs-ubuntu-20.04
       command: |
-        bazel build --config=rbe //... --deleted_packages=library/rocksdbjni
+        bazel build //... --deleted_packages=library/rocksdbjni
