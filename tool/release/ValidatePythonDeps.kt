@@ -28,7 +28,7 @@ fun main(args: Array<String>) {
         items[0] to items[1]
     }
 
-    val versionRegex = Pattern.compile("^(\\d+!)?(\\d+)(\\.\\d+)+([\\.\\-\\_])?((a(lpha)?|b(eta)?|c|r(c|ev)?|pre(view)?)\\d*)?(\\.?(post|dev)\\d*)?\$")
+    val versionRegex = Pattern.compile("^(\\d+!)?(\\d+)(\\.\\d+)+(a((\\d+)+)?)?\$")
     val pypiAddress = "https://pypi.org/pypi/%s/json"
 
     args.forEach {
