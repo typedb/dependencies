@@ -67,11 +67,11 @@ if __name__ == '__main__':
             if pull.merged:
                 print("PR {0} will be compiled into the release notes.".format(pull.number))
                 labels = [label.name for label in pull.labels]
-                if "feature" in labels:
+                if "type: feature" in labels:
                     pull_features.append(pull)
-                elif "bug" in labels:
+                elif "type: bug" in labels:
                     pull_bugs.append(pull)
-                elif "refactor" in labels:
+                elif "type: refactor" in labels:
                     pull_refactors.append(pull)
                 else:
                     pull_others.append(pull)
