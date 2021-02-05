@@ -2,39 +2,6 @@
 
 set -e
 
-# TODO: Remove once CircleCI fixes the issue with apt
-function apt_wait() {
-    echo -n 'Waiting for the initial apt-get process to finish...'
-    init_wait=0
-    while [[ $init_wait -eq 0 ]]; do
-        set +e
-        ps -C apt-get > /dev/null
-        init_wait=$?
-        set -e
-        echo -n '.'
-        sleep 1
-    done
-    echo 'done.'
-}
-
-function install_dependencies() {
-    echo "Installing rpmbuild..."
-    if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        apt_wait
-        if ! command -v rpmbuild &> /dev/null
-        then
-            sudo apt-get update
-            sudo apt-get install rpm
-        fi
-    elif [[ "$OSTYPE" == "darwin"* ]]; then
-        brew install rpm
-    else
-        echo "Your platform does not have rpmbuild executable for it. Make sure you are using Linux/macOS".
-        exit 1
-    fi
-}
-
-(cd /opt/circleci/.pyenv/plugins/python-build/../.. && git pull) || true
 if [[ -n "$BAZEL_BUILDBUDDY_CERT" && -n "$BAZEL_BUILDBUDDY_KEY" ]]; then
     echo "Installing BuildBuddy credential..."
     BAZEL_BUILDBUDDY_CREDENTIAL=/opt/credentials/
@@ -49,7 +16,6 @@ if [[ -n "$BAZEL_BUILDBUDDY_CERT" && -n "$BAZEL_BUILDBUDDY_KEY" ]]; then
     pyenv global 3.6.10 system
 else
     echo "No RBE credential found. Bazel will be executed locally without RBE support."
-    install_dependencies
     echo "Configuring Python..."
     # uses system version of python, according to the image that is set
     pyenv global system system
