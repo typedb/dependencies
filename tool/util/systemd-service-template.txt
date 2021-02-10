@@ -1,0 +1,12 @@
+[Unit]
+Description=DESCRIPTION_PLACEHOLDER
+
+[Service]
+Type=simple
+ExecStart=EXEC_START_PLACEHOLDER
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
