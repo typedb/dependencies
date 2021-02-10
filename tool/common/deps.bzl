@@ -1,7 +1,7 @@
-load("@rules_python//python:pip.bzl", "pip3_import")
+load("@rules_python//python:pip.bzl", "pip_install")
 
 def graknlabs_dependencies_ci_pip():
-    pip3_import(
+    pip_install(
         name = "graknlabs_dependencies_ci_pip",
         requirements = "@graknlabs_dependencies//tool:requirements.txt",
     )
