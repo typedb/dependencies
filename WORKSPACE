@@ -49,8 +49,6 @@ google_or_tools_windows()
 # Load //tool/common
 load("//tool/common:deps.bzl", "graknlabs_dependencies_ci_pip", graknlabs_dependencies_tool_maven_artifacts = "maven_artifacts")
 graknlabs_dependencies_ci_pip()
-load("@graknlabs_dependencies_ci_pip//:requirements.bzl",graknlabs_dependencies_ci_pip_install = "pip_install")
-graknlabs_dependencies_ci_pip_install()
 
 # Load //tool/checkstyle
 load("//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
