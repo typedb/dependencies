@@ -48,5 +48,6 @@ sh_binary(
 sh_binary(
     name = "create-systemd-service",
     srcs = [":create-systemd-service.sh"],
-    data = [":systemd-service-template.txt"]
+    data = [":systemd-service-template.txt"],
+    args = ["$(location systemd-service-template.txt)"],
 )
