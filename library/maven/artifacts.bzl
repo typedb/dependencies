@@ -219,6 +219,7 @@ artifacts = {
     "org.openjdk.jmh:jmh-generator-annprocess": "1.23",
     "org.rocksdb:rocksdbjni": "6.15.2",
     "org.rocksdb:rocksdbjni-dev": "6.15.2",
+    "org.rocksdb:rocksdbjni-dev-linux": "6.15.2",
     "org.scala-lang:scala-library": "2.12.10",
     "org.sharegov:mjson": "1.4.1",
     "org.slf4j:jcl-over-slf4j": "1.7.20",
