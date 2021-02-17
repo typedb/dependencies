@@ -25,3 +25,15 @@ def native_artifact_files(name, artifact_name, **kwargs):
             artifact_name = artifact_name.replace("{platform}", platform).replace("{ext}", ext),
             **kwargs,
         )
+
+
+def artifact_repackage(name, srcs, files_to_keep):
+    native.genrule(
+        name = name,
+        outs = ["{}.tar.gz".format(name)],
+        srcs = srcs,
+        cmd = "$(location @graknlabs_dependencies//distribution/artifact:artifact-repackage) $< $@ {}".format(
+            "|".join(files_to_keep)
+        ),
+        tools = ["@graknlabs_dependencies//distribution/artifact:artifact-repackage"]
+    )

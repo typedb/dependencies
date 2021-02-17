@@ -22,3 +22,9 @@ sh_binary(
     srcs = ["create-netrc.sh"],
     visibility = ["//visibility:public"],
 )
+
+sh_binary(
+    name = "artifact-repackage",
+    srcs = ["artifact-repackage.sh"],
+    visibility = ["//visibility:public"],
+)
