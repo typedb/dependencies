@@ -20,6 +20,13 @@
 build:
   correctness:
     build:
+      machine: 16-core-32-gb
       image: graknlabs-ubuntu-20.04
       command: |
+        wget https://download.java.net/openjdk/jdk8u41/ri/openjdk-8u41-b04-linux-x64-14_jan_2020.tar.gz
+        tar -xf openjdk-8u41-b04-linux-x64-14_jan_2020.tar.gz
+        sudo mv java-se-8u41-ri/ /opt/
+        export JAVA_HOME=/opt/java-se-8u41-ri
+        # git checkout v6.15.2
+        sleep 7200
         bazel build //... --deleted_packages=library/rocksdbjni

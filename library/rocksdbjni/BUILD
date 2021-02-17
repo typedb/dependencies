@@ -17,46 +17,102 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary", "kt_jvm_library")
 load("@graknlabs_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
 load("@graknlabs_dependencies//distribution:deployment.bzl", "deployment")
 
+kt_jvm_library(
+    name = "common",
+    srcs = ["Common.kt"],
+    deps = ["@maven//:org_zeroturnaround_zt_exec" ]
+)
+
 kt_jvm_binary(
-    name = "build-script",
-    main_class = "library.rocksdbjni.RocksDbBuilderKt",
-    srcs = ["RocksDbBuilder.kt"],
+    name = "builder-mac",
+    main_class = "library.rocksdbjni.mac.BuilderMacKt",
+    srcs = ["BuilderMac.kt"],
     deps = [
+        ":common",
         "@maven//:org_zeroturnaround_zt_exec"
     ],
 )
 
 genrule(
-    name = "builder",
+    name = "compile-mac",
     outs = [
         "rocksdbjni-osx.jar",
         "rocksdbjni-sources.jar",
     ],
     srcs = ["VERSION"],
-    cmd = "$(execpath :build-script) && read -a outs <<< '$(OUTS)' && mv rocksdbjni-osx.jar $${outs[0]} && mv rocksdbjni-sources.jar $${outs[1]}",
-    tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":build-script"],
+    cmd = "$(execpath :builder-mac) && read -a outs <<< '$(OUTS)' && mv rocksdbjni-osx.jar $${outs[0]} && mv rocksdbjni-sources.jar $${outs[1]}",
+    tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":builder-mac"],
+    tags = ["manual"]
 )
 
 java_import(
-    name = "java-lib",
+    name = "rocksdbjni-dev-mac",
     jars = ["rocksdbjni-osx.jar"],
     srcjar = "rocksdbjni-sources.jar",
-    tags = ["no-ide", "maven_coordinates=org.rocksdb:rocksdbjni-dev:{pom_version}"],
+    tags = ["manual", "no-ide", "maven_coordinates=org.rocksdb:rocksdbjni-dev-mac:{pom_version}"],
 )
 
 assemble_maven(
-    name = "assemble-maven",
-    target = ":java-lib",
+    name = "assemble-maven-mac",
+    target = ":rocksdbjni-dev-mac",
     version_file = "VERSION",
+    tags = ["manual"]
 )
 
 deploy_maven(
-    name = "deploy-maven",
-    target = ":assemble-maven",
+    name = "deploy-maven-mac",
+    target = ":assemble-maven-mac",
     snapshot = deployment["maven.snapshot"],
     release = deployment["maven.release"],
+    tags = ["manual"]
 )
+
+kt_jvm_binary(
+    name = "builder-linux",
+    main_class = "library.rocksdbjni.linux.BuilderLinuxKt",
+    srcs = ["BuilderLinux.kt"],
+    deps = [
+        ":common",
+        "@maven//:org_zeroturnaround_zt_exec"
+    ],
+)
+
+genrule(
+    name = "compile-linux",
+    outs = [
+        "rocksdbjni-linux.jar",
+#        "rocksdbjni-sources.jar", // TODO: enable once we found a way to generate source jar under Linux
+    ],
+    srcs = ["VERSION"],
+    cmd = "$(execpath :builder-linux) && read -a outs <<< '$(OUTS)' && mv rocksdbjni-linux.jar $${outs[0]}",
+    tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":builder-linux"],
+    tags = ["manual"]
+)
+
+java_import(
+    name = "rocksdbjni-dev-linux",
+    jars = [
+        "rocksdbjni-linux.jar"
+#        "rocksdbjni-sources.jar", // TODO: enable once we found a way to generate source jar under Linux
+    ],
+    tags = ["manual", "no-ide", "maven_coordinates=org.rocksdb:rocksdbjni-dev-linux:{pom_version}"],
+)
+
+assemble_maven(
+    name = "assemble-maven-linux",
+    target = ":rocksdbjni-dev-linux",
+    version_file = "VERSION",
+    tags = ["manual"]
+)
+
+#deploy_maven(
+#    name = "deploy-maven-linux",
+#    target = ":assemble-maven-linux",
+#    snapshot = deployment["maven.snapshot"],
+#    release = deployment["maven.release"],
+#    tags = ["manual"]
+#)
