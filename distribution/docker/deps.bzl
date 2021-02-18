@@ -6,4 +6,8 @@ def deps():
         sha256 = "1698624e878b0607052ae6131aa216d45ebb63871ec497f26c67455b34119c80",
         strip_prefix = "rules_docker-0.15.0",
         urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.15.0/rules_docker-v0.15.0.tar.gz"],
+        patches = [
+            "@graknlabs_dependencies//distribution/docker:bazelbuild-rules-docker-fix-tarfile-format.patch",
+        ],
+        patch_args = ["-p1"],
     )
