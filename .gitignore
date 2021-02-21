@@ -5,3 +5,4 @@ bazel-bin
 bazel-out
 bazel-dependencies
 bazel-testlogs
+tool/bazelcache/.terraform/*
