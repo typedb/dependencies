@@ -15,6 +15,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+exports_files(["wait-for-host.sh"])
+
 sh_binary(
     name = "restart-repo-container",
     srcs = ["restart-repo-container.sh"],
