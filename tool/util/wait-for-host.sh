@@ -16,4 +16,4 @@ until ping -q -c 1 "${1}" -w 2; do
     sleep 3;
 done
 
-echo "Waiting for host: ${1} is available after $(($attempt_counter+1)) attemps.";
+echo "Waiting for host: ${1} is available after $(($attempt_counter+1)) attempts.";
