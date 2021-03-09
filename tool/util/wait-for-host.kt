@@ -8,18 +8,18 @@ fun main(args: Array<String>) {
     for (i in 1..6) {
         var attempt = 0;
         val host = args[0]
-        var hostIsUnavailable = true
-        while (hostIsUnavailable && attempt++ < 100) {
+        var hostIsAvailable = false
+        while (!hostIsAvailable && attempt++ < 100) {
             println("Waiting for host $host: (attempt $i/$attempt).")
             try {
                 InetAddress.getAllByName(host)
                 println("Host $host available after $i/$attempt attempts).")
-                hostIsUnavailable = false
+                hostIsAvailable = true
             } catch (e: UnknownHostException) {
                 Thread.sleep(2000L);
             }
         }
-        if (hostIsUnavailable) {
+        if (!hostIsAvailable) {
             println("ERROR: $attempt attempts reached, but host is still unreachable")
             exitProcess(1)
         }
