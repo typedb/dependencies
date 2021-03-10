@@ -24,11 +24,12 @@ fun ensureHostIsAvailable(host: String) {
 }
 
 fun main(hosts: Array<String>) {
-    val totalAttempts = 6
+    val totalAttempts = 15
     for (host in hosts) {
         for (attempt in 1..totalAttempts) {
             println("Verifying whether host $host is available: attempt $attempt of $totalAttempts")
             ensureHostIsAvailable(host)
+            Thread.sleep(2000L)
         }
     }
 }
