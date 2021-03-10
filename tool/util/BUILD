@@ -16,6 +16,7 @@
 #
 
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
+exports_files(["wait-for-host.sh"])
 
 sh_binary(
     name = "restart-repo-container",
