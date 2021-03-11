@@ -15,6 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
 exports_files(["wait-for-host.sh"])
 
 sh_binary(
@@ -52,4 +53,16 @@ sh_binary(
     srcs = [":create-systemd-service.sh"],
     data = [":systemd-service-template.txt"],
     args = ["$(location systemd-service-template.txt)"],
+)
+
+kt_jvm_library(
+    name = "wait-for-host-lib",
+    srcs = ["wait-for-host.kt"],
+)
+
+java_binary(
+    name = "wait-for-host",
+    runtime_deps = [":wait-for-host-lib"],
+    main_class = "tool.util.Wait_for_hostKt",
+    visibility = ["//visibility:public"],
 )
