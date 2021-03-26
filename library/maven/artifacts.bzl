@@ -121,7 +121,7 @@ artifacts = {
         ],
         "version": "3.11.3",
     },
-    "org.apache.commons:commons-csv": "1.7",
+    "org.apache.commons:commons-csv": "1.8",
     "org.apache.commons:commons-lang3": "3.9",
     "org.apache.commons:commons-math3": "3.6.1",
     "org.apache.hadoop:hadoop-annotations": "2.7.2",
