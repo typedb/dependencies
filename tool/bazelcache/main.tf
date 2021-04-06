@@ -29,7 +29,7 @@ resource "azurerm_linux_virtual_machine" "bazel_cache" {
     caching = "ReadWrite"
     storage_account_type = "Premium_LRS"
     name = "bazel-cache_OsDisk_1_c02f51bc56c24105a39b64c5cf7b0bbb"
-    disk_size_gb = 100
+    disk_size_gb = 200
   }
 
   source_image_reference {
