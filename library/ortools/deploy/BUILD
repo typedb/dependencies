@@ -10,7 +10,7 @@ genrule(
     cmd = "sed '{}; {}' $(SRCS) > $(OUTS)"
         .format(
             "s/{google_or_tools_version}/" + version + "/g",
-            "s/{repository}/" + deployment['maven.release'].replace('/', '\/') + "/g"
+            "s/{repository}/" + deployment['maven.release'].replace('/', '\\/') + "/g"
         )
 )
 
