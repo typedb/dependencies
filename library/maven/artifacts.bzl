@@ -80,6 +80,18 @@ artifacts = {
     "io.grpc:grpc-protobuf": "1.33.1",
     "io.grpc:grpc-stub": "1.33.1",
     "io.grpc:grpc-testing": "1.33.1",
+    "io.kubernetes:client-java": {
+        "exclude": ["com.github.stefanbirkner:system-rules"],
+        "version": "12.0.0"
+    },
+    "io.kubernetes:client-java-api": {
+        "exclude": ["com.github.stefanbirkner:system-rules"],
+        "version": "12.0.0"
+    },
+    "io.kubernetes:client-java-util": {
+        "exclude": ["com.github.stefanbirkner:system-rules"],
+        "version": "0.1"
+    },
     "io.netty:netty-all": "4.1.51.Final",
     "io.netty:netty-codec-http2": "4.1.51.Final",
     "io.netty:netty-handler": "4.1.51.Final",
