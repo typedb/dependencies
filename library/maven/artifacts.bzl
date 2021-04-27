@@ -80,6 +80,18 @@ artifacts = {
     "io.grpc:grpc-protobuf": "1.33.1",
     "io.grpc:grpc-stub": "1.33.1",
     "io.grpc:grpc-testing": "1.33.1",
+    "io.kubernetes:client-java": {
+        "exclude": ["com.github.stefanbirkner:system-rules"],
+        "version": "12.0.0"
+    },
+    "io.kubernetes:client-java-api": {
+        "exclude": ["com.github.stefanbirkner:system-rules"],
+        "version": "12.0.0"
+    },
+    "io.kubernetes:client-java-util": {
+        "exclude": ["com.github.stefanbirkner:system-rules"],
+        "version": "0.1"
+    },
     "io.netty:netty-all": "4.1.51.Final",
     "io.netty:netty-codec-http2": "4.1.51.Final",
     "io.netty:netty-handler": "4.1.51.Final",
@@ -95,18 +107,6 @@ artifacts = {
     "io.opencensus:opencensus-api": "0.24.0",
     "io.opencensus:opencensus-contrib-grpc-metrics": "0.24.0",
     "io.vavr:vavr": "0.9.0",
-    "io.kubernetes:client-java": {
-        "exclude": ["com.github.stefanbirkner:system-rules"],
-        "version": "12.0.0"
-    },
-    "io.kubernetes:client-java-api": {
-        "exclude": ["com.github.stefanbirkner:system-rules"],
-        "version": "12.0.0"
-    },
-    "io.kubernetes:client-java-util": {
-        "exclude": ["com.github.stefanbirkner:system-rules"],
-        "version": "0.1"
-    },
     "javax.annotation:javax.annotation-api": "1.3.2",
     "javax.inject:javax.inject": "1",
     "javax.servlet:javax.servlet-api": "3.1.0",
