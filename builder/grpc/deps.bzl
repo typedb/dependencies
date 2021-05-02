@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 Vaticle
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -20,7 +20,7 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 def deps():
     git_repository(
         name = "com_github_grpc_grpc",
-        remote = "https://github.com/graknlabs/grpc",
+        remote = "https://github.com/vaticle/grpc",
         commit = "4a1528f6f20a8aa68bdbdc9a66286ec2394fc170"
     )
     git_repository(
@@ -30,6 +30,6 @@ def deps():
     )
     git_repository(
         name = "stackb_rules_proto",
-        remote = "https://github.com/graknlabs/rules_proto",
+        remote = "https://github.com/vaticle/rules_proto",
         commit = "fd3aa227fdaa178c077ef9d72156b772d3b8c05d",
     )

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 Vaticle
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -16,6 +16,6 @@
 #
 
 
-# These files are manually uploaded to repo.grakn.ai/meta
-# They are Grakn Labs third party RPM repository definitions that users must add in order to install
-# Grakn distributions from RPM
+# These files are manually uploaded to repo.vaticle.com/meta
+# They are Vaticle third party RPM repository definitions that users must add in order to install
+# TypeDB distributions from RPM

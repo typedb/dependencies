@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 Vaticle
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -27,11 +27,11 @@ def _checkstyle_test_impl(ctx):
     config = ctx.actions.declare_file("checkstyle.xml")
 
     if ctx.attr.license_type == "apache":
-        license_file = "external/graknlabs_dependencies/tool/checkstyle/config/checkstyle-file-header-apache.txt"
+        license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-header-apache.txt"
     elif ctx.attr.license_type == "commercial":
-        license_file = "external/graknlabs_dependencies/tool/checkstyle/config/checkstyle-file-header-commercial.txt"
+        license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-header-commercial.txt"
     else:
-        license_file = "external/graknlabs_dependencies/tool/checkstyle/config/checkstyle-file-header-agpl.txt"
+        license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-header-agpl.txt"
 
     ctx.actions.expand_template(
         template = ctx.file._checkstyle_xml_template,
@@ -141,7 +141,7 @@ checkstyle_test = rule(
         "_license_files": attr.label_list(
             allow_files=True,
             doc = "License file(s) that can be used with the checkstyle license target",
-            default = ["@graknlabs_dependencies//tool/checkstyle/config:license_files"]
+            default = ["@vaticle_dependencies//tool/checkstyle/config:license_files"]
         ),
     },
     outputs = {

@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 Vaticle
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@graknlabs_bazel_distribution//artifact:rules.bzl", "artifact_file")
+load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_file")
 
 def native_artifact_files(name, artifact_name, **kwargs):
     for platform, ext in [("mac", "zip"), ("linux", "tar.gz"), ("windows", "zip")]:
@@ -32,8 +32,8 @@ def artifact_repackage(name, srcs, files_to_keep):
         name = name,
         outs = ["{}.tar.gz".format(name)],
         srcs = srcs,
-        cmd = "$(location @graknlabs_dependencies//distribution/artifact:artifact-repackage) $< $@ {}".format(
+        cmd = "$(location @vaticle_dependencies//distribution/artifact:artifact-repackage) $< $@ {}".format(
             "|".join(files_to_keep)
         ),
-        tools = ["@graknlabs_dependencies//distribution/artifact:artifact-repackage"]
+        tools = ["@vaticle_dependencies//distribution/artifact:artifact-repackage"]
     )

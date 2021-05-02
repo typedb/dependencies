@@ -13,9 +13,9 @@ if GITHUB_TOKEN is None:
 if len(sys.argv) < 3:
     raise Exception("Arguments: <repo-name> <milestone-name>")
 
-graknlabs = 'graknlabs'
+vaticle = 'vaticle'
 github_connection = github.Github(GITHUB_TOKEN)
-github_org = github_connection.get_organization(graknlabs)
+github_org = github_connection.get_organization(vaticle)
 
 release_notes_template_regex = r'{.*release notes.*}'
 

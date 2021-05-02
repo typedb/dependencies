@@ -8,7 +8,7 @@ provider "azurerm" {
 terraform {
   backend "azurerm" {
     resource_group_name = "grabl-common"
-    storage_account_name = "graknlabsgrabl"
+    storage_account_name = "graknlabsgrabl" // TODO: @vmax rename to 'vaticle-factory'
     container_name = "bazel-cache-state"
     key = "terraform.tfstate"
   }

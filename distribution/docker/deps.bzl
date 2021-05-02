@@ -7,7 +7,7 @@ def deps():
         strip_prefix = "rules_docker-0.17.0",
         urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.17.0/rules_docker-v0.17.0.tar.gz"],
         patches = [
-            "@graknlabs_dependencies//distribution/docker:bazelbuild-rules-docker-fix-tarfile-format.patch",
+            "@vaticle_dependencies//distribution/docker:bazelbuild-rules-docker-fix-tarfile-format.patch",
         ],
         patch_args = ["-p1"],
     )

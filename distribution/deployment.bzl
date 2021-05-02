@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 Vaticle
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -16,29 +16,29 @@
 #
 
 deployment = {
-    "apt.snapshot" : "https://repo.grakn.ai/repository/apt-snapshot/",
-    "apt.release":"https://repo.grakn.ai/repository/apt/",
+    "apt.snapshot" : "https://repo.vaticle.com/repository/apt-snapshot/",
+    "apt.release":"https://repo.vaticle.com/repository/apt/",
 
-    "brew.snapshot":"https://github.com/graknlabs/homebrew-tap-test/",
-    "brew.release":"https://github.com/graknlabs/homebrew-tap/",
+    "brew.snapshot":"https://github.com/vaticle/homebrew-tap-test/",
+    "brew.release":"https://github.com/vaticle/homebrew-tap/",
 
-    "maven.snapshot":"https://repo.grakn.ai/repository/maven-snapshot/",
-    "maven.release":"https://repo.grakn.ai/repository/maven/",
+    "maven.snapshot":"https://repo.vaticle.com/repository/maven-snapshot/",
+    "maven.release":"https://repo.vaticle.com/repository/maven/",
 
     "pypi.release":"https://upload.pypi.org/legacy/",
-    "pypi.snapshot":"https://repo.grakn.ai/repository/pypi-snapshot/",
+    "pypi.snapshot":"https://repo.vaticle.com/repository/pypi-snapshot/",
 
     "npm.release":"https://registry.npmjs.org/",
-    "npm.snapshot":"https://repo.grakn.ai/repository/npm-snapshot/",
+    "npm.snapshot":"https://repo.vaticle.com/repository/npm-snapshot/",
 
-    "rpm.snapshot":"https://repo.grakn.ai/repository/rpm-snapshot/",
-    "rpm.release":"https://repo.grakn.ai/repository/rpm/",
+    "rpm.snapshot":"https://repo.vaticle.com/repository/rpm-snapshot/",
+    "rpm.release":"https://repo.vaticle.com/repository/rpm/",
 
-    "artifact.snapshot" : "https://repo.grakn.ai/repository/artifact-snapshot",
-    "artifact.release" : "https://repo.grakn.ai/repository/artifact",
+    "artifact.snapshot" : "https://repo.vaticle.com/repository/artifact-snapshot",
+    "artifact.release" : "https://repo.vaticle.com/repository/artifact",
 }
 
 deployment_private = {
-    "artifact.snapshot" : "https://repo.grakn.ai/repository/private-artifact-snapshot",
-    "artifact.release" : "https://repo.grakn.ai/repository/private-artifact",
+    "artifact.snapshot" : "https://repo.vaticle.com/repository/private-artifact-snapshot",
+    "artifact.release" : "https://repo.vaticle.com/repository/private-artifact",
 }

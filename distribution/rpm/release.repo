@@ -1,5 +1,5 @@
-[repo-grakn-rpm]
-name=repo-grakn-rpm
-baseurl=http://repo.grakn.ai/repository/rpm/
+[repo-vaticle-rpm]
+name=repo-vaticle-rpm
+baseurl=http://repo.vaticle.com/repository/rpm/
 enabled=1
 gpgcheck=0

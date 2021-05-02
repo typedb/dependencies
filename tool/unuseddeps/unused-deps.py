@@ -75,7 +75,7 @@ if args.mode == 'list':
             print('{}:'.format(target))
             for dep in deps:
                 print('--> {}'.format(dep))
-        print('You can run "bazel run @graknlabs_dependencies//tool/unuseddeps:unused-deps -- remove" to fix it')
+        print('You can run "bazel run @vaticle_dependencies//tool/unuseddeps:unused-deps -- remove" to fix it')
         exit(1)
     else:
         print('\033[0;32mThere are no unused deps found.\033[0m')

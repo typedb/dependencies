@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 Vaticle
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -30,7 +30,7 @@ if not credential:
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--project-key', help='Sonarcloud project key', required=True)
-parser.add_argument('--organisation', help='Sonarcloud organisation', default='graknlabs')
+parser.add_argument('--organisation', help='Sonarcloud organisation', default='vaticle')
 parser.add_argument('--commit-id', help='git commit id', required=True)
 parser.add_argument('--branch', help='git branch name', required=True)
 args = parser.parse_args()

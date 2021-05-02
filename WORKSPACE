@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 Vaticle
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -15,10 +15,10 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-workspace(name = "graknlabs_dependencies")
+workspace(name = "vaticle_dependencies")
 
 ################################
-# Load @graknlabs_dependencies #
+# Load @vaticle_dependencies #
 ################################
 
 # Load //builder/python
@@ -47,8 +47,8 @@ google_or_tools_linux()
 google_or_tools_windows()
 
 # Load //tool/common
-load("//tool/common:deps.bzl", "graknlabs_dependencies_ci_pip", graknlabs_dependencies_tool_maven_artifacts = "maven_artifacts")
-graknlabs_dependencies_ci_pip()
+load("//tool/common:deps.bzl", "vaticle_dependencies_ci_pip", vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
+vaticle_dependencies_ci_pip()
 
 # Load //tool/checkstyle
 load("//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
@@ -62,15 +62,15 @@ unuseddeps_deps()
 load("//tool/sonarcloud:deps.bzl", "sonarcloud_dependencies")
 sonarcloud_dependencies()
 
-# Load @graknlabs_bazel_distribution
-load("//distribution:deps.bzl", "graknlabs_bazel_distribution")
-graknlabs_bazel_distribution()
+# Load @vaticle_bazel_distribution
+load("//distribution:deps.bzl", "vaticle_bazel_distribution")
+vaticle_bazel_distribution()
 
-# Load //@graknlabs_bazel_distribution//common
-load("@graknlabs_bazel_distribution//common:deps.bzl", "rules_pkg")
+# Load //@vaticle_bazel_distribution//common
+load("@vaticle_bazel_distribution//common:deps.bzl", "rules_pkg")
 rules_pkg()
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
 # Load Maven artifacts
-maven(graknlabs_dependencies_tool_maven_artifacts)
+maven(vaticle_dependencies_tool_maven_artifacts)

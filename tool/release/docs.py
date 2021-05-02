@@ -16,7 +16,7 @@ git_username = os.environ['RELEASE_DOCS_USERNAME']
 git_email = os.environ['RELEASE_DOCS_EMAIL']
 git_token = git_username + ":" + os.environ['RELEASE_DOCS_TOKEN']
 
-git_org = "graknlabs"
+git_org = "vaticle"
 
 git_repo = "web-docs"
 git_branch = sys.argv[1]

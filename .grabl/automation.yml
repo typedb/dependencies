@@ -20,6 +20,6 @@
 build:
   correctness:
     build:
-      image: graknlabs-ubuntu-20.04
+      image: vaticle-ubuntu-20.04
       command: |
         bazel build //... --deleted_packages=library/rocksdbjni

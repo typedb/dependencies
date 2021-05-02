@@ -7,7 +7,7 @@ def maven(artifacts_org, artifacts_repo={}):
         _warn("There are {} artifacts_repo found. Overriding artifacts_org with `artifacts_repo` is discouraged!".format(len(artifacts_repo)))
     for a in artifacts_org:
         if a not in maven_artifacts_org.keys():
-            fail("'" + a + "' has not been declared in @graknlabs_dependencies")
+            fail("'" + a + "' has not been declared in @vaticle_dependencies")
     artifacts_selected = []
     for a in artifacts_org:
         artifact = maven_artifact(a, artifacts_repo.get(a, maven_artifacts_org[a]))
@@ -16,8 +16,8 @@ def maven(artifacts_org, artifacts_repo={}):
         artifacts = artifacts_selected,
         repositories = [
             "https://repo1.maven.org/maven2",
-            "https://repo.grakn.ai/repository/maven",
-            "https://repo.grakn.ai/repository/maven-snapshot",
+            "https://repo.vaticle.com/repository/maven",
+            "https://repo.vaticle.com/repository/maven-snapshot",
         ],
         strict_visibility = True,
         version_conflict_policy = "pinned",

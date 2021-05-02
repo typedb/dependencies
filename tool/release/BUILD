@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 Vaticle
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -17,7 +17,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@graknlabs_dependencies_ci_pip//:requirements.bzl", "requirement")
+load("@vaticle_dependencies_ci_pip//:requirements.bzl", "requirement")
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
 
 
@@ -27,13 +27,6 @@ py_binary(
     name = "docs",
     srcs = ["docs.py"],
     main = "docs.py"
-)
-
-py_binary(
-    name = "approval",
-    srcs = ["approval.py"],
-    main = "approval.py",
-    deps = [ "//tool/common:common" ]
 )
 
 py_binary(

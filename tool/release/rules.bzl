@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs Ltd
+# Copyright (C) 2021 Vaticle
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -48,7 +48,7 @@ _release_validate_deps_script_test = rule(
         ),
         "_release_validate_deps_template": attr.label(
             allow_single_file=True,
-            default = "@graknlabs_dependencies//tool/release:ValidateDeps.kt"
+            default = "@vaticle_dependencies//tool/release:ValidateDeps.kt"
         )
     },
     implementation = _release_validate_deps_script_impl,
@@ -86,7 +86,7 @@ def release_validate_nodejs_deps(
             name = name,
             main_class = "tool.release.ValidateNodeJsDepsKt",
             srcs = [
-                "@graknlabs_dependencies//tool/release:ValidateNodeJsDeps.kt"
+                "@vaticle_dependencies//tool/release:ValidateNodeJsDeps.kt"
             ],
             data = [
                 package_json,
@@ -109,7 +109,7 @@ def release_validate_python_deps(
             name = name,
             main_class = "tool.release.ValidatePythonDepsKt",
             srcs = [
-                "@graknlabs_dependencies//tool/release:ValidatePythonDeps.kt"
+                "@vaticle_dependencies//tool/release:ValidatePythonDeps.kt"
             ],
             data = [
                 requirements,

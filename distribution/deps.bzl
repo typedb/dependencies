@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2021 Grakn Labs
+# Copyright (C) 2021 Vaticle
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -17,9 +17,9 @@
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-def graknlabs_bazel_distribution():
+def vaticle_bazel_distribution():
     git_repository(
-        name = "graknlabs_bazel_distribution",
-        remote = "https://github.com/graknlabs/bazel-distribution",
-        commit = "bc6d555ca29ec75de9b9f16e1537bb8b2862c51a" # sync-marker: do not remove this comment, this is used for sync-dependencies by @graknlabs_bazel_distribution
+        name = "vaticle_bazel_distribution",
+        remote = "https://github.com/vaticle/bazel-distribution",
+        commit = "7eda72d1b9b0c835ed7d2df6a1eb3edb8a418a08" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_bazel_distribution
     )
