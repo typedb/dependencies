@@ -1,7 +1,7 @@
-# TypeDB Dependencies
+# Vaticle Dependencies
 
 [![Grabl](https://grabl.io/api/status/vaticle/dependencies/badge.svg)](https://grabl.io/vaticle/dependencies)
 
-Bazel dependency declarations for build tools reused across @vaticle repositories.
+Bazel dependencies and build tools for [@vaticle](https://github.com/vaticle) repositories.
 
-This a public repository, and you are free to take inspirations from it. However, **we will not be maintaining this codebase for public usage**, and we will definitely be making changes to it that are specific to @vaticle, and this may break your build system.
+> This is a publicly accessible repository, and you are free to take inspirations from it. However, **we are not maintaining this codebase for public usage** outside of [@vaticle](https://github.com/vaticle). We will definitely be making changes to it that are specific to [@vaticle](https://github.com/vaticle), and this may break your build system if you depend on this repository from outside of [@vaticle](https://github.com/vaticle).
