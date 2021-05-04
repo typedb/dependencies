@@ -1,4 +1,4 @@
-package tool.release
+package com.vaticle.dependencies.tool.release
 
 import com.eclipsesource.json.Json
 import com.eclipsesource.json.JsonObject

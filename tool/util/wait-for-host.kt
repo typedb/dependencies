@@ -1,4 +1,4 @@
-package tool.util
+package com.vaticle.dependencies.tool.util
 
 import java.net.InetAddress
 import java.net.UnknownHostException

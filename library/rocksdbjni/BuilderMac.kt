@@ -1,6 +1,5 @@
-package library.rocksdbjni.mac
+package com.vaticle.dependencies.library.rocksdbjni
 
-import library.rocksdbjni.bash
 import java.nio.file.Paths
 
 fun main() {

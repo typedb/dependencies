@@ -29,7 +29,7 @@ kt_jvm_library(
 
 kt_jvm_binary(
     name = "builder-mac",
-    main_class = "library.rocksdbjni.mac.BuilderMacKt",
+    main_class = "com.vaticle.dependencies.library.rocksdbjni.BuilderMacKt",
     srcs = ["BuilderMac.kt"],
     deps = [
         ":common",
@@ -73,7 +73,7 @@ deploy_maven(
 
 kt_jvm_binary(
     name = "builder-linux",
-    main_class = "library.rocksdbjni.linux.BuilderLinuxKt",
+    main_class = "com.vaticle.dependencies.library.rocksdbjni.BuilderLinuxKt",
     srcs = ["BuilderLinux.kt"],
     deps = [
         ":common",

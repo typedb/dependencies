@@ -63,6 +63,6 @@ kt_jvm_library(
 java_binary(
     name = "wait-for-host",
     runtime_deps = [":wait-for-host-lib"],
-    main_class = "tool.util.Wait_for_hostKt",
+    main_class = "com.vaticle.dependencies.tool.util.Wait_for_hostKt",
     visibility = ["//visibility:public"],
 )

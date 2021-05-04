@@ -1,4 +1,4 @@
-package library.rocksdbjni
+package com.vaticle.dependencies.library.rocksdbjni
 
 import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult

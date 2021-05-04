@@ -1,4 +1,4 @@
-package grabl.analysis
+package com.vaticle.dependencies.factory.analysis
 
 import com.eclipsesource.json.Json
 import com.eclipsesource.json.JsonObject
@@ -33,8 +33,8 @@ fun main() {
 
     val workspaceDirectory = System.getenv("BUILD_WORKSPACE_DIRECTORY")
             ?: throw RuntimeException("Not running from within Bazel workspace")
-    val grablUrl = System.getenv("GRABL_URL") ?: throw RuntimeException("GRABL_URL environment variable is not set")
-    val grablEndpoint = "/api/analysis/dependency-analysis"
+    val factoryURL = System.getenv("GRABL_URL") ?: throw RuntimeException("GRABL_URL environment variable is not set")
+    val factoryEndpoint = "/api/analysis/dependency-analysis"
     val workflow = System.getenv("GRABL_WORKFLOW")
             ?: throw RuntimeException("GRABL_WORKFLOW environment variable is not set")
     val dependencies = Paths.get(workspaceDirectory, "dependencies", "vaticle", "repositories.bzl")
@@ -63,5 +63,5 @@ fun main() {
 
     val dependencyAnalysis = Json.`object`().add("workflow", workflow).add("commit-dependency", repositoriesArray)
     val payload = Json.`object`().add("dependency-analysis", dependencyAnalysis)
-    httpPost(grablUrl + grablEndpoint, payload)
+    httpPost(factoryURL + factoryEndpoint, payload)
 }

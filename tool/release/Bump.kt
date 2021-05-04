@@ -1,4 +1,4 @@
-package tool.release
+package com.vaticle.dependencies.tool.release
 
 import com.google.api.client.http.ByteArrayContent
 import com.google.api.client.http.GenericUrl

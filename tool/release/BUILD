@@ -46,7 +46,7 @@ py_binary(
 kt_jvm_binary(
     name = "bump",
     srcs = ["Bump.kt"],
-    main_class = "tool.release.BumpKt",
+    main_class = "com.vaticle.dependencies.tool.release.BumpKt",
     deps = [
         "@maven//:com_eclipsesource_minimal_json_minimal_json",
         "@maven//:com_google_http_client_google_http_client",

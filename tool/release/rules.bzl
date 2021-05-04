@@ -69,7 +69,7 @@ def release_validate_deps(name, **kwargs):
     # assign this rule instance as the name that is passed in, so it is called with `bazel run `
     kt_jvm_test(
         name = name,
-        main_class = "tool.release." + standard_name + "_genKt",
+        main_class = "com.vaticle.dependencies.tool.release." + standard_name + "_genKt",
         srcs = [target_name],
         deps = [
             "@maven//:com_eclipsesource_minimal_json_minimal_json"
@@ -84,7 +84,7 @@ def release_validate_nodejs_deps(
     ):
         kt_jvm_test(
             name = name,
-            main_class = "tool.release.ValidateNodeJsDepsKt",
+            main_class = "com.vaticle.dependencies.tool.release.ValidateNodeJsDepsKt",
             srcs = [
                 "@vaticle_dependencies//tool/release:ValidateNodeJsDeps.kt"
             ],
@@ -107,7 +107,7 @@ def release_validate_python_deps(
     ):
         kt_jvm_test(
             name = name,
-            main_class = "tool.release.ValidatePythonDepsKt",
+            main_class = "com.vaticle.dependencies.tool.release.ValidatePythonDepsKt",
             srcs = [
                 "@vaticle_dependencies//tool/release:ValidatePythonDeps.kt"
             ],
