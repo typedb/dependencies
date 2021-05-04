@@ -4,8 +4,8 @@ import tempfile
 
 
 def shell_execute(args, **kwargs):
-    with tempfile.NamedTemporaryFile(delete = True) as tmpstdout, \
-            tempfile.NamedTemporaryFile(delete = True) as tmpstderr:
+    with tempfile.NamedTemporaryFile(delete=True) as tmpstdout, \
+            tempfile.NamedTemporaryFile(delete=True) as tmpstderr:
 
         process = sp.Popen(args, stdout=tmpstdout, stderr=tmpstderr, **kwargs)
         process.wait()
@@ -24,7 +24,7 @@ def shell_execute(args, **kwargs):
             return out, err
         else:
             raise RuntimeError('An error occurred.\n' +
-                               '- Command = "'+ str(args) + '"\n' +
+                               '- Command = "' + str(args) + '"\n' +
                                '- Exit code = "' + str(process.returncode) + '"\n' +
                                '- Working directory = "' + str(os.getcwd()) + '"\n' +
                                '- stdout = "' + out + '"\n' +
