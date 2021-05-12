@@ -3,11 +3,7 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file"
 def deps():
     http_archive(
         name = "io_bazel_rules_docker",
-        sha256 = "59d5b42ac315e7eadffa944e86e90c2990110a1c8075f1cd145f487e999d22b3",
-        strip_prefix = "rules_docker-0.17.0",
-        urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.17.0/rules_docker-v0.17.0.tar.gz"],
-        patches = [
-            "@vaticle_dependencies//distribution/docker:bazelbuild-rules-docker-fix-tarfile-format.patch",
-        ],
-        patch_args = ["-p1"],
+        sha256 = "8987c47e480a6ec7628a99159dc5da8d4a9b5367b31ac3aaecbee954ee37f75c",
+        strip_prefix = "rules_docker-9d5735a1da710a645b2863f9ebba58bba51ad09c",
+        urls = ["https://github.com/vaticle/rules_docker/archive/9d5735a1da710a645b2863f9ebba58bba51ad09c.tar.gz"],
     )
