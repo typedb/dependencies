@@ -18,7 +18,7 @@ class GrammarAdapter : Callable<Unit> {
     @Option(names = ["--out"], required = true)
     lateinit var outputFile: File
 
-    @Option(names = ["--keyword"], required = true)
+    @Option(names = ["--adapt-keyword"], required = true)
     lateinit var keywords: Array<String>
 
     var patterns = ArrayList<Regex>()
