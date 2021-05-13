@@ -9,8 +9,8 @@ import java.util.concurrent.Callable
 import kotlin.system.exitProcess
 
 
-@Command(name = "grammar-modifier", mixinStandardHelpOptions = true)
-class GrammarModifier : Callable<Unit> {
+@Command(name = "grammar-adapter", mixinStandardHelpOptions = true)
+class GrammarAdapter : Callable<Unit> {
 
     @Option(names = ["--in"], required = true)
     lateinit var inputFile: File
@@ -50,4 +50,4 @@ class GrammarModifier : Callable<Unit> {
     }
 }
 
-fun main(args: Array<String>): Unit = exitProcess(CommandLine(GrammarModifier()).execute(*args))
+fun main(args: Array<String>): Unit = exitProcess(CommandLine(GrammarAdapter()).execute(*args))

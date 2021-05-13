@@ -1,4 +1,4 @@
-def python_grammar_modifier(
+def python_grammar_adapter(
         name,
         input,
         output):
@@ -6,6 +6,6 @@ def python_grammar_modifier(
         name = name,
         srcs = [input],
         outs = [output],
-        cmd_bash = "$(location @vaticle_dependencies//builder/antlr:grammar-modifier) --in $< --out $@ --keyword type --keyword filter",
-        tools = ["@vaticle_dependencies//builder/antlr:grammar-modifier"],
+        cmd_bash = "$(location @vaticle_dependencies//builder/antlr:grammar-adapter) --in $< --out $@ --keyword type --keyword filter",
+        tools = ["@vaticle_dependencies//builder/antlr:grammar-adapter"],
     )
