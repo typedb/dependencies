@@ -16,18 +16,19 @@ git_username = os.environ['RELEASE_DOCS_USERNAME']
 git_email = os.environ['RELEASE_DOCS_EMAIL']
 git_token = git_username + ":" + os.environ['RELEASE_DOCS_TOKEN']
 
-git_org = "vaticle"
+git_org = sys.argv[1]
 
-git_repo = "web-docs"
-git_branch = sys.argv[1]
+git_repo = sys.argv[2]
+git_branch = sys.argv[3]
 
-git_submod_repo = "docs"
-git_submod_commit = sys.argv[2]
+git_submod_repo = sys.argv[4]
+git_submod_dir = sys.argv[5]
+git_submod_commit = sys.argv[6]
 
 git_remote = "github.com/{0}/{1}.git".format(git_org, git_repo)
 
-git_clone_dir = os.path.join("web-docs")
-git_clone_submod_dir = os.path.join(git_clone_dir, "docs")
+git_clone_dir = os.path.join(git_repo)
+git_clone_submod_dir = os.path.join(git_clone_dir, git_submod_dir)
 
 
 def short_commit(commit_sha):
@@ -37,7 +38,7 @@ def short_commit(commit_sha):
 if __name__ == '__main__':
     try:
         print('Starting the process of deploying {0} to {1}:{2}'.format(git_submod_repo, git_repo, git_branch))
-        # --recursive clones web-docs as well as the docs submodule
+        # --recursive clones repository as well as the submodule
         print('Cloning {0} to {1}'.format(git_remote, git_clone_dir))
 
         sp.check_call(['rm', '-rf', git_clone_dir])
