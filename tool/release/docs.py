@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
         print('Updating submodule {0} HEAD to {1}'.format(git_submod_repo, git_clone_submod_dir))
         sp.check_call(["git", "checkout", git_submod_commit], cwd=git_clone_submod_dir)
-        sp.check_call(["git", "add", git_submod_repo], cwd=git_clone_dir)
+        sp.check_call(["git", "add", git_submod_dir], cwd=git_clone_dir)
 
         # the command returns 1 if there is a staged file. otherwise, it will return 0
         should_commit = sp.call(["git", "diff", "--staged", "--exit-code"], cwd=git_clone_dir) == 1
