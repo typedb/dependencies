@@ -6,3 +6,5 @@ def deps():
         remote = "https://github.com/marcohu/rules_antlr",
         tag = "0.5.0"
     )
+
+antlr_version = "4.7.2"
