@@ -16,29 +16,31 @@
 #
 
 deployment = {
-    "apt.snapshot" : "https://repo.vaticle.com/repository/apt-snapshot/",
-    "apt.release":"https://repo.vaticle.com/repository/apt/",
+    "apt.release": "https://repo.vaticle.com/repository/apt/",
+    "apt.snapshot": "https://repo.vaticle.com/repository/apt-snapshot/",
 
-    "brew.snapshot":"https://github.com/vaticle/homebrew-tap-test/",
-    "brew.release":"https://github.com/vaticle/homebrew-tap/",
+    "artifact.release": "https://repo.vaticle.com/repository/artifact",
+    "artifact.snapshot": "https://repo.vaticle.com/repository/artifact-snapshot",
 
-    "maven.snapshot":"https://repo.vaticle.com/repository/maven-snapshot/",
-    "maven.release":"https://repo.vaticle.com/repository/maven/",
+    "brew.release": "https://github.com/vaticle/homebrew-tap/",
+    "brew.snapshot": "https://github.com/vaticle/homebrew-tap-test/",
 
-    "pypi.release":"https://upload.pypi.org/legacy/",
-    "pypi.snapshot":"https://repo.vaticle.com/repository/pypi-snapshot/",
+    "maven.release": "https://repo.vaticle.com/repository/maven/",
+    "maven.snapshot": "https://repo.vaticle.com/repository/maven-snapshot/",
 
-    "npm.release":"https://registry.npmjs.org/",
-    "npm.snapshot":"https://repo.vaticle.com/repository/npm-snapshot/",
+    "npm.release": "https://registry.npmjs.org/",
+    "npm.snapshot": "https://repo.vaticle.com/repository/npm-snapshot/",
 
-    "rpm.snapshot":"https://repo.vaticle.com/repository/rpm-snapshot/",
-    "rpm.release":"https://repo.vaticle.com/repository/rpm/",
+    "pypi.release": "https://upload.pypi.org/legacy/",
+    "pypi.snapshot": "https://repo.vaticle.com/repository/pypi-snapshot/",
 
-    "artifact.snapshot" : "https://repo.vaticle.com/repository/artifact-snapshot",
-    "artifact.release" : "https://repo.vaticle.com/repository/artifact",
+    "rpm.release": "https://repo.vaticle.com/repository/rpm/",
+    "rpm.snapshot": "https://repo.vaticle.com/repository/rpm-snapshot/",
 }
 
 deployment_private = {
-    "artifact.snapshot" : "https://repo.vaticle.com/repository/private-artifact-snapshot",
-    "artifact.release" : "https://repo.vaticle.com/repository/private-artifact",
+    "artifact.release": "https://repo.vaticle.com/repository/private-artifact",
+    "artifact.snapshot": "https://repo.vaticle.com/repository/private-artifact-snapshot",
+
+    "npm.release": "https://repo.vaticle.com/repository/npm-private/",
 }
