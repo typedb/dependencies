@@ -71,7 +71,7 @@ artifacts = {
     "commons-io:commons-io": "2.3",
     "commons-lang:commons-lang": "2.6",
     "commons-logging:commons-logging": "1.2",
-    "info.picocli:picocli": "4.3.2",
+    "info.picocli:picocli": "4.6.1",
     "io.cucumber:cucumber-java": "5.1.3",
     "io.cucumber:cucumber-junit": "5.1.3",
     "io.grpc:grpc-api": "1.33.1",
