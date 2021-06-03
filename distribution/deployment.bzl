@@ -19,14 +19,14 @@ deployment = {
     "apt.release": "https://repo.vaticle.com/repository/apt/",
     "apt.snapshot": "https://repo.vaticle.com/repository/apt-snapshot/",
 
-    "artifact.release": "https://repo.vaticle.com/repository/artifact",
-    "artifact.snapshot": "https://repo.vaticle.com/repository/artifact-snapshot",
+    "artifact.release": "https://repo.vaticle.com/repository/artifact/",
+    "artifact.snapshot": "https://repo.vaticle.com/repository/artifact-snapshot/",
 
     "brew.release": "https://github.com/vaticle/homebrew-tap/",
     "brew.snapshot": "https://github.com/vaticle/homebrew-tap-test/",
 
-    "helm.release": "https://repo.vaticle.com/repository/helm",
-    "helm.snapshot": "https://repo.vaticle.com/repository/helm-snapshot",
+    "helm.release": "https://repo.vaticle.com/repository/helm/",
+    "helm.snapshot": "https://repo.vaticle.com/repository/helm-snapshot/",
 
     "maven.release": "https://repo.vaticle.com/repository/maven/",
     "maven.snapshot": "https://repo.vaticle.com/repository/maven-snapshot/",
@@ -42,8 +42,8 @@ deployment = {
 }
 
 deployment_private = {
-    "artifact.release": "https://repo.vaticle.com/repository/private-artifact",
-    "artifact.snapshot": "https://repo.vaticle.com/repository/private-artifact-snapshot",
+    "artifact.release": "https://repo.vaticle.com/repository/private-artifact/",
+    "artifact.snapshot": "https://repo.vaticle.com/repository/private-artifact-snapshot/",
 
     "npm.release": "https://repo.vaticle.com/repository/npm-private/",
 }
