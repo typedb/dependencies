@@ -136,7 +136,7 @@ checkstyle_test = rule(
             Label("@org_slf4j_slf4j_jcl//jar"),
             Label("@antlr_antlr//jar"),
             Label("@org_antlr_antlr4_runtime//jar"),
-            Label("@com_google_guava_guava23//jar"),
+#            Label("@com_google_guava_guava23//jar"),
         ]),
         "_license_files": attr.label_list(
             allow_files=True,
