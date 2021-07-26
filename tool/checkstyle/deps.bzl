@@ -27,7 +27,7 @@ def deps(
       "commons_beanutils_commons_beanutils": "1.9.3",
       "info_picocli_picocli": "3.8.2",
       "commons_collections_commons_collections": "3.2.2",
-      "com_google_guava_guava23": "23.0",
+      "com_google_guava_guava30jre": "30.1-jre",
       "org_slf4j_slf4j_api": "1.7.7",
       "org_slf4j_slf4j_jcl": "1.7.7",
     }
@@ -80,11 +80,11 @@ def deps(
         server_urls = ["https://repo1.maven.org/maven2/"],
         licenses = ["notice"],
     )
-  if not "com_google_guava_guava23" in omit:
+  if not "com_google_guava_guava30jre" in omit:
     jvm_maven_import_external(
-        name = "com_google_guava_guava23",
-        artifact = "com.google.guava:guava:" + versions["com_google_guava_guava23"],
-        artifact_sha256 = "7baa80df284117e5b945b19b98d367a85ea7b7801bd358ff657946c3bd1b6596",
+        name = "com_google_guava_guava30jre",
+        artifact = "com.google.guava:guava:" + versions["com_google_guava_guava30jre"],
+        artifact_sha256 = "e6dd072f9d3fe02a4600688380bd422bdac184caf6fe2418cfdd0934f09432aa",
         server_urls = ["https://repo1.maven.org/maven2/"],
         licenses = ["notice"],
     )
