@@ -27,7 +27,7 @@ def deps(
       "commons_beanutils_commons_beanutils": "1.9.3",
       "info_picocli_picocli": "3.8.2",
       "commons_collections_commons_collections": "3.2.2",
-      "com_google_guava_guava30jre": "30.1",
+      "com_google_guava_guava30jre": "30.1-jre",
       "org_slf4j_slf4j_api": "1.7.7",
       "org_slf4j_slf4j_jcl": "1.7.7",
     }
