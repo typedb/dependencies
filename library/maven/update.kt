@@ -17,7 +17,6 @@ fun main() {
     val snapshotNew = snapshotUpdateProc.inputStream
             .use { inStr -> inStr.reader().readLines() }
             .toSortedSet()
-    println(snapshotNew)
     write(snapshotFile, (snapshotNew.joinToString(lineSeparator()) + lineSeparator()).toByteArray())
     if (snapshotUpdateProc.exitValue() != 0) {
         throw RuntimeException("'$snapshotCommand' failed with exit code '${snapshotUpdateProc.exitValue()}'")
