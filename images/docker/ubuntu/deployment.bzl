@@ -15,24 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("//images/docker/ubuntu:deployment.bzl", deployment_docker = "deployment")
-
-sh_library(
-    name = "version-docker",
-    srcs = ["version-docker.sh"],
-)
-
-sh_binary(
-    name = "assemble-docker",
-    srcs = ["assemble-docker.sh"],
-    data = ["Dockerfile"],
-    deps = [":version-docker"],
-    args = ["$(location Dockerfile)", "$(location :version-docker)", deployment_docker["docker.organisation"], deployment_docker["docker.repository"]]
-)
-
-sh_binary(
-    name = "deploy-docker",
-    deps = [":version-docker"],
-    srcs = ["deploy-docker.sh"],
-    args = ["$(location :version-docker)", deployment_docker["docker.organisation"], deployment_docker["docker.repository"]]
-)
+deployment = {
+    "docker.organisation": "vaticle",
+    "docker.repository": "ubuntu",
+}

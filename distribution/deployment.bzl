@@ -25,9 +25,6 @@ deployment = {
     "brew.release": "https://github.com/vaticle/homebrew-tap/",
     "brew.snapshot": "https://github.com/vaticle/homebrew-tap-test/",
 
-    "docker.organisation": "vaticle",
-    "docker.repository": "ubuntu",
-
     "helm.release": "https://repo.vaticle.com/repository/helm/",
     "helm.snapshot": "https://repo.vaticle.com/repository/helm-snapshot/",
 
