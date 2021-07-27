@@ -19,6 +19,7 @@ sh_binary(
     name = "assemble-docker",
     srcs = ["assemble-docker.sh"],
     data = ["Dockerfile"],
+    args = ["$(location Dockerfile)"]
 )
 
 sh_binary(

@@ -17,4 +17,11 @@
 #
 
 set -ex
-docker build -f ./images/docker/ubuntu/Dockerfile -t vaticle/ubuntu:"$(git -C $BUILD_WORKSPACE_DIRECTORY rev-parse HEAD)" .
+
+DOCKERFILE=$1
+DOCKER_ORG=vaticle
+DOCKER_REPO=ubuntu
+DOCKER_VERSION="$(git -C $BUILD_WORKSPACE_DIRECTORY rev-parse HEAD)"
+DOCKER_BUILD_CONTEXT=.
+
+docker build -f $DOCKERFILE -t $DOCKER_ORG/$DOCKER_REPO:$DOCKER_VERSION $DOCKER_BUILD_CONTEXT

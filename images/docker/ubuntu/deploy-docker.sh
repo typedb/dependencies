@@ -17,4 +17,9 @@
 #
 
 set -ex
-docker push vaticle/ubuntu:"$(git -C $BUILD_WORKSPACE_DIRECTORY rev-parse HEAD)"
+
+DOCKER_ORG=vaticle
+DOCKER_REPO=ubuntu
+DOCKER_VERSION="$(git -C $BUILD_WORKSPACE_DIRECTORY rev-parse HEAD)"
+
+docker push $DOCKER_ORG/$DOCKER_REPO:$DOCKER_VERSION
