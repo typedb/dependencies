@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Copyright (C) 2021 Vaticle
 #
@@ -15,5 +16,5 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-FROM ubuntu:focal-20210723
-RUN apt-get -y update && apt-get install -y openjdk-11-jre-headless && rm -rf /var/lib/apt/lists
+set -ex
+docker push vaticle/ubuntu:"$(git -C $BUILD_WORKSPACE_DIRECTORY rev-parse HEAD)"

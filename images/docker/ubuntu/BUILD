@@ -15,5 +15,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-FROM ubuntu:focal-20210723
-RUN apt-get -y update && apt-get install -y openjdk-11-jre-headless && rm -rf /var/lib/apt/lists
+sh_binary(
+    name = "assemble-docker",
+    srcs = ["assemble-docker.sh"],
+    data = ["Dockerfile"],
+)
+
+sh_binary(
+    name = "deploy-docker",
+    srcs = ["deploy-docker.sh"],
+)
