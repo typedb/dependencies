@@ -170,7 +170,7 @@ private fun md5(source: Path): Path {
     hasher.update(Files.readAllBytes(source));
     val digest = hasher.digest()
     // the resulting hash must have 32 characters. it is padded by leading zeros when it's less than that
-    val md5Padded = String.format("%1$32s", toHex(digest).toLowerCase()).replace(" ", "0")
+    val md5Padded = String.format("%1$32s", toHex(digest).lowercase()).replace(" ", "0")
     Files.write(destination, md5Padded.toByteArray(UTF_8))
     return destination
 }
@@ -181,7 +181,7 @@ private fun sha1(source: Path): Path {
     hasher.update(Files.readAllBytes(source));
     val digest = hasher.digest()
     // the resulting hash must have 40 characters. it is padded by leading zeros when it's less than that
-    val sha1Padded = String.format("%1$40s", toHex(digest).toLowerCase()).replace(" ", "0")
+    val sha1Padded = String.format("%1$40s", toHex(digest).lowercase()).replace(" ", "0")
     Files.write(destination, sha1Padded.toByteArray(UTF_8))
     return destination
 }
