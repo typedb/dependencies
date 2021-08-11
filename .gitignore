@@ -6,3 +6,6 @@ bazel-out
 bazel-dependencies
 bazel-testlogs
 tool/bazelcache/.terraform/*
+tool/elk/.terraform/*
+tool/elk/*.tfvars
+tool/elk/.terraform.lock.hcl

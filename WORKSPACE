@@ -72,5 +72,8 @@ rules_pkg()
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
+load("@vaticle_bazel_distribution//packer:deps.bzl", deploy_packer_dependencies="deps")
+deploy_packer_dependencies()
+
 # Load Maven artifacts
 maven(vaticle_dependencies_tool_maven_artifacts)
