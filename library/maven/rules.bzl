@@ -2,7 +2,7 @@ load("@rules_jvm_external//:defs.bzl", rje_maven_install = "maven_install")
 load("@rules_jvm_external//:specs.bzl", rje_maven = "maven")
 load(":artifacts.bzl", maven_artifacts_org = "artifacts")
 
-def maven(artifacts_org, artifacts_repo={}):
+def maven(artifacts_org, artifacts_repo={}, fail_on_missing_checksum=True):
     if len(artifacts_repo) > 0:
         _warn("There are {} artifacts_repo found. Overriding artifacts_org with `artifacts_repo` is discouraged!".format(len(artifacts_repo)))
     for a in artifacts_org:
@@ -18,10 +18,13 @@ def maven(artifacts_org, artifacts_repo={}):
             "https://repo1.maven.org/maven2",
             "https://repo.vaticle.com/repository/maven",
             "https://repo.vaticle.com/repository/maven-snapshot",
+            "https://dl.google.com/dl/android/maven2",
+            "https://maven.pkg.jetbrains.space/public/p/compose/dev",
         ],
         strict_visibility = True,
         version_conflict_policy = "pinned",
-        fetch_sources = True
+        fetch_sources = True,
+        fail_on_missing_checksum = fail_on_missing_checksum
     )
 
 def maven_artifact(artifact, artifact_info):

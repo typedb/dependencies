@@ -9,40 +9,54 @@ def _expand_label(name):
 
 
 
-def native_java_libraries(name, deps = [], mac_deps = [], linux_deps = [], windows_deps = [], native_libraries_deps = [], **kwargs):
+def native_java_libraries(name, deps = [], mac_deps = [], linux_deps = [], windows_deps = [],
+                          runtime_deps = [], mac_runtime_deps = [], linux_runtime_deps = [], windows_runtime_deps = [],
+                          native_libraries_deps = [], **kwargs):
     all_mac_deps = []
+    all_linux_deps = []
+    all_windows_deps = []
+    
     for dep in deps + mac_deps:
         all_mac_deps.append(dep)
-    for dep in native_libraries_deps:
-        all_mac_deps.append(dep + "-mac")
+    for dep in deps + linux_deps:
+        all_linux_deps.append(dep)
+    for dep in deps + windows_deps:
+        all_windows_deps.append(dep)
+
+    for native_libraries_dep in native_libraries_deps:
+        all_mac_deps.append(native_libraries_dep + "-mac")
+        all_linux_deps.append(native_libraries_dep + "-linux")
+        all_windows_deps.append(native_libraries_dep + "-windows")
+    
+    all_mac_runtime_deps = []
+    all_linux_runtime_deps = []
+    all_windows_runtime_deps = []
+    
+    for runtime_dep in runtime_deps + mac_runtime_deps:
+        all_mac_runtime_deps.append(runtime_dep)
+    for runtime_dep in runtime_deps + linux_runtime_deps:
+        all_linux_runtime_deps.append(runtime_dep)
+    for runtime_dep in runtime_deps + windows_runtime_deps:
+        all_windows_runtime_deps.append(runtime_dep)
 
     native.java_library(
         name = name + "-mac",
         deps = all_mac_deps,
+        runtime_deps = all_mac_runtime_deps,
         **kwargs,
     )
-
-    all_linux_deps = []
-    for dep in deps + linux_deps:
-        all_linux_deps.append(dep)
-    for dep in native_libraries_deps:
-        all_linux_deps.append(dep + "-linux")
 
     native.java_library(
         name = name + "-linux",
         deps = all_linux_deps,
+        runtime_deps = all_linux_runtime_deps,
         **kwargs,
     )
-
-    all_windows_deps = []
-    for dep in deps + windows_deps:
-        all_windows_deps.append(dep)
-    for dep in native_libraries_deps:
-        all_windows_deps.append(dep + "-windows")
 
     native.java_library(
         name = name + "-windows",
         deps = all_windows_deps,
+        runtime_deps = all_windows_runtime_deps,
         **kwargs,
     )
 
