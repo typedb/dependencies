@@ -116,6 +116,7 @@ artifacts = {
     "org.jline:jline": "3.17.1",
     "org.jline:jline-terminal-jansi": "3.17.1",
     "junit:junit": "4.12",
+    "net.logstash.logback:logstash-logback-encoder": "6.5",
     "net.minidev:json-smart": "2.3",
     "org.antlr:antlr4-runtime": "4.7.1",
     "org.apache.cassandra:cassandra-all": {
@@ -222,6 +223,7 @@ artifacts = {
         "version": "3.4.1",
     },
     "org.bouncycastle:bcprov-jdk16": "1.46",
+    "org.codehaus.janino:janino": "3.1.6",
     "org.eclipse.jetty.websocket:websocket-api": "9.4.18.v20190429",
     "org.hamcrest:hamcrest": "2.2",
     "org.hamcrest:hamcrest-all": "1.3",
