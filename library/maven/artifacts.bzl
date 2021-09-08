@@ -137,6 +137,7 @@ artifacts = {
         ],
         "version": "3.11.3",
     },
+    "org.apache.commons:commons-compress": "1.21",
     "org.apache.commons:commons-csv": "1.8",
     "org.apache.commons:commons-lang3": "3.9",
     "org.apache.commons:commons-math3": "3.6.1",
