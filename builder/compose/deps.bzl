@@ -31,3 +31,9 @@ def deps():
         urls = ["https://download.java.net/java/GA/jdk17/0d483333a00540d886896bac774ff48b/35/GPL/openjdk-17_linux-x64_bin.tar.gz"],
         sha256 = "aef49cc7aa606de2044302e757fa94c8e144818e93487081c4fd319ca858134b",
     )
+
+    http_file(
+        name = "wix_toolset_311",
+        urls = ["https://github.com/wixtoolset/wix3/releases/download/wix311rtm/wix311-binaries.zip"],
+        sha256 = "da034c489bd1dd6d8e1623675bf5e899f32d74d6d8312f8dd125a084543193de",
+    )
