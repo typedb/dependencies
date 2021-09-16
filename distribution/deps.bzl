@@ -21,7 +21,7 @@ def vaticle_bazel_distribution():
     git_repository(
         name = "vaticle_bazel_distribution",
         remote = "https://github.com/alexjpwalker/bazel-distribution",
-        commit = "97f2d22b31df26467357e53fa93fc17fd0886b34" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_bazel_distribution
+        commit = "e6623bff080b635702d1e6e246f17ae4689f8b4b" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_bazel_distribution
     )
 #    native.local_repository(
 #        name = "vaticle_bazel_distribution",
