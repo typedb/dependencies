@@ -33,6 +33,13 @@ def deps():
     )
 
     http_file(
+        name = "vaticle_mac_developer_id_application_cert",
+        urls = ["https://repo.vaticle.com/repository/cert/mac/VaticleDeveloperIDApplicationCertificate.p12"],
+        sha256 = "4754e62a448f1c1dce7b377d5f1f26a5a28a6c43e6f31c05c7850ca4d0278f15",
+        downloaded_file_path = "VaticleDeveloperIDApplicationCertificate.p12",
+    )
+
+    http_file(
         name = "wix_toolset_311",
         urls = ["https://github.com/wixtoolset/wix3/releases/download/wix311rtm/wix311-binaries.zip"],
         sha256 = "da034c489bd1dd6d8e1623675bf5e899f32d74d6d8312f8dd125a084543193de",
