@@ -4,7 +4,7 @@ def deps():
     http_file(
         name = "org_jetbrains_compose_compiler",
         urls = ["https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/compose/compiler/compiler-hosted/1.0.0-beta1/compiler-hosted-1.0.0-beta1.jar"],
-        sha256 = "cdf70c76d9ae44cfa1c261a74f69379446dae72580da35a415fd1ac06ed14d4c",
+        sha256 = "6746f2290e7492498f63204cd0101299892196a8238ff76e1e421dfbec57e515",
         downloaded_file_path = "compiler-hosted-1.0.0-beta1.jar",
     )
 
