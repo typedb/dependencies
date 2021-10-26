@@ -232,6 +232,7 @@ artifacts = {
     "org.hamcrest:hamcrest-library": "1.3",
     "org.javatuples:javatuples": "1.2",
     "org.jetbrains.compose.desktop:desktop-jvm": "1.0.0-alpha3",
+    "org.jetbrains.kotlin:kotlin-test": "1.5.21",
     "org.jetbrains.skiko:skiko-jvm-runtime-linux-x64": "0.3.9",
     "org.jetbrains.skiko:skiko-jvm-runtime-macos-x64": "0.3.9",
     "org.jetbrains.skiko:skiko-jvm-runtime-windows-x64": "0.3.9",
