@@ -236,7 +236,7 @@ artifacts = {
     "org.jetbrains.compose.foundation:foundation-layout-desktop": "1.0.0-beta1",
     "org.jetbrains.compose.ui:ui-desktop": "1.0.0-beta1",
     "org.jetbrains.compose.ui:ui-geometry-desktop": "1.0.0-beta1",
-    "org.jetbrains.kotlin:kotlin-test": "1.5.21",
+    "org.jetbrains.kotlin:kotlin-test": "1.5.31",
     "org.jetbrains.skiko:skiko-jvm-runtime-linux-x64": "0.5.6",
     "org.jetbrains.skiko:skiko-jvm-runtime-macos-x64": "0.5.6",
     "org.jetbrains.skiko:skiko-jvm-runtime-windows-x64": "0.5.6",

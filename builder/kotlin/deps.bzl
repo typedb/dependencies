@@ -3,8 +3,8 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file"
 def deps():
     http_archive(
         name = "io_bazel_rules_kotlin",
-        urls = ["https://github.com/vaticle/rules_kotlin/archive/2275dfc628bca44f110faf9e321158529176cb82.zip"],
+        urls = ["https://github.com/vaticle/rules_kotlin/archive/2b36c5a39a067613099754e6d575a48ffa3cad03.zip"],
         type = "zip",
-        strip_prefix = "rules_kotlin-2275dfc628bca44f110faf9e321158529176cb82",
-        sha256 = "012d3a835ff045c86a9666917b64bb5ff52b89bdd16d2ba983f9bf98d3fd167b",
+        strip_prefix = "rules_kotlin-2b36c5a39a067613099754e6d575a48ffa3cad03",
+        sha256 = "34d4d6cd39fdb7020276df0f3030fa8edf90f04a899b0560cf0154661688b7c8",
     )
