@@ -30,7 +30,7 @@ py_binary(
 )
 
 py_binary(
-    name = "create-notes",
+    name = "create-notes-2",
     srcs = ["create-notes.py"],
     main = "create-notes.py",
     deps = [
@@ -41,6 +41,14 @@ py_binary(
         requirement("wrapt"),
         requirement("certifi"),
     ]
+)
+
+kt_jvm_binary(
+    name = "create-notes",
+    srcs = ["CreateNotes.kt"],
+    main_class = "com.vaticle.dependencies.tool.release.CreateNotesKt",
+    deps = [
+    ],
 )
 
 kt_jvm_binary(
