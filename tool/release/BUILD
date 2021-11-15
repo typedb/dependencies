@@ -48,6 +48,8 @@ kt_jvm_binary(
     srcs = ["CreateNotes.kt"],
     main_class = "com.vaticle.dependencies.tool.release.CreateNotesKt",
     deps = [
+        "@maven//:com_eclipsesource_minimal_json_minimal_json",
+        "@maven//:com_google_http_client_google_http_client",
     ],
 )
 
