@@ -21,9 +21,9 @@
 set -ex
 
 [[ $(readlink $0) ]] && path=$(readlink $0) || path=$0
-CARGO_TOML_HOME=$(cd "$(dirname "${path}")" && pwd -P)
+CARGO_RAZE_HOME=$(cd "$(dirname "${path}")" && pwd -P)
 
-pushd "$CARGO_TOML_HOME" > /dev/null
+pushd "$CARGO_RAZE_HOME" > /dev/null
 
 cargo raze
 
