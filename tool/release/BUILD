@@ -29,20 +29,6 @@ py_binary(
     main = "docs.py"
 )
 
-py_binary(
-    name = "create-notes-2",
-    srcs = ["create-notes.py"],
-    main = "create-notes.py",
-    deps = [
-        requirement("PyGithub"),
-        requirement("urllib3"),
-        requirement("chardet"),
-        requirement("idna"),
-        requirement("wrapt"),
-        requirement("certifi"),
-    ]
-)
-
 kt_jvm_binary(
     name = "create-notes",
     srcs = ["CreateNotes.kt"],
