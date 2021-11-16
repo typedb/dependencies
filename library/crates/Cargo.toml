@@ -1,5 +1,3 @@
-# [package] and [lib] sections are mandatory
-# for Cargo tooling to be able to parse this file
 [package]
 name = "vaticle-dependencies"
 version = "0.0.0"
