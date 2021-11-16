@@ -5,7 +5,7 @@ name = "vaticle-dependencies"
 version = "0.0.0"
 
 [lib]
-path = ""
+path = "" # ignored by cargo raze
 
 [dependencies]
 antlr-rust = "0.2.0"
