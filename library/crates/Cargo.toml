@@ -1,6 +1,7 @@
-# Mandatory (or Cargo tooling is unhappy)
+# [package] and [lib] sections are mandatory
+# for Cargo tooling to be able to parse this file
 [package]
-name = "vaticle_dependencies"
+name = "vaticle-dependencies"
 version = "0.0.0"
 
 [lib]
