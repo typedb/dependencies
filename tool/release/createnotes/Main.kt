@@ -24,11 +24,6 @@ package com.vaticle.dependencies.tool.release.createnotes
 import java.nio.file.Paths
 import kotlin.io.path.notExists
 
-fun getEnv(env: String): String {
-    if (System.getenv(env) == null) throw RuntimeException("'$env' environment variable must be set.")
-    return System.getenv(env)
-}
-
 fun main(args: Array<String>) {
     val bazelWorkspaceDir = getEnv("BUILD_WORKSPACE_DIRECTORY")
     val githubToken = getEnv("CREATE_NOTES_TOKEN")
@@ -39,6 +34,7 @@ fun main(args: Array<String>) {
     val toBeReleased = args[3]
     val releaseTemplateFile = Paths.get(bazelWorkspaceDir, args[4])
     if (releaseTemplateFile.notExists()) throw RuntimeException("Release template file does not exist")
+
     val releaseTemplateRegex = "\\{\\srelease notes\\s}".toRegex()
 
     println("repository: $org/$repo")
@@ -47,4 +43,9 @@ fun main(args: Array<String>) {
     val commits = getCommits(org, repo, lastRelease, toBeReleased, githubToken)
     val commitDescriptions = getCommitDescriptions(org, repo, commits, githubToken)
     writeReleaseNoteMd(commitDescriptions, releaseTemplateFile, releaseTemplateRegex)
+}
+
+private fun getEnv(env: String): String {
+    if (System.getenv(env) == null) throw RuntimeException("'$env' environment variable must be set.")
+    return System.getenv(env)
 }

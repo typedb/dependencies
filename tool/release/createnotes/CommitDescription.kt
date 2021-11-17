@@ -34,7 +34,11 @@ import com.vaticle.dependencies.tool.release.createnotes.Constant.github
 import com.vaticle.dependencies.tool.release.createnotes.Constant.labelPrefix
 import com.vaticle.dependencies.tool.release.createnotes.Constant.labelRefactor
 
-object Constant {
+data class CommitDescription(val title: String, val desc: String, val type: CommitDescriptionType)
+
+enum class CommitDescriptionType { FEATURE, BUG, REFACTOR, OTHER }
+
+private object Constant {
     const val github = "https://api.github.com"
     const val headerAccept = "\"application/vnd.github.v3+json"
     const val headerAuthPrefix = "Token"
@@ -42,20 +46,6 @@ object Constant {
     const val labelFeature = "$labelPrefix: feature"
     const val labelBug = "$labelPrefix: bug"
     const val labelRefactor = "$labelPrefix: refactor"
-}
-
-data class CommitDescription(val title: String, val desc: String, val type: CommitDescriptionType)
-
-enum class CommitDescriptionType { FEATURE, BUG, REFACTOR, OTHER }
-
-fun httpGet(url: String, githubToken: String): HttpResponse {
-    return NetHttpTransport()
-        .createRequestFactory()
-        .buildGetRequest(GenericUrl(url))
-        .setHeaders(
-            HttpHeaders().setAuthorization("$headerAuthPrefix $githubToken").setAccept(headerAccept)
-        )
-        .execute()
 }
 
 fun getCommitDescriptions(org: String, repo: String, commits: List<String>, githubToken: String): List<CommitDescription> {
@@ -92,4 +82,14 @@ fun getCommitDescriptions(org: String, repo: String, commits: List<String>, gith
             notes
         }
     }
+}
+
+private fun httpGet(url: String, githubToken: String): HttpResponse {
+    return NetHttpTransport()
+        .createRequestFactory()
+        .buildGetRequest(GenericUrl(url))
+        .setHeaders(
+            HttpHeaders().setAuthorization("$headerAuthPrefix $githubToken").setAccept(headerAccept)
+        )
+        .execute()
 }
