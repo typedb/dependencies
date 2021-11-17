@@ -66,16 +66,16 @@ fun writeReleaseNoteMd(commitDescriptions: List<CommitDescription>, releaseTempl
 Install & Run: $installInstruction
 
 ## New Features
-${features.map { feature -> createCommitNoteMd(feature) }.joinToString("\n")}
+${features.map(::createCommitNoteMd).joinToString("\n")}
 
 ## Bugs Fixed
-${bugs.map { bug -> createCommitNoteMd(bug) }.joinToString("\n")}
+${bugs.map(::createCommitNoteMd).joinToString("\n")}
 
 ## Code Refactors
-${refactors.map { refactor -> createCommitNoteMd(refactor) }.joinToString("\n")}
+${refactors.map(::createCommitNoteMd).joinToString("\n")}
 
 ## Other Improvements
-${others.map { other -> createCommitNoteMd(other) }.joinToString("\n")}
+${others.map(::createCommitNoteMd).joinToString("\n")}
     """
 
     Files.write(releaseTemplateFile, template.replace(releaseTemplateRegex, markdown).toByteArray(UTF_8))

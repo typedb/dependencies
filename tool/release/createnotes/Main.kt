@@ -27,25 +27,21 @@ import kotlin.io.path.notExists
 fun main(args: Array<String>) {
     val bazelWorkspaceDir = Paths.get(getEnv("BUILD_WORKSPACE_DIRECTORY"))
     val githubToken = getEnv("CREATE_NOTES_TOKEN")
-    if (args.size != 5) throw RuntimeException("org, repo, version, commit, and release-template must be supplied")
-    val org = args[0]
-    val repo = args[1]
-    val version = args[2]
-    val commit = args[3]
-    val releaseTemplateFile = bazelWorkspaceDir.resolve(args[4])
-    if (releaseTemplateFile.notExists()) throw RuntimeException("Release template file does not exist")
+    if (args.size != 5) throw RuntimeException("org, repo, version, commit, and template must be supplied")
+    val (org, repo, version, commit, templateFileLocation) = args
+    val templateFile = bazelWorkspaceDir.resolve(templateFileLocation)
+    if (templateFile.notExists()) throw RuntimeException("Template file '$templateFile' does not exist.")
 
-    println("repository: $org/$repo")
-    println("commit: $commit")
-    println("new version: $version")
+    println("Repository: $org/$repo")
+    println("Commit: $commit")
+    println("Version: $version")
 
     val commits = getCommits(org, repo, Version.parse(version), commit, bazelWorkspaceDir, githubToken)
-    println("there are ${commits.size} commits to be collected.")
+    println("There are ${commits.size} commits to be collected.")
     val commitDescriptions = getCommitDescriptions(org, repo, commits, githubToken)
-    writeReleaseNoteMd(commitDescriptions, releaseTemplateFile)
+    writeReleaseNoteMd(commitDescriptions, templateFile)
 }
 
 private fun getEnv(env: String): String {
-    if (System.getenv(env) == null) throw RuntimeException("'$env' environment variable must be set.")
-    return System.getenv(env)
+    return System.getenv(env) ?: throw RuntimeException("'$env' environment variable must be set.")
 }
