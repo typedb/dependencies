@@ -26,7 +26,7 @@ import com.vaticle.dependencies.tool.release.createnotes.Constant.github
 
 fun getCommits(org: String, repo: String, current: Version, to: String, githubToken: String): List<String> {
     val preceding = getPrecedingVersion(org, repo, current, githubToken)
-    val from_ = preceding?.toString() ?: TODO() // "d67639340ebf55a76e1f8cbd0fd7194cd212da02"
+    val from_ = preceding?.toString() ?: TODO()
     val response = httpGet("$github/repos/$org/$repo/compare/$from_...$to", githubToken)
     val body = Json.parse(String(response.content.readBytes()))
     return body.asObject().get("commits").asArray().map { e -> e.asObject().get("sha").asString() }
