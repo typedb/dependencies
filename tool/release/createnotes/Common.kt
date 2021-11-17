@@ -4,9 +4,12 @@ import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpHeaders
 import com.google.api.client.http.HttpResponse
 import com.google.api.client.http.javanet.NetHttpTransport
+import org.zeroturnaround.exec.ProcessExecutor
+import org.zeroturnaround.exec.ProcessResult
+import java.nio.file.Path
 
 object Constant {
-    val releaseTemplateRegex = "\\{\\srelease notes\\s}".toRegex()
+    val releaseTemplateRegex = "\\{\\s*release notes\\s*}".toRegex()
     const val installInstruction = "http://docs.vaticle.com/docs/running-typedb/install-and-run"
     const val github = "https://api.github.com"
     const val headerAccept = "\"application/vnd.github.v3+json"
@@ -25,4 +28,14 @@ fun httpGet(url: String, githubToken: String): HttpResponse {
             HttpHeaders().setAuthorization("${Constant.headerAuthPrefix} $githubToken").setAccept(Constant.headerAccept)
         )
         .execute()
+}
+
+fun bash(script: String, baseDir: Path): ProcessResult {
+    val builder = ProcessExecutor(script.split(" "))
+        .readOutput(true)
+        .redirectOutput(System.out)
+        .redirectError(System.err)
+        .directory(baseDir.toFile())
+        .exitValueNormal()
+    return builder.execute()
 }

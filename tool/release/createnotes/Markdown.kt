@@ -45,7 +45,8 @@ fun createCommitNoteMd(description: CommitDescription): String {
 
 fun writeReleaseNoteMd(commitDescriptions: List<CommitDescription>, releaseTemplateFile: Path) {
     val template = String(Files.readAllBytes(releaseTemplateFile), UTF_8)
-    if (!template.matches(releaseTemplateRegex)) throw RuntimeException("The release-template does not contain the '${releaseTemplateRegex}' placeholder")
+    if (!template.matches("[\\s\\S]*${releaseTemplateRegex.pattern}[\\s\\S]*".toRegex()))
+        throw RuntimeException("The release-template does not contain the '${releaseTemplateRegex}' placeholder")
 
     val features = mutableListOf<CommitDescription>()
     val bugs = mutableListOf<CommitDescription>()

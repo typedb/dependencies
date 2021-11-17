@@ -23,13 +23,22 @@ package com.vaticle.dependencies.tool.release.createnotes
 
 import com.eclipsesource.json.Json
 import com.vaticle.dependencies.tool.release.createnotes.Constant.github
+import java.nio.file.Path
 
-fun getCommits(org: String, repo: String, current: Version, to: String, githubToken: String): List<String> {
+fun getCommits(org: String, repo: String, current: Version, to: String, baseDir: Path, githubToken: String): List<String> {
     val preceding = getPrecedingVersion(org, repo, current, githubToken)
-    val from_ = preceding?.toString() ?: TODO()
-    val response = httpGet("$github/repos/$org/$repo/compare/$from_...$to", githubToken)
-    val body = Json.parse(String(response.content.readBytes()))
-    return body.asObject().get("commits").asArray().map { e -> e.asObject().get("sha").asString() }
+    if (preceding != null) {
+        val response = httpGet("$github/repos/$org/$repo/compare/$preceding...$to", githubToken)
+        val body = Json.parse(String(response.content.readBytes()))
+        return body.asObject().get("commits").asArray().map { e -> e.asObject().get("sha").asString() }
+    }
+    else {
+        val gitRevList = bash("git rev-list --max-parents=0 HEAD", baseDir)
+        val firstCommit = gitRevList.outputString().trim()
+        val response = httpGet("$github/repos/$org/$repo/compare/$firstCommit...$to", githubToken)
+        val body = Json.parse(String(response.content.readBytes()))
+        return listOf(firstCommit) + body.asObject().get("commits").asArray().map { e -> e.asObject().get("sha").asString() }.toList()
+    }
 }
 
 private fun getPrecedingVersion(org: String, repo: String, current: Version, githubToken: String): Version? {

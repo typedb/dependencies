@@ -25,20 +25,21 @@ import java.nio.file.Paths
 import kotlin.io.path.notExists
 
 fun main(args: Array<String>) {
-    val bazelWorkspaceDir = getEnv("BUILD_WORKSPACE_DIRECTORY")
+    val bazelWorkspaceDir = Paths.get(getEnv("BUILD_WORKSPACE_DIRECTORY"))
     val githubToken = getEnv("CREATE_NOTES_TOKEN")
     if (args.size != 5) throw RuntimeException("org, repo, version, commit, and release-template must be supplied")
     val org = args[0]
     val repo = args[1]
     val version = args[2]
     val commit = args[3]
-    val releaseTemplateFile = Paths.get(bazelWorkspaceDir, args[4])
+    val releaseTemplateFile = bazelWorkspaceDir.resolve(args[4])
     if (releaseTemplateFile.notExists()) throw RuntimeException("Release template file does not exist")
 
     println("repository: $org/$repo")
     println("commit: $commit")
     println("new version: $version")
-    val commits = getCommits(org, repo, Version.parse(version), commit, githubToken)
+
+    val commits = getCommits(org, repo, Version.parse(version), commit, bazelWorkspaceDir, githubToken)
     println("there are ${commits.size} commits to be collected.")
     val commitDescriptions = getCommitDescriptions(org, repo, commits, githubToken)
     writeReleaseNoteMd(commitDescriptions, releaseTemplateFile)
