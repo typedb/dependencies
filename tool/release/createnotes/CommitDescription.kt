@@ -24,31 +24,53 @@ package com.vaticle.dependencies.tool.release.createnotes
 import com.eclipsesource.json.Json
 import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpHeaders
+import com.google.api.client.http.HttpResponse
 import com.google.api.client.http.javanet.NetHttpTransport
+import com.vaticle.dependencies.tool.release.createnotes.Constant.headerAccept
+import com.vaticle.dependencies.tool.release.createnotes.Constant.headerAuthPrefix
+import com.vaticle.dependencies.tool.release.createnotes.Constant.labelBug
+import com.vaticle.dependencies.tool.release.createnotes.Constant.labelFeature
+import com.vaticle.dependencies.tool.release.createnotes.Constant.github
+import com.vaticle.dependencies.tool.release.createnotes.Constant.labelPrefix
+import com.vaticle.dependencies.tool.release.createnotes.Constant.labelRefactor
+
+object Constant {
+    const val github = "https://api.github.com"
+    const val headerAccept = "\"application/vnd.github.v3+json"
+    const val headerAuthPrefix = "Token"
+    const val labelPrefix = "type"
+    const val labelFeature = "$labelPrefix: feature"
+    const val labelBug = "$labelPrefix: bug"
+    const val labelRefactor = "$labelPrefix: refactor"
+}
 
 data class CommitDescription(val title: String, val desc: String, val type: CommitDescriptionType)
 
 enum class CommitDescriptionType { FEATURE, BUG, REFACTOR, OTHER }
 
-fun getCommitDescriptions(org: String, repo: String, commits: List<String>, githubToken: String?): List<CommitDescription> {
+fun httpGet(url: String, githubToken: String): HttpResponse {
+    return NetHttpTransport()
+        .createRequestFactory()
+        .buildGetRequest(GenericUrl(url))
+        .setHeaders(
+            HttpHeaders().setAuthorization("$headerAuthPrefix $githubToken").setAccept(headerAccept)
+        )
+        .execute()
+}
+
+fun getCommitDescriptions(org: String, repo: String, commits: List<String>, githubToken: String): List<CommitDescription> {
     return commits.flatMap { commit ->
-        val response = NetHttpTransport()
-            .createRequestFactory()
-            .buildGetRequest(GenericUrl("https://api.github.com/repos/$org/$repo/commits/$commit/pulls"))
-            .setHeaders(
-                HttpHeaders().setAuthorization("Token $githubToken").setAccept("application/vnd.github.v3+json")
-            )
-            .execute()
+        val response = httpGet("$github/repos/$org/$repo/commits/$commit/pulls", githubToken)
         val body = Json.parse(String(response.content.readBytes()))
         val prs = body.asArray()
         if (prs.size() > 0) {
             val notes = prs.map { pr ->
                 val types = pr.asObject().get("labels").asArray().map { e -> e.asObject().get("name").asString() }
-                    .filter { e -> e.startsWith("type:") }
+                    .filter { e -> e.startsWith(labelPrefix) }
                 val type =
-                    if (types.contains("type: feature")) CommitDescriptionType.FEATURE
-                    else if (types.contains("type: bug")) CommitDescriptionType.BUG
-                    else if (types.contains("type: refactor")) CommitDescriptionType.REFACTOR
+                    if (types.contains(labelFeature)) CommitDescriptionType.FEATURE
+                    else if (types.contains(labelBug)) CommitDescriptionType.BUG
+                    else if (types.contains(labelRefactor)) CommitDescriptionType.REFACTOR
                     else CommitDescriptionType.OTHER
                 CommitDescription(
                     title = pr.asObject().get("title").asString(),
@@ -58,13 +80,7 @@ fun getCommitDescriptions(org: String, repo: String, commits: List<String>, gith
             }
             notes
         } else {
-            val response = NetHttpTransport()
-                .createRequestFactory()
-                .buildGetRequest(GenericUrl("https://api.github.com/repos/$org/$repo/commits/$commit"))
-                .setHeaders(
-                    HttpHeaders().setAuthorization("Token $githubToken").setAccept("application/vnd.github.v3+json")
-                )
-                .execute()
+            val response = httpGet("$github/repos/$org/$repo/commits/$commit", githubToken)
             val body = Json.parse(String(response.content.readBytes()))
             val notes = listOf(
                 CommitDescription(
