@@ -31,18 +31,17 @@ fun main(args: Array<String>) {
     val org = args[0]
     val repo = args[1]
     val version = args[2]
-    val toBeReleased = args[3]
+    val commit = args[3]
     val releaseTemplateFile = Paths.get(bazelWorkspaceDir, args[4])
     if (releaseTemplateFile.notExists()) throw RuntimeException("Release template file does not exist")
 
-    val releaseTemplateRegex = "\\{\\srelease notes\\s}".toRegex()
-
     println("repository: $org/$repo")
-    println("commit: $toBeReleased")
-    val lastRelease = getLastRelease(org, repo, githubToken)
-    val commits = getCommits(org, repo, lastRelease, toBeReleased, githubToken)
+    println("commit: $commit")
+    println("new version: $version")
+    val commits = getCommits(org, repo, Version.parse(version), commit, githubToken)
+    println("there are ${commits.size} commits to be collected.")
     val commitDescriptions = getCommitDescriptions(org, repo, commits, githubToken)
-    writeReleaseNoteMd(commitDescriptions, releaseTemplateFile, releaseTemplateRegex)
+    writeReleaseNoteMd(commitDescriptions, releaseTemplateFile)
 }
 
 private fun getEnv(env: String): String {

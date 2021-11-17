@@ -75,6 +75,11 @@ data class Version(val major: Int, val minor: Int, val patch: Int, val alpha: In
     }
 
     override fun toString(): String {
-        return "$major.$minor.$patch" + (if (alpha != null) "-alpha-$alpha" else "")
+        val alpha =
+            if (alpha != null) {
+                if (alpha == 1) "-alpha"
+                else "-alpha-$alpha"
+            } else ""
+        return "$major.$minor.$patch$alpha"
     }
 }

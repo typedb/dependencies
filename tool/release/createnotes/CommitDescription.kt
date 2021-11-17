@@ -22,34 +22,19 @@
 package com.vaticle.dependencies.tool.release.createnotes
 
 import com.eclipsesource.json.Json
-import com.google.api.client.http.GenericUrl
-import com.google.api.client.http.HttpHeaders
-import com.google.api.client.http.HttpResponse
-import com.google.api.client.http.javanet.NetHttpTransport
-import com.vaticle.dependencies.tool.release.createnotes.Constant.headerAccept
-import com.vaticle.dependencies.tool.release.createnotes.Constant.headerAuthPrefix
 import com.vaticle.dependencies.tool.release.createnotes.Constant.labelBug
 import com.vaticle.dependencies.tool.release.createnotes.Constant.labelFeature
 import com.vaticle.dependencies.tool.release.createnotes.Constant.github
 import com.vaticle.dependencies.tool.release.createnotes.Constant.labelPrefix
 import com.vaticle.dependencies.tool.release.createnotes.Constant.labelRefactor
 
-data class CommitDescription(val title: String, val desc: String, val type: CommitDescriptionType)
-
-enum class CommitDescriptionType { FEATURE, BUG, REFACTOR, OTHER }
-
-private object Constant {
-    const val github = "https://api.github.com"
-    const val headerAccept = "\"application/vnd.github.v3+json"
-    const val headerAuthPrefix = "Token"
-    const val labelPrefix = "type"
-    const val labelFeature = "$labelPrefix: feature"
-    const val labelBug = "$labelPrefix: bug"
-    const val labelRefactor = "$labelPrefix: refactor"
+data class CommitDescription(val title: String, val desc: String, val type: Type) {
+    enum class Type { FEATURE, BUG, REFACTOR, OTHER }
 }
 
 fun getCommitDescriptions(org: String, repo: String, commits: List<String>, githubToken: String): List<CommitDescription> {
     return commits.flatMap { commit ->
+        println("collecting description for commit '$commit'...")
         val response = httpGet("$github/repos/$org/$repo/commits/$commit/pulls", githubToken)
         val body = Json.parse(String(response.content.readBytes()))
         val prs = body.asArray()
@@ -58,10 +43,10 @@ fun getCommitDescriptions(org: String, repo: String, commits: List<String>, gith
                 val types = pr.asObject().get("labels").asArray().map { e -> e.asObject().get("name").asString() }
                     .filter { e -> e.startsWith(labelPrefix) }
                 val type =
-                    if (types.contains(labelFeature)) CommitDescriptionType.FEATURE
-                    else if (types.contains(labelBug)) CommitDescriptionType.BUG
-                    else if (types.contains(labelRefactor)) CommitDescriptionType.REFACTOR
-                    else CommitDescriptionType.OTHER
+                    if (types.contains(labelFeature)) CommitDescription.Type.FEATURE
+                    else if (types.contains(labelBug)) CommitDescription.Type.BUG
+                    else if (types.contains(labelRefactor)) CommitDescription.Type.REFACTOR
+                    else CommitDescription.Type.OTHER
                 CommitDescription(
                     title = pr.asObject().get("title").asString(),
                     desc = pr.asObject().get("body").asString(),
@@ -72,24 +57,12 @@ fun getCommitDescriptions(org: String, repo: String, commits: List<String>, gith
         } else {
             val response = httpGet("$github/repos/$org/$repo/commits/$commit", githubToken)
             val body = Json.parse(String(response.content.readBytes()))
+            // only take the first line of the commit message, since the second line onwards are most likely implementation detail
+            val title = body.asObject().get("commit").asObject().get("message").asString().lines().first()
             val notes = listOf(
-                CommitDescription(
-                    title = body.asObject().get("commit").asObject().get("message").asString(),
-                    desc = "",
-                    type = CommitDescriptionType.OTHER
-                )
+                CommitDescription(title = title, desc = "", type = CommitDescription.Type.OTHER)
             )
             notes
         }
     }
-}
-
-private fun httpGet(url: String, githubToken: String): HttpResponse {
-    return NetHttpTransport()
-        .createRequestFactory()
-        .buildGetRequest(GenericUrl(url))
-        .setHeaders(
-            HttpHeaders().setAuthorization("$headerAuthPrefix $githubToken").setAccept(headerAccept)
-        )
-        .execute()
 }

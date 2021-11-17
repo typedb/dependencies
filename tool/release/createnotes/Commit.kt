@@ -22,28 +22,28 @@
 package com.vaticle.dependencies.tool.release.createnotes
 
 import com.eclipsesource.json.Json
-import com.google.api.client.http.GenericUrl
-import com.google.api.client.http.HttpHeaders
-import com.google.api.client.http.javanet.NetHttpTransport
+import com.vaticle.dependencies.tool.release.createnotes.Constant.github
 
-fun getLastRelease(org: String, repo: String, githubToken: String): Version? {
-    val response = NetHttpTransport()
-        .createRequestFactory()
-        .buildGetRequest(GenericUrl("https://api.github.com/repos/$org/$repo/releases"))
-        .setHeaders(HttpHeaders().setAuthorization("Token $githubToken").setAccept("application/vnd.github.v3+json"))
-        .execute()
-    val body = Json.parse(String(response.content.readBytes()))
-    val releases = body.asArray().map { e -> Version.parse(e.asObject().get("tag_name").asString()) }
-    return releases.maxOrNull()
-}
-
-fun getCommits(org: String, repo: String, from: Version?, to: String, githubToken: String): List<String> {
-    val from_ = "d67639340ebf55a76e1f8cbd0fd7194cd212da02" // from?.toString() ?: TODO("get first commit")
-    val response = NetHttpTransport()
-        .createRequestFactory()
-        .buildGetRequest(GenericUrl("https://api.github.com/repos/$org/$repo/compare/$from_...$to"))
-        .setHeaders(HttpHeaders().setAuthorization("Token $githubToken").setAccept("application/vnd.github.v3+json"))
-        .execute()
+fun getCommits(org: String, repo: String, current: Version, to: String, githubToken: String): List<String> {
+    val preceding = getPrecedingVersion(org, repo, current, githubToken)
+    val from_ = preceding?.toString() ?: TODO() // "d67639340ebf55a76e1f8cbd0fd7194cd212da02"
+    val response = httpGet("$github/repos/$org/$repo/compare/$from_...$to", githubToken)
     val body = Json.parse(String(response.content.readBytes()))
     return body.asObject().get("commits").asArray().map { e -> e.asObject().get("sha").asString() }
+}
+
+private fun getPrecedingVersion(org: String, repo: String, current: Version, githubToken: String): Version? {
+    val response = httpGet("$github/repos/$org/$repo/releases", githubToken)
+    val body = Json.parse(String(response.content.readBytes()))
+    val releases = mutableListOf<Version>()
+    releases.add(current)
+    releases.addAll(body.asArray().map { e -> Version.parse(e.asObject().get("tag_name").asString()) })
+    releases.sort()
+    val currentIdx = releases.indexOf(current)
+    val preceding =
+        if (currentIdx >= 1) releases[currentIdx - 1]
+        else if (currentIdx == 0) null
+        else throw IllegalStateException("")
+    println("preceding version: $preceding")
+    return preceding
 }

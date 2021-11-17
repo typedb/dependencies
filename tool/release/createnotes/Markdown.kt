@@ -21,6 +21,9 @@
 
 package com.vaticle.dependencies.tool.release.createnotes
 
+import com.vaticle.dependencies.tool.release.createnotes.Constant.installInstruction
+import com.vaticle.dependencies.tool.release.createnotes.Constant.releaseTemplateRegex
+import java.lang.RuntimeException
 import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.text.Charsets.UTF_8
@@ -40,8 +43,10 @@ fun createCommitNoteMd(description: CommitDescription): String {
     return "- **${description.title}**\n  $desc"
 }
 
-fun writeReleaseNoteMd(commitDescriptions: List<CommitDescription>, releaseTemplateFile: Path, releaseTemplateRegex: Regex) {
+fun writeReleaseNoteMd(commitDescriptions: List<CommitDescription>, releaseTemplateFile: Path) {
     val template = String(Files.readAllBytes(releaseTemplateFile), UTF_8)
+    if (!template.matches(releaseTemplateRegex)) throw RuntimeException("The release-template does not contain the '${releaseTemplateRegex}' placeholder")
+
     val features = mutableListOf<CommitDescription>()
     val bugs = mutableListOf<CommitDescription>()
     val refactors = mutableListOf<CommitDescription>()
@@ -49,15 +54,15 @@ fun writeReleaseNoteMd(commitDescriptions: List<CommitDescription>, releaseTempl
 
     commitDescriptions.forEach { note ->
         when (note.type) {
-            CommitDescriptionType.FEATURE -> features.add(note)
-            CommitDescriptionType.BUG -> bugs.add(note)
-            CommitDescriptionType.REFACTOR -> refactors.add(note)
+            CommitDescription.Type.FEATURE -> features.add(note)
+            CommitDescription.Type.BUG -> bugs.add(note)
+            CommitDescription.Type.REFACTOR -> refactors.add(note)
             else -> others.add(note)
         }
     }
 
     val markdown = """
-Install & Run: http://docs.vaticle.com/docs/running-typedb/install-and-run
+Install & Run: $installInstruction
 
 ## New Features
 ${features.map { feature -> createCommitNoteMd(feature) }.joinToString("\n")}
@@ -65,7 +70,7 @@ ${features.map { feature -> createCommitNoteMd(feature) }.joinToString("\n")}
 ## Bugs Fixed
 ${bugs.map { bug -> createCommitNoteMd(bug) }.joinToString("\n")}
 
-## Code Refactor
+## Code Refactors
 ${refactors.map { refactor -> createCommitNoteMd(refactor) }.joinToString("\n")}
 
 ## Other Improvements
