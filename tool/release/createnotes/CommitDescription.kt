@@ -34,12 +34,14 @@ data class CommitDescription(val title: String, val desc: String, val type: Type
 
 fun getCommitDescriptions(org: String, repo: String, commits: List<String>, githubToken: String): List<CommitDescription> {
     return commits.flatMap { commit ->
-        println("collecting description for commit '$commit'...")
+
         val response = httpGet("$github/repos/$org/$repo/commits/$commit/pulls", githubToken)
         val body = Json.parse(String(response.content.readBytes()))
         val prs = body.asArray()
         if (prs.size() > 0) {
             val notes = prs.map { pr ->
+                val prNumber = pr.asObject().get("number").asInt()
+                println("collecting commit '$commit' from PR #$prNumber...")
                 val types = pr.asObject().get("labels").asArray().map { e -> e.asObject().get("name").asString() }
                     .filter { e -> e.startsWith(labelPrefix) }
                 val type =
@@ -55,6 +57,7 @@ fun getCommitDescriptions(org: String, repo: String, commits: List<String>, gith
             }
             notes
         } else {
+            println("collecting commit '$commit'...")
             val response = httpGet("$github/repos/$org/$repo/commits/$commit", githubToken)
             val body = Json.parse(String(response.content.readBytes()))
             // only take the first line of the commit message, since the second line onwards are most likely implementation detail
