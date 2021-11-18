@@ -29,16 +29,15 @@ import kotlin.io.path.notExists
 fun main(args: Array<String>) {
     val bazelWorkspaceDir = Paths.get(getEnv("BUILD_WORKSPACE_DIRECTORY"))
     val githubToken = getEnv("CREATE_NOTES_TOKEN")
-    if (args.size != 5) throw RuntimeException("org, repo, version, commit, and template must be supplied")
-    val (org, repo, version, commit, templateFileLocation) = args
+    if (args.size != 5) throw RuntimeException("org, repo, commit, version, and template must be supplied")
+    val (org, repo, commit, version, templateFileLocation) = args
     val templateFile = bazelWorkspaceDir.resolve(templateFileLocation)
     if (templateFile.notExists()) throw RuntimeException("Template file '$templateFile' does not exist.")
 
-    println("Repository: $org/$repo")
-    println("Commit: $commit")
+    println("Commit: $org/$repo@$commit")
     println("Version: $version")
 
-    val commits = collectCommits(org, repo, Version.parse(version), commit, bazelWorkspaceDir, githubToken)
+    val commits = collectCommits(org, repo, commit, Version.parse(version), bazelWorkspaceDir, githubToken)
     println("Found ${commits.size} commits to be collected into the release note.")
     val notes = collectNotes(org, repo, commits, githubToken)
     writeNotesMd(notes, templateFile)
