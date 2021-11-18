@@ -21,6 +21,8 @@
 
 package com.vaticle.dependencies.tool.release.createnotes
 
+import java.nio.file.Files
+import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.notExists
 
@@ -38,10 +40,18 @@ fun main(args: Array<String>) {
 
     val commits = collectCommits(org, repo, Version.parse(version), commit, bazelWorkspaceDir, githubToken)
     println("Found ${commits.size} commits to be collected into the release note.")
-    val commitInfos = getCommitInfos(org, repo, commits, githubToken)
-    createNotesMd(commitInfos, templateFile)
+    val notes = collectNotes(org, repo, commits, githubToken)
+    writeNotesMd(notes, templateFile)
 }
 
 private fun getEnv(env: String): String {
     return System.getenv(env) ?: throw RuntimeException("'$env' environment variable must be set.")
+}
+
+private fun writeNotesMd(notes: List<Note>, releaseTemplateFile: Path) {
+    val template = String(Files.readAllBytes(releaseTemplateFile), Charsets.UTF_8)
+    if (!template.matches("[\\s\\S]*${Constant.releaseTemplateRegex.pattern}[\\s\\S]*".toRegex()))
+        throw RuntimeException("The release-template does not contain the '${Constant.releaseTemplateRegex}' placeholder")
+    val markdown = template.replace(Constant.releaseTemplateRegex, Note.toMarkdown(notes))
+    Files.write(releaseTemplateFile, markdown.toByteArray(Charsets.UTF_8))
 }
