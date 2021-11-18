@@ -28,36 +28,21 @@ import java.nio.file.Files
 import java.nio.file.Path
 import kotlin.text.Charsets.UTF_8
 
-fun createCommitNoteMd(description: CommitDescription): String {
-    val desc = StringBuilder()
-    var header = 0
-    for (line in description.desc.lines()) {
-        if (line.startsWith("##")) {
-            header += 1
-        } else if (header == 1) {
-            desc.append(line)
-        } else if (header > 1) {
-            break
-        }
-    }
-    return "- **${description.title}**\n  $desc"
-}
-
-fun writeReleaseNoteMd(commitDescriptions: List<CommitDescription>, releaseTemplateFile: Path) {
+fun createNotesMd(commitInfos: List<CommitInfo>, releaseTemplateFile: Path) {
     val template = String(Files.readAllBytes(releaseTemplateFile), UTF_8)
     if (!template.matches("[\\s\\S]*${releaseTemplateRegex.pattern}[\\s\\S]*".toRegex()))
         throw RuntimeException("The release-template does not contain the '${releaseTemplateRegex}' placeholder")
 
-    val features = mutableListOf<CommitDescription>()
-    val bugs = mutableListOf<CommitDescription>()
-    val refactors = mutableListOf<CommitDescription>()
-    val others = mutableListOf<CommitDescription>()
+    val features = mutableListOf<CommitInfo>()
+    val bugs = mutableListOf<CommitInfo>()
+    val refactors = mutableListOf<CommitInfo>()
+    val others = mutableListOf<CommitInfo>()
 
-    commitDescriptions.forEach { note ->
+    commitInfos.forEach { note ->
         when (note.type) {
-            CommitDescription.Type.FEATURE -> features.add(note)
-            CommitDescription.Type.BUG -> bugs.add(note)
-            CommitDescription.Type.REFACTOR -> refactors.add(note)
+            CommitInfo.Type.FEATURE -> features.add(note)
+            CommitInfo.Type.BUG -> bugs.add(note)
+            CommitInfo.Type.REFACTOR -> refactors.add(note)
             else -> others.add(note)
         }
     }
@@ -66,17 +51,21 @@ fun writeReleaseNoteMd(commitDescriptions: List<CommitDescription>, releaseTempl
 Install & Run: $installInstruction
 
 ## New Features
-${features.map(::createCommitNoteMd).joinToString("\n")}
+${features.map(::createNoteMd).joinToString("\n")}
 
 ## Bugs Fixed
-${bugs.map(::createCommitNoteMd).joinToString("\n")}
+${bugs.map(::createNoteMd).joinToString("\n")}
 
 ## Code Refactors
-${refactors.map(::createCommitNoteMd).joinToString("\n")}
+${refactors.map(::createNoteMd).joinToString("\n")}
 
 ## Other Improvements
-${others.map(::createCommitNoteMd).joinToString("\n")}
+${others.map(::createNoteMd).joinToString("\n")}
     """
 
     Files.write(releaseTemplateFile, template.replace(releaseTemplateRegex, markdown).toByteArray(UTF_8))
+}
+
+private fun createNoteMd(info: CommitInfo): String {
+    return "- **${info.title}**\n  ${info.goal ?: ""}"
 }

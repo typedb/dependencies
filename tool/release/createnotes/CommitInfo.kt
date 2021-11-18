@@ -22,19 +22,19 @@
 package com.vaticle.dependencies.tool.release.createnotes
 
 import com.eclipsesource.json.Json
+import com.eclipsesource.json.JsonValue
 import com.vaticle.dependencies.tool.release.createnotes.Constant.labelBug
 import com.vaticle.dependencies.tool.release.createnotes.Constant.labelFeature
 import com.vaticle.dependencies.tool.release.createnotes.Constant.github
 import com.vaticle.dependencies.tool.release.createnotes.Constant.labelPrefix
 import com.vaticle.dependencies.tool.release.createnotes.Constant.labelRefactor
 
-data class CommitDescription(val title: String, val desc: String, val type: Type) {
+data class CommitInfo(val title: String, val goal: String?, val type: Type) {
     enum class Type { FEATURE, BUG, REFACTOR, OTHER }
 }
 
-fun getCommitDescriptions(org: String, repo: String, commits: List<String>, githubToken: String): List<CommitDescription> {
+fun getCommitInfos(org: String, repo: String, commits: List<String>, githubToken: String): List<CommitInfo> {
     return commits.flatMap { commit ->
-
         val response = httpGet("$github/repos/$org/$repo/commits/$commit/pulls", githubToken)
         val body = Json.parse(String(response.content.readBytes()))
         val prs = body.asArray()
@@ -45,13 +45,15 @@ fun getCommitDescriptions(org: String, repo: String, commits: List<String>, gith
                 val types = pr.asObject().get("labels").asArray().map { e -> e.asObject().get("name").asString() }
                     .filter { e -> e.startsWith(labelPrefix) }
                 val type =
-                    if (types.contains(labelFeature)) CommitDescription.Type.FEATURE
-                    else if (types.contains(labelBug)) CommitDescription.Type.BUG
-                    else if (types.contains(labelRefactor)) CommitDescription.Type.REFACTOR
-                    else CommitDescription.Type.OTHER
-                CommitDescription(
+                    when {
+                        types.contains(labelFeature) -> CommitInfo.Type.FEATURE
+                        types.contains(labelBug) -> CommitInfo.Type.BUG
+                        types.contains(labelRefactor) -> CommitInfo.Type.REFACTOR
+                        else -> CommitInfo.Type.OTHER
+                    }
+                CommitInfo(
                     title = pr.asObject().get("title").asString(),
-                    desc = pr.asObject().get("body").asString(),
+                    goal = getPRGoal(pr.asObject().get("body").asString()),
                     type = type
                 )
             }
@@ -60,12 +62,30 @@ fun getCommitDescriptions(org: String, repo: String, commits: List<String>, gith
             println("collecting commit '$commit'...")
             val response = httpGet("$github/repos/$org/$repo/commits/$commit", githubToken)
             val body = Json.parse(String(response.content.readBytes()))
-            // only take the first line of the commit message, since the second line onwards are most likely implementation detail
-            val title = body.asObject().get("commit").asObject().get("message").asString().lines().first()
             val notes = listOf(
-                CommitDescription(title = title, desc = "", type = CommitDescription.Type.OTHER)
+                CommitInfo(title = getCommitTitle(body), goal = null, type = CommitInfo.Type.OTHER)
             )
             notes
         }
     }
+}
+
+private fun getPRGoal(description: String): String {
+    val goal = StringBuilder()
+    var header = 0
+    for (line in description.lines()) {
+        if (line.startsWith("##")) {
+            header += 1
+        } else if (header == 1) {
+            goal.append(line)
+        } else if (header > 1) {
+            break
+        }
+    }
+    return goal.toString()
+}
+
+// only take the first line of the commit message, since the second line onwards are most likely implementation detail
+private fun getCommitTitle(body: JsonValue): String {
+    return body.asObject().get("commit").asObject().get("message").asString().lines().first()
 }

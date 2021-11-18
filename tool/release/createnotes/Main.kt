@@ -36,10 +36,10 @@ fun main(args: Array<String>) {
     println("Commit: $commit")
     println("Version: $version")
 
-    val commits = getCommits(org, repo, Version.parse(version), commit, bazelWorkspaceDir, githubToken)
-    println("There are ${commits.size} commits to be collected.")
-    val commitDescriptions = getCommitDescriptions(org, repo, commits, githubToken)
-    writeReleaseNoteMd(commitDescriptions, templateFile)
+    val commits = collectCommits(org, repo, Version.parse(version), commit, bazelWorkspaceDir, githubToken)
+    println("Found ${commits.size} commits to be collected into the release note.")
+    val commitInfos = getCommitInfos(org, repo, commits, githubToken)
+    createNotesMd(commitInfos, templateFile)
 }
 
 private fun getEnv(env: String): String {

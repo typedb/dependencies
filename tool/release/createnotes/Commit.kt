@@ -25,9 +25,11 @@ import com.eclipsesource.json.Json
 import com.vaticle.dependencies.tool.release.createnotes.Constant.github
 import java.nio.file.Path
 
-fun getCommits(org: String, repo: String, current: Version, to: String, baseDir: Path, githubToken: String): List<String> {
+fun collectCommits(org: String, repo: String, current: Version, to: String, baseDir: Path, githubToken: String): List<String> {
+    println("Determining the commits to be collected...")
     val preceding = getPrecedingVersion(org, repo, current, githubToken)
     if (preceding != null) {
+        println("The script will collect commits down to the preceding version '$preceding'.")
         val response = httpGet("$github/repos/$org/$repo/compare/$preceding...$to", githubToken)
         val body = Json.parse(String(response.content.readBytes()))
         return body.asObject().get("commits").asArray().map { e -> e.asObject().get("sha").asString() }
@@ -35,6 +37,7 @@ fun getCommits(org: String, repo: String, current: Version, to: String, baseDir:
     else {
         val gitRevList = bash("git rev-list --max-parents=0 HEAD", baseDir)
         val firstCommit = gitRevList.outputString().trim()
+        println("No preceding version found. The script will collect all commits down to the first one: '$firstCommit'.")
         val response = httpGet("$github/repos/$org/$repo/compare/$firstCommit...$to", githubToken)
         val body = Json.parse(String(response.content.readBytes()))
         return listOf(firstCommit) + body.asObject().get("commits").asArray().map { e -> e.asObject().get("sha").asString() }.toList()
@@ -53,6 +56,5 @@ private fun getPrecedingVersion(org: String, repo: String, current: Version, git
         if (currentIdx >= 1) releases[currentIdx - 1]
         else if (currentIdx == 0) null
         else throw IllegalStateException("")
-    println("preceding version: $preceding")
     return preceding
 }
