@@ -106,16 +106,16 @@ class Note {
 
             return """
 ## New Features
-${features.map { e -> e.toMarkdown() }.joinToString("\n")}
+${features.map(Note::toMarkdown).joinToString("\n")}
 
 ## Bugs Fixed
-${bugs.map { e -> e.toMarkdown() }.joinToString("\n")}
+${bugs.map(Note::toMarkdown).joinToString("\n")}
 
 ## Code Refactors
-${refactors.map { e -> e.toMarkdown() }.joinToString("\n")}
+${refactors.map(Note::toMarkdown).joinToString("\n")}
 
 ## Other Improvements
-${others.map { e -> e.toMarkdown() }.joinToString("\n")}
+${others.map(Note::toMarkdown).joinToString("\n")}
     """
         }
     }
