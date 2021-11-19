@@ -121,9 +121,9 @@ ${others.map(Note::toMarkdown).joinToString("\n")}
 
 fun collectNotes(org: String, repo: String, commits: List<String>, githubToken: String): List<Note> {
     return commits.flatMap { commit ->
-        val response = httpGet("$github/repos/$org/$repo/commits/$commit/pulls", githubToken)
-        val body = Json.parse(response.parseAsString())
-        val prs = body.asArray()
+        val pullsRes = httpGet("$github/repos/$org/$repo/commits/$commit/pulls", githubToken)
+        val pullsJSON = Json.parse(pullsRes.parseAsString())
+        val prs = pullsJSON.asArray()
         if (prs.size() > 0) {
             val notes = prs.map { pr ->
                 val prNumber = pr.asObject().get("number").asInt()
@@ -133,9 +133,9 @@ fun collectNotes(org: String, repo: String, commits: List<String>, githubToken: 
             notes
         } else {
             println("collecting commit '$commit'...")
-            val response = httpGet("$github/repos/$org/$repo/commits/$commit", githubToken)
-            val body = Json.parse(response.parseAsString())
-            val notes = listOf(Note.fromGithubCommit(body.asObject().get("commit").asObject()))
+            val commitRes = httpGet("$github/repos/$org/$repo/commits/$commit", githubToken)
+            val commitJSON = Json.parse(commitRes.parseAsString())
+            val notes = listOf(Note.fromGithubCommit(commitJSON.asObject().get("commit").asObject()))
             notes
         }
     }
