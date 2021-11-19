@@ -24,8 +24,6 @@ package com.vaticle.dependencies.tool.release.createnotes
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.notExists
-import kotlin.io.path.readText
-import kotlin.io.path.writeText
 
 fun main(args: Array<String>) {
     val bazelWorkspaceDir = Paths.get(getEnv("BUILD_WORKSPACE_DIRECTORY"))
