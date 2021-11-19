@@ -24,7 +24,7 @@ load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
 kt_jvm_binary(
     name = "bin",
     srcs = glob(["*.kt"]),
-    main_class = "com.vaticle.dependencies.tool.release.createnotes.MainKt",
+    main_class = "com.vaticle.dependencies.tool.release.createnotes.CreateNotesKt",
     deps = [
         "@maven//:com_eclipsesource_minimal_json_minimal_json",
         "@maven//:com_google_http_client_google_http_client",
