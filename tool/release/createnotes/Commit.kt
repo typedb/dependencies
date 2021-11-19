@@ -25,34 +25,38 @@ import com.eclipsesource.json.Json
 import com.vaticle.dependencies.tool.release.createnotes.Constant.github
 import java.nio.file.Path
 
-fun getCommits(org: String, repo: String, current: Version, to: String, baseDir: Path, githubToken: String): List<String> {
-    val preceding = getPrecedingVersion(org, repo, current, githubToken)
+fun collectCommits(org: String, repo: String, commit: String, version: Version, baseDir: Path, githubToken: String): List<String> {
+    println("Determining the commits to be collected...")
+    val preceding = getPrecedingVersion(org, repo, version, githubToken)
     if (preceding != null) {
-        val response = httpGet("$github/repos/$org/$repo/compare/$preceding...$to", githubToken)
-        val body = Json.parse(String(response.content.readBytes()))
-        return body.asObject().get("commits").asArray().map { e -> e.asObject().get("sha").asString() }
+        println("The script will collect commits down to the preceding version '$preceding'.")
+        val response = httpGet("$github/repos/$org/$repo/compare/$preceding...$commit", githubToken)
+        val body = Json.parse(response.parseAsString())
+        return body.asObject().get("commits").asArray().map { cmt -> cmt.asObject().get("sha").asString() }
     }
     else {
         val gitRevList = bash("git rev-list --max-parents=0 HEAD", baseDir)
         val firstCommit = gitRevList.outputString().trim()
-        val response = httpGet("$github/repos/$org/$repo/compare/$firstCommit...$to", githubToken)
-        val body = Json.parse(String(response.content.readBytes()))
-        return listOf(firstCommit) + body.asObject().get("commits").asArray().map { e -> e.asObject().get("sha").asString() }.toList()
+        println("No preceding version found. The script will collect all commits down to the first one: '$firstCommit'.")
+        val response = httpGet("$github/repos/$org/$repo/compare/$firstCommit...$commit", githubToken)
+        val body = Json.parse(response.parseAsString())
+        val commits =
+            body.asObject().get("commits").asArray().map { cmt -> cmt.asObject().get("sha").asString() }.toList()
+        return listOf(firstCommit) + commits
     }
 }
 
-private fun getPrecedingVersion(org: String, repo: String, current: Version, githubToken: String): Version? {
+private fun getPrecedingVersion(org: String, repo: String, version: Version, githubToken: String): Version? {
     val response = httpGet("$github/repos/$org/$repo/releases", githubToken)
-    val body = Json.parse(String(response.content.readBytes()))
-    val releases = mutableListOf<Version>()
-    releases.add(current)
-    releases.addAll(body.asArray().map { e -> Version.parse(e.asObject().get("tag_name").asString()) })
-    releases.sort()
-    val currentIdx = releases.indexOf(current)
+    val body = Json.parse(response.parseAsString())
+    val tags = mutableListOf<Version>()
+    tags.add(version)
+    tags.addAll(body.asArray().map { release -> Version.parse(release.asObject().get("tag_name").asString()) })
+    tags.sort()
+    val currentIdx = tags.indexOf(version)
     val preceding =
-        if (currentIdx >= 1) releases[currentIdx - 1]
+        if (currentIdx >= 1) tags[currentIdx - 1]
         else if (currentIdx == 0) null
-        else throw IllegalStateException("")
-    println("preceding version: $preceding")
+        else throw IllegalStateException("Version '$version' not found: currentIdx = '$currentIdx'")
     return preceding
 }
