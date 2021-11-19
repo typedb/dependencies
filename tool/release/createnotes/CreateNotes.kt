@@ -49,7 +49,7 @@ private fun getEnv(env: String): String {
 
 private fun writeNotesMd(notes: List<Note>, releaseTemplateFile: Path) {
     val template = String(Files.readAllBytes(releaseTemplateFile), Charsets.UTF_8)
-    if (!template.matches("[\\s\\S]*${Constant.releaseTemplateRegex.pattern}[\\s\\S]*".toRegex()))
+    if (!template.matches(".*${Constant.releaseTemplateRegex.pattern}.*".toRegex(RegexOption.DOT_MATCHES_ALL)))
         throw RuntimeException("The release-template does not contain the '${Constant.releaseTemplateRegex}' placeholder")
     val markdown = template.replace(Constant.releaseTemplateRegex, Note.toMarkdown(notes))
     Files.write(releaseTemplateFile, markdown.toByteArray(Charsets.UTF_8))
