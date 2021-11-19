@@ -55,6 +55,6 @@ private fun getPrecedingVersion(org: String, repo: String, version: Version, git
     val preceding =
         if (currentIdx >= 1) releases[currentIdx - 1]
         else if (currentIdx == 0) null
-        else throw IllegalStateException("Version '$version' not found: currentIdx = '$currentIdx")
+        else throw IllegalStateException("Version '$version' not found: currentIdx = '$currentIdx'")
     return preceding
 }
