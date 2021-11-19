@@ -10,7 +10,6 @@ import java.nio.file.Path
 
 object Constant {
     val releaseTemplateRegex = "\\{\\s*release notes\\s*}".toRegex()
-    const val installInstruction = "http://docs.vaticle.com/docs/running-typedb/install-and-run"
     const val github = "https://api.github.com"
     const val headerAccept = "\"application/vnd.github.v3+json"
     const val headerAuthPrefix = "Token"

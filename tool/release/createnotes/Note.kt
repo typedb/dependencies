@@ -105,8 +105,6 @@ class Note {
             }
 
             return """
-Install & Run: ${Constant.installInstruction}
-
 ## New Features
 ${features.map { e -> e.toMarkdown() }.joinToString("\n")}
 
