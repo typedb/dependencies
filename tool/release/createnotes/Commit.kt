@@ -31,29 +31,31 @@ fun collectCommits(org: String, repo: String, commit: String, version: Version, 
     if (preceding != null) {
         println("The script will collect commits down to the preceding version '$preceding'.")
         val response = httpGet("$github/repos/$org/$repo/compare/$preceding...$commit", githubToken)
-        val body = Json.parse(String(response.content.readBytes()))
-        return body.asObject().get("commits").asArray().map { e -> e.asObject().get("sha").asString() }
+        val body = Json.parse(response.parseAsString())
+        return body.asObject().get("commits").asArray().map { cmt -> cmt.asObject().get("sha").asString() }
     }
     else {
         val gitRevList = bash("git rev-list --max-parents=0 HEAD", baseDir)
         val firstCommit = gitRevList.outputString().trim()
         println("No preceding version found. The script will collect all commits down to the first one: '$firstCommit'.")
         val response = httpGet("$github/repos/$org/$repo/compare/$firstCommit...$commit", githubToken)
-        val body = Json.parse(String(response.content.readBytes()))
-        return listOf(firstCommit) + body.asObject().get("commits").asArray().map { e -> e.asObject().get("sha").asString() }.toList()
+        val body = Json.parse(response.parseAsString())
+        val commits =
+            body.asObject().get("commits").asArray().map { cmt -> cmt.asObject().get("sha").asString() }.toList()
+        return listOf(firstCommit) + commits
     }
 }
 
 private fun getPrecedingVersion(org: String, repo: String, version: Version, githubToken: String): Version? {
     val response = httpGet("$github/repos/$org/$repo/releases", githubToken)
-    val body = Json.parse(String(response.content.readBytes()))
-    val releases = mutableListOf<Version>()
-    releases.add(version)
-    releases.addAll(body.asArray().map { e -> Version.parse(e.asObject().get("tag_name").asString()) })
-    releases.sort()
-    val currentIdx = releases.indexOf(version)
+    val body = Json.parse(response.parseAsString())
+    val tags = mutableListOf<Version>()
+    tags.add(version)
+    tags.addAll(body.asArray().map { release -> Version.parse(release.asObject().get("tag_name").asString()) })
+    tags.sort()
+    val currentIdx = tags.indexOf(version)
     val preceding =
-        if (currentIdx >= 1) releases[currentIdx - 1]
+        if (currentIdx >= 1) tags[currentIdx - 1]
         else if (currentIdx == 0) null
         else throw IllegalStateException("Version '$version' not found: currentIdx = '$currentIdx'")
     return preceding

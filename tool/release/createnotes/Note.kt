@@ -58,16 +58,14 @@ class Note {
 
         private fun getPRType(labels: JsonArray): Type {
             val types = labels
-                .map { e -> e.asObject().get("name").asString() }
-                .filter { e -> e.startsWith(labelPrefix) }
-            val type =
-                when {
-                    types.contains(labelFeature) -> Type.FEATURE
-                    types.contains(labelBug) -> Type.BUG
-                    types.contains(labelRefactor) -> Type.REFACTOR
-                    else -> Type.OTHER
-                }
-            return type
+                .map { label -> label.asObject().get("name").asString() }
+                .filter { label -> label.startsWith(labelPrefix) }
+            return when {
+                types.contains(labelFeature) -> Type.FEATURE
+                types.contains(labelBug) -> Type.BUG
+                types.contains(labelRefactor) -> Type.REFACTOR
+                else -> Type.OTHER
+            }
         }
 
         private fun getPRGoal(description: String): String {
@@ -124,7 +122,7 @@ ${others.map(Note::toMarkdown).joinToString("\n")}
 fun collectNotes(org: String, repo: String, commits: List<String>, githubToken: String): List<Note> {
     return commits.flatMap { commit ->
         val response = httpGet("$github/repos/$org/$repo/commits/$commit/pulls", githubToken)
-        val body = Json.parse(String(response.content.readBytes()))
+        val body = Json.parse(response.parseAsString())
         val prs = body.asArray()
         if (prs.size() > 0) {
             val notes = prs.map { pr ->
@@ -136,7 +134,7 @@ fun collectNotes(org: String, repo: String, commits: List<String>, githubToken: 
         } else {
             println("collecting commit '$commit'...")
             val response = httpGet("$github/repos/$org/$repo/commits/$commit", githubToken)
-            val body = Json.parse(String(response.content.readBytes()))
+            val body = Json.parse(response.parseAsString())
             val notes = listOf(Note.fromGithubCommit(body.asObject().get("commit").asObject()))
             notes
         }
