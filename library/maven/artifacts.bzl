@@ -241,8 +241,8 @@ artifacts = {
     "org.jetbrains.compose.ui:ui-text-desktop": "1.0.0-alpha3",
     "org.jetbrains.compose.ui:ui-unit-desktop": "1.0.0-alpha3",
     "org.jetbrains.compose.runtime:runtime-desktop": "1.0.0-alpha3",
-    "org.jetbrains.kotlin:kotlin-reflect": "1.5.2", # TODO: Upgrade to 1.6.0
-    "org.jetbrains.kotlin:kotlin-stdlib-jdk7": "1.5.2", # TODO: Upgrade to 1.6.0
+    "org.jetbrains.kotlin:kotlin-reflect": "1.5.20", # TODO: Upgrade to 1.6.0
+    "org.jetbrains.kotlin:kotlin-stdlib-jdk7": "1.5.20", # TODO: Upgrade to 1.6.0
     "org.jetbrains.kotlin:kotlin-test": "1.5.21", # TODO: Upgrade to 1.6.0
     "org.jetbrains.kotlinx:kotlinx-coroutines-core": "1.5.2", # TODO: Upgrade to 1.6.0
     "org.jetbrains.skiko:skiko-jvm-runtime-linux-x64": "0.3.9",
