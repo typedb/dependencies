@@ -38,7 +38,6 @@ artifacts = {
     "com.google.ortools:ortools-win32-x86-64-java": "8.0.8283",
     "com.google.protobuf:protobuf-java": "3.14.0",
     "com.jcraft:jsch": "0.1.55",
-    "org.jetbrains.kotlin:kotlin-stdlib-jdk7": "1.4.30",
     "com.microsoft.azure:azure": "1.33.1",
     "com.microsoft.azure:azure-client-authentication": "1.7.4",
     "com.microsoft.azure:azure-client-runtime": "1.7.4",
@@ -242,8 +241,10 @@ artifacts = {
     "org.jetbrains.compose.ui:ui-text-desktop": "1.0.0-alpha3",
     "org.jetbrains.compose.ui:ui-unit-desktop": "1.0.0-alpha3",
     "org.jetbrains.compose.runtime:runtime-desktop": "1.0.0-alpha3",
-    "org.jetbrains.kotlin:kotlin-test": "1.5.21",
-    "org.jetbrains.kotlinx:kotlinx-coroutines-core": "1.5.2",
+    "org.jetbrains.kotlin:kotlin-reflect": "1.5.2", # TODO: Upgrade to 1.6.0
+    "org.jetbrains.kotlin:kotlin-stdlib-jdk7": "1.5.2", # TODO: Upgrade to 1.6.0
+    "org.jetbrains.kotlin:kotlin-test": "1.5.21", # TODO: Upgrade to 1.6.0
+    "org.jetbrains.kotlinx:kotlinx-coroutines-core": "1.5.2", # TODO: Upgrade to 1.6.0
     "org.jetbrains.skiko:skiko-jvm-runtime-linux-x64": "0.3.9",
     "org.jetbrains.skiko:skiko-jvm-runtime-macos-x64": "0.3.9",
     "org.jetbrains.skiko:skiko-jvm-runtime-windows-x64": "0.3.9",
