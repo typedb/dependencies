@@ -13,7 +13,7 @@ used in production.
 
 0. Then, run `bazel build //library/rocksdbjni:assemble-maven-mac` to build the Maven artifact.
 
-0. Finally, deploy it with `bazel run //library/rocksdbjni:deploy-maven -- release`.
+0. Finally, deploy it with `bazel run //library/rocksdbjni:deploy-maven-mac -- release`.
 You'll need the correct credentials in order to deploy to the Vaticle Maven repository.
 
 (!) **Important** - When upgrading RocksDB JNI, remember to also update the version specified in `library/maven/artifacts.bzl`.
