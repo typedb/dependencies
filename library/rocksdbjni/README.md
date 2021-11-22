@@ -11,7 +11,7 @@ used in production.
 
 0. First run `cat library/rocksdbjni/VERSION` to check that the version number is correct.
 
-0. Then, run `bazel build //library/rocksdbjni:assemble-maven` to build the Maven artifact.
+0. Then, run `bazel build //library/rocksdbjni:assemble-maven-mac` to build the Maven artifact.
 
 0. Finally, deploy it with `bazel run //library/rocksdbjni:deploy-maven -- release`.
 You'll need the correct credentials in order to deploy to the Vaticle Maven repository.
