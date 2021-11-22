@@ -7,16 +7,27 @@ The RocksDB JNI has two modes of operation: "debug mode", which enables code ass
 disables them and runs significantly faster. Debug mode should be used in development; the production mode should be
 used in production.
 
-## Deploying RocksDB JNI with Bazel
+## Assembling & Deploying with Bazel
 
-**NOTE: Only -mac distributions are currently operational.**
+**NOTE: Only Mac distributions are currently operational.**
 
-1. First run `cat library/rocksdbjni/VERSION` to check that the version number is correct.
 
-2. Then, run `bazel build //library/rocksdbjni:assemble-maven-mac` to build the Maven artifact.
+1. Update VERSION file with the version of RocksDB JNI that you wish to assemble & deploy:
+```
+echo "<rocksdb-jni-version>" > library/rocksdbjni/VERSION
+```
 
-3. Finally, deploy it with `bazel run //library/rocksdbjni:deploy-maven-mac -- release`.
-You'll need the correct credentials in order to deploy to the Vaticle Maven repository.
+2. Assemble the artifact:
+```
+bazel build //library/rocksdbjni:assemble-maven-mac
+```
+
+3. Deploy the artifact:
+```
+export DEPLOY_MAVEN_USERNAME=...
+export DEPLOY_MAVEN_PASSWORD=...
+bazel run //library/rocksdbjni:deploy-maven-mac -- release
+```
 
 (!) **Important** - When upgrading RocksDB JNI, remember to also update the version specified in `library/maven/artifacts.bzl`.
 
