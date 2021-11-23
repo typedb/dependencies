@@ -31,7 +31,7 @@ bazel run //library/rocksdbjni:deploy-maven-mac -- release
 
 (!) **Important** - When upgrading RocksDB JNI, remember to also update the version specified in `library/maven/artifacts.bzl`.
 
-## The RocksDB JNI build process
+## The manual RocksDB JNI build process
 
 For reference, the steps to build RocksDB JNI manually are listed here, but `assemble_maven` does all these steps automatically.
 The official documentation for compiling RocksDB JNI can be found in RocksDB's [GitHub wiki page](https://github.com/facebook/rocksdb/wiki/RocksJava-Basics).
