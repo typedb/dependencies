@@ -74,3 +74,10 @@ rules_pkg_dependencies()
 
 # Load Maven artifacts
 maven(vaticle_dependencies_tool_maven_artifacts)
+
+###############################################
+# Create @vaticle_typedb_workspace_refs #
+###############################################
+
+load("@vaticle_bazel_distribution//common:rules.bzl", "workspace_refs")
+workspace_refs(name = "vaticle_dependencies_workspace_refs")
