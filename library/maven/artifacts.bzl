@@ -245,6 +245,7 @@ artifacts = {
     "org.jetbrains.kotlin:kotlin-stdlib-jdk7": "1.5.20", # TODO: Upgrade to 1.6.0
     "org.jetbrains.kotlin:kotlin-test": "1.5.21", # TODO: Upgrade to 1.6.0
     "org.jetbrains.kotlinx:kotlinx-coroutines-core": "1.5.2", # TODO: Upgrade to 1.6.0
+    "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm": "1.5.2", # TODO: Upgrade to 1.6.0
     "org.jetbrains.skiko:skiko-jvm-runtime-linux-x64": "0.3.9",
     "org.jetbrains.skiko:skiko-jvm-runtime-macos-x64": "0.3.9",
     "org.jetbrains.skiko:skiko-jvm-runtime-windows-x64": "0.3.9",
