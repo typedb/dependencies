@@ -25,6 +25,9 @@ deployment = {
     "brew.release": "https://github.com/vaticle/homebrew-tap/",
     "brew.snapshot": "https://github.com/vaticle/homebrew-tap-test/",
 
+    "crate.release": "https://crates.io",
+    "crate.snapshot": "https://repo.vaticle.com/repository/crates-snapshot/",
+
     "helm.release": "https://repo.vaticle.com/repository/helm/",
     "helm.snapshot": "https://repo.vaticle.com/repository/helm-snapshot/",
 
