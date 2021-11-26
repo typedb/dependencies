@@ -3,9 +3,9 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 def deps():
     http_file(
         name = "org_jetbrains_compose_compiler",
-        urls = ["https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/compose/compiler/compiler-hosted/1.0.0-beta1/compiler-hosted-1.0.0-beta1.jar"],
-        sha256 = "6746f2290e7492498f63204cd0101299892196a8238ff76e1e421dfbec57e515",
-        downloaded_file_path = "compiler-hosted-1.0.0-beta1.jar",
+        urls = ["https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/compose/compiler/compiler-hosted/1.0.0-rc3/compiler-hosted-1.0.0-rc3.jar"],
+        sha256 = "1e628a81ad501bc737ca4ea193b8c5072a4baa022b3152aacb928bf076af8226",
+        downloaded_file_path = "compiler-hosted-1.0.0-rc3.jar",
     )
 
     http_file(
