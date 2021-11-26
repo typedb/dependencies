@@ -15,12 +15,4 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-package(default_visibility = ["//visibility:public"])
-
-load("@vaticle_dependencies_ci_pip//:requirements.bzl", "requirement")
-
-py_binary(
-    name = "docs",
-    srcs = ["docs.py"],
-    main = "docs.py"
-)
+exports_files(["ValidateDeps.kt", "ValidateNodeJsDeps.kt", "ValidatePythonDeps.kt"])
