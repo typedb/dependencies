@@ -1,4 +1,4 @@
-package com.vaticle.dependencies.tool.release
+package com.vaticle.dependencies.tool.release.version
 
 import com.google.api.client.http.ByteArrayContent
 import com.google.api.client.http.GenericUrl
@@ -6,7 +6,6 @@ import com.google.api.client.http.HttpHeaders
 import com.google.api.client.http.javanet.NetHttpTransport
 import java.nio.file.Files
 import java.nio.file.Paths
-
 
 fun postJson(url: String?, authorization: String, accept: String, content: String) {
     NetHttpTransport()
