@@ -1,4 +1,4 @@
-package com.vaticle.dependencies.tool.release.createnotes
+package com.vaticle.dependencies.tool.release.notes
 
 import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.HttpHeaders
