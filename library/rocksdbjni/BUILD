@@ -58,9 +58,13 @@ java_import(
 
 assemble_maven(
     name = "assemble-maven-mac",
+    project_description = "RocksDB JNI Mac Dev release by Vaticle",
+    project_name = "RocksDB JNI Mac Dev",
+    project_url = "https://github.com/vaticle/dependencies",
+    scm_url = "https://github.com/vaticle/dependencies",
     target = ":rocksdbjni-dev-mac",
     version_file = "VERSION",
-    tags = ["manual"]
+    workspace_refs = "@vaticle_dependencies_workspace_refs//:refs.json",
 )
 
 deploy_maven(
