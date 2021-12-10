@@ -8,6 +8,7 @@ path = "" # ignored by cargo raze
 [dependencies]
 antlr-rust = "0.2.0"
 rocksdb = "0.17.0"
+cxx = "1.0.59"
 
 [package.metadata.raze]
 # The path at which to write output files.

@@ -129,6 +129,33 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
+        name = "raze__cxx__1_0_59",
+        url = "https://crates.io/api/v1/crates/cxx/1.0.59/download",
+        type = "tar.gz",
+        strip_prefix = "cxx-1.0.59",
+        build_file = Label("//library/crates/remote:BUILD.cxx-1.0.59.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "raze__cxxbridge_flags__1_0_59",
+        url = "https://crates.io/api/v1/crates/cxxbridge-flags/1.0.59/download",
+        type = "tar.gz",
+        strip_prefix = "cxxbridge-flags-1.0.59",
+        build_file = Label("//library/crates/remote:BUILD.cxxbridge-flags-1.0.59.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "raze__cxxbridge_macro__1_0_59",
+        url = "https://crates.io/api/v1/crates/cxxbridge-macro/1.0.59/download",
+        type = "tar.gz",
+        strip_prefix = "cxxbridge-macro-1.0.59",
+        build_file = Label("//library/crates/remote:BUILD.cxxbridge-macro-1.0.59.bazel"),
+    )
+
+    maybe(
+        http_archive,
         name = "raze__glob__0_3_0",
         url = "https://crates.io/api/v1/crates/glob/0.3.0/download",
         type = "tar.gz",
@@ -200,6 +227,15 @@ def raze_fetch_remote_crates():
         type = "tar.gz",
         strip_prefix = "librocksdb-sys-6.20.3",
         build_file = Label("//library/crates/remote:BUILD.librocksdb-sys-6.20.3.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "raze__link_cplusplus__1_0_6",
+        url = "https://crates.io/api/v1/crates/link-cplusplus/1.0.6/download",
+        type = "tar.gz",
+        strip_prefix = "link-cplusplus-1.0.6",
+        build_file = Label("//library/crates/remote:BUILD.link-cplusplus-1.0.6.bazel"),
     )
 
     maybe(
