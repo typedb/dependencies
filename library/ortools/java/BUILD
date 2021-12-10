@@ -16,7 +16,7 @@ genrule(
 
 kt_jvm_binary(
     name = "maven",
-    main_class = "com.vaticle.dependencies.library.ortools.deploy.DeployKt",
+    main_class = "java",
     srcs = [":script"],
     deps = ["@maven//:org_zeroturnaround_zt_exec"],
     data = google_or_tools_import_files("@google_or_tools_darwin", "darwin") +

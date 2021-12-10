@@ -27,7 +27,7 @@ def google_or_tools_import_files(workspace, artifact):
         workspace + "//:ortools-java-" + version + "-javadoc.jar",
     ]
 
-def google_or_tools_darwin():
+def google_or_tools_mac():
     http_archive(
         name = "google_or_tools_darwin",
         urls = ["https://github.com/google/or-tools/releases/download/v8.0/or-tools_MacOsX-10.15.7_v" + version + ".tar.gz"],
