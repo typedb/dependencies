@@ -7,7 +7,7 @@ fun main() {
         val baseDir = Paths.get(".")
         val version = Paths.get("library").resolve("rocksdbjni").resolve("VERSION").toFile().useLines { it.firstOrNull() }
 
-        val javaHome = Paths.get("/opt/java-se-8u41-ri")
+        val javaHome = Paths.get("/usr/lib/jvm/openjdk-11-amd64")
 
         bash("git clone https://github.com/flyingsilverfin/rocksdb.git", baseDir, javaHome, true)
 

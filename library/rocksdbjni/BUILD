@@ -118,10 +118,10 @@ assemble_maven(
         workspace_refs = "@vaticle_dependencies_workspace_refs//:refs.json",
 )
 
-#deploy_maven(
-#    name = "deploy-maven-linux",
-#    target = ":assemble-maven-linux",
-#    snapshot = deployment["maven.snapshot"],
-#    release = deployment["maven.release"],
-#    tags = ["manual"]
-#)
+deploy_maven(
+    name = "deploy-maven-linux",
+    target = ":assemble-maven-linux",
+    snapshot = deployment["maven.snapshot"],
+    release = deployment["maven.release"],
+    tags = ["manual"]
+)
