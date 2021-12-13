@@ -8,10 +8,11 @@ fun main() {
 
     val javaHome = Paths.get(bash("/usr/libexec/java_home", baseDir, null, true).outputUTF8().trim())
 
-    bash("git clone https://github.com/facebook/rocksdb.git", baseDir, javaHome, true)
+//    bash("git clone https://github.com/facebook/rocksdb.git", baseDir, javaHome, true)
+    bash("git clone https://github.com/flyingsilverfin/rocksdb.git", baseDir, javaHome, true)
 
     val rocksDbDir = Paths.get("rocksdb")
-    bash("git checkout v$version", rocksDbDir, javaHome, true)
+    bash("git checkout $version", rocksDbDir, javaHome, true)
 
     bash("brew install cmake", rocksDbDir, javaHome, false)
 
@@ -23,7 +24,8 @@ fun main() {
     val sourcesJarName = "rocksdbjni-$version-sources.jar"
     bash("jar -cf ../../../target/$sourcesJarName org", srcMainJavaDir, javaHome, true)
 
-    val versionedJarName = "rocksdbjni-$version-osx.jar"
+    val buildVersion = "6.27.0"
+    val versionedJarName = "rocksdbjni-$buildVersion-osx.jar"
     val jar = rocksDbDir.resolve("java").resolve("target").resolve(versionedJarName).toFile()
     val destPath = Paths.get("rocksdbjni-osx.jar").toFile()
     jar.copyTo(destPath)

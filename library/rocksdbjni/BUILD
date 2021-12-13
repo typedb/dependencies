@@ -103,14 +103,19 @@ java_import(
         "rocksdbjni-linux.jar"
 #        "rocksdbjni-sources.jar", // TODO: enable once we found a way to generate source jar under Linux
     ],
-    tags = ["manual", "no-ide", "maven_coordinates=org.rocksdb:rocksdbjni-dev-linux:{pom_version}"],
+    tags = ["manual", "no-ide", "maven_coordinates=org.rocksdb:rocksdbjni-linux:{pom_version}"],
 )
 
 assemble_maven(
     name = "assemble-maven-linux",
     target = ":rocksdbjni-dev-linux",
     version_file = "VERSION",
-    tags = ["manual"]
+    tags = ["manual"],
+        project_description = "RocksDB JNI Mac Dev release by Vaticle",
+        project_name = "RocksDB JNI Mac Dev",
+        project_url = "https://github.com/vaticle/dependencies",
+        scm_url = "https://github.com/vaticle/dependencies",
+        workspace_refs = "@vaticle_dependencies_workspace_refs//:refs.json",
 )
 
 #deploy_maven(
