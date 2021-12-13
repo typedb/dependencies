@@ -257,7 +257,7 @@ artifacts = {
     "org.openjdk.jmh:jmh-core": "1.23",
     "org.openjdk.jmh:jmh-generator-annprocess": "1.23",
     "org.rocksdb:rocksdbjni": "6.26.1",
-    "org.rocksdb:rocksdbjni-dev-linux": "36c2700d602dea7247824e5eb44b2f4c6c066efd",
+    "org.rocksdb:rocksdbjni-linux": "36c2700d602dea7247824e5eb44b2f4c6c066efd",
     "org.rocksdb:rocksdbjni-dev-mac": "36c2700d602dea7247824e5eb44b2f4c6c066efd",
     "org.scala-lang:scala-library": "2.12.10",
     "org.sharegov:mjson": "1.4.1",
