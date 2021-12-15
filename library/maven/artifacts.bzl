@@ -121,7 +121,7 @@ artifacts = {
     "junit:junit": "4.12",
     "net.logstash.logback:logstash-logback-encoder": "6.5",
     "net.minidev:json-smart": "2.3",
-    "org.antlr:antlr4-runtime": "4.7.1",
+    "org.antlr:antlr4-runtime": "4.8",
     "org.apache.cassandra:cassandra-all": {
         "exclude": [
             "ch.qos.logback:logback-classic",
