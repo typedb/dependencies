@@ -103,7 +103,7 @@ java_import(
         "rocksdbjni-linux.jar"
 #        "rocksdbjni-sources.jar", // TODO: enable once we found a way to generate source jar under Linux
     ],
-    tags = ["manual", "no-ide", "maven_coordinates=org.rocksdb:rocksdbjni-linux-dev:{pom_version}"],
+    tags = ["manual", "no-ide", "maven_coordinates=org.rocksdb:rocksdbjni-dev-linux:{pom_version}"],
 )
 
 assemble_maven(
