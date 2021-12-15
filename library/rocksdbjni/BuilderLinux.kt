@@ -9,16 +9,17 @@ fun main() {
 
         val javaHome = Paths.get("/usr/lib/jvm/openjdk-11-amd64")
 
-        bash("git clone https://github.com/flyingsilverfin/rocksdb.git", baseDir, javaHome, true)
+        bash("git clone https://github.com/facebook/rocksdb.git", baseDir, javaHome, true)
 
         val rocksDbDir = Paths.get("rocksdb").toAbsolutePath()
-        bash("git checkout $version", rocksDbDir, javaHome, true)
+        bash("git checkout v$version", rocksDbDir, javaHome, true)
 
         bash("sudo apt install cmake", rocksDbDir, javaHome, false)
 
         bash("make clean jclean", rocksDbDir, javaHome, true)
 
-        bash("DEBUG_LEVEL=0 make -j8 rocksdbjava", rocksDbDir, javaHome, true)
+        // use 'make DEBUG_LEVEL=0 ...' to build production binary
+        bash("make -j8 rocksdbjava", rocksDbDir, javaHome, true)
 
         println(">>>>>>>>>>>>>>>>>>>>> baseDir")
         bash("ls ${baseDir}", rocksDbDir, javaHome, true)
@@ -36,8 +37,7 @@ fun main() {
         bash("ls ${rocksDbDir.resolve("java").resolve("target")}", rocksDbDir, javaHome, true)
         println(">>>>>>>>>>>>>>>>>>>>>")
 
-        val buildVersion = "6.27.0"
-        val versionedJarName = "rocksdbjni-$buildVersion-linux64.jar"
+        val versionedJarName = "rocksdbjni-$version-linux64.jar"
         println(">>>>>>>>>>>>>>>>>>>>>")
 
         println("1")
