@@ -9,6 +9,7 @@ path = "" # ignored by cargo raze
 antlr-rust = "0.2.0"
 rocksdb = "0.17.0"
 cxx = "1.0.59"
+rand = "0.8.4"
 
 [package.metadata.raze]
 # The path at which to write output files.

@@ -31,10 +31,12 @@ licenses([
 
 # Generated Targets
 
-rust_proc_macro(
-    name = "cxxbridge_macro",
+rust_library(
+    name = "ppv_lite86",
     srcs = glob(["**/*.rs"]),
     crate_features = [
+        "simd",
+        "std",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,13 +47,10 @@ rust_proc_macro(
     tags = [
         "cargo-raze",
         "manual",
-        "crate-name=cxxbridge-macro"
+        "crate-name=ppv-lite86"
     ],
-    version = "1.0.59",
+    version = "0.2.15",
     # buildifier: leave-alone
     deps = [
-        "@raze__proc_macro2__1_0_32//:proc_macro2",
-        "@raze__quote__1_0_10//:quote",
-        "@raze__syn__1_0_81//:syn",
     ],
 )
