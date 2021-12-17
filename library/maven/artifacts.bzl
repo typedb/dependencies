@@ -1,7 +1,7 @@
 artifacts = {
     "androidx.annotation:annotation": "1.2.0",
-    "ch.qos.logback:logback-classic": "1.2.3",
-    "ch.qos.logback:logback-core": "1.2.3",
+    "ch.qos.logback:logback-classic": "1.2.7",
+    "ch.qos.logback:logback-core": "1.2.7",
     "com.auth0:java-jwt": "3.8.3",
     "com.azure:azure-core": "1.5.0",
     "com.azure:azure-identity": "1.0.6",
@@ -121,7 +121,7 @@ artifacts = {
     "junit:junit": "4.12",
     "net.logstash.logback:logstash-logback-encoder": "6.5",
     "net.minidev:json-smart": "2.3",
-    "org.antlr:antlr4-runtime": "4.7.1",
+    "org.antlr:antlr4-runtime": "4.8",
     "org.apache.cassandra:cassandra-all": {
         "exclude": [
             "ch.qos.logback:logback-classic",
@@ -261,10 +261,10 @@ artifacts = {
     "org.rocksdb:rocksdbjni-dev-mac": "6.26.1",
     "org.scala-lang:scala-library": "2.12.10",
     "org.sharegov:mjson": "1.4.1",
-    "org.slf4j:jcl-over-slf4j": "1.7.20",
-    "org.slf4j:log4j-over-slf4j": "1.7.20",
-    "org.slf4j:slf4j-api": "1.7.28",
-    "org.slf4j:slf4j-simple": "1.7.20",
+    "org.slf4j:jcl-over-slf4j": "1.7.32",
+    "org.slf4j:log4j-over-slf4j": "1.7.32",
+    "org.slf4j:slf4j-api": "1.7.32",
+    "org.slf4j:slf4j-simple": "1.7.32",
     "org.springframework.security:spring-security-crypto": "5.5.0",
     "org.yaml:snakeyaml": "1.25",
     "org.zeromq:jeromq": "0.5.2",
