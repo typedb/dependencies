@@ -17,6 +17,7 @@ fun main() {
 
     bash("make clean jclean", rocksDbDir, javaHome, true)
 
+    // use 'make DEBUG_LEVEL=0 ...' to build production binary
     bash("make -j8 rocksdbjava", rocksDbDir, javaHome, true)
 
     val srcMainJavaDir = Paths.get("rocksdb", "java", "src", "main", "java")

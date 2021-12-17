@@ -110,13 +110,18 @@ assemble_maven(
     name = "assemble-maven-linux",
     target = ":rocksdbjni-dev-linux",
     version_file = "VERSION",
-    tags = ["manual"]
+    tags = ["manual"],
+    project_description = "RocksDB JNI Mac Dev release by Vaticle",
+    project_name = "RocksDB JNI Mac Dev",
+    project_url = "https://github.com/vaticle/dependencies",
+    scm_url = "https://github.com/vaticle/dependencies",
+    workspace_refs = "@vaticle_dependencies_workspace_refs//:refs.json",
 )
 
-#deploy_maven(
-#    name = "deploy-maven-linux",
-#    target = ":assemble-maven-linux",
-#    snapshot = deployment["maven.snapshot"],
-#    release = deployment["maven.release"],
-#    tags = ["manual"]
-#)
+deploy_maven(
+    name = "deploy-maven-linux",
+    target = ":assemble-maven-linux",
+    snapshot = deployment["maven.snapshot"],
+    release = deployment["maven.release"],
+    tags = ["manual"]
+)

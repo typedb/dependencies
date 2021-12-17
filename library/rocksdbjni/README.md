@@ -9,7 +9,7 @@ used in production.
 
 ## Assembling & Deploying with Bazel
 
-**NOTE: Only Mac distributions are currently operational.**
+**NOTE: Only Mac distributions are currently available with sources.**
 
 
 1. Update VERSION file with the version of RocksDB JNI that you wish to assemble & deploy:
@@ -53,7 +53,7 @@ The official documentation for compiling RocksDB JNI can be found in RocksDB's [
 5. To clean, run `make clean jclean`.
 
 6. To build the JNI into a JAR, run `make -j8 rocksdbjava`. This will configure `DEBUG_LEVEL` to the default of 1,
-which is debug mode enabled. To get a production build, run `DEBUG_LEVEL=0 make -j8 rocksdbjava` instead.
+which is debug mode enabled. To get a production build, run `make DEBUG_LEVEL=0 -j8 rocksdbjava` instead.
 
 7. To build the JNI's source code into a sources JAR, run the following command (with the correct version number):
 `cd java/src/main/java;jar -cf ../../../target/rocksdbjni-6.8.1-sources.jar org`
