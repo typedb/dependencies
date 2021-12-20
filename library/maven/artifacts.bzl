@@ -108,7 +108,7 @@ artifacts = {
     "io.netty:netty-common": "4.1.63.Final",
     "io.netty:netty-transport": "4.1.63.Final",
     "io.netty:netty-resolver": "4.1.63.Final",
-    "io.netty:netty-tcnative-boringssl-static": "2.0.25.Final",
+    "io.netty:netty-tcnative-boringssl-static": "2.0.46.Final",
     "io.opencensus:opencensus-api": "0.24.0",
     "io.opencensus:opencensus-contrib-grpc-metrics": "0.24.0",
     "io.vavr:vavr": "0.9.0",
