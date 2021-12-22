@@ -24,6 +24,7 @@ package com.vaticle.dependencies.tool.release.createnotes
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.notExists
+import kotlin.text.Regex.Companion.escapeReplacement
 
 fun main(args: Array<String>) {
     val bazelWorkspaceDir = Paths.get(getEnv("BUILD_WORKSPACE_DIRECTORY"))
@@ -50,6 +51,6 @@ private fun writeNotesMd(notes: List<Note>, releaseTemplateFile: Path) {
     val template = releaseTemplateFile.toFile().readText()
     if (!template.matches(".*${Constant.releaseTemplateRegex.pattern}.*".toRegex(RegexOption.DOT_MATCHES_ALL)))
         throw RuntimeException("The release-template does not contain the '${Constant.releaseTemplateRegex}' placeholder")
-    val markdown = template.replace(Constant.releaseTemplateRegex, Note.toMarkdown(notes))
+    val markdown = template.replace(Constant.releaseTemplateRegex, escapeReplacement(Note.toMarkdown(notes)))
     releaseTemplateFile.toFile().writeText(markdown)
 }
