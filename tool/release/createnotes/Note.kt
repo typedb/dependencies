@@ -43,23 +43,23 @@ class Note {
         this.type = type
     }
 
-    fun toMarkdown():  String {
+    fun toMarkdown(): String {
         return "- **$title**\n  ${goal ?: ""}"
     }
 
     companion object {
         fun fromGithubPR(pr: JsonObject): Note {
             return Note(
-                title = pr.get("title").asString(),
-                goal = getPRGoal(pr.get("body").asString()),
-                type = getPRType(pr.get("labels").asArray())
+                    title = pr.get("title").asString(),
+                    goal = getPRGoal(pr.get("body").asString()),
+                    type = getPRType(pr.get("labels").asArray())
             )
         }
 
         private fun getPRType(labels: JsonArray): Type {
             val types = labels
-                .map { label -> label.asObject().get("name").asString() }
-                .filter { label -> label.startsWith(labelPrefix) }
+                    .map { label -> label.asObject().get("name").asString() }
+                    .filter { label -> label.startsWith(labelPrefix) }
             return when {
                 types.contains(labelFeature) -> Type.FEATURE
                 types.contains(labelBug) -> Type.BUG
@@ -120,7 +120,7 @@ ${others.map(Note::toMarkdown).joinToString("\n")}
 }
 
 fun collectNotes(org: String, repo: String, commits: List<String>, githubToken: String): List<Note> {
-     return commits.reversed().flatMap { commit ->
+    return commits.flatMap { commit ->
         val pullsRes = httpGet("$github/repos/$org/$repo/commits/$commit/pulls", githubToken)
         val pullsJSON = Json.parse(pullsRes.parseAsString())
         val prs = pullsJSON.asArray()

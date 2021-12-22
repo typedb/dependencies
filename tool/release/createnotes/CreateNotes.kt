@@ -39,7 +39,7 @@ fun main(args: Array<String>) {
 
     val commits = collectCommits(org, repo, commit, Version.parse(version), bazelWorkspaceDir, githubToken)
     println("Found ${commits.size} commits to be collected into the release note.")
-    val notes = collectNotes(org, repo, commits, githubToken)
+    val notes = collectNotes(org, repo, commits.reversed(), githubToken)
     writeNotesMd(notes, templateFile)
 }
 
