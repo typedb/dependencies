@@ -75,7 +75,7 @@ class Note {
                 if (line.startsWith("##")) {
                     header += 1
                 } else if (header == 1) {
-                    goal.append(line)
+                    goal.append(line).append("\n")
                 } else if (header > 1) {
                     break
                 }
@@ -120,7 +120,7 @@ ${others.map(Note::toMarkdown).joinToString("\n")}
 }
 
 fun collectNotes(org: String, repo: String, commits: List<String>, githubToken: String): List<Note> {
-    return commits.flatMap { commit ->
+     return commits.reversed().flatMap { commit ->
         val pullsRes = httpGet("$github/repos/$org/$repo/commits/$commit/pulls", githubToken)
         val pullsJSON = Json.parse(pullsRes.parseAsString())
         val prs = pullsJSON.asArray()
