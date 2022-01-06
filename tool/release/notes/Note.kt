@@ -19,16 +19,16 @@
  * under the License.
  */
 
-package com.vaticle.dependencies.tool.release.createnotes
+package com.vaticle.dependencies.tool.release.notes
 
 import com.eclipsesource.json.Json
 import com.eclipsesource.json.JsonArray
 import com.eclipsesource.json.JsonObject
-import com.vaticle.dependencies.tool.release.createnotes.Constant.labelBug
-import com.vaticle.dependencies.tool.release.createnotes.Constant.labelFeature
-import com.vaticle.dependencies.tool.release.createnotes.Constant.github
-import com.vaticle.dependencies.tool.release.createnotes.Constant.labelPrefix
-import com.vaticle.dependencies.tool.release.createnotes.Constant.labelRefactor
+import com.vaticle.dependencies.tool.release.notes.Constant.labelBug
+import com.vaticle.dependencies.tool.release.notes.Constant.labelFeature
+import com.vaticle.dependencies.tool.release.notes.Constant.github
+import com.vaticle.dependencies.tool.release.notes.Constant.labelPrefix
+import com.vaticle.dependencies.tool.release.notes.Constant.labelRefactor
 
 class Note {
     enum class Type { FEATURE, BUG, REFACTOR, OTHER }

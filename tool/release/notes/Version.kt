@@ -19,7 +19,7 @@
  * under the License.
  */
 
-package com.vaticle.dependencies.tool.release.createnotes
+package com.vaticle.dependencies.tool.release.notes
 
 data class Version(val major: Int, val minor: Int, val patch: Int, val alpha: Int?): Comparable<Version> {
     companion object {
