@@ -229,6 +229,7 @@ artifacts = {
     "org.bouncycastle:bcprov-jdk16": "1.46",
     "org.codehaus.janino:janino": "3.1.6",
     "org.eclipse.jetty.websocket:websocket-api": "9.4.18.v20190429",
+    "org.eclipse.platform:org.eclipse.swt": "3.118.0",
     "org.hamcrest:hamcrest": "2.2",
     "org.hamcrest:hamcrest-all": "1.3",
     "org.hamcrest:hamcrest-core": "1.3",
