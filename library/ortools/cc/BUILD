@@ -14,13 +14,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
-package(default_visibility = ["//visibility:public"])
-
-load("@vaticle_dependencies_ci_pip//:requirements.bzl", "requirement")
-
-py_binary(
-    name = "docs",
-    srcs = ["docs.py"],
-    main = "docs.py"
-)

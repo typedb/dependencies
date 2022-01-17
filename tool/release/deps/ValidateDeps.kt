@@ -1,4 +1,4 @@
-package com.vaticle.dependencies.tool.release
+package com.vaticle.dependencies.tool.release.deps
 
 import com.eclipsesource.json.Json
 import java.io.FileReader

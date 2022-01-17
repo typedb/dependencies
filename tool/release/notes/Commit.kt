@@ -19,10 +19,10 @@
  * under the License.
  */
 
-package com.vaticle.dependencies.tool.release.createnotes
+package com.vaticle.dependencies.tool.release.notes
 
 import com.eclipsesource.json.Json
-import com.vaticle.dependencies.tool.release.createnotes.Constant.github
+import com.vaticle.dependencies.tool.release.notes.Constant.github
 import java.nio.file.Path
 
 fun collectCommits(org: String, repo: String, commit: String, version: Version, baseDir: Path, githubToken: String): List<String> {

@@ -7,7 +7,7 @@ fun main() {
         val baseDir = Paths.get(".")
         val version = Paths.get("library").resolve("rocksdbjni").resolve("VERSION").toFile().useLines { it.firstOrNull() }
 
-        val javaHome = Paths.get("/opt/java-se-8u41-ri")
+        val javaHome = Paths.get("/usr/lib/jvm/java-11-openjdk-amd64")
 
         bash("git clone https://github.com/facebook/rocksdb.git", baseDir, javaHome, true)
 
@@ -18,6 +18,7 @@ fun main() {
 
         bash("make clean jclean", rocksDbDir, javaHome, true)
 
+        // use 'make DEBUG_LEVEL=0 ...' to build production binary
         bash("make -j8 rocksdbjava", rocksDbDir, javaHome, true)
 
         println(">>>>>>>>>>>>>>>>>>>>> baseDir")

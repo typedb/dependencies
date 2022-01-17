@@ -1,4 +1,4 @@
-package com.vaticle.dependencies.library.ortools.deploy
+package com.vaticle.dependencies.library.ortools.java
 
 import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult

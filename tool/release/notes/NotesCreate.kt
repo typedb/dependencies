@@ -19,15 +19,16 @@
  * under the License.
  */
 
-package com.vaticle.dependencies.tool.release.createnotes
+package com.vaticle.dependencies.tool.release.notes
 
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.notExists
+import kotlin.text.Regex.Companion.escapeReplacement
 
 fun main(args: Array<String>) {
     val bazelWorkspaceDir = Paths.get(getEnv("BUILD_WORKSPACE_DIRECTORY"))
-    val githubToken = getEnv("CREATE_NOTES_TOKEN")
+    val githubToken = getEnv("NOTES_CREATE_TOKEN")
     if (args.size != 5) throw RuntimeException("org, repo, commit, version, and template must be supplied")
     val (org, repo, commit, version, templateFileLocation) = args
     val templateFile = bazelWorkspaceDir.resolve(templateFileLocation)
@@ -38,7 +39,7 @@ fun main(args: Array<String>) {
 
     val commits = collectCommits(org, repo, commit, Version.parse(version), bazelWorkspaceDir, githubToken)
     println("Found ${commits.size} commits to be collected into the release note.")
-    val notes = collectNotes(org, repo, commits, githubToken)
+    val notes = collectNotes(org, repo, commits.reversed(), githubToken)
     writeNotesMd(notes, templateFile)
 }
 
@@ -50,6 +51,6 @@ private fun writeNotesMd(notes: List<Note>, releaseTemplateFile: Path) {
     val template = releaseTemplateFile.toFile().readText()
     if (!template.matches(".*${Constant.releaseTemplateRegex.pattern}.*".toRegex(RegexOption.DOT_MATCHES_ALL)))
         throw RuntimeException("The release-template does not contain the '${Constant.releaseTemplateRegex}' placeholder")
-    val markdown = template.replace(Constant.releaseTemplateRegex, Note.toMarkdown(notes))
+    val markdown = template.replace(Constant.releaseTemplateRegex, escapeReplacement(Note.toMarkdown(notes)))
     releaseTemplateFile.toFile().writeText(markdown)
 }

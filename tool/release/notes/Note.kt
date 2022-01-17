@@ -19,16 +19,16 @@
  * under the License.
  */
 
-package com.vaticle.dependencies.tool.release.createnotes
+package com.vaticle.dependencies.tool.release.notes
 
 import com.eclipsesource.json.Json
 import com.eclipsesource.json.JsonArray
 import com.eclipsesource.json.JsonObject
-import com.vaticle.dependencies.tool.release.createnotes.Constant.labelBug
-import com.vaticle.dependencies.tool.release.createnotes.Constant.labelFeature
-import com.vaticle.dependencies.tool.release.createnotes.Constant.github
-import com.vaticle.dependencies.tool.release.createnotes.Constant.labelPrefix
-import com.vaticle.dependencies.tool.release.createnotes.Constant.labelRefactor
+import com.vaticle.dependencies.tool.release.notes.Constant.labelBug
+import com.vaticle.dependencies.tool.release.notes.Constant.labelFeature
+import com.vaticle.dependencies.tool.release.notes.Constant.github
+import com.vaticle.dependencies.tool.release.notes.Constant.labelPrefix
+import com.vaticle.dependencies.tool.release.notes.Constant.labelRefactor
 
 class Note {
     enum class Type { FEATURE, BUG, REFACTOR, OTHER }
@@ -43,23 +43,23 @@ class Note {
         this.type = type
     }
 
-    fun toMarkdown():  String {
+    fun toMarkdown(): String {
         return "- **$title**\n  ${goal ?: ""}"
     }
 
     companion object {
         fun fromGithubPR(pr: JsonObject): Note {
             return Note(
-                title = pr.get("title").asString(),
-                goal = getPRGoal(pr.get("body").asString()),
-                type = getPRType(pr.get("labels").asArray())
+                    title = pr.get("title").asString(),
+                    goal = getPRGoal(pr.get("body").asString()),
+                    type = getPRType(pr.get("labels").asArray())
             )
         }
 
         private fun getPRType(labels: JsonArray): Type {
             val types = labels
-                .map { label -> label.asObject().get("name").asString() }
-                .filter { label -> label.startsWith(labelPrefix) }
+                    .map { label -> label.asObject().get("name").asString() }
+                    .filter { label -> label.startsWith(labelPrefix) }
             return when {
                 types.contains(labelFeature) -> Type.FEATURE
                 types.contains(labelBug) -> Type.BUG
@@ -75,7 +75,7 @@ class Note {
                 if (line.startsWith("##")) {
                     header += 1
                 } else if (header == 1) {
-                    goal.append(line)
+                    goal.append(line).append("\n")
                 } else if (header > 1) {
                     break
                 }

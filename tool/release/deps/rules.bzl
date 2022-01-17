@@ -48,7 +48,7 @@ _release_validate_deps_script_test = rule(
         ),
         "_release_validate_deps_template": attr.label(
             allow_single_file=True,
-            default = "@vaticle_dependencies//tool/release:ValidateDeps.kt"
+            default = "@vaticle_dependencies//tool/release/deps:ValidateDeps.kt"
         )
     },
     implementation = _release_validate_deps_script_impl,
@@ -69,7 +69,7 @@ def release_validate_deps(name, **kwargs):
     # assign this rule instance as the name that is passed in, so it is called with `bazel run `
     kt_jvm_test(
         name = name,
-        main_class = "com.vaticle.dependencies.tool.release." + standard_name + "_genKt",
+        main_class = "com.vaticle.dependencies.tool.release.deps." + standard_name + "_genKt",
         srcs = [target_name],
         deps = [
             "@maven//:com_eclipsesource_minimal_json_minimal_json"
@@ -84,9 +84,9 @@ def release_validate_nodejs_deps(
     ):
         kt_jvm_test(
             name = name,
-            main_class = "com.vaticle.dependencies.tool.release.ValidateNodeJsDepsKt",
+            main_class = "com.vaticle.dependencies.tool.release.deps.ValidateNodeJsDepsKt",
             srcs = [
-                "@vaticle_dependencies//tool/release:ValidateNodeJsDeps.kt"
+                "@vaticle_dependencies//tool/release/deps:ValidateNodeJsDeps.kt"
             ],
             data = [
                 package_json,
@@ -107,9 +107,9 @@ def release_validate_python_deps(
     ):
         kt_jvm_test(
             name = name,
-            main_class = "com.vaticle.dependencies.tool.release.ValidatePythonDepsKt",
+            main_class = "com.vaticle.dependencies.tool.release.deps.ValidatePythonDepsKt",
             srcs = [
-                "@vaticle_dependencies//tool/release:ValidatePythonDeps.kt"
+                "@vaticle_dependencies//tool/release/deps:ValidatePythonDeps.kt"
             ],
             data = [
                 requirements,

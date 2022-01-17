@@ -21,6 +21,12 @@ workspace(name = "vaticle_dependencies")
 # Load @vaticle_dependencies #
 ################################
 
+# Load //build/rust
+load("//builder/rust:deps.bzl", rust_deps = "deps")
+rust_deps()
+load("@rules_rust//rust:repositories.bzl", "rust_repositories")
+rust_repositories(version = "nightly", iso_date = "2021-07-01", edition="2018")
+
 # Load //builder/python
 load("//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
@@ -41,8 +47,13 @@ kotlin_repositories()
 kt_register_toolchains()
 
 # Load //library/ortools
-load("//library/ortools/deploy:deps.bzl", "google_or_tools_darwin", "google_or_tools_linux", "google_or_tools_windows")
-google_or_tools_darwin()
+load("//library/ortools/java:deps.bzl", "google_or_tools_mac", "google_or_tools_linux", "google_or_tools_windows")
+google_or_tools_mac()
+google_or_tools_linux()
+google_or_tools_windows()
+
+load("//library/ortools/cc:deps.bzl", "google_or_tools_mac", "google_or_tools_linux", "google_or_tools_windows")
+google_or_tools_mac()
 google_or_tools_linux()
 google_or_tools_windows()
 
@@ -74,6 +85,11 @@ rules_pkg_dependencies()
 
 # Load Maven artifacts
 maven(vaticle_dependencies_tool_maven_artifacts)
+
+# Load Rust Crate dependencies
+
+load("//library/crates:crates.bzl", "raze_fetch_remote_crates")
+raze_fetch_remote_crates()
 
 ###############################################
 # Create @vaticle_typedb_workspace_refs #

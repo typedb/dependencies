@@ -1,10 +1,9 @@
-package com.vaticle.dependencies.tool.release
+package com.vaticle.dependencies.tool.release.deps
 
 import com.eclipsesource.json.Json
 import com.eclipsesource.json.JsonObject
 import com.google.api.client.http.GenericUrl
 import com.google.api.client.http.javanet.NetHttpTransport
-import java.io.FileReader
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.regex.Pattern

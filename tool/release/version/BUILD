@@ -15,12 +15,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-package(default_visibility = ["//visibility:public"])
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
 
-load("@vaticle_dependencies_ci_pip//:requirements.bzl", "requirement")
-
-py_binary(
-    name = "docs",
-    srcs = ["docs.py"],
-    main = "docs.py"
+kt_jvm_binary(
+    name = "bump",
+    srcs = ["Bump.kt"],
+    main_class = "com.vaticle.dependencies.tool.release.version.BumpKt",
+    deps = [
+        "@maven//:com_eclipsesource_minimal_json_minimal_json",
+        "@maven//:com_google_http_client_google_http_client",
+    ],
 )
