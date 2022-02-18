@@ -253,9 +253,9 @@ artifacts = {
     # Find out the Skiko version we need to use at:
     # https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/compose/ui/ui-graphics-desktop/
     # https://mvnrepository.com/artifact/org.jetbrains.skiko/skiko-awt-runtime-macos-x64
-    "org.jetbrains.skiko:skiko-jvm-runtime-linux-x64": "0.6.7",
-    "org.jetbrains.skiko:skiko-jvm-runtime-macos-x64": "0.6.7",
-    "org.jetbrains.skiko:skiko-jvm-runtime-windows-x64": "0.6.7",
+    "org.jetbrains.skiko:skiko-awt-runtime-linux-x64": "0.7.5",
+    "org.jetbrains.skiko:skiko-awt-runtime-macos-x64": "0.7.5",
+    "org.jetbrains.skiko:skiko-awt-runtime-windows-x64": "0.7.5",
     "org.kohsuke:github-api": "1.101",
     "org.mockito:mockito-core": "2.6.4",
     "org.openjdk.jmh:jmh-core": "1.23",
