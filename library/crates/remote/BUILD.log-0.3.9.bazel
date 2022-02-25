@@ -32,9 +32,11 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "version_check",
+    name = "log",
     srcs = glob(["**/*.rs"]),
     crate_features = [
+        "default",
+        "use_std",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -44,11 +46,12 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=log",
         "manual",
-        "crate-name=version_check"
     ],
-    version = "0.9.3",
+    version = "0.3.9",
     # buildifier: leave-alone
     deps = [
+        "@raze__log__0_4_6//:log",
     ],
 )

@@ -16,7 +16,7 @@
 #
 
 
-load("@rules_rust//rust:rust.bzl", "rust_binary", "rust_library")
+load("@rules_rust//rust:defs.bzl", "rust_library")
 load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cxx_bridge")
 
 package(default_visibility = ["//visibility:public"])

@@ -54,8 +54,8 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=regex-syntax",
         "manual",
-        "crate-name=regex-syntax"
     ],
     version = "0.6.25",
     # buildifier: leave-alone

@@ -50,8 +50,8 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=rocksdb",
         "manual",
-        "crate-name=rocksdb"
     ],
     version = "0.17.0",
     # buildifier: leave-alone

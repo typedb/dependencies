@@ -51,6 +51,10 @@ cargo_build_script(
         "winbase",
         "winerror",
         "winnt",
+        "winsock2",
+        "ws2def",
+        "ws2ipdef",
+        "ws2tcpip",
     ],
     crate_root = "build.rs",
     data = glob(["**"]),
@@ -80,6 +84,10 @@ rust_library(
         "winbase",
         "winerror",
         "winnt",
+        "winsock2",
+        "ws2def",
+        "ws2ipdef",
+        "ws2tcpip",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -89,8 +97,8 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=winapi",
         "manual",
-        "crate-name=winapi"
     ],
     version = "0.3.9",
     # buildifier: leave-alone

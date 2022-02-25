@@ -26,13 +26,13 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # ISC from expression "ISC"
+    "notice",  # MIT from expression "MIT OR Apache-2.0"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "libloading",
+    name = "mio_uds",
     srcs = glob(["**/*.rs"]),
     aliases = {
     },
@@ -46,10 +46,10 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=mio-uds",
         "manual",
-        "crate-name=libloading"
     ],
-    version = "0.7.2",
+    version = "0.6.8",
     # buildifier: leave-alone
     deps = [
     ] + selects.with_or({
@@ -58,26 +58,10 @@ rust_library(
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
         ): [
-            "@raze__cfg_if__1_0_0//:cfg_if",
-        ],
-        "//conditions:default": [],
-    }) + selects.with_or({
-        # cfg(windows)
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__winapi__0_3_9//:winapi",
+            "@raze__iovec__0_1_4//:iovec",
+            "@raze__libc__0_2_106//:libc",
+            "@raze__mio__0_6_23//:mio",
         ],
         "//conditions:default": [],
     }),
 )
-
-# Unsupported target "constants" with type "test" omitted
-
-# Unsupported target "functions" with type "test" omitted
-
-# Unsupported target "library_filename" with type "test" omitted
-
-# Unsupported target "markers" with type "test" omitted
-
-# Unsupported target "windows" with type "test" omitted

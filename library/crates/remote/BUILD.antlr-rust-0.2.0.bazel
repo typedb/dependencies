@@ -44,8 +44,8 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=antlr-rust",
         "manual",
-        "crate-name=antlr-rust"
     ],
     version = "0.2.0",
     # buildifier: leave-alone
