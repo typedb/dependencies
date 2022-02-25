@@ -18,7 +18,7 @@ grpc = "0.6.2"
 grpc-compiler = "0.6.2"
 tls-api = "0.1.22"
 tls-api-stub = "0.1.22"
-log = "0.4, <0.4.7"
+log = "0.4.6"
 
 [package.metadata.raze]
 # The path at which to write output files.
