@@ -58,7 +58,7 @@ cargo_build_script(
     version = "0.59.2",
     visibility = ["//visibility:private"],
     deps = [
-        "@raze__clang_sys__1_3_0//:clang_sys",
+        "@raze__clang_sys__1_3_1//:clang_sys",
     ],
 )
 
@@ -78,8 +78,8 @@ rust_binary(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=bindgen",
         "manual",
-        "crate-name=bindgen"
     ],
     version = "0.59.2",
     # buildifier: leave-alone
@@ -88,7 +88,7 @@ rust_binary(
         ":bindgen_build_script",
         "@raze__bitflags__1_3_2//:bitflags",
         "@raze__cexpr__0_6_0//:cexpr",
-        "@raze__clang_sys__1_3_0//:clang_sys",
+        "@raze__clang_sys__1_3_1//:clang_sys",
         "@raze__lazy_static__1_4_0//:lazy_static",
         "@raze__lazycell__1_3_0//:lazycell",
         "@raze__peeking_take_while__0_1_2//:peeking_take_while",
@@ -114,8 +114,8 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=bindgen",
         "manual",
-        "crate-name=bindgen"
     ],
     version = "0.59.2",
     # buildifier: leave-alone
@@ -123,7 +123,7 @@ rust_library(
         ":bindgen_build_script",
         "@raze__bitflags__1_3_2//:bitflags",
         "@raze__cexpr__0_6_0//:cexpr",
-        "@raze__clang_sys__1_3_0//:clang_sys",
+        "@raze__clang_sys__1_3_1//:clang_sys",
         "@raze__lazy_static__1_4_0//:lazy_static",
         "@raze__lazycell__1_3_0//:lazycell",
         "@raze__peeking_take_while__0_1_2//:peeking_take_while",

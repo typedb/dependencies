@@ -9,7 +9,16 @@ path = "" # ignored by cargo raze
 antlr-rust = "0.2.0"
 rocksdb = "0.17.0"
 cxx = "1.0.59"
-rand = "0.8.4"
+futures = "0.3.21"
+
+# gRPC dependencies
+protobuf = { version = "2.8.2", features = ["with-bytes"] }
+protobuf-codegen = "2.8.2"
+grpc = "0.6.2"
+grpc-compiler = "0.6.2"
+tls-api = "0.1.22"
+tls-api-stub = "0.1.22"
+log = "0.4, <0.4.7"
 
 [package.metadata.raze]
 # The path at which to write output files.
@@ -34,3 +43,19 @@ targets = [
 # is used to indicate whether the user is using a non-vendored or
 # vendored set of dependencies.
 genmode = "Remote"
+
+# gRPC arguments and aliased targets
+[package.metadata.raze.crates.lazy_static.'1.4.0']
+additional_flags = [
+    "--cfg=lazy_static_heap_impl",
+]
+
+[package.metadata.raze.crates.protobuf.'2.8.2']
+patches = ["@rules_rust//proto/raze/patch:protobuf-2.8.2.patch"]
+patch_args = ["-p1"]
+
+[package.metadata.raze.crates.protobuf-codegen.'2.8.2']
+extra_aliased_targets = ["cargo_bin_protoc_gen_rust"]
+
+[package.metadata.raze.crates.grpc-compiler.'0.6.2']
+extra_aliased_targets = ["cargo_bin_protoc_gen_rust_grpc"]

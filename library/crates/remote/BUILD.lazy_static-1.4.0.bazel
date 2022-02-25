@@ -41,11 +41,12 @@ rust_library(
     edition = "2015",
     rustc_flags = [
         "--cap-lints=allow",
+        "--cfg=lazy_static_heap_impl",
     ],
     tags = [
         "cargo-raze",
+        "crate-name=lazy_static",
         "manual",
-        "crate-name=lazy_static"
     ],
     version = "1.4.0",
     # buildifier: leave-alone

@@ -59,7 +59,7 @@ cargo_build_script(
     version = "1.0.6",
     visibility = ["//visibility:private"],
     deps = [
-        "@raze__cc__1_0_72//:cc",
+        "@raze__cc__1_0_73//:cc",
     ],
 )
 
@@ -77,8 +77,8 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=link-cplusplus",
         "manual",
-        "crate-name=link-cplusplus"
     ],
     version = "1.0.6",
     # buildifier: leave-alone

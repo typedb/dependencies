@@ -66,7 +66,7 @@ cargo_build_script(
     visibility = ["//visibility:private"],
     deps = [
         "@raze__bindgen__0_59_2//:bindgen",
-        "@raze__cc__1_0_72//:cc",
+        "@raze__cc__1_0_73//:cc",
         "@raze__glob__0_3_0//:glob",
     ],
 )
@@ -91,8 +91,8 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=librocksdb-sys",
         "manual",
-        "crate-name=librocksdb-sys"
     ],
     version = "6.20.3",
     # buildifier: leave-alone

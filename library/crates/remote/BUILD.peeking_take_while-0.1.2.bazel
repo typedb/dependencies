@@ -44,8 +44,8 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
+        "crate-name=peeking_take_while",
         "manual",
-        "crate-name=peeking_take_while"
     ],
     version = "0.1.2",
     # buildifier: leave-alone
