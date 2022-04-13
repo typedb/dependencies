@@ -32,24 +32,26 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "tls_api",
+    name = "tls_api_stub",
     srcs = glob(["**/*.rs"]),
     crate_features = [
     ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2015",
+    edition = "2018",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tls-api",
+        "crate-name=tls-api-stub",
         "manual",
     ],
-    version = "0.1.22",
+    version = "0.4.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__log__0_4_14//:log",
+        "@raze__tls_api__0_4_0//:tls_api",
+        "@raze__tokio__0_2_25//:tokio",
+        "@raze__void__1_0_2//:void",
     ],
 )

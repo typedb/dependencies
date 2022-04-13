@@ -32,24 +32,38 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "tls_api",
+    name = "grpc",
     srcs = glob(["**/*.rs"]),
     crate_features = [
     ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2015",
+    edition = "2018",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tls-api",
+        "crate-name=grpc",
         "manual",
     ],
-    version = "0.1.22",
+    version = "0.8.3",
     # buildifier: leave-alone
     deps = [
+        "@raze__base64__0_9_3//:base64",
+        "@raze__bytes__0_5_6//:bytes",
+        "@raze__futures__0_3_21//:futures",
+        "@raze__httpbis__0_9_1//:httpbis",
         "@raze__log__0_4_14//:log",
+        "@raze__log_ndc__0_2_0//:log_ndc",
+        "@raze__tls_api__0_4_0//:tls_api",
+        "@raze__tls_api_stub__0_4_0//:tls_api_stub",
+        "@raze__tokio__0_2_25//:tokio",
     ],
 )
+
+# Unsupported target "client" with type "test" omitted
+
+# Unsupported target "server" with type "test" omitted
+
+# Unsupported target "simple" with type "test" omitted

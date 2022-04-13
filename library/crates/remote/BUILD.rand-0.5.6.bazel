@@ -26,19 +26,34 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT"
+    "notice",  # MIT from expression "MIT OR Apache-2.0"
 ])
 
 # Generated Targets
 
+# Unsupported target "distributions" with type "bench" omitted
+
+# Unsupported target "generators" with type "bench" omitted
+
+# Unsupported target "misc" with type "bench" omitted
+
+# Unsupported target "monte-carlo" with type "example" omitted
+
+# Unsupported target "monty-hall" with type "example" omitted
+
 rust_library(
-    name = "mio",
+    name = "rand",
     srcs = glob(["**/*.rs"]),
     aliases = {
     },
     crate_features = [
+        "alloc",
+        "cloudabi",
         "default",
-        "with-deprecated",
+        "fuchsia-cprng",
+        "libc",
+        "std",
+        "winapi",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -48,17 +63,13 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=mio",
+        "crate-name=rand",
         "manual",
     ],
-    version = "0.6.23",
+    version = "0.5.6",
     # buildifier: leave-alone
     deps = [
-        "@raze__cfg_if__0_1_10//:cfg_if",
-        "@raze__iovec__0_1_4//:iovec",
-        "@raze__log__0_4_14//:log",
-        "@raze__net2__0_2_37//:net2",
-        "@raze__slab__0_4_5//:slab",
+        "@raze__rand_core__0_3_1//:rand_core",
     ] + selects.with_or({
         # cfg(unix)
         (
@@ -73,12 +84,10 @@ rust_library(
         (
             "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
         ): [
-            "@raze__kernel32_sys__0_2_2//:kernel32_sys",
-            "@raze__miow__0_2_2//:miow",
-            "@raze__winapi__0_2_8//:winapi",
+            "@raze__winapi__0_3_9//:winapi",
         ],
         "//conditions:default": [],
     }),
 )
 
-# Unsupported target "test" with type "test" omitted
+# Unsupported target "bool" with type "test" omitted

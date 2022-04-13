@@ -23,7 +23,7 @@ alias(
 
 alias(
     name = "cxx",
-    actual = "@raze__cxx__1_0_65//:cxx",
+    actual = "@raze__cxx__1_0_66//:cxx",
     tags = [
         "cargo-raze",
         "manual",
@@ -41,7 +41,7 @@ alias(
 
 alias(
     name = "grpc",
-    actual = "@raze__grpc__0_6_2//:grpc",
+    actual = "@raze__grpc__0_8_3//:grpc",
     tags = [
         "cargo-raze",
         "manual",
@@ -50,7 +50,7 @@ alias(
 
 alias(
     name = "cargo_bin_protoc_gen_rust_grpc",
-    actual = "@raze__grpc_compiler__0_6_2//:cargo_bin_protoc_gen_rust_grpc",
+    actual = "@raze__grpc_compiler__0_8_3//:cargo_bin_protoc_gen_rust_grpc",
     tags = [
         "cargo-raze",
         "manual",
@@ -59,7 +59,16 @@ alias(
 
 alias(
     name = "grpc_compiler",
-    actual = "@raze__grpc_compiler__0_6_2//:grpc_compiler",
+    actual = "@raze__grpc_compiler__0_8_3//:grpc_compiler",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "grpc_protobuf",
+    actual = "@raze__grpc_protobuf__0_8_3//:grpc_protobuf",
     tags = [
         "cargo-raze",
         "manual",
@@ -68,7 +77,7 @@ alias(
 
 alias(
     name = "log",
-    actual = "@raze__log__0_4_6//:log",
+    actual = "@raze__log__0_4_14//:log",
     tags = [
         "cargo-raze",
         "manual",
@@ -77,7 +86,7 @@ alias(
 
 alias(
     name = "protobuf",
-    actual = "@raze__protobuf__2_8_2//:protobuf",
+    actual = "@raze__protobuf__2_18_2//:protobuf",
     tags = [
         "cargo-raze",
         "manual",
@@ -86,7 +95,7 @@ alias(
 
 alias(
     name = "cargo_bin_protoc_gen_rust",
-    actual = "@raze__protobuf_codegen__2_8_2//:cargo_bin_protoc_gen_rust",
+    actual = "@raze__protobuf_codegen__2_18_2//:cargo_bin_protoc_gen_rust",
     tags = [
         "cargo-raze",
         "manual",
@@ -95,7 +104,16 @@ alias(
 
 alias(
     name = "protobuf_codegen",
-    actual = "@raze__protobuf_codegen__2_8_2//:protobuf_codegen",
+    actual = "@raze__protobuf_codegen__2_18_2//:protobuf_codegen",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "protoc_rust_grpc",
+    actual = "@raze__protoc_rust_grpc__0_8_3//:protoc_rust_grpc",
     tags = [
         "cargo-raze",
         "manual",
@@ -123,6 +141,24 @@ alias(
 alias(
     name = "tls_api_stub",
     actual = "@raze__tls_api_stub__0_1_22//:tls_api_stub",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "tokio",
+    actual = "@raze__tokio__1_17_0//:tokio",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "uuid",
+    actual = "@raze__uuid__0_8_2//:uuid",
     tags = [
         "cargo-raze",
         "manual",

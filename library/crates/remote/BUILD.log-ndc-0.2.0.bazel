@@ -32,22 +32,22 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "tls_api",
+    name = "log_ndc",
     srcs = glob(["**/*.rs"]),
     crate_features = [
     ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2015",
+    edition = "2018",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tls-api",
+        "crate-name=log-ndc",
         "manual",
     ],
-    version = "0.1.22",
+    version = "0.2.0",
     # buildifier: leave-alone
     deps = [
         "@raze__log__0_4_14//:log",

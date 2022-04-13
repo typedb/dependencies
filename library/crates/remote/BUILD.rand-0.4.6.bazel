@@ -31,10 +31,21 @@ licenses([
 
 # Generated Targets
 
+# Unsupported target "bench" with type "bench" omitted
+
+# Unsupported target "generators" with type "bench" omitted
+
+# Unsupported target "misc" with type "bench" omitted
+
 rust_library(
-    name = "tls_api",
+    name = "rand",
     srcs = glob(["**/*.rs"]),
+    aliases = {
+    },
     crate_features = [
+        "default",
+        "libc",
+        "std",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -44,12 +55,28 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tls-api",
+        "crate-name=rand",
         "manual",
     ],
-    version = "0.1.22",
+    version = "0.4.6",
     # buildifier: leave-alone
     deps = [
-        "@raze__log__0_4_14//:log",
-    ],
+    ] + selects.with_or({
+        # cfg(unix)
+        (
+            "@rules_rust//rust/platform:x86_64-apple-darwin",
+            "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+        ): [
+            "@raze__libc__0_2_106//:libc",
+        ],
+        "//conditions:default": [],
+    }) + selects.with_or({
+        # cfg(windows)
+        (
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+        ): [
+            "@raze__winapi__0_3_9//:winapi",
+        ],
+        "//conditions:default": [],
+    }),
 )

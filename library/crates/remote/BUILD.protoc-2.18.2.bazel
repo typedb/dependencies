@@ -26,13 +26,13 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "tls_api",
+    name = "protoc",
     srcs = glob(["**/*.rs"]),
     crate_features = [
     ],
@@ -44,12 +44,13 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tls-api",
+        "crate-name=protoc",
         "manual",
     ],
-    version = "0.1.22",
+    version = "2.18.2",
     # buildifier: leave-alone
     deps = [
         "@raze__log__0_4_14//:log",
+        "@raze__which__4_2_4//:which",
     ],
 )

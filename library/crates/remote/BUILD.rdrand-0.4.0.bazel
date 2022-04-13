@@ -26,15 +26,23 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # ISC from expression "ISC"
 ])
 
 # Generated Targets
 
+# Unsupported target "rdrand" with type "bench" omitted
+
+# Unsupported target "rdseed" with type "bench" omitted
+
+# Unsupported target "std" with type "bench" omitted
+
 rust_library(
-    name = "tls_api",
+    name = "rdrand",
     srcs = glob(["**/*.rs"]),
     crate_features = [
+        "default",
+        "std",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -44,12 +52,12 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tls-api",
+        "crate-name=rdrand",
         "manual",
     ],
-    version = "0.1.22",
+    version = "0.4.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__log__0_4_14//:log",
+        "@raze__rand_core__0_3_1//:rand_core",
     ],
 )

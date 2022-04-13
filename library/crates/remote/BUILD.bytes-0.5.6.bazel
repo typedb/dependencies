@@ -26,29 +26,23 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # Apache-2.0 from expression "Apache-2.0 OR MIT"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
-# Unsupported target "format_str" with type "bench" omitted
+# Unsupported target "buf" with type "bench" omitted
 
-# Unsupported target "invalid_parse_str" with type "bench" omitted
+# Unsupported target "bytes" with type "bench" omitted
 
-# Unsupported target "mod" with type "bench" omitted
-
-# Unsupported target "serde_support" with type "bench" omitted
-
-# Unsupported target "valid_parse_str" with type "bench" omitted
+# Unsupported target "bytes_mut" with type "bench" omitted
 
 rust_library(
-    name = "uuid",
+    name = "bytes",
     srcs = glob(["**/*.rs"]),
     crate_features = [
         "default",
-        "getrandom",
         "std",
-        "v4",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -58,12 +52,33 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=uuid",
+        "crate-name=bytes",
         "manual",
     ],
-    version = "0.8.2",
+    version = "0.5.6",
     # buildifier: leave-alone
     deps = [
-        "@raze__getrandom__0_2_5//:getrandom",
     ],
 )
+
+# Unsupported target "test_buf" with type "test" omitted
+
+# Unsupported target "test_buf_mut" with type "test" omitted
+
+# Unsupported target "test_bytes" with type "test" omitted
+
+# Unsupported target "test_bytes_odd_alloc" with type "test" omitted
+
+# Unsupported target "test_bytes_vec_alloc" with type "test" omitted
+
+# Unsupported target "test_chain" with type "test" omitted
+
+# Unsupported target "test_debug" with type "test" omitted
+
+# Unsupported target "test_iter" with type "test" omitted
+
+# Unsupported target "test_reader" with type "test" omitted
+
+# Unsupported target "test_serde" with type "test" omitted
+
+# Unsupported target "test_take" with type "test" omitted

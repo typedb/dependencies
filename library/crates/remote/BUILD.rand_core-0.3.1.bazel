@@ -32,9 +32,11 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "tls_api",
+    name = "rand_core",
     srcs = glob(["**/*.rs"]),
     crate_features = [
+        "alloc",
+        "std",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -44,12 +46,12 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tls-api",
+        "crate-name=rand_core",
         "manual",
     ],
-    version = "0.1.22",
+    version = "0.3.1",
     # buildifier: leave-alone
     deps = [
-        "@raze__log__0_4_14//:log",
+        "@raze__rand_core__0_4_2//:rand_core",
     ],
 )

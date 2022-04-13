@@ -26,30 +26,43 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "tls_api",
+    name = "which",
     srcs = glob(["**/*.rs"]),
+    aliases = {
+    },
     crate_features = [
     ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2015",
+    edition = "2018",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tls-api",
+        "crate-name=which",
         "manual",
     ],
-    version = "0.1.22",
+    version = "4.2.4",
     # buildifier: leave-alone
     deps = [
-        "@raze__log__0_4_14//:log",
-    ],
+        "@raze__either__1_6_1//:either",
+        "@raze__libc__0_2_106//:libc",
+    ] + selects.with_or({
+        # cfg(windows)
+        (
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+        ): [
+            "@raze__lazy_static__1_4_0//:lazy_static",
+        ],
+        "//conditions:default": [],
+    }),
 )
+
+# Unsupported target "basic" with type "test" omitted

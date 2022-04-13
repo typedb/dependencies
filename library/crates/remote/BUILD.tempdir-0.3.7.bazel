@@ -32,7 +32,7 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "tls_api",
+    name = "tempdir",
     srcs = glob(["**/*.rs"]),
     crate_features = [
     ],
@@ -44,12 +44,15 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tls-api",
+        "crate-name=tempdir",
         "manual",
     ],
-    version = "0.1.22",
+    version = "0.3.7",
     # buildifier: leave-alone
     deps = [
-        "@raze__log__0_4_14//:log",
+        "@raze__rand__0_4_6//:rand",
+        "@raze__remove_dir_all__0_5_3//:remove_dir_all",
     ],
 )
+
+# Unsupported target "smoke" with type "test" omitted

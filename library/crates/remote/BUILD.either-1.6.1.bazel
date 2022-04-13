@@ -32,9 +32,11 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "tls_api",
+    name = "either",
     srcs = glob(["**/*.rs"]),
     crate_features = [
+        "default",
+        "use_std",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -44,12 +46,11 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tls-api",
+        "crate-name=either",
         "manual",
     ],
-    version = "0.1.22",
+    version = "1.6.1",
     # buildifier: leave-alone
     deps = [
-        "@raze__log__0_4_14//:log",
     ],
 )

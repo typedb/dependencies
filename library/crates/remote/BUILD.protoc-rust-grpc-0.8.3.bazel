@@ -32,24 +32,28 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "tls_api",
+    name = "protoc_rust_grpc",
     srcs = glob(["**/*.rs"]),
     crate_features = [
     ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2015",
+    edition = "2018",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tls-api",
+        "crate-name=protoc-rust-grpc",
         "manual",
     ],
-    version = "0.1.22",
+    version = "0.8.3",
     # buildifier: leave-alone
     deps = [
-        "@raze__log__0_4_14//:log",
+        "@raze__grpc_compiler__0_8_3//:grpc_compiler",
+        "@raze__protobuf__2_18_2//:protobuf",
+        "@raze__protoc__2_18_2//:protoc",
+        "@raze__protoc_rust__2_18_2//:protoc_rust",
+        "@raze__tempdir__0_3_7//:tempdir",
     ],
 )
