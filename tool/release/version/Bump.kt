@@ -8,6 +8,7 @@ import java.nio.file.Path
 import java.nio.file.Paths
 
 val logger = Logger(DEBUG)
+val shell = Shell(logger)
 
 fun bumpVersion(version: String): String {
     val versionComponents = version.split(".").toTypedArray()
@@ -34,8 +35,6 @@ fun bumpVersion(version: String): String {
 }
 
 fun gitCommitAndPush(workspacePath: Path, newVersion: String) {
-    val shell = Shell(logger)
-    shell.execute(listOf("git", "checkout", "master"), baseDir = workspacePath)
     shell.execute(listOf("git", "add", "VERSION"), baseDir = workspacePath)
     shell.execute(listOf("git", "commit", "-m", "\"Bump version number to $newVersion\""), baseDir = workspacePath)
     val maxRetries = 3
@@ -57,6 +56,9 @@ fun main() {
     val workspaceDirectory = System.getenv("BUILD_WORKSPACE_DIRECTORY")
             ?: throw RuntimeException("Not running from within Bazel workspace")
     val workspacePath = Paths.get(workspaceDirectory)
+
+    shell.execute(listOf("git", "checkout", "master"), baseDir = workspacePath)
+
     val versionFile = workspacePath.resolve("VERSION")
     val version = String(Files.readAllBytes(versionFile)).trim()
     val newVersion = bumpVersion(version)
