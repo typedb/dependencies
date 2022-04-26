@@ -35,7 +35,7 @@ fun bumpVersion(version: String): String {
 
 fun gitCommitAndPush(workspacePath: Path, newVersion: String) {
     val shell = Shell(logger)
-    shell.execute(listOf("git", "remote", "-vv"), baseDir = workspacePath)
+    shell.execute(listOf("git", "checkout", "master"), baseDir = workspacePath)
     shell.execute(listOf("git", "add", "VERSION"), baseDir = workspacePath)
     shell.execute(listOf("git", "commit", "-m", "\"Bump version number to $newVersion\""), baseDir = workspacePath)
     val maxRetries = 3
