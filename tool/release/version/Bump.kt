@@ -47,6 +47,7 @@ fun gitCommitAndPush(workspacePath: Path, newVersion: String) {
         } catch (e: Exception) {
             // cover the unlikely but possible edge case where someone else has already pushed
             retryCount++
+            if (retryCount == maxRetries) throw e
         }
     }
 }
