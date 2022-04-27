@@ -6,9 +6,30 @@ import com.vaticle.bazel.distribution.common.shell.Shell
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
+import kotlin.io.path.exists
 
 val logger = Logger(DEBUG)
 val shell = Shell(logger)
+
+fun main() {
+    val workspaceDirectory = System.getenv("BUILD_WORKSPACE_DIRECTORY")
+        ?: throw RuntimeException("Not running from within Bazel workspace")
+    val branchName = System.getenv("GRABL_BRANCH")
+        ?: throw RuntimeException("GRABL_BRANCH environment variable is not set")
+    val workspacePath = Paths.get(workspaceDirectory)
+
+    shell.execute(listOf("git", "checkout", branchName), baseDir = workspacePath)
+
+    val versionFile = workspacePath.resolve("VERSION")
+    if (!versionFile.exists()) throw RuntimeException("File not found: VERSION")
+    val version = String(Files.readAllBytes(versionFile)).trim()
+    val newVersion = bumpVersion(version)
+
+    logger.debug { "Bumping the version to $newVersion" }
+    Files.write(versionFile, newVersion.toByteArray())
+
+    gitCommitAndPush(workspacePath, newVersion)
+}
 
 fun bumpVersion(version: String): String {
     val versionComponents = version.split(".").toTypedArray()
@@ -41,30 +62,12 @@ fun gitCommitAndPush(workspacePath: Path, newVersion: String) {
     var retryCount = 0
     while (retryCount < maxRetries) {
         shell.execute(listOf("git", "pull"), baseDir = workspacePath)
-        try {
-            shell.execute(listOf("git", "push"), baseDir = workspacePath)
-            break
-        } catch (e: Exception) {
+        val pushResult = shell.execute(listOf("git", "push"), baseDir = workspacePath, throwOnError = false)
+        if (pushResult.exitValue == 0) break
+        else {
             // cover the unlikely but possible edge case where someone else has already pushed
             retryCount++
-            if (retryCount == maxRetries) throw e
+            if (retryCount == maxRetries) throw RuntimeException("Exceeded retry limit of [$maxRetries] attempting to push to Git. Aborting.")
         }
     }
-}
-
-fun main() {
-    val workspaceDirectory = System.getenv("BUILD_WORKSPACE_DIRECTORY")
-            ?: throw RuntimeException("Not running from within Bazel workspace")
-    val workspacePath = Paths.get(workspaceDirectory)
-
-    shell.execute(listOf("git", "checkout", "master"), baseDir = workspacePath)
-
-    val versionFile = workspacePath.resolve("VERSION")
-    val version = String(Files.readAllBytes(versionFile)).trim()
-    val newVersion = bumpVersion(version)
-
-    logger.debug { "Bumping the version to $newVersion" }
-    Files.write(versionFile, newVersion.toByteArray())
-
-    gitCommitAndPush(workspacePath, newVersion)
 }
