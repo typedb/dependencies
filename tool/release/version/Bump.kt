@@ -3,7 +3,6 @@ package com.vaticle.dependencies.tool.release.version
 import com.vaticle.bazel.distribution.common.Logging.LogLevel.DEBUG
 import com.vaticle.bazel.distribution.common.Logging.Logger
 import com.vaticle.bazel.distribution.common.shell.Shell
-import com.vaticle.bazel.distribution.common.shell.Shell.Command.Companion.arg
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -13,7 +12,7 @@ val logger = Logger(DEBUG)
 val shell = Shell(logger)
 
 fun main() {
-    val (workspacePath, branchName, gitUsername, gitEmail, gitToken) = Config.load()
+    val (workspacePath, branchName, gitUsername, gitEmail) = Config.load()
 
     shell.execute(listOf("git", "config", "--global", "user.name", gitUsername))
     shell.execute(listOf("git", "config", "--global", "user.email", gitEmail))
@@ -28,19 +27,16 @@ fun main() {
     Files.write(versionFile, newVersion.toByteArray())
 
     logger.debug { "Creating Git commit and pushing to the remote repository" }
-    val remoteURL = getRemoteURL(workspacePath, gitToken)
-    gitCommitAndPush(workspacePath, newVersion, remoteURL)
+    gitCommitAndPush(workspacePath, newVersion)
 }
 
-data class Config(val workspacePath: Path, val branchName: String, val gitUsername: String, val gitEmail: String, val gitToken: String) {
+data class Config(val workspacePath: Path, val branchName: String, val gitUsername: String, val gitEmail: String) {
     companion object {
         fun load(): Config {
             return Config(
                 workspacePath = Paths.get(getenv("BUILD_WORKSPACE_DIRECTORY", errorMsg = "Not running from within Bazel workspace")),
-                branchName = getenv("GRABL_BRANCH"),
-                gitUsername = getenv("GIT_USERNAME"),
-                gitEmail = getenv("GIT_EMAIL"),
-                gitToken = getenv("GIT_TOKEN")
+                branchName = getenv("GRABL_BRANCH"), gitUsername = getenv("GIT_USERNAME"),
+                gitEmail = getenv("GIT_EMAIL")
             )
         }
 
@@ -74,29 +70,17 @@ fun bumpVersion(version: String): String {
     return versionComponents.joinToString(".")
 }
 
-fun getRemoteURL(workspacePath: Path, gitToken: String): String {
-    val gitRemoteOutput = shell.execute(listOf("git", "remote", "-v"), baseDir = workspacePath).outputString()
-    val regex = Regex("git@github\\.com:([^/]+)/([^/]+)\\.git")
-    val matchedGroups = regex.find(gitRemoteOutput)?.groupValues
-    if (matchedGroups == null || matchedGroups.size < 3) {
-        throw RuntimeException("Unable to parse 'git remote' output '$gitRemoteOutput'")
-    }
-    val (_, orgName, repoName) = matchedGroups
-    return "https://$gitToken@github.com/$orgName/$repoName.git"
-}
-
-fun gitCommitAndPush(workspacePath: Path, newVersion: String, remoteURL: String) {
+fun gitCommitAndPush(workspacePath: Path, newVersion: String) {
     shell.execute(listOf("git", "add", "VERSION"), baseDir = workspacePath)
     shell.execute(listOf("git", "commit", "-m", "Bump version number to $newVersion"), baseDir = workspacePath)
     val maxRetries = 3
     var retryCount = 0
     while (retryCount < maxRetries) {
         shell.execute(listOf("git", "pull", "--rebase"), baseDir = workspacePath)
-        val pushCmd = Shell.Command(arg("git"), arg("push"), arg(remoteURL, printable = false))
-        val pushResult = shell.execute(pushCmd, baseDir = workspacePath, outputIsSensitive = true, throwOnError = false)
+        val pushResult = shell.execute(listOf("git", "push"), baseDir = workspacePath, throwOnError = false)
         if (pushResult.exitValue == 0) break
         else {
-            // cover the unlikely but possible edge case where someone else has already pushed
+            // cover the edge case where someone else has already pushed
             retryCount++
             if (retryCount == maxRetries) throw RuntimeException("Exceeded retry limit of [$maxRetries] attempting to push to Git. Aborting.")
         }
