@@ -76,7 +76,7 @@ fun bumpVersion(version: String): String {
 
 fun getRemoteURL(workspacePath: Path, gitToken: String): String {
     val gitRemoteOutput = shell.execute(listOf("git", "remote", "-v"), baseDir = workspacePath).outputString()
-    val regex = Regex("git@github\\.com:(\\w+)/(\\w+)\\.git")
+    val regex = Regex("git@github\\.com:([^/]+)/([^/]+)\\.git")
     val matchedGroups = regex.find(gitRemoteOutput)?.groupValues
     if (matchedGroups == null || matchedGroups.size < 3) {
         throw RuntimeException("Unable to parse 'git remote' output '$gitRemoteOutput'")
