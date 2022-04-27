@@ -17,6 +17,8 @@
 
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
 
+package(default_visibility = ["//visibility:public"])
+
 kt_jvm_binary(
     name = "bump",
     srcs = ["Bump.kt"],
