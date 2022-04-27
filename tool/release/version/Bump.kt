@@ -18,6 +18,7 @@ fun main() {
         ?: throw RuntimeException("GRABL_BRANCH environment variable is not set")
     val workspacePath = Paths.get(workspaceDirectory)
 
+    configureGitCredentials()
     shell.execute(listOf("git", "checkout", branchName), baseDir = workspacePath)
 
     val versionFile = workspacePath.resolve("VERSION")
@@ -29,6 +30,16 @@ fun main() {
     Files.write(versionFile, newVersion.toByteArray())
 
     gitCommitAndPush(workspacePath, newVersion)
+}
+
+fun configureGitCredentials() {
+    val gitUsername = System.getenv("GIT_USERNAME")
+        ?: throw RuntimeException("GIT_USERNAME environment variable is not set")
+    val gitEmail = System.getenv("GIT_EMAIL")
+        ?: throw RuntimeException("GIT_EMAIL environment variable is not set")
+
+    shell.execute(listOf("git", "config", "--global", "user.name", gitUsername))
+    shell.execute(listOf("git", "config", "--global", "user.email", gitEmail))
 }
 
 fun bumpVersion(version: String): String {
@@ -57,7 +68,7 @@ fun bumpVersion(version: String): String {
 
 fun gitCommitAndPush(workspacePath: Path, newVersion: String) {
     shell.execute(listOf("git", "add", "VERSION"), baseDir = workspacePath)
-    shell.execute(listOf("git", "commit", "-m", "\"Bump version number to $newVersion\""), baseDir = workspacePath)
+    shell.execute(listOf("git", "commit", "-m", "Bump version number to $newVersion"), baseDir = workspacePath)
     val maxRetries = 3
     var retryCount = 0
     while (retryCount < maxRetries) {
