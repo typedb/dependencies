@@ -3,6 +3,7 @@ package com.vaticle.dependencies.tool.release.version
 import com.vaticle.bazel.distribution.common.Logging.LogLevel.DEBUG
 import com.vaticle.bazel.distribution.common.Logging.Logger
 import com.vaticle.bazel.distribution.common.shell.Shell
+import com.vaticle.bazel.distribution.common.shell.Shell.Command.Companion.arg
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -12,13 +13,10 @@ val logger = Logger(DEBUG)
 val shell = Shell(logger)
 
 fun main() {
-    val workspaceDirectory = System.getenv("BUILD_WORKSPACE_DIRECTORY")
-        ?: throw RuntimeException("Not running from within Bazel workspace")
-    val branchName = System.getenv("GRABL_BRANCH")
-        ?: throw RuntimeException("GRABL_BRANCH environment variable is not set")
-    val workspacePath = Paths.get(workspaceDirectory)
+    val (workspacePath, branchName, gitUsername, gitEmail, gitToken) = Config.load()
 
-    configureGitCredentials()
+    shell.execute(listOf("git", "config", "--global", "user.name", gitUsername))
+    shell.execute(listOf("git", "config", "--global", "user.email", gitEmail))
     shell.execute(listOf("git", "checkout", branchName), baseDir = workspacePath)
 
     val versionFile = workspacePath.resolve("VERSION")
@@ -26,20 +24,30 @@ fun main() {
     val version = String(Files.readAllBytes(versionFile)).trim()
     val newVersion = bumpVersion(version)
 
-    logger.debug { "Bumping the version to $newVersion" }
+    logger.debug { "Updating VERSION file content to '$newVersion'" }
     Files.write(versionFile, newVersion.toByteArray())
 
-    gitCommitAndPush(workspacePath, newVersion)
+    logger.debug { "Creating Git commit and pushing to the remote repository" }
+    val remoteURL = getRemoteURL(workspacePath, gitToken)
+    gitCommitAndPush(workspacePath, newVersion, remoteURL)
 }
 
-fun configureGitCredentials() {
-    val gitUsername = System.getenv("GIT_USERNAME")
-        ?: throw RuntimeException("GIT_USERNAME environment variable is not set")
-    val gitEmail = System.getenv("GIT_EMAIL")
-        ?: throw RuntimeException("GIT_EMAIL environment variable is not set")
+data class Config(val workspacePath: Path, val branchName: String, val gitUsername: String, val gitEmail: String, val gitToken: String) {
+    companion object {
+        fun load(): Config {
+            return Config(
+                workspacePath = Paths.get(getenv("BUILD_WORKSPACE_DIRECTORY", errorMsg = "Not running from within Bazel workspace")),
+                branchName = getenv("GRABL_BRANCH"),
+                gitUsername = getenv("GIT_USERNAME"),
+                gitEmail = getenv("GIT_EMAIL"),
+                gitToken = getenv("GIT_TOKEN")
+            )
+        }
 
-    shell.execute(listOf("git", "config", "--global", "user.name", gitUsername))
-    shell.execute(listOf("git", "config", "--global", "user.email", gitEmail))
+        private fun getenv(name: String, errorMsg: String = "$name environment variable is not set"): String {
+            return System.getenv(name) ?: throw RuntimeException(errorMsg)
+        }
+    }
 }
 
 fun bumpVersion(version: String): String {
@@ -66,14 +74,26 @@ fun bumpVersion(version: String): String {
     return versionComponents.joinToString(".")
 }
 
-fun gitCommitAndPush(workspacePath: Path, newVersion: String) {
+fun getRemoteURL(workspacePath: Path, gitToken: String): String {
+    val gitRemoteOutput = shell.execute(listOf("git", "remote", "-v"), baseDir = workspacePath).outputString()
+    val regex = Regex("git@github\\.com:(\\w+)/(\\w+)\\.git")
+    val matchedGroups = regex.find(gitRemoteOutput)?.groupValues
+    if (matchedGroups == null || matchedGroups.size < 3) {
+        throw RuntimeException("Unable to parse 'git remote' output '$gitRemoteOutput'")
+    }
+    val (_, orgName, repoName) = matchedGroups
+    return "https://$gitToken@github.com/$orgName/$repoName.git"
+}
+
+fun gitCommitAndPush(workspacePath: Path, newVersion: String, remoteURL: String) {
     shell.execute(listOf("git", "add", "VERSION"), baseDir = workspacePath)
     shell.execute(listOf("git", "commit", "-m", "Bump version number to $newVersion"), baseDir = workspacePath)
     val maxRetries = 3
     var retryCount = 0
     while (retryCount < maxRetries) {
-        shell.execute(listOf("git", "pull"), baseDir = workspacePath)
-        val pushResult = shell.execute(listOf("git", "push"), baseDir = workspacePath, throwOnError = false)
+        shell.execute(listOf("git", "pull", "--rebase"), baseDir = workspacePath)
+        val pushCmd = Shell.Command(arg("git"), arg("push"), arg(remoteURL, printable = false))
+        val pushResult = shell.execute(pushCmd, baseDir = workspacePath, outputIsSensitive = true, throwOnError = false)
         if (pushResult.exitValue == 0) break
         else {
             // cover the unlikely but possible edge case where someone else has already pushed
