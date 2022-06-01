@@ -38,13 +38,15 @@ class Note {
     private val type: Type
 
     private constructor(title: String, goal: String?, type: Type) {
-        this.title = title.trim()
+        this.title = title
         this.goal = goal
         this.type = type
     }
 
     fun toMarkdown(): String {
-        return "- **$title**\n  ${goal ?: ""}"
+        val title = title.trim()
+        val goal = if (goal != null) goal.prependIndent("  ") else ""
+        return "- **$title**\n$goal"
     }
 
     companion object {
