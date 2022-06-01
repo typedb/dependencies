@@ -38,7 +38,7 @@ class Note {
     private val type: Type
 
     private constructor(title: String, goal: String?, type: Type) {
-        this.title = title
+        this.title = title.trim()
         this.goal = goal
         this.type = type
     }
