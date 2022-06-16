@@ -250,9 +250,8 @@ artifacts = {
     "org.jetbrains.kotlin:kotlin-test": "1.6.0",
     "org.jetbrains.kotlinx:kotlinx-coroutines-core": "1.6.0",
     "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm": "1.6.0",
-    # Find out the Skiko version we need to use at:
-    # https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/compose/ui/ui-graphics-desktop/
-    # https://mvnrepository.com/artifact/org.jetbrains.skiko/skiko-awt-runtime-macos-x64
+    # Find out the Skiko version we need by viewing dependencies of @maven//org_jetbrains_compose_ui_ui_graphics_desktop
+    "org.jetbrains.skiko:skiko-awt": "0.7.5",
     "org.jetbrains.skiko:skiko-awt-runtime-linux-x64": "0.7.5",
     "org.jetbrains.skiko:skiko-awt-runtime-macos-x64": "0.7.5",
     "org.jetbrains.skiko:skiko-awt-runtime-windows-x64": "0.7.5",
