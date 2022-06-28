@@ -1,4 +1,4 @@
 exports_files([
-    "checkstyle.py",
+    "Checkstyle.kt",
     "checkstyle.xml",
 ])

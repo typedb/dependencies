@@ -15,24 +15,19 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_test")
+
 def _checkstyle_test_impl(ctx):
     properties = ctx.file.properties
     opts = ctx.attr.opts
     sopts = ctx.attr.string_opts
 
-    classpath = ":".join([file.path for file in ctx.files._classpath])
-
     args = ""
     inputs = []
-    config = ctx.actions.declare_file("checkstyle.xml")
 
-    if ctx.attr.license_type == "apache":
-        license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-header-apache.txt"
-    elif ctx.attr.license_type == "commercial":
-        license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-header-commercial.txt"
-    else:
-        license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-header-agpl.txt"
+    license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-%s.txt" % ctx.attr.license_type
 
+    config = ctx.actions.declare_file("%s.xml" % ctx.attr.name)
     ctx.actions.expand_template(
         template = ctx.file._checkstyle_xml_template,
         output = config,
@@ -55,9 +50,10 @@ def _checkstyle_test_impl(ctx):
     files = []
     for target in ctx.attr.include:
         path = target.files.to_list()[0].path;
-        if target not in ctx.attr.exclude and path not in ['.DS_Store', '.bazelversion', '.gitkeep', 'LICENSE', 'VERSION'] and not path.endswith('.md'):
+        if target not in ctx.attr.exclude:
             files.extend(target.files.to_list())
 
+    classpath = ":".join([file.path for file in ctx.files._classpath])
     cmd = " ".join(
         ["java -cp %s com.puppycrawl.tools.checkstyle.Main" % classpath] +
         [args] +
@@ -66,34 +62,40 @@ def _checkstyle_test_impl(ctx):
         [file.path for file in files]
     )
 
+    checkstyle_wrapper = ctx.actions.declare_file("%s.kt" % ctx.attr.name)
     ctx.actions.expand_template(
-        template = ctx.file._checkstyle_py_template,
-        output = ctx.outputs.checkstyle_script,
+        template = ctx.file._checkstyle_kt_template,
+        output = checkstyle_wrapper,
         substitutions = {
             "{command}" : cmd,
-            "{allow_failure}": str(int(ctx.attr.allow_failure)),
         },
         is_executable = True,
     )
 
-    files = [ctx.outputs.checkstyle_script] + ctx.files._license_files + files + ctx.files._classpath + inputs
+    files = [checkstyle_wrapper] + ctx.files._license_files + files + ctx.files._classpath + inputs
     runfiles = ctx.runfiles(
         files = files,
         collect_data = True,
     )
     return DefaultInfo(
-        executable = ctx.outputs.checkstyle_script,
-        files = depset(files),
+        executable = checkstyle_wrapper,
         runfiles = runfiles,
     )
 
-checkstyle_test = rule(
+_checkstyle_test = rule(
     implementation = _checkstyle_test_impl,
     test = True,
     attrs = {
         "license_type": attr.string(
             doc = "Type of license to produce the header for every source code",
-            values = ["agpl", "apache", "commercial"],
+            values = [
+                "agpl-header",
+                "apache-header",
+                "commercial-header",
+                "agpl-fulltext",
+                "apache-fulltext",
+                "commercial-fulltext",
+            ],
             mandatory = True,
         ),
         "properties": attr.label(
@@ -115,13 +117,9 @@ checkstyle_test = rule(
             allow_files = True,
             default = [],
         ),
-        "allow_failure": attr.bool(
-            default = False,
-            doc = "Successfully finish the test even if checkstyle failed"
-        ),
-        "_checkstyle_py_template": attr.label(
+        "_checkstyle_kt_template": attr.label(
              allow_single_file=True,
-             default = "//tool/checkstyle/templates:checkstyle.py"
+             default = "//tool/checkstyle/templates:Checkstyle.kt"
         ),
         "_checkstyle_xml_template": attr.label(
              allow_single_file=True,
@@ -144,7 +142,16 @@ checkstyle_test = rule(
             default = ["@vaticle_dependencies//tool/checkstyle/config:license_files"]
         ),
     },
-    outputs = {
-        "checkstyle_script": "%{name}.py",
-    },
 )
+
+def checkstyle_test(name, **kwargs):
+    wrapper_target_name = name.capitalize().replace("-","_") + "_"
+
+    _checkstyle_test(name = wrapper_target_name, **kwargs)
+
+    kt_jvm_test(
+        name = name,
+        main_class = "com.vaticle.dependencies.tool.checkstyle.templates." + wrapper_target_name + "Kt",
+        srcs = [wrapper_target_name],
+        deps = ["@vaticle_dependencies//util:common", "@maven//:org_zeroturnaround_zt_exec"],
+    )

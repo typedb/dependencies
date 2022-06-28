@@ -1,13 +1,11 @@
-package com.vaticle.dependencies.library.rocksdbjni
+package com.vaticle.dependencies.util
 
 import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
 import java.nio.file.Path
 
 fun bash(script: String, baseDir: Path, javaHome: Path?, expectExitValueNormal: Boolean): ProcessResult {
-    println("======================================================================================")
-    println("=== Running: '$script' ===")
-    println("======================================================================================")
+    println("=== Running: '$script'")
     var builder = ProcessExecutor(script.split(" "))
             .readOutput(true)
             .redirectOutput(System.out)
@@ -20,9 +18,7 @@ fun bash(script: String, baseDir: Path, javaHome: Path?, expectExitValueNormal: 
         builder = builder.exitValueNormal()
     }
     val execution = builder.execute()
-    println("======================================================================================")
-    println("Execution finished with status code '${execution.exitValue}'")
-    println("======================================================================================")
+    println("=== Execution finished with status code '${execution.exitValue}'")
     println()
     return execution
 }
