@@ -49,7 +49,7 @@ if __name__ == '__main__':
     workspace_files = workspace_files.split()
 
     checkstyle_targets_xml, _ = tc.shell_execute([
-        'bazel', 'query', 'kind(checkstyle_test, //...)', '--output', 'xml'
+        'bazel', 'query', 'kind(checkstyle_wrapper, //...)', '--output', 'xml'
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
     checkstyle_targets_tree = ElementTree.fromstring(checkstyle_targets_xml)
     included_checkstyle_files = checkstyle_targets_tree.findall(".//list[@name='include']//label[@value]")

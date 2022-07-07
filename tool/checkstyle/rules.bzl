@@ -17,7 +17,7 @@
 
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_test")
 
-def _checkstyle_test_impl(ctx):
+def _checkstyle_wrapper_impl(ctx):
     properties = ctx.file.properties
     opts = ctx.attr.opts
     sopts = ctx.attr.string_opts
@@ -82,9 +82,8 @@ def _checkstyle_test_impl(ctx):
         runfiles = runfiles,
     )
 
-_checkstyle_test = rule(
-    implementation = _checkstyle_test_impl,
-    test = True,
+_checkstyle_wrapper = rule(
+    implementation = _checkstyle_wrapper_impl,
     attrs = {
         "license_type": attr.string(
             doc = "Type of license to produce the header for every source code",
@@ -144,14 +143,15 @@ _checkstyle_test = rule(
     },
 )
 
-def checkstyle_test(name, **kwargs):
+def checkstyle_test(name, size = "small", **kwargs):
     wrapper_target_name = name.capitalize().replace("-","_") + "_"
 
-    _checkstyle_test(name = wrapper_target_name, **kwargs)
+    _checkstyle_wrapper(name = wrapper_target_name, **kwargs)
 
     kt_jvm_test(
         name = name,
         main_class = "com.vaticle.dependencies.tool.checkstyle.templates." + wrapper_target_name + "Kt",
         srcs = [wrapper_target_name],
         deps = ["@vaticle_dependencies//util:common", "@maven//:org_zeroturnaround_zt_exec"],
+        size = size,
     )
