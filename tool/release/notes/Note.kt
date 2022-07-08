@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Vaticle
+ * Copyright (C) 2022 Vaticle
  *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -44,7 +44,9 @@ class Note {
     }
 
     fun toMarkdown(): String {
-        return "- **$title**\n  ${goal ?: ""}"
+        val title = title.trim()
+        val goal = if (goal != null) goal.prependIndent("  ") else ""
+        return "- **$title**\n$goal"
     }
 
     companion object {
