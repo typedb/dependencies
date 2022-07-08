@@ -72,17 +72,17 @@ rust_library(
         "@raze__bytes__0_5_6//:bytes",
         "@raze__iovec__0_1_4//:iovec",
         "@raze__lazy_static__1_4_0//:lazy_static",
-        "@raze__memchr__2_4_1//:memchr",
+        "@raze__memchr__2_5_0//:memchr",
         "@raze__mio__0_6_23//:mio",
         "@raze__pin_project_lite__0_1_12//:pin_project_lite",
-        "@raze__slab__0_4_5//:slab",
+        "@raze__slab__0_4_6//:slab",
     ] + selects.with_or({
         # cfg(unix)
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
         ): [
-            "@raze__libc__0_2_106//:libc",
+            "@raze__libc__0_2_126//:libc",
             "@raze__mio_uds__0_6_8//:mio_uds",
         ],
         "//conditions:default": [],

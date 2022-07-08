@@ -68,10 +68,10 @@ rust_library(
         "crate-name=regex",
         "manual",
     ],
-    version = "1.5.5",
+    version = "1.6.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__regex_syntax__0_6_25//:regex_syntax",
+        "@raze__regex_syntax__0_6_27//:regex_syntax",
     ],
 )
 

@@ -37,6 +37,7 @@ rust_library(
     crate_features = [
         "default",
         "macros",
+        "once_cell",
         "rt",
         "tokio-macros",
     ],
@@ -44,7 +45,7 @@ rust_library(
     data = [],
     edition = "2018",
     proc_macro_deps = [
-        "@raze__tokio_macros__1_7_0//:tokio_macros",
+        "@raze__tokio_macros__1_8_0//:tokio_macros",
     ],
     rustc_flags = [
         "--cap-lints=allow",
@@ -54,10 +55,11 @@ rust_library(
         "crate-name=tokio",
         "manual",
     ],
-    version = "1.17.0",
+    version = "1.19.2",
     # buildifier: leave-alone
     deps = [
-        "@raze__pin_project_lite__0_2_8//:pin_project_lite",
+        "@raze__once_cell__1_8_0//:once_cell",
+        "@raze__pin_project_lite__0_2_9//:pin_project_lite",
     ],
 )
 
@@ -138,6 +140,8 @@ rust_library(
 # Unsupported target "macros_join" with type "test" omitted
 
 # Unsupported target "macros_pin" with type "test" omitted
+
+# Unsupported target "macros_rename_test" with type "test" omitted
 
 # Unsupported target "macros_select" with type "test" omitted
 

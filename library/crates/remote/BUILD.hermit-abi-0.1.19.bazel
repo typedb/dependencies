@@ -32,7 +32,7 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "cxxbridge_flags",
+    name = "hermit_abi",
     srcs = glob(["**/*.rs"]),
     crate_features = [
         "default",
@@ -45,11 +45,12 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=cxxbridge-flags",
+        "crate-name=hermit-abi",
         "manual",
     ],
-    version = "1.0.66",
+    version = "0.1.19",
     # buildifier: leave-alone
     deps = [
+        "@raze__libc__0_2_126//:libc",
     ],
 )

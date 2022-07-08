@@ -7,11 +7,12 @@ path = "" # ignored by cargo raze
 
 [dependencies]
 antlr-rust = "0.2.0"
-rocksdb = "0.17.0"
 cxx = "1.0.59"
 futures = "0.3.21"
-uuid = { version = "0.8.2", features = ["v4"] }
+rocksdb = "0.17.0"
+threadpool = "1.8.1"
 tokio = { version = "1.17.0", features = ["macros", "rt"] }
+uuid = { version = "0.8.2", features = ["v4"] }
 
 # gRPC dependencies - TODO: clean up
 protobuf = { version = "2.18.2", features = ["with-bytes"] }

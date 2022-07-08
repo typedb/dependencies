@@ -26,7 +26,7 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # Apache-2.0 from expression "Apache-2.0"
 ])
 
 # Generated Targets
@@ -38,16 +38,26 @@ load(
 )
 
 cargo_build_script(
-    name = "log_build_script",
+    name = "clang_sys_build_script",
     srcs = glob(["**/*.rs"]),
     build_script_env = {
     },
     crate_features = [
-        "std",
+        "clang_3_5",
+        "clang_3_6",
+        "clang_3_7",
+        "clang_3_8",
+        "clang_3_9",
+        "clang_4_0",
+        "clang_5_0",
+        "clang_6_0",
+        "libloading",
+        "runtime",
     ],
     crate_root = "build.rs",
     data = glob(["**"]),
     edition = "2015",
+    links = "clang",
     rustc_flags = [
         "--cap-lints=allow",
     ],
@@ -55,19 +65,27 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "0.4.14",
+    version = "1.3.3",
     visibility = ["//visibility:private"],
     deps = [
+        "@raze__glob__0_3_0//:glob",
     ],
 )
 
-# Unsupported target "value" with type "bench" omitted
-
 rust_library(
-    name = "log",
+    name = "clang_sys",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "std",
+        "clang_3_5",
+        "clang_3_6",
+        "clang_3_7",
+        "clang_3_8",
+        "clang_3_9",
+        "clang_4_0",
+        "clang_5_0",
+        "clang_6_0",
+        "libloading",
+        "runtime",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -77,17 +95,17 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=log",
+        "crate-name=clang-sys",
         "manual",
     ],
-    version = "0.4.14",
+    version = "1.3.3",
     # buildifier: leave-alone
     deps = [
-        ":log_build_script",
-        "@raze__cfg_if__1_0_0//:cfg_if",
+        ":clang_sys_build_script",
+        "@raze__glob__0_3_0//:glob",
+        "@raze__libc__0_2_126//:libc",
+        "@raze__libloading__0_7_3//:libloading",
     ],
 )
 
-# Unsupported target "filters" with type "test" omitted
-
-# Unsupported target "macros" with type "test" omitted
+# Unsupported target "lib" with type "test" omitted

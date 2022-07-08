@@ -31,11 +31,9 @@ licenses([
 
 # Generated Targets
 
-rust_library(
-    name = "which",
+rust_proc_macro(
+    name = "tokio_macros",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
     crate_features = [
     ],
     crate_root = "src/lib.rs",
@@ -46,23 +44,14 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=which",
+        "crate-name=tokio-macros",
         "manual",
     ],
-    version = "4.2.4",
+    version = "1.8.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__either__1_6_1//:either",
-        "@raze__libc__0_2_106//:libc",
-    ] + selects.with_or({
-        # cfg(windows)
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__lazy_static__1_4_0//:lazy_static",
-        ],
-        "//conditions:default": [],
-    }),
+        "@raze__proc_macro2__1_0_40//:proc_macro2",
+        "@raze__quote__1_0_10//:quote",
+        "@raze__syn__1_0_98//:syn",
+    ],
 )
-
-# Unsupported target "basic" with type "test" omitted

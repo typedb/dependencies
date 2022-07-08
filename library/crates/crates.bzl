@@ -147,11 +147,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__clang_sys__1_3_1",
-        url = "https://crates.io/api/v1/crates/clang-sys/1.3.1/download",
+        name = "raze__clang_sys__1_3_3",
+        url = "https://crates.io/api/v1/crates/clang-sys/1.3.3/download",
         type = "tar.gz",
-        strip_prefix = "clang-sys-1.3.1",
-        build_file = Label("//library/crates/remote:BUILD.clang-sys-1.3.1.bazel"),
+        strip_prefix = "clang-sys-1.3.3",
+        build_file = Label("//library/crates/remote:BUILD.clang-sys-1.3.3.bazel"),
     )
 
     maybe(
@@ -165,38 +165,38 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__cxx__1_0_66",
-        url = "https://crates.io/api/v1/crates/cxx/1.0.66/download",
+        name = "raze__cxx__1_0_71",
+        url = "https://crates.io/api/v1/crates/cxx/1.0.71/download",
         type = "tar.gz",
-        strip_prefix = "cxx-1.0.66",
-        build_file = Label("//library/crates/remote:BUILD.cxx-1.0.66.bazel"),
+        strip_prefix = "cxx-1.0.71",
+        build_file = Label("//library/crates/remote:BUILD.cxx-1.0.71.bazel"),
     )
 
     maybe(
         http_archive,
-        name = "raze__cxxbridge_flags__1_0_66",
-        url = "https://crates.io/api/v1/crates/cxxbridge-flags/1.0.66/download",
+        name = "raze__cxxbridge_flags__1_0_71",
+        url = "https://crates.io/api/v1/crates/cxxbridge-flags/1.0.71/download",
         type = "tar.gz",
-        strip_prefix = "cxxbridge-flags-1.0.66",
-        build_file = Label("//library/crates/remote:BUILD.cxxbridge-flags-1.0.66.bazel"),
+        strip_prefix = "cxxbridge-flags-1.0.71",
+        build_file = Label("//library/crates/remote:BUILD.cxxbridge-flags-1.0.71.bazel"),
     )
 
     maybe(
         http_archive,
-        name = "raze__cxxbridge_macro__1_0_66",
-        url = "https://crates.io/api/v1/crates/cxxbridge-macro/1.0.66/download",
+        name = "raze__cxxbridge_macro__1_0_71",
+        url = "https://crates.io/api/v1/crates/cxxbridge-macro/1.0.71/download",
         type = "tar.gz",
-        strip_prefix = "cxxbridge-macro-1.0.66",
-        build_file = Label("//library/crates/remote:BUILD.cxxbridge-macro-1.0.66.bazel"),
+        strip_prefix = "cxxbridge-macro-1.0.71",
+        build_file = Label("//library/crates/remote:BUILD.cxxbridge-macro-1.0.71.bazel"),
     )
 
     maybe(
         http_archive,
-        name = "raze__either__1_6_1",
-        url = "https://crates.io/api/v1/crates/either/1.6.1/download",
+        name = "raze__either__1_7_0",
+        url = "https://crates.io/api/v1/crates/either/1.7.0/download",
         type = "tar.gz",
-        strip_prefix = "either-1.6.1",
-        build_file = Label("//library/crates/remote:BUILD.either-1.6.1.bazel"),
+        strip_prefix = "either-1.7.0",
+        build_file = Label("//library/crates/remote:BUILD.either-1.7.0.bazel"),
     )
 
     maybe(
@@ -318,11 +318,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__getrandom__0_2_5",
-        url = "https://crates.io/api/v1/crates/getrandom/0.2.5/download",
+        name = "raze__getrandom__0_2_7",
+        url = "https://crates.io/api/v1/crates/getrandom/0.2.7/download",
         type = "tar.gz",
-        strip_prefix = "getrandom-0.2.5",
-        build_file = Label("//library/crates/remote:BUILD.getrandom-0.2.5.bazel"),
+        strip_prefix = "getrandom-0.2.7",
+        build_file = Label("//library/crates/remote:BUILD.getrandom-0.2.7.bazel"),
     )
 
     maybe(
@@ -359,6 +359,15 @@ def raze_fetch_remote_crates():
         type = "tar.gz",
         strip_prefix = "grpc-protobuf-0.8.3",
         build_file = Label("//library/crates/remote:BUILD.grpc-protobuf-0.8.3.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "raze__hermit_abi__0_1_19",
+        url = "https://crates.io/api/v1/crates/hermit-abi/0.1.19/download",
+        type = "tar.gz",
+        strip_prefix = "hermit-abi-0.1.19",
+        build_file = Label("//library/crates/remote:BUILD.hermit-abi-0.1.19.bazel"),
     )
 
     maybe(
@@ -428,12 +437,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__libc__0_2_106",
-        url = "https://crates.io/api/v1/crates/libc/0.2.106/download",
+        name = "raze__libc__0_2_126",
+        url = "https://crates.io/api/v1/crates/libc/0.2.126/download",
         type = "tar.gz",
-        sha256 = "a60553f9a9e039a333b4e9b20573b9e9b9c0bb3a11e201ccc48ef4283456d673",
-        strip_prefix = "libc-0.2.106",
-        build_file = Label("//library/crates/remote:BUILD.libc-0.2.106.bazel"),
+        strip_prefix = "libc-0.2.126",
+        build_file = Label("//library/crates/remote:BUILD.libc-0.2.126.bazel"),
     )
 
     maybe(
@@ -475,11 +483,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__log__0_4_14",
-        url = "https://crates.io/api/v1/crates/log/0.4.14/download",
+        name = "raze__log__0_4_17",
+        url = "https://crates.io/api/v1/crates/log/0.4.17/download",
         type = "tar.gz",
-        strip_prefix = "log-0.4.14",
-        build_file = Label("//library/crates/remote:BUILD.log-0.4.14.bazel"),
+        strip_prefix = "log-0.4.17",
+        build_file = Label("//library/crates/remote:BUILD.log-0.4.17.bazel"),
     )
 
     maybe(
@@ -493,11 +501,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__memchr__2_4_1",
-        url = "https://crates.io/api/v1/crates/memchr/2.4.1/download",
+        name = "raze__memchr__2_5_0",
+        url = "https://crates.io/api/v1/crates/memchr/2.5.0/download",
         type = "tar.gz",
-        strip_prefix = "memchr-2.4.1",
-        build_file = Label("//library/crates/remote:BUILD.memchr-2.4.1.bazel"),
+        strip_prefix = "memchr-2.5.0",
+        build_file = Label("//library/crates/remote:BUILD.memchr-2.5.0.bazel"),
     )
 
     maybe(
@@ -566,6 +574,15 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
+        name = "raze__num_cpus__1_13_1",
+        url = "https://crates.io/api/v1/crates/num_cpus/1.13.1/download",
+        type = "tar.gz",
+        strip_prefix = "num_cpus-1.13.1",
+        build_file = Label("//library/crates/remote:BUILD.num_cpus-1.13.1.bazel"),
+    )
+
+    maybe(
+        http_archive,
         name = "raze__once_cell__1_8_0",
         url = "https://crates.io/api/v1/crates/once_cell/1.8.0/download",
         type = "tar.gz",
@@ -614,11 +631,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__pin_project_lite__0_2_8",
-        url = "https://crates.io/api/v1/crates/pin-project-lite/0.2.8/download",
+        name = "raze__pin_project_lite__0_2_9",
+        url = "https://crates.io/api/v1/crates/pin-project-lite/0.2.9/download",
         type = "tar.gz",
-        strip_prefix = "pin-project-lite-0.2.8",
-        build_file = Label("//library/crates/remote:BUILD.pin-project-lite-0.2.8.bazel"),
+        strip_prefix = "pin-project-lite-0.2.9",
+        build_file = Label("//library/crates/remote:BUILD.pin-project-lite-0.2.9.bazel"),
     )
 
     maybe(
@@ -632,12 +649,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__proc_macro2__1_0_32",
-        url = "https://crates.io/api/v1/crates/proc-macro2/1.0.32/download",
+        name = "raze__proc_macro2__1_0_40",
+        url = "https://crates.io/api/v1/crates/proc-macro2/1.0.40/download",
         type = "tar.gz",
-        sha256 = "ba508cc11742c0dc5c1659771673afbab7a0efab23aa17e854cbab0837ed0b43",
-        strip_prefix = "proc-macro2-1.0.32",
-        build_file = Label("//library/crates/remote:BUILD.proc-macro2-1.0.32.bazel"),
+        strip_prefix = "proc-macro2-1.0.40",
+        build_file = Label("//library/crates/remote:BUILD.proc-macro2-1.0.40.bazel"),
     )
 
     maybe(
@@ -752,20 +768,20 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__regex__1_5_5",
-        url = "https://crates.io/api/v1/crates/regex/1.5.5/download",
+        name = "raze__regex__1_6_0",
+        url = "https://crates.io/api/v1/crates/regex/1.6.0/download",
         type = "tar.gz",
-        strip_prefix = "regex-1.5.5",
-        build_file = Label("//library/crates/remote:BUILD.regex-1.5.5.bazel"),
+        strip_prefix = "regex-1.6.0",
+        build_file = Label("//library/crates/remote:BUILD.regex-1.6.0.bazel"),
     )
 
     maybe(
         http_archive,
-        name = "raze__regex_syntax__0_6_25",
-        url = "https://crates.io/api/v1/crates/regex-syntax/0.6.25/download",
+        name = "raze__regex_syntax__0_6_27",
+        url = "https://crates.io/api/v1/crates/regex-syntax/0.6.27/download",
         type = "tar.gz",
-        strip_prefix = "regex-syntax-0.6.25",
-        build_file = Label("//library/crates/remote:BUILD.regex-syntax-0.6.25.bazel"),
+        strip_prefix = "regex-syntax-0.6.27",
+        build_file = Label("//library/crates/remote:BUILD.regex-syntax-0.6.27.bazel"),
     )
 
     maybe(
@@ -825,11 +841,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__slab__0_4_5",
-        url = "https://crates.io/api/v1/crates/slab/0.4.5/download",
+        name = "raze__slab__0_4_6",
+        url = "https://crates.io/api/v1/crates/slab/0.4.6/download",
         type = "tar.gz",
-        strip_prefix = "slab-0.4.5",
-        build_file = Label("//library/crates/remote:BUILD.slab-0.4.5.bazel"),
+        strip_prefix = "slab-0.4.6",
+        build_file = Label("//library/crates/remote:BUILD.slab-0.4.6.bazel"),
     )
 
     maybe(
@@ -844,12 +860,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__syn__1_0_81",
-        url = "https://crates.io/api/v1/crates/syn/1.0.81/download",
+        name = "raze__syn__1_0_98",
+        url = "https://crates.io/api/v1/crates/syn/1.0.98/download",
         type = "tar.gz",
-        sha256 = "f2afee18b8beb5a596ecb4a2dce128c719b4ba399d34126b9e4396e3f9860966",
-        strip_prefix = "syn-1.0.81",
-        build_file = Label("//library/crates/remote:BUILD.syn-1.0.81.bazel"),
+        strip_prefix = "syn-1.0.98",
+        build_file = Label("//library/crates/remote:BUILD.syn-1.0.98.bazel"),
     )
 
     maybe(
@@ -868,6 +883,15 @@ def raze_fetch_remote_crates():
         type = "tar.gz",
         strip_prefix = "tempfile-3.3.0",
         build_file = Label("//library/crates/remote:BUILD.tempfile-3.3.0.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "raze__threadpool__1_8_1",
+        url = "https://crates.io/api/v1/crates/threadpool/1.8.1/download",
+        type = "tar.gz",
+        strip_prefix = "threadpool-1.8.1",
+        build_file = Label("//library/crates/remote:BUILD.threadpool-1.8.1.bazel"),
     )
 
     maybe(
@@ -917,20 +941,20 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__tokio__1_17_0",
-        url = "https://crates.io/api/v1/crates/tokio/1.17.0/download",
+        name = "raze__tokio__1_19_2",
+        url = "https://crates.io/api/v1/crates/tokio/1.19.2/download",
         type = "tar.gz",
-        strip_prefix = "tokio-1.17.0",
-        build_file = Label("//library/crates/remote:BUILD.tokio-1.17.0.bazel"),
+        strip_prefix = "tokio-1.19.2",
+        build_file = Label("//library/crates/remote:BUILD.tokio-1.19.2.bazel"),
     )
 
     maybe(
         http_archive,
-        name = "raze__tokio_macros__1_7_0",
-        url = "https://crates.io/api/v1/crates/tokio-macros/1.7.0/download",
+        name = "raze__tokio_macros__1_8_0",
+        url = "https://crates.io/api/v1/crates/tokio-macros/1.8.0/download",
         type = "tar.gz",
-        strip_prefix = "tokio-macros-1.7.0",
-        build_file = Label("//library/crates/remote:BUILD.tokio-macros-1.7.0.bazel"),
+        strip_prefix = "tokio-macros-1.8.0",
+        build_file = Label("//library/crates/remote:BUILD.tokio-macros-1.8.0.bazel"),
     )
 
     maybe(
@@ -945,12 +969,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__unicode_xid__0_2_2",
-        url = "https://crates.io/api/v1/crates/unicode-xid/0.2.2/download",
+        name = "raze__unicode_ident__1_0_1",
+        url = "https://crates.io/api/v1/crates/unicode-ident/1.0.1/download",
         type = "tar.gz",
-        sha256 = "8ccb82d61f80a663efe1f787a51b16b5a51e3314d6ac365b08639f52387b33f3",
-        strip_prefix = "unicode-xid-0.2.2",
-        build_file = Label("//library/crates/remote:BUILD.unicode-xid-0.2.2.bazel"),
+        strip_prefix = "unicode-ident-1.0.1",
+        build_file = Label("//library/crates/remote:BUILD.unicode-ident-1.0.1.bazel"),
     )
 
     maybe(
@@ -983,20 +1006,20 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__wasi__0_10_2_wasi_snapshot_preview1",
-        url = "https://crates.io/api/v1/crates/wasi/0.10.2+wasi-snapshot-preview1/download",
+        name = "raze__wasi__0_11_0_wasi_snapshot_preview1",
+        url = "https://crates.io/api/v1/crates/wasi/0.11.0+wasi-snapshot-preview1/download",
         type = "tar.gz",
-        strip_prefix = "wasi-0.10.2+wasi-snapshot-preview1",
-        build_file = Label("//library/crates/remote:BUILD.wasi-0.10.2+wasi-snapshot-preview1.bazel"),
+        strip_prefix = "wasi-0.11.0+wasi-snapshot-preview1",
+        build_file = Label("//library/crates/remote:BUILD.wasi-0.11.0+wasi-snapshot-preview1.bazel"),
     )
 
     maybe(
         http_archive,
-        name = "raze__which__4_2_4",
-        url = "https://crates.io/api/v1/crates/which/4.2.4/download",
+        name = "raze__which__4_2_5",
+        url = "https://crates.io/api/v1/crates/which/4.2.5/download",
         type = "tar.gz",
-        strip_prefix = "which-4.2.4",
-        build_file = Label("//library/crates/remote:BUILD.which-4.2.4.bazel"),
+        strip_prefix = "which-4.2.5",
+        build_file = Label("//library/crates/remote:BUILD.which-4.2.5.bazel"),
     )
 
     maybe(

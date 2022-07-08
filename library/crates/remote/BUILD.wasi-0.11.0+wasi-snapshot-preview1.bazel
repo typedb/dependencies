@@ -26,15 +26,17 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # Apache-2.0 from expression "Apache-2.0 OR MIT"
+    "notice",  # Apache-2.0 from expression "Apache-2.0 OR (Apache-2.0 OR MIT)"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "pin_project_lite",
+    name = "wasi",
     srcs = glob(["**/*.rs"]),
     crate_features = [
+        "default",
+        "std",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -44,23 +46,11 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=pin-project-lite",
+        "crate-name=wasi",
         "manual",
     ],
-    version = "0.2.8",
+    version = "0.11.0+wasi-snapshot-preview1",
     # buildifier: leave-alone
     deps = [
     ],
 )
-
-# Unsupported target "compiletest" with type "test" omitted
-
-# Unsupported target "drop_order" with type "test" omitted
-
-# Unsupported target "expandtest" with type "test" omitted
-
-# Unsupported target "lint" with type "test" omitted
-
-# Unsupported target "proper_unpin" with type "test" omitted
-
-# Unsupported target "test" with type "test" omitted
