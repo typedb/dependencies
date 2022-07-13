@@ -130,15 +130,6 @@ alias(
 )
 
 alias(
-    name = "threadpool",
-    actual = "@raze__threadpool__1_8_1//:threadpool",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
     name = "tls_api",
     actual = "@raze__tls_api__0_1_22//:tls_api",
     tags = [
@@ -158,7 +149,7 @@ alias(
 
 alias(
     name = "tokio",
-    actual = "@raze__tokio__1_19_2//:tokio",
+    actual = "@raze__tokio__0_2_25//:tokio",
     tags = [
         "cargo-raze",
         "manual",

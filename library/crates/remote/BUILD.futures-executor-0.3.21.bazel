@@ -37,7 +37,9 @@ rust_library(
     name = "futures_executor",
     srcs = glob(["**/*.rs"]),
     crate_features = [
+        "num_cpus",
         "std",
+        "thread-pool",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -56,6 +58,7 @@ rust_library(
         "@raze__futures_core__0_3_21//:futures_core",
         "@raze__futures_task__0_3_21//:futures_task",
         "@raze__futures_util__0_3_21//:futures_util",
+        "@raze__num_cpus__1_13_1//:num_cpus",
     ],
 )
 

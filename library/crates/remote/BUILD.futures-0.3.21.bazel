@@ -41,6 +41,7 @@ rust_library(
         "executor",
         "futures-executor",
         "std",
+        "thread-pool",
     ],
     crate_root = "src/lib.rs",
     data = [],

@@ -210,6 +210,15 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
+        name = "raze__fnv__1_0_7",
+        url = "https://crates.io/api/v1/crates/fnv/1.0.7/download",
+        type = "tar.gz",
+        strip_prefix = "fnv-1.0.7",
+        build_file = Label("//library/crates/remote:BUILD.fnv-1.0.7.bazel"),
+    )
+
+    maybe(
+        http_archive,
         name = "raze__fuchsia_cprng__0_1_1",
         url = "https://crates.io/api/v1/crates/fuchsia-cprng/0.1.1/download",
         type = "tar.gz",
@@ -887,15 +896,6 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__threadpool__1_8_1",
-        url = "https://crates.io/api/v1/crates/threadpool/1.8.1/download",
-        type = "tar.gz",
-        strip_prefix = "threadpool-1.8.1",
-        build_file = Label("//library/crates/remote:BUILD.threadpool-1.8.1.bazel"),
-    )
-
-    maybe(
-        http_archive,
         name = "raze__tls_api__0_1_22",
         url = "https://crates.io/api/v1/crates/tls-api/0.1.22/download",
         type = "tar.gz",
@@ -941,20 +941,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__tokio__1_19_2",
-        url = "https://crates.io/api/v1/crates/tokio/1.19.2/download",
+        name = "raze__tokio_macros__0_2_6",
+        url = "https://crates.io/api/v1/crates/tokio-macros/0.2.6/download",
         type = "tar.gz",
-        strip_prefix = "tokio-1.19.2",
-        build_file = Label("//library/crates/remote:BUILD.tokio-1.19.2.bazel"),
-    )
-
-    maybe(
-        http_archive,
-        name = "raze__tokio_macros__1_8_0",
-        url = "https://crates.io/api/v1/crates/tokio-macros/1.8.0/download",
-        type = "tar.gz",
-        strip_prefix = "tokio-macros-1.8.0",
-        build_file = Label("//library/crates/remote:BUILD.tokio-macros-1.8.0.bazel"),
+        strip_prefix = "tokio-macros-0.2.6",
+        build_file = Label("//library/crates/remote:BUILD.tokio-macros-0.2.6.bazel"),
     )
 
     maybe(
