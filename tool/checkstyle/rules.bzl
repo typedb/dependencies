@@ -15,9 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_test")
-
-def _checkstyle_wrapper_impl(ctx):
+def _checkstyle_test_impl(ctx):
     properties = ctx.file.properties
     opts = ctx.attr.opts
     sopts = ctx.attr.string_opts
@@ -62,13 +60,10 @@ def _checkstyle_wrapper_impl(ctx):
         [file.path for file in files]
     )
 
-    checkstyle_wrapper = ctx.actions.declare_file("%s.kt" % ctx.attr.name)
-    ctx.actions.expand_template(
-        template = ctx.file._checkstyle_kt_template,
+    checkstyle_wrapper = ctx.actions.declare_file("%s.sh" % ctx.attr.name)
+    ctx.actions.write(
         output = checkstyle_wrapper,
-        substitutions = {
-            "{command}" : cmd,
-        },
+        content = cmd,
         is_executable = True,
     )
 
@@ -79,11 +74,13 @@ def _checkstyle_wrapper_impl(ctx):
     )
     return DefaultInfo(
         executable = checkstyle_wrapper,
+        files = depset(files),
         runfiles = runfiles,
     )
 
-_checkstyle_wrapper = rule(
-    implementation = _checkstyle_wrapper_impl,
+checkstyle_test = rule(
+    implementation = _checkstyle_test_impl,
+    test = True,
     attrs = {
         "license_type": attr.string(
             doc = "Type of license to produce the header for every source code",
@@ -116,10 +113,6 @@ _checkstyle_wrapper = rule(
             allow_files = True,
             default = [],
         ),
-        "_checkstyle_kt_template": attr.label(
-             allow_single_file=True,
-             default = "//tool/checkstyle/templates:Checkstyle.kt"
-        ),
         "_checkstyle_xml_template": attr.label(
              allow_single_file=True,
              default = "//tool/checkstyle/templates:checkstyle.xml"
@@ -142,16 +135,3 @@ _checkstyle_wrapper = rule(
         ),
     },
 )
-
-def checkstyle_test(name, size = "small", **kwargs):
-    wrapper_target_name = name.capitalize().replace("-","_") + "_"
-
-    _checkstyle_wrapper(name = wrapper_target_name, **kwargs)
-
-    kt_jvm_test(
-        name = name,
-        main_class = "com.vaticle.dependencies.tool.checkstyle.templates." + wrapper_target_name + "Kt",
-        srcs = [wrapper_target_name],
-        deps = ["@vaticle_dependencies//util:common", "@maven//:org_zeroturnaround_zt_exec"],
-        size = size,
-    )

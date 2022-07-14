@@ -17,16 +17,22 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary", "kt_jvm_library")
 load("@vaticle_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
+
+kt_jvm_library(
+    name = "common",
+    srcs = ["Common.kt"],
+    deps = ["@maven//:org_zeroturnaround_zt_exec" ]
+)
 
 kt_jvm_binary(
     name = "builder-mac",
     main_class = "com.vaticle.dependencies.library.rocksdbjni.BuilderMacKt",
     srcs = ["BuilderMac.kt"],
     deps = [
-        "//util:common",
+        ":common",
         "@maven//:org_zeroturnaround_zt_exec"
     ],
 )
@@ -74,7 +80,7 @@ kt_jvm_binary(
     main_class = "com.vaticle.dependencies.library.rocksdbjni.BuilderLinuxKt",
     srcs = ["BuilderLinux.kt"],
     deps = [
-        "//util:common",
+        ":common",
         "@maven//:org_zeroturnaround_zt_exec"
     ],
 )

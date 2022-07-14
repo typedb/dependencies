@@ -2,8 +2,6 @@ package com.vaticle.dependencies.library.rocksdbjni
 
 import java.nio.file.Paths
 
-import com.vaticle.dependencies.util.bash
-
 fun main() {
     val baseDir = Paths.get(".")
     val version = Paths.get("library").resolve("rocksdbjni").resolve("VERSION").toFile().useLines { it.firstOrNull() }
