@@ -242,6 +242,8 @@ artifacts = {
     "org.jetbrains.compose.ui:ui-desktop": "1.1.0-alpha04",
     "org.jetbrains.compose.ui:ui-geometry-desktop": "1.1.0-alpha04",
     "org.jetbrains.compose.ui:ui-graphics-desktop": "1.1.0-alpha04",
+    "org.jetbrains.compose.ui:ui-test-desktop": "1.1.0-alpha04",
+    "org.jetbrains.compose.ui:ui-test-junit4-desktop": "1.1.0-alpha04",
     "org.jetbrains.compose.ui:ui-text-desktop": "1.1.0-alpha04",
     "org.jetbrains.compose.ui:ui-unit-desktop": "1.1.0-alpha04",
     "org.jetbrains.compose.runtime:runtime-desktop": "1.1.0-alpha04",
@@ -250,6 +252,7 @@ artifacts = {
     "org.jetbrains.kotlin:kotlin-test": "1.6.0",
     "org.jetbrains.kotlinx:kotlinx-coroutines-core": "1.6.0",
     "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm": "1.6.0",
+    "org.jetbrains.kotlinx:kotlinx-coroutines-test": "1.6.0",
     # Find out the Skiko version we need by viewing dependencies of @maven//org_jetbrains_compose_ui_ui_graphics_desktop
     "org.jetbrains.skiko:skiko-awt": "0.7.5",
     "org.jetbrains.skiko:skiko-awt-runtime-linux-x64": "0.7.5",
