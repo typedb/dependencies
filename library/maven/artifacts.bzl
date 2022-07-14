@@ -243,7 +243,6 @@ artifacts = {
     "org.jetbrains.compose.ui:ui-geometry-desktop": "1.1.0-alpha04",
     "org.jetbrains.compose.ui:ui-graphics-desktop": "1.1.0-alpha04",
     "org.jetbrains.compose.ui:ui-test-desktop": "1.1.0-alpha04",
-    "org.jetbrains.compose.ui:ui-test-junit4": "1.1.0-alpha04",
     "org.jetbrains.compose.ui:ui-test-junit4-desktop": "1.1.0-alpha04",
     "org.jetbrains.compose.ui:ui-text-desktop": "1.1.0-alpha04",
     "org.jetbrains.compose.ui:ui-unit-desktop": "1.1.0-alpha04",
