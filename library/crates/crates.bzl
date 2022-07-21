@@ -23,6 +23,15 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
+        name = "raze__autocfg__1_1_0",
+        url = "https://crates.io/api/v1/crates/autocfg/1.1.0/download",
+        type = "tar.gz",
+        strip_prefix = "autocfg-1.1.0",
+        build_file = Label("//library/crates/remote:BUILD.autocfg-1.1.0.bazel"),
+    )
+
+    maybe(
+        http_archive,
         name = "raze__base64__0_9_3",
         url = "https://crates.io/api/v1/crates/base64/0.9.3/download",
         type = "tar.gz",
@@ -165,29 +174,38 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__cxx__1_0_71",
-        url = "https://crates.io/api/v1/crates/cxx/1.0.71/download",
+        name = "raze__cxx__1_0_72",
+        url = "https://crates.io/api/v1/crates/cxx/1.0.72/download",
         type = "tar.gz",
-        strip_prefix = "cxx-1.0.71",
-        build_file = Label("//library/crates/remote:BUILD.cxx-1.0.71.bazel"),
+        strip_prefix = "cxx-1.0.72",
+        build_file = Label("//library/crates/remote:BUILD.cxx-1.0.72.bazel"),
     )
 
     maybe(
         http_archive,
-        name = "raze__cxxbridge_flags__1_0_71",
-        url = "https://crates.io/api/v1/crates/cxxbridge-flags/1.0.71/download",
+        name = "raze__cxxbridge_flags__1_0_72",
+        url = "https://crates.io/api/v1/crates/cxxbridge-flags/1.0.72/download",
         type = "tar.gz",
-        strip_prefix = "cxxbridge-flags-1.0.71",
-        build_file = Label("//library/crates/remote:BUILD.cxxbridge-flags-1.0.71.bazel"),
+        strip_prefix = "cxxbridge-flags-1.0.72",
+        build_file = Label("//library/crates/remote:BUILD.cxxbridge-flags-1.0.72.bazel"),
     )
 
     maybe(
         http_archive,
-        name = "raze__cxxbridge_macro__1_0_71",
-        url = "https://crates.io/api/v1/crates/cxxbridge-macro/1.0.71/download",
+        name = "raze__cxxbridge_macro__1_0_72",
+        url = "https://crates.io/api/v1/crates/cxxbridge-macro/1.0.72/download",
         type = "tar.gz",
-        strip_prefix = "cxxbridge-macro-1.0.71",
-        build_file = Label("//library/crates/remote:BUILD.cxxbridge-macro-1.0.71.bazel"),
+        strip_prefix = "cxxbridge-macro-1.0.72",
+        build_file = Label("//library/crates/remote:BUILD.cxxbridge-macro-1.0.72.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "raze__derivative__2_2_0",
+        url = "https://crates.io/api/v1/crates/derivative/2.2.0/download",
+        type = "tar.gz",
+        strip_prefix = "derivative-2.2.0",
+        build_file = Label("//library/crates/remote:BUILD.derivative-2.2.0.bazel"),
     )
 
     maybe(
@@ -850,11 +868,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__slab__0_4_6",
-        url = "https://crates.io/api/v1/crates/slab/0.4.6/download",
+        name = "raze__slab__0_4_7",
+        url = "https://crates.io/api/v1/crates/slab/0.4.7/download",
         type = "tar.gz",
-        strip_prefix = "slab-0.4.6",
-        build_file = Label("//library/crates/remote:BUILD.slab-0.4.6.bazel"),
+        strip_prefix = "slab-0.4.7",
+        build_file = Label("//library/crates/remote:BUILD.slab-0.4.7.bazel"),
     )
 
     maybe(
@@ -960,11 +978,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__unicode_ident__1_0_1",
-        url = "https://crates.io/api/v1/crates/unicode-ident/1.0.1/download",
+        name = "raze__unicode_ident__1_0_2",
+        url = "https://crates.io/api/v1/crates/unicode-ident/1.0.2/download",
         type = "tar.gz",
-        strip_prefix = "unicode-ident-1.0.1",
-        build_file = Label("//library/crates/remote:BUILD.unicode-ident-1.0.1.bazel"),
+        strip_prefix = "unicode-ident-1.0.2",
+        build_file = Label("//library/crates/remote:BUILD.unicode-ident-1.0.2.bazel"),
     )
 
     maybe(

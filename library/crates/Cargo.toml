@@ -25,6 +25,9 @@ tls-api = "0.1.22"
 tls-api-stub = "0.1.22"
 log = "0.4.6"
 
+[dev-dependencies]
+derivative = "2.2.0"
+
 [package.metadata.raze]
 # The path at which to write output files.
 #

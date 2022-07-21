@@ -31,10 +31,8 @@ licenses([
 
 # Generated Targets
 
-# Unsupported target "xid" with type "bench" omitted
-
-rust_library(
-    name = "unicode_ident",
+rust_proc_macro(
+    name = "cxxbridge_macro",
     srcs = glob(["**/*.rs"]),
     crate_features = [
     ],
@@ -46,15 +44,14 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=unicode-ident",
+        "crate-name=cxxbridge-macro",
         "manual",
     ],
-    version = "1.0.1",
+    version = "1.0.72",
     # buildifier: leave-alone
     deps = [
+        "@raze__proc_macro2__1_0_40//:proc_macro2",
+        "@raze__quote__1_0_10//:quote",
+        "@raze__syn__1_0_98//:syn",
     ],
 )
-
-# Unsupported target "compare" with type "test" omitted
-
-# Unsupported target "static_size" with type "test" omitted

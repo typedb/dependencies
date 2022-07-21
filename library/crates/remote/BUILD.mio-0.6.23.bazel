@@ -58,7 +58,7 @@ rust_library(
         "@raze__iovec__0_1_4//:iovec",
         "@raze__log__0_4_17//:log",
         "@raze__net2__0_2_37//:net2",
-        "@raze__slab__0_4_6//:slab",
+        "@raze__slab__0_4_7//:slab",
     ] + selects.with_or({
         # cfg(unix)
         (
