@@ -8,6 +8,7 @@ path = "" # ignored by cargo raze
 [dependencies]
 antlr-rust = "0.2.0"
 cxx = "1.0.59"
+derivative = "2.2.0"
 futures = { version = "0.3.21", features = ["executor", "thread-pool"] }
 rocksdb = "0.17.0"
 tokio = { version = "0.2.25", features = ["macros", "sync"] } # tokio 0.2.25 is used by grpc
@@ -24,9 +25,6 @@ grpc-compiler = "0.8.3"
 tls-api = "0.1.22"
 tls-api-stub = "0.1.22"
 log = "0.4.6"
-
-[dev-dependencies]
-derivative = "2.2.0"
 
 [package.metadata.raze]
 # The path at which to write output files.
