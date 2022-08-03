@@ -174,29 +174,29 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__cxx__1_0_72",
-        url = "https://crates.io/api/v1/crates/cxx/1.0.72/download",
+        name = "raze__cxx__1_0_73",
+        url = "https://crates.io/api/v1/crates/cxx/1.0.73/download",
         type = "tar.gz",
-        strip_prefix = "cxx-1.0.72",
-        build_file = Label("//library/crates/remote:BUILD.cxx-1.0.72.bazel"),
+        strip_prefix = "cxx-1.0.73",
+        build_file = Label("//library/crates/remote:BUILD.cxx-1.0.73.bazel"),
     )
 
     maybe(
         http_archive,
-        name = "raze__cxxbridge_flags__1_0_72",
-        url = "https://crates.io/api/v1/crates/cxxbridge-flags/1.0.72/download",
+        name = "raze__cxxbridge_flags__1_0_73",
+        url = "https://crates.io/api/v1/crates/cxxbridge-flags/1.0.73/download",
         type = "tar.gz",
-        strip_prefix = "cxxbridge-flags-1.0.72",
-        build_file = Label("//library/crates/remote:BUILD.cxxbridge-flags-1.0.72.bazel"),
+        strip_prefix = "cxxbridge-flags-1.0.73",
+        build_file = Label("//library/crates/remote:BUILD.cxxbridge-flags-1.0.73.bazel"),
     )
 
     maybe(
         http_archive,
-        name = "raze__cxxbridge_macro__1_0_72",
-        url = "https://crates.io/api/v1/crates/cxxbridge-macro/1.0.72/download",
+        name = "raze__cxxbridge_macro__1_0_73",
+        url = "https://crates.io/api/v1/crates/cxxbridge-macro/1.0.73/download",
         type = "tar.gz",
-        strip_prefix = "cxxbridge-macro-1.0.72",
-        build_file = Label("//library/crates/remote:BUILD.cxxbridge-macro-1.0.72.bazel"),
+        strip_prefix = "cxxbridge-macro-1.0.73",
+        build_file = Label("//library/crates/remote:BUILD.cxxbridge-macro-1.0.73.bazel"),
     )
 
     maybe(
@@ -219,11 +219,20 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__fastrand__1_7_0",
-        url = "https://crates.io/api/v1/crates/fastrand/1.7.0/download",
+        name = "raze__enum_dispatch__0_3_8",
+        url = "https://crates.io/api/v1/crates/enum_dispatch/0.3.8/download",
         type = "tar.gz",
-        strip_prefix = "fastrand-1.7.0",
-        build_file = Label("//library/crates/remote:BUILD.fastrand-1.7.0.bazel"),
+        strip_prefix = "enum_dispatch-0.3.8",
+        build_file = Label("//library/crates/remote:BUILD.enum_dispatch-0.3.8.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "raze__fastrand__1_8_0",
+        url = "https://crates.io/api/v1/crates/fastrand/1.8.0/download",
+        type = "tar.gz",
+        strip_prefix = "fastrand-1.8.0",
+        build_file = Label("//library/crates/remote:BUILD.fastrand-1.8.0.bazel"),
     )
 
     maybe(
@@ -676,11 +685,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__proc_macro2__1_0_40",
-        url = "https://crates.io/api/v1/crates/proc-macro2/1.0.40/download",
+        name = "raze__proc_macro2__1_0_43",
+        url = "https://crates.io/api/v1/crates/proc-macro2/1.0.43/download",
         type = "tar.gz",
-        strip_prefix = "proc-macro2-1.0.40",
-        build_file = Label("//library/crates/remote:BUILD.proc-macro2-1.0.40.bazel"),
+        strip_prefix = "proc-macro2-1.0.43",
+        build_file = Label("//library/crates/remote:BUILD.proc-macro2-1.0.43.bazel"),
     )
 
     maybe(
@@ -887,11 +896,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__syn__1_0_98",
-        url = "https://crates.io/api/v1/crates/syn/1.0.98/download",
+        name = "raze__syn__1_0_99",
+        url = "https://crates.io/api/v1/crates/syn/1.0.99/download",
         type = "tar.gz",
-        strip_prefix = "syn-1.0.98",
-        build_file = Label("//library/crates/remote:BUILD.syn-1.0.98.bazel"),
+        strip_prefix = "syn-1.0.99",
+        build_file = Label("//library/crates/remote:BUILD.syn-1.0.99.bazel"),
     )
 
     maybe(
@@ -978,11 +987,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__unicode_ident__1_0_2",
-        url = "https://crates.io/api/v1/crates/unicode-ident/1.0.2/download",
+        name = "raze__unicode_ident__1_0_3",
+        url = "https://crates.io/api/v1/crates/unicode-ident/1.0.3/download",
         type = "tar.gz",
-        strip_prefix = "unicode-ident-1.0.2",
-        build_file = Label("//library/crates/remote:BUILD.unicode-ident-1.0.2.bazel"),
+        strip_prefix = "unicode-ident-1.0.3",
+        build_file = Label("//library/crates/remote:BUILD.unicode-ident-1.0.3.bazel"),
     )
 
     maybe(

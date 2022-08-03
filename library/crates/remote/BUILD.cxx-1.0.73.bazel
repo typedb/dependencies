@@ -58,11 +58,11 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "1.0.72",
+    version = "1.0.73",
     visibility = ["//visibility:private"],
     deps = [
         "@raze__cc__1_0_73//:cc",
-        "@raze__cxxbridge_flags__1_0_72//:cxxbridge_flags",
+        "@raze__cxxbridge_flags__1_0_73//:cxxbridge_flags",
     ],
 )
 
@@ -78,7 +78,7 @@ rust_library(
     data = [],
     edition = "2018",
     proc_macro_deps = [
-        "@raze__cxxbridge_macro__1_0_72//:cxxbridge_macro",
+        "@raze__cxxbridge_macro__1_0_73//:cxxbridge_macro",
     ],
     rustc_flags = [
         "--cap-lints=allow",
@@ -88,7 +88,7 @@ rust_library(
         "crate-name=cxx",
         "manual",
     ],
-    version = "1.0.72",
+    version = "1.0.73",
     # buildifier: leave-alone
     deps = [
         ":cxx_build_script",

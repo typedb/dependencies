@@ -23,7 +23,7 @@ alias(
 
 alias(
     name = "cxx",
-    actual = "@raze__cxx__1_0_72//:cxx",
+    actual = "@raze__cxx__1_0_73//:cxx",
     tags = [
         "cargo-raze",
         "manual",
@@ -33,6 +33,15 @@ alias(
 alias(
     name = "derivative",
     actual = "@raze__derivative__2_2_0//:derivative",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "enum_dispatch",
+    actual = "@raze__enum_dispatch__0_3_8//:enum_dispatch",
     tags = [
         "cargo-raze",
         "manual",

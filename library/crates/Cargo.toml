@@ -27,6 +27,7 @@ log = "0.4.6"
 
 [dev-dependencies]
 derivative = "2.2.0"
+enum_dispatch = "0.3.8"
 
 [package.metadata.raze]
 # The path at which to write output files.
