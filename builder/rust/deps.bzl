@@ -3,10 +3,10 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file"
 def deps():
     http_archive(
         name = "rules_rust",
-        sha256 = "7240a4865b11427cc58cd00b3e89c805825bfd3cc4c225b7e992a58622bec859",
-        strip_prefix = "rules_rust-a619e1a30bb274639b6d2ccb76c820a02b9f94be",
+        sha256 = "6bfe75125e74155955d8a9854a8811365e6c0f3d33ed700bc17f39e32522c822",
         urls = [
-            "https://github.com/bazelbuild/rules_rust/archive/a619e1a30bb274639b6d2ccb76c820a02b9f94be.tar.gz",
+            "https://mirror.bazel.build/github.com/bazelbuild/rules_rust/releases/download/0.9.0/rules_rust-v0.9.0.tar.gz",
+            "https://github.com/bazelbuild/rules_rust/releases/download/0.9.0/rules_rust-v0.9.0.tar.gz",
         ],
     )
     http_file(
