@@ -31,11 +31,15 @@ licenses([
 
 # Generated Targets
 
+# Unsupported target "thread_notify" with type "bench" omitted
+
 rust_library(
-    name = "hermit_abi",
+    name = "futures_executor",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
+        "num_cpus",
+        "std",
+        "thread-pool",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,12 +49,17 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hermit-abi",
+        "crate-name=futures-executor",
         "manual",
     ],
-    version = "0.1.19",
+    version = "0.3.23",
     # buildifier: leave-alone
     deps = [
-        "@raze__libc__0_2_131//:libc",
+        "@raze__futures_core__0_3_23//:futures_core",
+        "@raze__futures_task__0_3_23//:futures_task",
+        "@raze__futures_util__0_3_23//:futures_util",
+        "@raze__num_cpus__1_13_1//:num_cpus",
     ],
 )
+
+# Unsupported target "local_pool" with type "test" omitted

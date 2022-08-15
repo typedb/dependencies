@@ -26,17 +26,38 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # Apache-2.0 from expression "Apache-2.0 OR MIT"
 ])
 
 # Generated Targets
 
+# Unsupported target "format_str" with type "bench" omitted
+
+# Unsupported target "parse_str" with type "bench" omitted
+
+# Unsupported target "v4" with type "bench" omitted
+
+# Unsupported target "random_uuid" with type "example" omitted
+
+# Unsupported target "uuid_macro" with type "example" omitted
+
+# Unsupported target "windows_guid" with type "example" omitted
+
 rust_library(
-    name = "futures_sink",
+    name = "uuid",
     srcs = glob(["**/*.rs"]),
+    aliases = {
+        "@raze__getrandom__0_2_7//:getrandom": "private_getrandom",
+        "@raze__rand__0_8_5//:rand": "private_rand",
+    },
     crate_features = [
-        "alloc",
+        "default",
+        "fast-rng",
+        "private_getrandom",
+        "private_rand",
+        "rng",
         "std",
+        "v4",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -46,11 +67,15 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=futures-sink",
+        "crate-name=uuid",
         "manual",
     ],
-    version = "0.3.21",
+    version = "1.1.2",
     # buildifier: leave-alone
     deps = [
+        "@raze__getrandom__0_2_7//:getrandom",
+        "@raze__rand__0_8_5//:rand",
     ],
 )
+
+# Unsupported target "macros" with type "test" omitted

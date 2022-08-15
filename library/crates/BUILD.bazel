@@ -50,7 +50,7 @@ alias(
 
 alias(
     name = "futures",
-    actual = "@raze__futures__0_3_21//:futures",
+    actual = "@raze__futures__0_3_23//:futures",
     tags = [
         "cargo-raze",
         "manual",
@@ -148,26 +148,8 @@ alias(
 )
 
 alias(
-    name = "tls_api",
-    actual = "@raze__tls_api__0_1_22//:tls_api",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
-    name = "tls_api_stub",
-    actual = "@raze__tls_api_stub__0_1_22//:tls_api_stub",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
     name = "tokio",
-    actual = "@raze__tokio__0_2_25//:tokio",
+    actual = "@raze__tokio__1_20_1//:tokio",
     tags = [
         "cargo-raze",
         "manual",
@@ -176,7 +158,7 @@ alias(
 
 alias(
     name = "uuid",
-    actual = "@raze__uuid__0_8_2//:uuid",
+    actual = "@raze__uuid__1_1_2//:uuid",
     tags = [
         "cargo-raze",
         "manual",

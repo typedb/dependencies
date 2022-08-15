@@ -8,26 +8,19 @@ path = "" # ignored by cargo raze
 [dependencies]
 antlr-rust = "0.2.0"
 cxx = "1.0.59"
-futures = { version = "0.3.21", features = ["executor", "thread-pool"] }
-rocksdb = "0.17.0"
-tokio = { version = "0.2.25", features = ["macros", "sync"] } # tokio 0.2.25 is used by grpc
-uuid = { version = "0.8.2", features = ["v4"] }
-
-# gRPC dependencies - TODO: clean up
-protobuf = { version = "2.18.2", features = ["with-bytes"] }
-protobuf-codegen = "2.18.2"
-grpc = "0.8.3"
-protoc-rust-grpc = "0.8.3"
-grpc-protobuf = "0.8.3"
-
-grpc-compiler = "0.8.3"
-tls-api = "0.1.22"
-tls-api-stub = "0.1.22"
-log = "0.4.6"
-
-[dev-dependencies]
 derivative = "2.2.0"
 enum_dispatch = "0.3.8"
+futures = { version = "0.3.21", features = ["executor", "thread-pool"] }
+grpc = "0.8.3"
+grpc-compiler = "0.8.3"
+grpc-protobuf = "0.8.3"
+log = "0.4.6"
+protobuf = { version = "2.18.2", features = ["with-bytes"] }
+protobuf-codegen = "2.18.2"
+protoc-rust-grpc = "0.8.3"
+rocksdb = "0.17.0"
+tokio = { version = "1.20.1", features = ["macros", "rt" ] }
+uuid = { version = "1.1.2", features = ["fast-rng", "v4"] }
 
 [package.metadata.raze]
 # The path at which to write output files.
@@ -58,10 +51,6 @@ genmode = "Remote"
 additional_flags = [
     "--cfg=lazy_static_heap_impl",
 ]
-
-#[package.metadata.raze.crates.protobuf.'2.23.0']
-#patches = ["@rules_rust//proto/raze/patch:protobuf-2.8.2.patch"]
-#patch_args = ["-p1"]
 
 [package.metadata.raze.crates.protobuf-codegen.'2.18.2']
 extra_aliased_targets = ["cargo_bin_protoc_gen_rust"]

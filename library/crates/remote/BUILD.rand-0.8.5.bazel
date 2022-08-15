@@ -32,25 +32,43 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "tls_api_stub",
+    name = "rand",
     srcs = glob(["**/*.rs"]),
+    aliases = {
+    },
     crate_features = [
+        "alloc",
+        "default",
+        "getrandom",
+        "libc",
+        "rand_chacha",
+        "std",
+        "std_rng",
     ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2015",
+    edition = "2018",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tls-api-stub",
+        "crate-name=rand",
         "manual",
     ],
-    version = "0.1.22",
+    version = "0.8.5",
     # buildifier: leave-alone
     deps = [
-        "@raze__tls_api__0_1_22//:tls_api",
-        "@raze__void__1_0_2//:void",
-    ],
+        "@raze__rand_chacha__0_3_1//:rand_chacha",
+        "@raze__rand_core__0_6_3//:rand_core",
+    ] + selects.with_or({
+        # cfg(unix)
+        (
+            "@rules_rust//rust/platform:x86_64-apple-darwin",
+            "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+        ): [
+            "@raze__libc__0_2_131//:libc",
+        ],
+        "//conditions:default": [],
+    }),
 )

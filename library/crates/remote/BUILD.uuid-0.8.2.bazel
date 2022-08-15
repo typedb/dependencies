@@ -46,9 +46,7 @@ rust_library(
     srcs = glob(["**/*.rs"]),
     crate_features = [
         "default",
-        "getrandom",
         "std",
-        "v4",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -64,6 +62,5 @@ rust_library(
     version = "0.8.2",
     # buildifier: leave-alone
     deps = [
-        "@raze__getrandom__0_2_7//:getrandom",
     ],
 )
