@@ -44,6 +44,7 @@ cargo_build_script(
     },
     crate_features = [
         "alloc",
+        "default",
         "std",
     ],
     crate_root = "build.rs",
@@ -67,6 +68,7 @@ rust_library(
     srcs = glob(["**/*.rs"]),
     crate_features = [
         "alloc",
+        "default",
         "std",
     ],
     crate_root = "src/lib.rs",

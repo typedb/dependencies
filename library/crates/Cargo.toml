@@ -21,6 +21,9 @@ protoc-rust-grpc = "0.8.3"
 rocksdb = "0.17.0"
 tokio = { version = "1.20.1", features = ["macros", "rt" ] }
 uuid = { version = "1.1.2", features = ["fast-rng", "v4"] }
+tonic = "0.8.0"
+prost = "0.11.0"
+tonic-build = "0.8.0"
 
 [package.metadata.raze]
 # The path at which to write output files.
@@ -57,3 +60,9 @@ extra_aliased_targets = ["cargo_bin_protoc_gen_rust"]
 
 [package.metadata.raze.crates.grpc-compiler.'0.8.3']
 extra_aliased_targets = ["cargo_bin_protoc_gen_rust_grpc"]
+
+[package.metadata.raze.crates.tonic.'0.8.0']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.prost.'0.11.0']
+compile_data_attr = "glob([\"**/*.md\"])"

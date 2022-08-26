@@ -36,8 +36,6 @@ rust_library(
     srcs = glob(["**/*.rs"]),
     aliases = {
     },
-    crate_features = [
-    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2015",
@@ -53,13 +51,12 @@ rust_library(
     # buildifier: leave-alone
     deps = [
     ] + selects.with_or({
-        # cfg(unix)
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
         ): [
             "@raze__iovec__0_1_4//:iovec",
-            "@raze__libc__0_2_131//:libc",
+            "@raze__libc__0_2_132//:libc",
             "@raze__mio__0_6_23//:mio",
         ],
         "//conditions:default": [],

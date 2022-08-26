@@ -36,8 +36,6 @@ rust_binary(
     # N.B.: The exact form of this is subject to change.
     name = "cargo_bin_protoc_gen_rust_grpc",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-    ],
     crate_root = "src/bin/protoc-gen-rust-grpc.rs",
     data = [],
     edition = "2018",
@@ -61,8 +59,6 @@ rust_binary(
 rust_library(
     name = "grpc_compiler",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",

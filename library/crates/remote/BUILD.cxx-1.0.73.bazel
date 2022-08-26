@@ -92,7 +92,7 @@ rust_library(
     # buildifier: leave-alone
     deps = [
         ":cxx_build_script",
-        "@raze__link_cplusplus__1_0_6//:link_cplusplus",
+        "@raze__link_cplusplus__1_0_7//:link_cplusplus",
     ],
 )
 

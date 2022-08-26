@@ -42,8 +42,6 @@ cargo_build_script(
     srcs = glob(["**/*.rs"]),
     build_script_env = {
     },
-    crate_features = [
-    ],
     crate_root = "build.rs",
     data = glob(["**"]),
     edition = "2018",
@@ -58,7 +56,6 @@ cargo_build_script(
     visibility = ["//visibility:private"],
     deps = [
     ] + selects.with_or({
-        # cfg(unix)
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
@@ -75,8 +72,6 @@ rust_binary(
     srcs = glob(["**/*.rs"]),
     aliases = {
     },
-    crate_features = [
-    ],
     crate_root = "src/bin/client_server_loop.rs",
     data = [],
     edition = "2018",
@@ -104,7 +99,6 @@ rust_binary(
         "@raze__tokio__0_2_25//:tokio",
         "@raze__void__1_0_2//:void",
     ] + selects.with_or({
-        # cfg(unix)
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
@@ -124,8 +118,6 @@ rust_library(
     srcs = glob(["**/*.rs"]),
     aliases = {
     },
-    crate_features = [
-    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -152,7 +144,6 @@ rust_library(
         "@raze__tokio__0_2_25//:tokio",
         "@raze__void__1_0_2//:void",
     ] + selects.with_or({
-        # cfg(unix)
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",

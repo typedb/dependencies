@@ -103,6 +103,15 @@ alias(
 )
 
 alias(
+    name = "prost",
+    actual = "@raze__prost__0_11_0//:prost",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "protobuf",
     actual = "@raze__protobuf__2_18_2//:protobuf",
     tags = [
@@ -157,6 +166,24 @@ alias(
 )
 
 alias(
+    name = "tonic",
+    actual = "@raze__tonic__0_8_0//:tonic",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "tonic_build",
+    actual = "@raze__tonic_build__0_8_0//:tonic_build",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "uuid",
     actual = "@raze__uuid__1_1_2//:uuid",
     tags = [
@@ -167,8 +194,18 @@ alias(
 
 # Export file for Stardoc support
 exports_files(
-    [
-        "crates.bzl",
-    ],
+    glob([
+        "**/*.bazel",
+        "**/*.bzl",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "srcs",
+    srcs = glob([
+        "**/*.bazel",
+        "**/*.bzl",
+    ]),
     visibility = ["//visibility:public"],
 )

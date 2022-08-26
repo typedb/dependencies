@@ -34,8 +34,6 @@ licenses([
 rust_library(
     name = "unix_socket",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2015",
@@ -51,6 +49,6 @@ rust_library(
     # buildifier: leave-alone
     deps = [
         "@raze__cfg_if__0_1_10//:cfg_if",
-        "@raze__libc__0_2_131//:libc",
+        "@raze__libc__0_2_132//:libc",
     ],
 )

@@ -103,7 +103,7 @@ rust_library(
     deps = [
         ":clang_sys_build_script",
         "@raze__glob__0_3_0//:glob",
-        "@raze__libc__0_2_131//:libc",
+        "@raze__libc__0_2_132//:libc",
         "@raze__libloading__0_7_3//:libloading",
     ],
 )

@@ -34,8 +34,6 @@ licenses([
 rust_library(
     name = "antlr_rust",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -55,7 +53,7 @@ rust_library(
         "@raze__byteorder__1_4_3//:byteorder",
         "@raze__lazy_static__1_4_0//:lazy_static",
         "@raze__murmur3__0_4_1//:murmur3",
-        "@raze__once_cell__1_8_0//:once_cell",
+        "@raze__once_cell__1_13_1//:once_cell",
         "@raze__parking_lot__0_11_2//:parking_lot",
         "@raze__typed_arena__2_0_1//:typed_arena",
         "@raze__uuid__0_8_2//:uuid",

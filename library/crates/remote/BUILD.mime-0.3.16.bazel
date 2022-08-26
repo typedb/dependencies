@@ -30,59 +30,29 @@ licenses([
 ])
 
 # Generated Targets
-# buildifier: disable=out-of-order-load
-# buildifier: disable=load-on-top
-load(
-    "@rules_rust//cargo:cargo_build_script.bzl",
-    "cargo_build_script",
-)
 
-cargo_build_script(
-    name = "link_cplusplus_build_script",
-    srcs = glob(["**/*.rs"]),
-    build_script_env = {
-    },
-    crate_features = [
-        "default",
-    ],
-    crate_root = "build.rs",
-    data = glob(["**"]),
-    edition = "2018",
-    links = "cplusplus",
-    rustc_flags = [
-        "--cap-lints=allow",
-    ],
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-    version = "1.0.6",
-    visibility = ["//visibility:private"],
-    deps = [
-        "@raze__cc__1_0_73//:cc",
-    ],
-)
+# Unsupported target "cmp" with type "bench" omitted
+
+# Unsupported target "fmt" with type "bench" omitted
+
+# Unsupported target "parse" with type "bench" omitted
 
 rust_library(
-    name = "link_cplusplus",
+    name = "mime",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-        "default",
-    ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2018",
+    edition = "2015",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=link-cplusplus",
+        "crate-name=mime",
         "manual",
     ],
-    version = "1.0.6",
+    version = "0.3.16",
     # buildifier: leave-alone
     deps = [
-        ":link_cplusplus_build_script",
     ],
 )
