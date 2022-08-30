@@ -77,7 +77,7 @@ rust_proc_macro(
     deps = [
         ":async_trait_build_script",
         "@raze__proc_macro2__1_0_43//:proc_macro2",
-        "@raze__quote__1_0_10//:quote",
+        "@raze__quote__1_0_21//:quote",
         "@raze__syn__1_0_99//:syn",
     ],
 )

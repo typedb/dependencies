@@ -26,13 +26,13 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # Apache-2.0 from expression "Apache-2.0 OR MIT"
+    "notice",  # MIT from expression "MIT OR Apache-2.0"
 ])
 
 # Generated Targets
 
-rust_library(
-    name = "lock_api",
+rust_proc_macro(
+    name = "futures_macro",
     srcs = glob(["**/*.rs"]),
     crate_root = "src/lib.rs",
     data = [],
@@ -42,12 +42,14 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=lock_api",
+        "crate-name=futures-macro",
         "manual",
     ],
-    version = "0.4.5",
+    version = "0.3.24",
     # buildifier: leave-alone
     deps = [
-        "@raze__scopeguard__1_1_0//:scopeguard",
+        "@raze__proc_macro2__1_0_43//:proc_macro2",
+        "@raze__quote__1_0_21//:quote",
+        "@raze__syn__1_0_99//:syn",
     ],
 )

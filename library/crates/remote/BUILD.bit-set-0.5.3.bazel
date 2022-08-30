@@ -49,7 +49,7 @@ rust_library(
         "crate-name=bit-set",
         "manual",
     ],
-    version = "0.5.2",
+    version = "0.5.3",
     # buildifier: leave-alone
     deps = [
         "@raze__bit_vec__0_6_3//:bit_vec",

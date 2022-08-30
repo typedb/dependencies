@@ -74,8 +74,8 @@ rust_library(
     version = "0.4.13",
     # buildifier: leave-alone
     deps = [
-        "@raze__futures_core__0_3_23//:futures_core",
-        "@raze__futures_util__0_3_23//:futures_util",
+        "@raze__futures_core__0_3_24//:futures_core",
+        "@raze__futures_util__0_3_24//:futures_util",
         "@raze__indexmap__1_9_1//:indexmap",
         "@raze__pin_project__1_0_12//:pin_project",
         "@raze__pin_project_lite__0_2_9//:pin_project_lite",
