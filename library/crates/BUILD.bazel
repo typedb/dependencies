@@ -14,7 +14,7 @@ licenses([
 # Aliased targets
 alias(
     name = "antlr_rust",
-    actual = "@raze__antlr_rust__0_2_0//:antlr_rust",
+    actual = "@raze__antlr_rust__0_2_2//:antlr_rust",
     tags = [
         "cargo-raze",
         "manual",
@@ -50,7 +50,7 @@ alias(
 
 alias(
     name = "futures",
-    actual = "@raze__futures__0_3_23//:futures",
+    actual = "@raze__futures__0_3_24//:futures",
     tags = [
         "cargo-raze",
         "manual",
@@ -96,6 +96,15 @@ alias(
 alias(
     name = "log",
     actual = "@raze__log__0_4_17//:log",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "prost",
+    actual = "@raze__prost__0_11_0//:prost",
     tags = [
         "cargo-raze",
         "manual",
@@ -157,6 +166,24 @@ alias(
 )
 
 alias(
+    name = "tonic",
+    actual = "@raze__tonic__0_8_0//:tonic",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "tonic_build",
+    actual = "@raze__tonic_build__0_8_0//:tonic_build",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "uuid",
     actual = "@raze__uuid__1_1_2//:uuid",
     tags = [
@@ -167,8 +194,18 @@ alias(
 
 # Export file for Stardoc support
 exports_files(
-    [
-        "crates.bzl",
-    ],
+    glob([
+        "**/*.bazel",
+        "**/*.bzl",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "srcs",
+    srcs = glob([
+        "**/*.bazel",
+        "**/*.bzl",
+    ]),
     visibility = ["//visibility:public"],
 )

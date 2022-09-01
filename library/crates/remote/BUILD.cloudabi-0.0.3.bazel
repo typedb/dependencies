@@ -34,10 +34,6 @@ licenses([
 rust_library(
     name = "cloudabi",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-        "bitflags",
-        "default",
-    ],
     crate_root = "cloudabi.rs",
     data = [],
     edition = "2015",

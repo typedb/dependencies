@@ -77,12 +77,11 @@ rust_library(
         "@raze__pin_project_lite__0_1_12//:pin_project_lite",
         "@raze__slab__0_4_7//:slab",
     ] + selects.with_or({
-        # cfg(unix)
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
         ): [
-            "@raze__libc__0_2_131//:libc",
+            "@raze__libc__0_2_132//:libc",
             "@raze__mio_uds__0_6_8//:mio_uds",
         ],
         "//conditions:default": [],

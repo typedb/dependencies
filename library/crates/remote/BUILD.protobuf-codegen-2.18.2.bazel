@@ -36,8 +36,6 @@ rust_binary(
     # N.B.: The exact form of this is subject to change.
     name = "cargo_bin_protobuf_bin_gen_rust_do_not_use",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-    ],
     crate_root = "src/bin/protobuf-bin-gen-rust-do-not-use.rs",
     data = [],
     edition = "2015",
@@ -62,8 +60,6 @@ rust_binary(
     # N.B.: The exact form of this is subject to change.
     name = "cargo_bin_protoc_gen_rust",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-    ],
     crate_root = "src/bin/protoc-gen-rust.rs",
     data = [],
     edition = "2015",
@@ -86,8 +82,6 @@ rust_binary(
 rust_library(
     name = "protobuf_codegen",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2015",
