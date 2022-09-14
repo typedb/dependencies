@@ -7,6 +7,7 @@ path = "" # ignored by cargo raze
 
 [dependencies]
 antlr-rust = "0.2.0"
+axum = "0.5.15"
 cxx = "1.0.59"
 derivative = "2.2.0"
 enum_dispatch = "0.3.8"
@@ -19,7 +20,7 @@ protobuf = { version = "2.18.2", features = ["with-bytes"] }
 protobuf-codegen = "2.18.2"
 protoc-rust-grpc = "0.8.3"
 rocksdb = "0.17.0"
-tokio = { version = "1.20.1", features = ["macros", "rt" ] }
+tokio = { version = "1.20.1", features = ["full"] }
 uuid = { version = "1.1.2", features = ["fast-rng", "v4"] }
 tonic = "0.8.0"
 prost = "0.11.0"
