@@ -6,8 +6,9 @@ version = "0.0.0"
 path = "" # ignored by cargo raze
 
 [dependencies]
-antlr-rust = "0.2.0"
+antlr-rust = "0.3.0-beta"
 axum = "0.5.15"
+chrono = "0.4.22"
 cxx = "1.0.59"
 derivative = "2.2.0"
 enum_dispatch = "0.3.8"
