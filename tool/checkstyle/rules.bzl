@@ -20,19 +20,12 @@ def _checkstyle_test_impl(ctx):
     opts = ctx.attr.opts
     sopts = ctx.attr.string_opts
 
-    classpath = ":".join([file.path for file in ctx.files._classpath])
-
     args = ""
     inputs = []
-    config = ctx.actions.declare_file("checkstyle.xml")
 
-    if ctx.attr.license_type == "apache":
-        license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-header-apache.txt"
-    elif ctx.attr.license_type == "commercial":
-        license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-header-commercial.txt"
-    else:
-        license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-header-agpl.txt"
+    license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-%s.txt" % ctx.attr.license_type
 
+    config = ctx.actions.declare_file("%s.xml" % ctx.attr.name)
     ctx.actions.expand_template(
         template = ctx.file._checkstyle_xml_template,
         output = config,
@@ -55,9 +48,10 @@ def _checkstyle_test_impl(ctx):
     files = []
     for target in ctx.attr.include:
         path = target.files.to_list()[0].path;
-        if target not in ctx.attr.exclude and path not in ['.DS_Store', '.bazelversion', '.gitkeep', 'LICENSE', 'VERSION'] and not path.endswith('.md'):
+        if target not in ctx.attr.exclude:
             files.extend(target.files.to_list())
 
+    classpath = ":".join([file.path for file in ctx.files._classpath])
     cmd = " ".join(
         ["java -cp %s com.puppycrawl.tools.checkstyle.Main" % classpath] +
         [args] +
@@ -66,23 +60,20 @@ def _checkstyle_test_impl(ctx):
         [file.path for file in files]
     )
 
-    ctx.actions.expand_template(
-        template = ctx.file._checkstyle_py_template,
-        output = ctx.outputs.checkstyle_script,
-        substitutions = {
-            "{command}" : cmd,
-            "{allow_failure}": str(int(ctx.attr.allow_failure)),
-        },
+    checkstyle_wrapper = ctx.actions.declare_file("%s.sh" % ctx.attr.name)
+    ctx.actions.write(
+        output = checkstyle_wrapper,
+        content = cmd,
         is_executable = True,
     )
 
-    files = [ctx.outputs.checkstyle_script] + ctx.files._license_files + files + ctx.files._classpath + inputs
+    files = [checkstyle_wrapper] + ctx.files._license_files + files + ctx.files._classpath + inputs
     runfiles = ctx.runfiles(
         files = files,
         collect_data = True,
     )
     return DefaultInfo(
-        executable = ctx.outputs.checkstyle_script,
+        executable = checkstyle_wrapper,
         files = depset(files),
         runfiles = runfiles,
     )
@@ -93,7 +84,14 @@ checkstyle_test = rule(
     attrs = {
         "license_type": attr.string(
             doc = "Type of license to produce the header for every source code",
-            values = ["agpl", "apache", "commercial"],
+            values = [
+                "agpl-header",
+                "apache-header",
+                "commercial-header",
+                "agpl-fulltext",
+                "apache-fulltext",
+                "commercial-fulltext",
+            ],
             mandatory = True,
         ),
         "properties": attr.label(
@@ -115,14 +113,6 @@ checkstyle_test = rule(
             allow_files = True,
             default = [],
         ),
-        "allow_failure": attr.bool(
-            default = False,
-            doc = "Successfully finish the test even if checkstyle failed"
-        ),
-        "_checkstyle_py_template": attr.label(
-             allow_single_file=True,
-             default = "//tool/checkstyle/templates:checkstyle.py"
-        ),
         "_checkstyle_xml_template": attr.label(
              allow_single_file=True,
              default = "//tool/checkstyle/templates:checkstyle.xml"
@@ -143,8 +133,5 @@ checkstyle_test = rule(
             doc = "License file(s) that can be used with the checkstyle license target",
             default = ["@vaticle_dependencies//tool/checkstyle/config:license_files"]
         ),
-    },
-    outputs = {
-        "checkstyle_script": "%{name}.py",
     },
 )

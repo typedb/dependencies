@@ -1,9 +1,12 @@
 filegroup(
     name = "license_files",
     srcs = [
-        "checkstyle-file-header-agpl.txt",
-        "checkstyle-file-header-apache.txt",
-        "checkstyle-file-header-commercial.txt",
+        "checkstyle-file-agpl-header.txt",
+        "checkstyle-file-apache-header.txt",
+        "checkstyle-file-commercial-header.txt",
+        "checkstyle-file-agpl-fulltext.txt",
+        "checkstyle-file-apache-fulltext.txt",
+        "checkstyle-file-commercial-fulltext.txt",
     ],
     visibility = ["//visibility:public"]
 )
