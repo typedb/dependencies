@@ -1,10 +1,11 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
 def deps():
+    rules_kotlin_version = "1.7.0-RC-3"
+    rules_kotlin_sha = "f033fa36f51073eae224f18428d9493966e67c27387728b6be2ebbdae43f140e"
+
     http_archive(
         name = "io_bazel_rules_kotlin",
-        urls = ["https://github.com/jamesreprise/rules_kotlin/archive/a30f94e82d0b4ca439612a634ef7f62f13c56dc2.zip"],
-        type = "zip",
-        strip_prefix = "rules_kotlin-a30f94e82d0b4ca439612a634ef7f62f13c56dc2",
-        sha256 = "aa48a3d7859db8a72ab019ebd2ee71e41ea429b0e7f3216c7599fc4ff9dc74a9",
+        urls = ["https://github.com/bazelbuild/rules_kotlin/releases/download/v%s/rules_kotlin_release.tgz" % rules_kotlin_version],
+        sha256 = rules_kotlin_sha,
     )
