@@ -41,8 +41,13 @@ load("//library/maven:rules.bzl", "maven")
 # Load //builder/kotlin
 load("//builder/kotlin:deps.bzl", kotlin_deps = "deps")
 kotlin_deps()
-load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories")
-kotlin_repositories()
+load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "kotlinc_version")
+kotlin_repositories(
+    compiler_release = kotlinc_version(
+        release = "1.6.10",
+        sha256 = "432267996d0d6b4b17ca8de0f878e44d4a099b7e9f1587a98edc4d27e76c215a"
+    )
+)
 load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
 kt_register_toolchains()
 
