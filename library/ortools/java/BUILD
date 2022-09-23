@@ -1,4 +1,4 @@
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 load(":deps.bzl", "version", "google_or_tools_import_files")
 load("//distribution:deployment.bzl", "deployment")
 
