@@ -30,32 +30,52 @@ licenses([
 ])
 
 # Generated Targets
+# buildifier: disable=out-of-order-load
+# buildifier: disable=load-on-top
+load(
+    "@rules_rust//cargo:cargo_build_script.bzl",
+    "cargo_build_script",
+)
 
-rust_library(
-    name = "better_any",
+cargo_build_script(
+    name = "wasm_bindgen_shared_build_script",
     srcs = glob(["**/*.rs"]),
-    crate_root = "src/lib.rs",
-    data = [],
+    build_script_env = {
+    },
+    crate_root = "build.rs",
+    data = glob(["**"]),
     edition = "2018",
-    proc_macro_deps = [
-        "@raze__better_typeid_derive__0_1_1//:better_typeid_derive",
-    ],
+    links = "wasm_bindgen",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=better_any",
         "manual",
     ],
-    version = "0.1.1",
-    # buildifier: leave-alone
+    version = "0.2.83",
+    visibility = ["//visibility:private"],
     deps = [
     ],
 )
 
-# Unsupported target "compile_fail" with type "test" omitted
-
-# Unsupported target "expand" with type "test" omitted
-
-# Unsupported target "test" with type "test" omitted
+rust_library(
+    name = "wasm_bindgen_shared",
+    srcs = glob(["**/*.rs"]),
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2018",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=wasm-bindgen-shared",
+        "manual",
+    ],
+    version = "0.2.83",
+    # buildifier: leave-alone
+    deps = [
+        ":wasm_bindgen_shared_build_script",
+    ],
+)

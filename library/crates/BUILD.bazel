@@ -14,7 +14,7 @@ licenses([
 # Aliased targets
 alias(
     name = "antlr_rust",
-    actual = "@raze__antlr_rust__0_2_2//:antlr_rust",
+    actual = "@raze__antlr_rust__0_3_0_beta//:antlr_rust",
     tags = [
         "cargo-raze",
         "manual",
@@ -24,6 +24,15 @@ alias(
 alias(
     name = "axum",
     actual = "@raze__axum__0_5_15//:axum",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "chrono",
+    actual = "@raze__chrono__0_4_22//:chrono",
     tags = [
         "cargo-raze",
         "manual",

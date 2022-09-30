@@ -31,8 +31,8 @@ licenses([
 
 # Generated Targets
 
-rust_proc_macro(
-    name = "better_typeid_derive",
+rust_library(
+    name = "js_sys",
     srcs = glob(["**/*.rs"]),
     crate_root = "src/lib.rs",
     data = [],
@@ -42,14 +42,16 @@ rust_proc_macro(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=better_typeid_derive",
+        "crate-name=js-sys",
         "manual",
     ],
-    version = "0.1.1",
+    version = "0.3.60",
     # buildifier: leave-alone
     deps = [
-        "@raze__proc_macro2__1_0_43//:proc_macro2",
-        "@raze__quote__1_0_21//:quote",
-        "@raze__syn__1_0_99//:syn",
+        "@raze__wasm_bindgen__0_2_83//:wasm_bindgen",
     ],
 )
+
+# Unsupported target "headless" with type "test" omitted
+
+# Unsupported target "wasm" with type "test" omitted
