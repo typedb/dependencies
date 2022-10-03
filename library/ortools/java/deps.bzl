@@ -32,7 +32,8 @@ def google_or_tools_mac():
         name = "google_or_tools_darwin",
         urls = ["https://github.com/google/or-tools/releases/download/v8.0/or-tools_MacOsX-10.15.7_v" + version + ".tar.gz"],
         strip_prefix = "or-tools_MacOsX-10.15.7_v" + version + "",
-        build_file_content = google_or_tools_export_files(version, "darwin")
+        build_file_content = google_or_tools_export_files(version, "darwin"),
+        sha256 = "3c921c16c8162b337744dc45819dd5cf0c7a43382615edb8f599320bcf31773a"
     )
 
 def google_or_tools_linux():
@@ -40,7 +41,8 @@ def google_or_tools_linux():
         name = "google_or_tools_linux",
         urls = ["https://github.com/google/or-tools/releases/download/v8.0/or-tools_debian-10_v" + version + ".tar.gz"],
         strip_prefix = "or-tools_Debian-10-64bit_v" + version + "",
-        build_file_content = google_or_tools_export_files(version, "linux-x86-64")
+        build_file_content = google_or_tools_export_files(version, "linux-x86-64"),
+        sha256 = "7a15decbb983e4045b3d22dbfd82ccaaacfe1afbb2be9587bef64c9440e3cb99"
     )
 
 def google_or_tools_windows():
@@ -48,5 +50,6 @@ def google_or_tools_windows():
         name = "google_or_tools_windows",
         urls = ["https://github.com/google/or-tools/releases/download/v8.0/or-tools_VisualStudio2019-64bit_v" + version + ".zip"],
         strip_prefix = "or-tools_VisualStudio2019-64bit_v" + version + "",
-        build_file_content = google_or_tools_export_files(version, "win32-x86-64")
+        build_file_content = google_or_tools_export_files(version, "win32-x86-64"),
+        sha256 = "2d07658c6c1c5b9b93b13d0b2f47f5a58e0fb9230bdc9a9ec02d147befea2fb5"
     )

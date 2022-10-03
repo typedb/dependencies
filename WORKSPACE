@@ -31,9 +31,6 @@ rust_repositories(version = "nightly", iso_date = "2021-07-01", edition="2018")
 load("//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
 
-load("@rules_python//python:pip.bzl", "pip_repositories")
-pip_repositories()
-
 # Load //builder/java
 load("//builder/java:deps.bzl", java_deps = "deps")
 java_deps()
