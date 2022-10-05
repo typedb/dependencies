@@ -26,35 +26,34 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "restricted",  # GPL-3.0 from expression "GPL-3.0"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "serde_urlencoded",
+    name = "alcoholic_jwt",
     srcs = glob(["**/*.rs"]),
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2018",
+    edition = "2015",
+    proc_macro_deps = [
+        "@raze__serde_derive__1_0_145//:serde_derive",
+    ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=serde_urlencoded",
+        "crate-name=alcoholic_jwt",
         "manual",
     ],
-    version = "0.7.1",
+    version = "4091.0.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__form_urlencoded__1_0_1//:form_urlencoded",
-        "@raze__itoa__1_0_3//:itoa",
-        "@raze__ryu__1_0_11//:ryu",
+        "@raze__base64__0_13_0//:base64",
+        "@raze__openssl__0_10_42//:openssl",
         "@raze__serde__1_0_145//:serde",
+        "@raze__serde_json__1_0_85//:serde_json",
     ],
 )
-
-# Unsupported target "test_deserialize" with type "test" omitted
-
-# Unsupported target "test_serialize" with type "test" omitted

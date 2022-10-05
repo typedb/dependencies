@@ -25,6 +25,8 @@ uuid = { version = "1.1.2", features = ["fast-rng", "v4"] }
 tonic = "0.8.0"
 prost = "0.11.0"
 tonic-build = "0.8.0"
+alcoholic_jwt = "4091.0.0"
+serde = "1.0.145"
 
 [package.metadata.raze]
 # The path at which to write output files.
