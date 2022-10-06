@@ -31,30 +31,12 @@ licenses([
 
 # Generated Targets
 
+# Unsupported target "parse_url" with type "bench" omitted
+
 rust_library(
-    name = "windows_sys",
+    name = "url",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
     crate_features = [
-        "Win32",
-        "Win32_Foundation",
-        "Win32_Networking",
-        "Win32_Networking_WinSock",
-        "Win32_Security",
-        "Win32_Security_Authentication",
-        "Win32_Security_Authentication_Identity",
-        "Win32_Security_Credentials",
-        "Win32_Security_Cryptography",
-        "Win32_Storage",
-        "Win32_Storage_FileSystem",
-        "Win32_System",
-        "Win32_System_IO",
-        "Win32_System_LibraryLoader",
-        "Win32_System_Memory",
-        "Win32_System_Pipes",
-        "Win32_System_SystemServices",
-        "Win32_System_WindowsProgramming",
         "default",
     ],
     crate_root = "src/lib.rs",
@@ -65,18 +47,20 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=windows-sys",
+        "crate-name=url",
         "manual",
     ],
-    version = "0.36.1",
+    version = "2.3.0",
     # buildifier: leave-alone
     deps = [
-    ] + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__windows_x86_64_msvc__0_36_1//:windows_x86_64_msvc",
-        ],
-        "//conditions:default": [],
-    }),
+        "@raze__form_urlencoded__1_0_1//:form_urlencoded",
+        "@raze__idna__0_2_3//:idna",
+        "@raze__percent_encoding__2_1_0//:percent_encoding",
+    ],
 )
+
+# Unsupported target "data" with type "test" omitted
+
+# Unsupported target "debugger_visualizer" with type "test" omitted
+
+# Unsupported target "unit" with type "test" omitted

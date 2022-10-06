@@ -166,6 +166,15 @@ alias(
 )
 
 alias(
+    name = "reqwest",
+    actual = "@raze__reqwest__0_11_12//:reqwest",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "rocksdb",
     actual = "@raze__rocksdb__0_17_0//:rocksdb",
     tags = [
