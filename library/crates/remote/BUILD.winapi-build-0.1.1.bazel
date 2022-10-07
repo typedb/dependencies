@@ -43,6 +43,8 @@ alias(
 rust_library(
     name = "build",
     srcs = glob(["**/*.rs"]),
+    crate_features = [
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2015",

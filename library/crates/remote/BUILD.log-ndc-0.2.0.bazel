@@ -34,6 +34,8 @@ licenses([
 rust_library(
     name = "log_ndc",
     srcs = glob(["**/*.rs"]),
+    crate_features = [
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -48,6 +50,6 @@ rust_library(
     version = "0.2.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__log__0_4_17//:log",
+        "@raze__log__0_4_8//:log",
     ],
 )

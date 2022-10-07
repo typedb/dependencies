@@ -31,9 +31,18 @@ licenses([
 
 # Generated Targets
 
-rust_proc_macro(
-    name = "cxxbridge_macro",
+# Unsupported target "get_timezone" with type "example" omitted
+
+# Unsupported target "stress-test" with type "example" omitted
+
+rust_library(
+    name = "iana_time_zone",
     srcs = glob(["**/*.rs"]),
+    aliases = {
+    },
+    crate_features = [
+        "fallback",
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -42,14 +51,27 @@ rust_proc_macro(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=cxxbridge-macro",
+        "crate-name=iana-time-zone",
         "manual",
     ],
-    version = "1.0.73",
+    version = "0.1.50",
     # buildifier: leave-alone
     deps = [
-        "@raze__proc_macro2__1_0_43//:proc_macro2",
-        "@raze__quote__1_0_21//:quote",
-        "@raze__syn__1_0_99//:syn",
-    ],
+    ] + selects.with_or({
+        # cfg(any(target_os = "macos", target_os = "ios"))
+        (
+            "@rules_rust//rust/platform:x86_64-apple-darwin",
+        ): [
+            "@raze__core_foundation_sys__0_8_3//:core_foundation_sys",
+        ],
+        "//conditions:default": [],
+    }) + selects.with_or({
+        # cfg(target_os = "windows")
+        (
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+        ): [
+            "@raze__winapi__0_3_9//:winapi",
+        ],
+        "//conditions:default": [],
+    }),
 )

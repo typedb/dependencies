@@ -54,7 +54,7 @@ rust_library(
         "crate-name=futures",
         "manual",
     ],
-    version = "0.3.24",
+    version = "0.3.21",
     # buildifier: leave-alone
     deps = [
         "@raze__futures_channel__0_3_24//:futures_channel",
