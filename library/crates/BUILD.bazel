@@ -41,7 +41,7 @@ alias(
 
 alias(
     name = "cxx",
-    actual = "@raze__cxx__1_0_73//:cxx",
+    actual = "@raze__cxx__1_0_59//:cxx",
     tags = [
         "cargo-raze",
         "manual",
@@ -68,7 +68,7 @@ alias(
 
 alias(
     name = "futures",
-    actual = "@raze__futures__0_3_24//:futures",
+    actual = "@raze__futures__0_3_21//:futures",
     tags = [
         "cargo-raze",
         "manual",
@@ -113,7 +113,7 @@ alias(
 
 alias(
     name = "log",
-    actual = "@raze__log__0_4_17//:log",
+    actual = "@raze__log__0_4_8//:log",
     tags = [
         "cargo-raze",
         "manual",
@@ -212,18 +212,8 @@ alias(
 
 # Export file for Stardoc support
 exports_files(
-    glob([
-        "**/*.bazel",
-        "**/*.bzl",
-    ]),
-    visibility = ["//visibility:public"],
-)
-
-filegroup(
-    name = "srcs",
-    srcs = glob([
-        "**/*.bazel",
-        "**/*.bzl",
-    ]),
+    [
+        "crates.bzl",
+    ],
     visibility = ["//visibility:public"],
 )

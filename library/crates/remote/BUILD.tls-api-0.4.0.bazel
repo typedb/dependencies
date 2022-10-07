@@ -34,6 +34,8 @@ licenses([
 rust_library(
     name = "tls_api",
     srcs = glob(["**/*.rs"]),
+    crate_features = [
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -48,7 +50,7 @@ rust_library(
     version = "0.4.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__log__0_4_17//:log",
+        "@raze__log__0_4_8//:log",
         "@raze__tokio__0_2_25//:tokio",
     ],
 )

@@ -34,6 +34,8 @@ licenses([
 rust_library(
     name = "protoc",
     srcs = glob(["**/*.rs"]),
+    crate_features = [
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2015",
@@ -48,7 +50,7 @@ rust_library(
     version = "2.18.2",
     # buildifier: leave-alone
     deps = [
-        "@raze__log__0_4_17//:log",
+        "@raze__log__0_4_8//:log",
         "@raze__which__4_2_5//:which",
     ],
 )

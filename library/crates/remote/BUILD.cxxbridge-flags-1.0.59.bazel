@@ -32,7 +32,7 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "parking_lot",
+    name = "cxxbridge_flags",
     srcs = glob(["**/*.rs"]),
     crate_features = [
         "default",
@@ -45,15 +45,11 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=parking_lot",
+        "crate-name=cxxbridge-flags",
         "manual",
     ],
-    version = "0.12.1",
+    version = "1.0.59",
     # buildifier: leave-alone
     deps = [
-        "@raze__lock_api__0_4_8//:lock_api",
-        "@raze__parking_lot_core__0_9_3//:parking_lot_core",
     ],
 )
-
-# Unsupported target "issue_203" with type "test" omitted

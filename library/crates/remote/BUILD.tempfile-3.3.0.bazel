@@ -36,6 +36,8 @@ rust_library(
     srcs = glob(["**/*.rs"]),
     aliases = {
     },
+    crate_features = [
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -54,6 +56,7 @@ rust_library(
         "@raze__fastrand__1_8_0//:fastrand",
         "@raze__remove_dir_all__0_5_3//:remove_dir_all",
     ] + selects.with_or({
+        # cfg(any(unix, target_os = "wasi"))
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
@@ -62,6 +65,7 @@ rust_library(
         ],
         "//conditions:default": [],
     }) + selects.with_or({
+        # cfg(windows)
         (
             "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
         ): [
