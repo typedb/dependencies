@@ -1594,11 +1594,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__serde_json__1_0_85",
-        url = "https://crates.io/api/v1/crates/serde_json/1.0.85/download",
+        name = "raze__serde_json__1_0_86",
+        url = "https://crates.io/api/v1/crates/serde_json/1.0.86/download",
         type = "tar.gz",
-        strip_prefix = "serde_json-1.0.85",
-        build_file = Label("//library/crates/remote:BUILD.serde_json-1.0.85.bazel"),
+        strip_prefix = "serde_json-1.0.86",
+        build_file = Label("//library/crates/remote:BUILD.serde_json-1.0.86.bazel"),
     )
 
     maybe(

@@ -77,7 +77,7 @@ rust_library(
         "@raze__bytes__1_2_1//:bytes",
         "@raze__http__0_2_8//:http",
         "@raze__serde__1_0_145//:serde",
-        "@raze__serde_json__1_0_85//:serde_json",
+        "@raze__serde_json__1_0_86//:serde_json",
         "@raze__serde_urlencoded__0_7_1//:serde_urlencoded",
         "@raze__tower_service__0_3_2//:tower_service",
         "@raze__url__2_3_0//:url",

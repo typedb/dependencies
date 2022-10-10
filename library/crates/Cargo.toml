@@ -24,11 +24,13 @@ tokio = { version = "1.20.1", features = ["full"] }
 uuid = { version = "1.1.2", features = ["fast-rng", "v4"] }
 tonic = "0.8.0"
 prost = "0.11.0"
+prost-build = "0.11.1"
 tonic-build = "0.8.0"
 alcoholic_jwt = "4091.0.0"
 serde = "1.0.145"
 reqwest = { version = "0.11.12", features = ["json"] }
 dotenv = "0.15.0"
+bytes = "1.2.1"
 
 [package.metadata.raze]
 # The path at which to write output files.
