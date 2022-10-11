@@ -7,7 +7,7 @@ path = "" # ignored by cargo raze
 
 [dependencies]
 antlr-rust = "0.2.0"
-axum = "0.5.15"
+axum = { version = "0.5.15", features = ["ws"] }
 cxx = "1.0.59"
 derivative = "2.2.0"
 enum_dispatch = "0.3.8"

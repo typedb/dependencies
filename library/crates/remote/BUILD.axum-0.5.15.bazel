@@ -38,6 +38,7 @@ rust_library(
         "@raze__tower__0_4_13//:tower": "tower",
     },
     crate_features = [
+        "base64",
         "default",
         "form",
         "http1",
@@ -47,7 +48,10 @@ rust_library(
         "query",
         "serde_json",
         "serde_urlencoded",
+        "sha-1",
+        "tokio-tungstenite",
         "tower-log",
+        "ws",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -68,6 +72,7 @@ rust_library(
     # buildifier: leave-alone
     deps = [
         "@raze__axum_core__0_2_7//:axum_core",
+        "@raze__base64__0_13_0//:base64",
         "@raze__bitflags__1_3_2//:bitflags",
         "@raze__bytes__1_2_1//:bytes",
         "@raze__futures_util__0_3_24//:futures_util",
@@ -83,8 +88,10 @@ rust_library(
         "@raze__serde__1_0_145//:serde",
         "@raze__serde_json__1_0_86//:serde_json",
         "@raze__serde_urlencoded__0_7_1//:serde_urlencoded",
+        "@raze__sha_1__0_10_0//:sha_1",
         "@raze__sync_wrapper__0_1_1//:sync_wrapper",
         "@raze__tokio__1_20_1//:tokio",
+        "@raze__tokio_tungstenite__0_17_2//:tokio_tungstenite",
         "@raze__tower__0_4_13//:tower",
         "@raze__tower_http__0_3_4//:tower_http",
         "@raze__tower_layer__0_3_1//:tower_layer",
