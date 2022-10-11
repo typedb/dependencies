@@ -220,6 +220,15 @@ alias(
 )
 
 alias(
+    name = "sha2",
+    actual = "@raze__sha2__0_10_6//:sha2",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "tokio",
     actual = "@raze__tokio__1_20_1//:tokio",
     tags = [
