@@ -234,7 +234,7 @@ artifacts = {
     "org.hamcrest:hamcrest-core": "1.3",
     "org.hamcrest:hamcrest-library": "1.3",
     "org.javatuples:javatuples": "1.2",
-    "org.jetbrains.compose.compiler:compiler": "1.3.0",
+    "org.jetbrains.compose.compiler:compiler": "1.3.2",
     "org.jetbrains.compose.animation:animation-core-desktop": "1.2.0",
     "org.jetbrains.compose.desktop:desktop-jvm": "1.2.0",
     "org.jetbrains.compose.foundation:foundation-desktop": "1.2.0",
