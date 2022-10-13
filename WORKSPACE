@@ -45,7 +45,7 @@ load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "
 kotlin_repositories(
     compiler_release = kotlinc_version(
         release = "1.7.20",
-        sha256 = "7683f5451ef308eb773a686ee7779a76a95ed8b143c69ac247937619d7ca3a09"
+        sha256 = "5e3c8d0f965410ff12e90d6f8dc5df2fc09fd595a684d514616851ce7e94ae7d"
     )
 )
 load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
