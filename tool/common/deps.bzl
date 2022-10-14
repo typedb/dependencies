@@ -8,7 +8,9 @@ def vaticle_dependencies_ci_pip():
 
 maven_artifacts = [
   "com.eclipsesource.minimal-json:minimal-json",
-  "org.zeroturnaround:zt-exec",
+  "com.electronwill.night-config:core",
+  "com.electronwill.night-config:toml",
   "com.google.http-client:google-http-client",
+  "org.zeroturnaround:zt-exec",
   "info.picocli:picocli",
 ]
