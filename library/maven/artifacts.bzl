@@ -34,6 +34,7 @@ artifacts = {
     "com.google.auth:google-auth-library-oauth2-http":"0.20.0",
     "com.google.cloud:google-cloud-compute":"0.117.0-alpha",
     "com.google.cloud:google-cloud-core":"1.93.3",
+    "com.google.cloud:google-cloud-storage":"1.106.0",
     "com.google.guava:guava": "30.1-jre",
     "com.google.http-client:google-http-client": "1.34.2",
     "com.google.inject:guice": "4.2.2",
