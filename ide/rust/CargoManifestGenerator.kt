@@ -19,28 +19,29 @@
  * under the License.
  */
 
-package com.vaticle.dependencies.builder.rust.cargo
+package com.vaticle.dependencies.ide.rust
 
 import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
 import com.vaticle.bazel.distribution.common.util.FileUtil.listFilesRecursively
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Keys.DEPS_PREFIX
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Keys.EDITION
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Keys.ENTRY_POINT_PATH
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Keys.FEATURES
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Keys.NAME
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Keys.PATH
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Keys.ROOT_PATH
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Keys.SOURCES_ARE_GENERATED
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Keys.TYPE
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Keys.VERSION
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Type.BIN
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Type.LIB
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.CargoSyncInfo.Type.TEST
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.Paths.BAZEL_BIN
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.Paths.CARGO_SYNC_PROPERTIES
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.Paths.CARGO_TOML
-import com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilder.Paths.EXTERNAL
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.DEPS_PREFIX
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.EDITION
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.ENTRY_POINT_PATH
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.FEATURES
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.NAME
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.PATH
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.ROOT_PATH
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.SOURCES_ARE_GENERATED
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.TYPE
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.VERSION
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Type.BIN
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Type.LIB
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Type.TEST
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.BAZEL_BIN
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.CARGO_TOML
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.EXTERNAL
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.EXTERNAL_PLACEHOLDER
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.IDE_SYNC_PROPERTIES
 import picocli.CommandLine
 import picocli.CommandLine.Command
 import picocli.CommandLine.Option
@@ -52,12 +53,12 @@ import java.nio.file.Path
 import java.util.Properties
 import java.util.concurrent.Callable
 import kotlin.io.path.Path
-import kotlin.io.path.relativeTo
 import kotlin.system.exitProcess
 
+fun main(args: Array<String>): Unit = exitProcess(CommandLine(CargoManifestGenerator()).execute(*args))
 
-@Command(name = "project-structure-builder", mixinStandardHelpOptions = true)
-class ProjectStructureBuilder : Callable<Unit> {
+@Command(name = "cargo-manifest-generator", mixinStandardHelpOptions = true)
+class CargoManifestGenerator : Callable<Unit> {
 
     @Option(names = ["--workspace_root"], required = true)
     lateinit var workspaceRoot: File
@@ -88,9 +89,9 @@ class ProjectStructureBuilder : Callable<Unit> {
         println(outputPaths.joinToString("\n"))
     }
 
-    private fun loadSyncInfos(): List<CargoSyncInfo> {
+    private fun loadSyncInfos(): List<IDESyncInfo> {
         return findSyncInfoFiles()
-            .map { CargoSyncInfo.fromPropertiesFile(Path(it.path)) }
+            .map { IDESyncInfo.fromPropertiesFile(Path(it.path)) }
             .apply { attachTestInfos(this) }
     }
 
@@ -98,10 +99,10 @@ class ProjectStructureBuilder : Callable<Unit> {
         val bazelBinContents = bazelBinPath.listFiles() ?: throw IllegalStateException()
         val filesToCheck = bazelBinContents.filter { it.isFile } + bazelBinContents
             .filter { it.isDirectory && it.name != EXTERNAL }.flatMap { it.listFilesRecursively() }
-        return filesToCheck.filter { it.name.endsWith(CARGO_SYNC_PROPERTIES) }
+        return filesToCheck.filter { it.name.endsWith(IDE_SYNC_PROPERTIES) }
     }
 
-    private fun attachTestInfos(syncInfos: Collection<CargoSyncInfo>) {
+    private fun attachTestInfos(syncInfos: Collection<IDESyncInfo>) {
         val (testInfos, nonTestInfos) = syncInfos.partition { it.type == TEST }
             .let { it.first to it.second.associateBy { info -> info.name } }
         testInfos.forEach { testInfo ->
@@ -109,11 +110,11 @@ class ProjectStructureBuilder : Callable<Unit> {
         }
     }
 
-    private fun shouldGenerateManifest(info: CargoSyncInfo): Boolean {
+    private fun shouldGenerateManifest(info: IDESyncInfo): Boolean {
         return info.type in listOf(LIB, BIN)
     }
 
-    private fun generateManifest(info: CargoSyncInfo): String {
+    private fun generateManifest(info: IDESyncInfo): String {
         val cargoToml = Config.inMemory()
 
         cargoToml.createSubConfig().apply {
@@ -143,7 +144,7 @@ class ProjectStructureBuilder : Callable<Unit> {
         return GENERATED_FILE_NOTICE + TomlWriter().writeToString(cargoToml.unmodifiable())
     }
 
-    private fun Config.createEntryPointSubConfig(info: CargoSyncInfo) {
+    private fun Config.createEntryPointSubConfig(info: IDESyncInfo) {
         val entryPointPath = if (info.sourcesAreGenerated) {
             bazelBinPath.resolve(info.entryPointPath.toString()).toString()
         } else info.rootPath!!.relativize(info.entryPointPath!!).toString()
@@ -163,16 +164,16 @@ class ProjectStructureBuilder : Callable<Unit> {
                     set<String>("path", entryPointPath)
                 }
             }
-            TEST -> throw IllegalStateException("$CARGO_TOML should not be generated for Cargo sync info of type TEST")
+            TEST -> throw IllegalStateException("$CARGO_TOML should not be generated for IDE sync info of type TEST")
         }
     }
 
-    private fun manifestOutputPath(info: CargoSyncInfo): Path {
+    private fun manifestOutputPath(info: IDESyncInfo): Path {
         val projectRelativePath = bazelBinPath.toPath().relativize(info.path.parent)
         return workspaceRoot.resolve(projectRelativePath.toString()).resolve(CARGO_TOML).toPath()
     }
 
-    data class CargoSyncInfo(
+    data class IDESyncInfo(
         val path: Path,
         val name: String,
         val type: Type,
@@ -182,7 +183,7 @@ class ProjectStructureBuilder : Callable<Unit> {
         val rootPath: Path?,
         val entryPointPath: Path?,
         val sourcesAreGenerated: Boolean,
-        val tests: MutableCollection<CargoSyncInfo>
+        val tests: MutableCollection<IDESyncInfo>
     ) {
         sealed class Dependency(open val name: String) {
             abstract fun toToml(bazelOutputBasePath: File): Config
@@ -199,7 +200,7 @@ class ProjectStructureBuilder : Callable<Unit> {
             data class Path(override val name: String, val path: String) : Dependency(name) {
                 override fun toToml(bazelOutputBasePath: File): Config {
                     return Config.inMemory().apply {
-                        set<String>("path", path.replace("{external}", bazelOutputBasePath.resolve(EXTERNAL).absolutePath))
+                        set<String>("path", path.replace(EXTERNAL_PLACEHOLDER, bazelOutputBasePath.resolve(EXTERNAL).absolutePath))
                     }
                 }
             }
@@ -240,10 +241,10 @@ class ProjectStructureBuilder : Callable<Unit> {
         }
 
         companion object {
-            fun fromPropertiesFile(path: Path): CargoSyncInfo {
+            fun fromPropertiesFile(path: Path): IDESyncInfo {
                 val props = Properties().apply { load(FileInputStream(path.toString())) }
                 try {
-                    return CargoSyncInfo(
+                    return IDESyncInfo(
                         path = path,
                         name = props.getProperty(NAME),
                         type = Type.of(props.getProperty(TYPE)),
@@ -256,7 +257,7 @@ class ProjectStructureBuilder : Callable<Unit> {
                         tests = mutableListOf()
                     )
                 } catch (e: Exception) {
-                    throw IllegalStateException("Failed to parse Cargo Sync properties file at $path", e)
+                    throw IllegalStateException("Failed to parse IDE Sync properties file at $path", e)
                 }
             }
 
@@ -288,19 +289,18 @@ class ProjectStructureBuilder : Callable<Unit> {
 
     private object Paths {
         const val BAZEL_BIN = "bazel-bin"
-        const val CARGO_SYNC_PROPERTIES = "cargo-sync.properties"
         const val CARGO_TOML = "Cargo.toml"
         const val EXTERNAL = "external"
+        const val EXTERNAL_PLACEHOLDER = "{external}"
+        const val IDE_SYNC_PROPERTIES = "ide-sync.properties"
     }
 
     companion object {
         const val GENERATED_FILE_NOTICE =
 """
-# Generated by Vaticle Cargo project generator.
+# Generated by Vaticle Rust IDE sync tool.
 # Do not commit or modify this file.
 
 """
     }
 }
-
-fun main(args: Array<String>): Unit = exitProcess(CommandLine(ProjectStructureBuilder()).execute(*args))

@@ -17,8 +17,22 @@
 
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
 
+sh_binary(
+    name = "sync",
+    srcs = ["sync.sh"],
+    visibility = ["//visibility:public"]
+)
+
+java_binary(
+    name = "generate_cargo_manifests",
+    runtime_deps = [
+        ":cargo_manifest_generator"
+    ],
+    main_class = "com.vaticle.dependencies.ide.rust.CargoManifestGeneratorKt",
+)
+
 kt_jvm_library(
-    name = "project_structure_builder",
+    name = "cargo_manifest_generator",
     deps = [
         "@vaticle_bazel_distribution//common/util",
 
@@ -27,20 +41,6 @@ kt_jvm_library(
         "@maven//:info_picocli_picocli",
     ],
     srcs = [
-        "ProjectStructureBuilder.kt"
+        "CargoManifestGenerator.kt"
     ]
-)
-
-java_binary(
-    name = "build_project_structure",
-    runtime_deps = [
-        ":project_structure_builder"
-    ],
-    main_class = "com.vaticle.dependencies.builder.rust.cargo.ProjectStructureBuilderKt",
-)
-
-sh_binary(
-    name = "generate_project",
-    srcs = ["generate-project.sh"],
-    visibility = ["//visibility:public"]
 )

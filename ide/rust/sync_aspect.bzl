@@ -15,32 +15,15 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-def _target_root_path(target):
-    return str(target.label).split("//")[1].split(":")[0] if "//" in str(target.label) else ""
+_TARGET_TYPES = {
+    "rust_library": "lib",
+    "rust_binary": "bin",
+    "rust_proc_macro": "lib",
+    "rust_test": "test"
+}
 
-def _entry_point(target, ctx, source_files):
-    if getattr(ctx.rule.attr, "crate_root", None):
-        return ctx.rule.attr.crate_root.files.to_list()[0]
-    else:
-        return _find_entry_point_in_sources(target, ctx, source_files)
-
-def _find_entry_point_in_sources(target, ctx, source_files):
-    standard_entry_point_name = "main.rs" if ctx.rule.kind == "rust_binary" else "lib.rs"
-    alternative_entry_point_name = "%s.rs" % ctx.rule.attr.name
-
-    standard_entry_points = [f for f in source_files if f.basename == standard_entry_point_name]
-    if len(standard_entry_points) == 1:
-        return standard_entry_points[0]
-    elif len(standard_entry_points) > 1:
-        fail("cannot determine entry point for %s target '%s': multiple files named '%s' found in srcs, and no explicit crate_root" % (ctx.rule.kind, target.label.name, standard_entry_point_name))
-
-    alternative_entry_points = [f for f in source_files if f.basename == alternative_entry_point_name]
-    if len(alternative_entry_points) == 1:
-        return alternative_entry_points[0]
-    elif len(alternative_entry_points) > 1:
-        fail("cannot determine entry point for %s target '%s': multiple files named '%s' found in srcs, and no explicit crate_root" % (ctx.rule.kind, target.label.name, alternative_entry_point_name))
-
-    fail("cannot determine entry point for %s target '%s': no files named '%s' or '%s' found in srcs, and no explicit crate_root" % (ctx.rule.kind, target.label.name, standard_entry_point_name, alternative_entry_point_name))
+def _should_generate_dep_info(dependency):
+    return dependency.kind in _TARGET_TYPES and _TARGET_TYPES[dependency.kind] in ["lib", "bin"]
 
 def _is_raze_crate(rust_target):
     return str(rust_target.label).startswith("@raze__")
@@ -74,32 +57,22 @@ def _dep_path_double_dots(current_target):
             double_dots = "../"
     return double_dots
 
-_TARGET_TYPES = {
-    "rust_library": "lib",
-    "rust_binary": "bin",
-    "rust_proc_macro": "lib",
-    "rust_test": "test"
-}
-
 def _deps_info(ctx, target):
     deps_info = {}
     all_deps = getattr(ctx.rule.attr, "deps", []) + getattr(ctx.rule.attr, "proc_macro_deps", []) + ([ctx.rule.attr.crate] if hasattr(ctx.rule.attr, "crate") and ctx.rule.attr.crate else [])
     for dependency in all_deps:
         if not _should_generate_dep_info(dependency):
             continue
-        dep_info = dependency.cargo_sync_info
+        dep_info = dependency.rust_ide_sync_info
         features_str = ",".join(dep_info.features)
         if _is_raze_crate(dependency):
-            deps_info[dependency.cargo_sync_info.name] = "version=%s;features=%s" % (dep_info.version, features_str) if features_str else "version=%s" % dep_info.version
+            deps_info[dependency.rust_ide_sync_info.name] = "version=%s;features=%s" % (dep_info.version, features_str) if features_str else "version=%s" % dep_info.version
         else:
             path = _dep_path(target, dependency)
-            deps_info[dependency.cargo_sync_info.name] = "path=%s;features=%s" % (path, features_str) if features_str else "path=%s" % path
+            deps_info[dependency.rust_ide_sync_info.name] = "path=%s;features=%s" % (path, features_str) if features_str else "path=%s" % path
     return deps_info
 
-def _should_generate_dep_info(dependency):
-    return dependency.kind in ["rust_binary", "rust_library", "rust_proc_macro"]
-
-def _cargo_sync_info(ctx, target):
+def _sync_info(ctx, target):
     crate_name = ctx.rule.attr.name
     for tag in ctx.rule.attr.tags:
         if tag.startswith("crate-name"):
@@ -112,7 +85,34 @@ def _cargo_sync_info(ctx, target):
         deps = _deps_info(ctx, target),
     )
 
-def _cargo_sync_props(target, ctx, source_files, sync_info):
+def _target_root_path(target):
+    return str(target.label).split("//")[1].split(":")[0] if "//" in str(target.label) else ""
+
+def _find_entry_point_in_sources(target, ctx, source_files):
+    standard_entry_point_name = "main.rs" if ctx.rule.kind == "rust_binary" else "lib.rs"
+    alternative_entry_point_name = "%s.rs" % ctx.rule.attr.name
+
+    standard_entry_points = [f for f in source_files if f.basename == standard_entry_point_name]
+    if len(standard_entry_points) == 1:
+        return standard_entry_points[0]
+    elif len(standard_entry_points) > 1:
+        fail("cannot determine entry point for %s target '%s': multiple files named '%s' found in srcs, and no explicit crate_root" % (ctx.rule.kind, target.label.name, standard_entry_point_name))
+
+    alternative_entry_points = [f for f in source_files if f.basename == alternative_entry_point_name]
+    if len(alternative_entry_points) == 1:
+        return alternative_entry_points[0]
+    elif len(alternative_entry_points) > 1:
+        fail("cannot determine entry point for %s target '%s': multiple files named '%s' found in srcs, and no explicit crate_root" % (ctx.rule.kind, target.label.name, alternative_entry_point_name))
+
+    fail("cannot determine entry point for %s target '%s': no files named '%s' or '%s' found in srcs, and no explicit crate_root" % (ctx.rule.kind, target.label.name, standard_entry_point_name, alternative_entry_point_name))
+
+def _entry_point(target, ctx, source_files):
+    if getattr(ctx.rule.attr, "crate_root", None):
+        return ctx.rule.attr.crate_root.files.to_list()[0]
+    else:
+        return _find_entry_point_in_sources(target, ctx, source_files)
+
+def _sync_props(target, ctx, source_files, sync_info):
     props = {}
     target_type = _TARGET_TYPES[ctx.rule.kind]
 
@@ -129,9 +129,9 @@ def _cargo_sync_props(target, ctx, source_files, sync_info):
         props["deps." + dep[0]] = dep[1]
     return props
 
-def _build_cargo_sync_props_file(target, ctx, source_files, sync_info):
-    props_file = ctx.actions.declare_file("%s.cargo-sync.properties" % ctx.rule.attr.name)
-    props = _cargo_sync_props(target, ctx, source_files, sync_info)
+def _build_sync_props_file(target, ctx, source_files, sync_info):
+    props_file = ctx.actions.declare_file("%s.ide-sync.properties" % ctx.rule.attr.name)
+    props = _sync_props(target, ctx, source_files, sync_info)
 
     content = ""
     for prop in props.items():
@@ -142,21 +142,21 @@ def _build_cargo_sync_props_file(target, ctx, source_files, sync_info):
     )
     return props_file
 
-def _cargo_sync_aspect_impl(target, ctx):
-    if ctx.rule.kind not in ["rust_binary", "rust_library", "rust_proc_macro", "rust_test"]:
+def _rust_ide_sync_aspect_impl(target, ctx):
+    if ctx.rule.kind not in _TARGET_TYPES.keys():
         return struct(kind = ctx.rule.kind)
 
     sources = [f for src in getattr(ctx.rule.attr, "srcs", []) for f in src.files.to_list()]
-    sync_info = _cargo_sync_info(ctx, target)
-    sync_props_file = _build_cargo_sync_props_file(target, ctx, sources, sync_info)
+    sync_info = _sync_info(ctx, target)
+    sync_props_file = _build_sync_props_file(target, ctx, sources, sync_info)
 
     return struct(
         kind = ctx.rule.kind,
-        cargo_sync_info = sync_info,
-        output_groups = {"cargo-sync-props": depset([sync_props_file])}
+        rust_ide_sync_info = sync_info,
+        output_groups = {"rust-ide-sync": depset([sync_props_file])}
     )
 
-cargo_sync_aspect = aspect(
+rust_ide_sync_aspect = aspect(
     attr_aspects = ["deps", "proc_macro_deps", "crate"],
-    implementation = _cargo_sync_aspect_impl,
+    implementation = _rust_ide_sync_aspect_impl,
 )

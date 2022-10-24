@@ -16,9 +16,9 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-set -x
-cd "$BUILD_WORKSPACE_DIRECTORY" &&
+set -e
+cd "$BUILD_WORKSPACE_DIRECTORY"
 export RUST_TARGETS=$(bazel query 'kind(rust_*, //...)' | tr '\n' ' ')
-bazel build $RUST_TARGETS &&
-bazel build $RUST_TARGETS --aspects @vaticle_dependencies//builder/rust/cargo:sync_aspect.bzl%cargo_sync_aspect --output_groups=cargo-sync-props &&
-bazel run @vaticle_dependencies//builder/rust/cargo:build_project_structure -- --workspace_root="$(bazel info workspace)" --bazel_output_base="$(bazel info output_base)"
+bazel build $RUST_TARGETS
+bazel build $RUST_TARGETS --aspects @vaticle_dependencies//ide/rust:sync_aspect.bzl%rust_ide_sync_aspect --output_groups=rust-ide-sync
+bazel run @vaticle_dependencies//ide/rust:generate_cargo_manifests -- --workspace_root="$(bazel info workspace)" --bazel_output_base="$(bazel info output_base)"
