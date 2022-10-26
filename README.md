@@ -1,6 +1,6 @@
 # Vaticle Dependencies
 
-[![Grabl](https://grabl.io/api/status/vaticle/dependencies/badge.svg)](https://grabl.io/vaticle/dependencies)
+[![Factory](https://factory.vaticle.com/api/status/vaticle/dependencies/badge.svg)](https://factory.vaticle.com/vaticle/dependencies)
 
 Bazel dependencies and build tools for [@vaticle](https://github.com/vaticle) repositories.
 
