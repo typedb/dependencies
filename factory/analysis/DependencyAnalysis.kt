@@ -33,10 +33,10 @@ fun main() {
 
     val workspaceDirectory = System.getenv("BUILD_WORKSPACE_DIRECTORY")
             ?: throw RuntimeException("Not running from within Bazel workspace")
-    val factoryURL = System.getenv("GRABL_URL") ?: throw RuntimeException("GRABL_URL environment variable is not set")
+    val factoryURL = System.getenv("FACTORY_URL") ?: throw RuntimeException("FACTORY_URL environment variable is not set")
     val factoryEndpoint = "/api/analysis/dependency-analysis"
-    val workflow = System.getenv("GRABL_WORKFLOW")
-            ?: throw RuntimeException("GRABL_WORKFLOW environment variable is not set")
+    val workflow = System.getenv("FACTORY_WORKFLOW")
+            ?: throw RuntimeException("FACTORY_WORKFLOW environment variable is not set")
     val dependencies = Paths.get(workspaceDirectory, "dependencies", "vaticle", "repositories.bzl")
 
     var repositoriesArray = Json.array()

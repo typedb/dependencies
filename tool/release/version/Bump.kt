@@ -35,7 +35,7 @@ data class Config(val workspacePath: Path, val branchName: String, val gitUserna
         fun load(): Config {
             return Config(
                 workspacePath = Paths.get(getenv("BUILD_WORKSPACE_DIRECTORY", errorMsg = "Not running from within Bazel workspace")),
-                branchName = getenv("GRABL_BRANCH"), gitUsername = getenv("GIT_USERNAME"),
+                branchName = getenv("FACTORY_BRANCH"), gitUsername = getenv("GIT_USERNAME"),
                 gitEmail = getenv("GIT_EMAIL")
             )
         }
