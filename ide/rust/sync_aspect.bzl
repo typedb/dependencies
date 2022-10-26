@@ -19,11 +19,15 @@ _TARGET_TYPES = {
     "rust_library": "lib",
     "rust_binary": "bin",
     "rust_proc_macro": "lib",
-    "rust_test": "test"
+    "rust_test": "test",
+    "_build_script_run": "build"
 }
 
 def _should_generate_dep_info(dependency):
-    return dependency.kind in _TARGET_TYPES and _TARGET_TYPES[dependency.kind] in ["lib", "bin"]
+    return dependency.kind in _TARGET_TYPES and _TARGET_TYPES[dependency.kind] in ["bin", "lib"]
+
+def _should_generate_build_dep_info(dependency):
+    return dependency.kind in _TARGET_TYPES and _TARGET_TYPES[dependency.kind] == "build"
 
 def _is_raze_crate(rust_target):
     return str(rust_target.label).startswith("@raze__")
@@ -72,6 +76,14 @@ def _deps_info(ctx, target):
             deps_info[dependency.rust_ide_sync_info.name] = "path=%s;features=%s" % (path, features_str) if features_str else "path=%s" % path
     return deps_info
 
+def _build_deps_info(ctx, target):
+    build_deps_info = []
+    for dependency in getattr(ctx.rule.attr, "deps", []):
+        if not _should_generate_build_dep_info(dependency):
+            continue
+        build_deps_info.append(dependency.rust_ide_sync_info.name)
+    return build_deps_info
+
 def _sync_info(ctx, target):
     crate_name = ctx.rule.attr.name
     for tag in ctx.rule.attr.tags:
@@ -83,7 +95,11 @@ def _sync_info(ctx, target):
         version = getattr(ctx.rule.attr, "version", "0.0.0"),
         features = getattr(ctx.rule.attr, "crate_features", []),
         deps = _deps_info(ctx, target),
+        build_deps = _build_deps_info(ctx, target),
     )
+
+def _looks_like_cargo_build_script(target):
+    return str(target.label).endswith("_")
 
 def _target_root_path(target):
     return str(target.label).split("//")[1].split(":")[0] if "//" in str(target.label) else ""
@@ -114,17 +130,18 @@ def _entry_point(target, ctx, source_files):
 
 def _sync_props(target, ctx, source_files, sync_info):
     props = {}
-    target_type = _TARGET_TYPES[ctx.rule.kind]
+    target_type = "build" if _looks_like_cargo_build_script(target) else _TARGET_TYPES[ctx.rule.kind]
 
     props["name"] = sync_info.name
     props["type"] = target_type
     props["version"] = sync_info.version
-    props["edition"] = ctx.rule.attr.edition or "2021"
-    if target_type != "test":
+    if target_type in ["bin", "lib"]:
+        props["edition"] = ctx.rule.attr.edition or "2021"
         props["root.path"] = _target_root_path(target)
         entry_point = _entry_point(target, ctx, source_files)
         props["entry.point.path"] = entry_point.short_path
         props["sources.are.generated"] = not entry_point.is_source
+        props["build.deps"] = ",".join(sync_info.build_deps)
     for dep in sync_info.deps.items():
         props["deps." + dep[0]] = dep[1]
     return props

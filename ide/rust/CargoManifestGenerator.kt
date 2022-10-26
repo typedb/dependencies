@@ -23,7 +23,9 @@ package com.vaticle.dependencies.ide.rust
 
 import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
+import com.vaticle.bazel.distribution.common.shell.Shell
 import com.vaticle.bazel.distribution.common.util.FileUtil.listFilesRecursively
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.BUILD_DEPS
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.DEPS_PREFIX
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.EDITION
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.ENTRY_POINT_PATH
@@ -35,6 +37,7 @@ import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.TYPE
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.VERSION
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Type.BIN
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Type.BUILD
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Type.LIB
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Type.TEST
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.BAZEL_BIN
@@ -42,42 +45,24 @@ import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.CARGO_TOML
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.EXTERNAL
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.EXTERNAL_PLACEHOLDER
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.IDE_SYNC_PROPERTIES
-import picocli.CommandLine
-import picocli.CommandLine.Command
-import picocli.CommandLine.Option
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.ShellArgs.BAZEL
+import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.ShellArgs.INFO
 import java.io.File
 import java.io.FileInputStream
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.Properties
-import java.util.concurrent.Callable
 import kotlin.io.path.Path
-import kotlin.system.exitProcess
 
-fun main(args: Array<String>): Unit = exitProcess(CommandLine(CargoManifestGenerator()).execute(*args))
+class CargoManifestGenerator(private val workspaceRoot: File, private val shell: Shell) {
 
-@Command(name = "cargo-manifest-generator", mixinStandardHelpOptions = true)
-class CargoManifestGenerator : Callable<Unit> {
-
-    @Option(names = ["--workspace_root"], required = true)
-    lateinit var workspaceRoot: File
-
-    @Option(names = ["--bazel_output_base"], required = true)
-    lateinit var bazelOutputBasePath: File
-
+    private lateinit var bazelOutputBasePath: File
     private lateinit var bazelBinPath: File
 
-    override fun call() {
-        locateBazelBin()
-        generateManifests()
-    }
-
-    private fun locateBazelBin() {
+    fun generateManifests() {
+        bazelOutputBasePath = File(shell.execute(listOf(BAZEL, INFO, "output_base"), workspaceRoot.toPath()).outputString().trim())
         bazelBinPath = workspaceRoot.resolve(BAZEL_BIN).toPath().toRealPath().toFile()
-    }
-
-    private fun generateManifests() {
         val syncInfos = loadSyncInfos()
         val outputPaths = mutableListOf<Path>()
         syncInfos.filter { shouldGenerateManifest(it) }.forEach { info ->
@@ -92,7 +77,7 @@ class CargoManifestGenerator : Callable<Unit> {
     private fun loadSyncInfos(): List<IDESyncInfo> {
         return findSyncInfoFiles()
             .map { IDESyncInfo.fromPropertiesFile(Path(it.path)) }
-            .apply { attachTestInfos(this) }
+            .apply { attachTestAndBuildInfos(this) }
     }
 
     private fun findSyncInfoFiles(): List<File> {
@@ -102,11 +87,16 @@ class CargoManifestGenerator : Callable<Unit> {
         return filesToCheck.filter { it.name.endsWith(IDE_SYNC_PROPERTIES) }
     }
 
-    private fun attachTestInfos(syncInfos: Collection<IDESyncInfo>) {
+    private fun attachTestAndBuildInfos(syncInfos: Collection<IDESyncInfo>) {
         val (testInfos, nonTestInfos) = syncInfos.partition { it.type == TEST }
             .let { it.first to it.second.associateBy { info -> info.name } }
         testInfos.forEach { testInfo ->
             testInfo.deps.filter { it.name in nonTestInfos }.forEach { nonTestInfos[it.name]!!.tests += testInfo }
+        }
+        val (buildInfos, nonBuildInfos) = syncInfos.partition { it.type == BUILD }
+            .let { it.first.associateBy { info -> info.name } to it.second }
+        nonBuildInfos.forEach { nonBuildInfo ->
+            nonBuildInfo.buildDeps.forEach { buildInfos["${it}_"]?.let { buildInfo -> nonBuildInfo.buildScripts += buildInfo } }
         }
     }
 
@@ -131,15 +121,7 @@ class CargoManifestGenerator : Callable<Unit> {
             info.deps.forEach { set<Config>(it.name, it.toToml(bazelOutputBasePath)) }
         }
 
-        if (info.tests.isNotEmpty()) {
-            cargoToml.createSubConfig().apply {
-                cargoToml.set<Config>("dev-dependencies", this)
-                info.tests.flatMap { it.deps }
-                    .distinctBy { it.name }
-                    .filter { it.name != info.name }
-                    .forEach { set<Config>(it.name, it.toToml(bazelOutputBasePath)) }
-            }
-        }
+        cargoToml.addDevAndBuildDependencies(info)
 
         return GENERATED_FILE_NOTICE + TomlWriter().writeToString(cargoToml.unmodifiable())
     }
@@ -164,7 +146,29 @@ class CargoManifestGenerator : Callable<Unit> {
                     set<String>("path", entryPointPath)
                 }
             }
-            TEST -> throw IllegalStateException("$CARGO_TOML should not be generated for IDE sync info of type TEST")
+            TEST, BUILD -> throw IllegalStateException("$CARGO_TOML should not be generated for IDE sync info of type ${info.type}")
+        }
+    }
+
+    private fun Config.addDevAndBuildDependencies(info: IDESyncInfo) {
+        if (info.tests.isNotEmpty()) {
+            createSubConfig().apply {
+                this@addDevAndBuildDependencies.set<Config>("dev-dependencies", this)
+                info.tests.flatMap { it.deps }
+                    .distinctBy { it.name }
+                    .filter { it.name != info.name }
+                    .forEach { set<Config>(it.name, it.toToml(bazelOutputBasePath)) }
+            }
+        }
+
+        if (info.buildScripts.isNotEmpty()) {
+            createSubConfig().apply {
+                this@addDevAndBuildDependencies.set<Config>("build-dependencies", this)
+                info.buildScripts.flatMap { it.deps }
+                    .distinctBy { it.name }
+                    .filter { it.name != info.name }
+                    .forEach { set<Config>(it.name, it.toToml(bazelOutputBasePath)) }
+            }
         }
     }
 
@@ -178,12 +182,14 @@ class CargoManifestGenerator : Callable<Unit> {
         val name: String,
         val type: Type,
         val version: String,
-        val edition: String,
+        val edition: String?,
         val deps: Collection<Dependency>,
+        val buildDeps: Collection<String>,
         val rootPath: Path?,
         val entryPointPath: Path?,
         val sourcesAreGenerated: Boolean,
-        val tests: MutableCollection<IDESyncInfo>
+        val tests: MutableCollection<IDESyncInfo>,
+        val buildScripts: MutableCollection<IDESyncInfo>,
     ) {
         sealed class Dependency(open val name: String) {
             abstract fun toToml(bazelOutputBasePath: File): Config
@@ -226,7 +232,8 @@ class CargoManifestGenerator : Callable<Unit> {
         enum class Type {
             LIB,
             BIN,
-            TEST;
+            TEST,
+            BUILD;
 
             companion object {
                 fun of(value: String): Type {
@@ -234,6 +241,7 @@ class CargoManifestGenerator : Callable<Unit> {
                         "lib" -> LIB
                         "bin" -> BIN
                         "test" -> TEST
+                        "build" -> BUILD
                         else -> throw IllegalArgumentException()
                     }
                 }
@@ -249,12 +257,14 @@ class CargoManifestGenerator : Callable<Unit> {
                         name = props.getProperty(NAME),
                         type = Type.of(props.getProperty(TYPE)),
                         version = props.getProperty(VERSION),
-                        edition = props.getProperty(EDITION),
+                        edition = props.getProperty(EDITION, "2021"),
                         deps = parseDependencies(extractDependencyEntries(props)),
+                        buildDeps = props.getProperty(BUILD_DEPS, "").split(",").filter { it.isNotBlank() },
                         rootPath = props.getProperty(ROOT_PATH)?.let { Path(it) },
                         entryPointPath = props.getProperty(ENTRY_POINT_PATH)?.let { Path(it) },
                         sourcesAreGenerated = props.getProperty(SOURCES_ARE_GENERATED).toBoolean(),
-                        tests = mutableListOf()
+                        tests = mutableListOf(),
+                        buildScripts = mutableListOf(),
                     )
                 } catch (e: Exception) {
                     throw IllegalStateException("Failed to parse IDE Sync properties file at $path", e)
@@ -274,6 +284,7 @@ class CargoManifestGenerator : Callable<Unit> {
         }
 
         private object Keys {
+            const val BUILD_DEPS = "build.deps"
             const val DEPS_PREFIX = "deps"
             const val EDITION = "edition"
             const val ENTRY_POINT_PATH = "entry.point.path"
@@ -293,6 +304,11 @@ class CargoManifestGenerator : Callable<Unit> {
         const val EXTERNAL = "external"
         const val EXTERNAL_PLACEHOLDER = "{external}"
         const val IDE_SYNC_PROPERTIES = "ide-sync.properties"
+    }
+
+    private object ShellArgs {
+        const val BAZEL = "bazel"
+        const val INFO = "info"
     }
 
     companion object {

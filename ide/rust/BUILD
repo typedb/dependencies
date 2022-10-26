@@ -17,28 +17,40 @@
 
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
 
-sh_binary(
+java_binary(
     name = "sync",
-    srcs = ["sync.sh"],
-    visibility = ["//visibility:public"]
+    runtime_deps = [
+        ":sync_lib",
+    ],
+    main_class = "com.vaticle.dependencies.ide.rust.SyncRunnerKt",
 )
 
-java_binary(
-    name = "generate_cargo_manifests",
-    runtime_deps = [
-        ":cargo_manifest_generator"
+kt_jvm_library(
+    name = "sync_lib",
+    srcs = [
+        "SyncRunner.kt",
     ],
-    main_class = "com.vaticle.dependencies.ide.rust.CargoManifestGeneratorKt",
+    deps = [
+        "@vaticle_dependencies//ide/rust:cargo_manifest_generator",
+
+        "@vaticle_bazel_distribution//common",
+        "@vaticle_bazel_distribution//common/shell",
+        "@vaticle_bazel_distribution//common/util",
+
+        "@maven//:info_picocli_picocli",
+        "@maven//:org_zeroturnaround_zt_exec",
+    ]
 )
 
 kt_jvm_library(
     name = "cargo_manifest_generator",
     deps = [
+        "@vaticle_bazel_distribution//common/shell",
         "@vaticle_bazel_distribution//common/util",
 
         "@maven//:com_electronwill_night_config_core",
         "@maven//:com_electronwill_night_config_toml",
-        "@maven//:info_picocli_picocli",
+        "@maven//:org_zeroturnaround_zt_exec",
     ],
     srcs = [
         "CargoManifestGenerator.kt"
