@@ -55,15 +55,18 @@ class SyncRunner : Callable<Unit> {
         shell = Shell(logger, verbose)
         buildWorkspaceDir = Path(System.getenv("BUILD_WORKSPACE_DIRECTORY"))
         bazelOutputBase = Path(shell.execute(listOf(BAZEL, INFO, "output_base"), buildWorkspaceDir).outputString().trim())
-        buildLocalRustTargets()
+        val rustTargets = rustTargets(buildWorkspaceDir)
+        validateBuildWorkspace(rustTargets)
+        loadRustToolchainAndExternalDeps(rustTargets)
         rustRepoPaths().forEach { sync(it) }
     }
 
-    private fun buildLocalRustTargets() {
-        // This serves two purposes; firstly, it loads the Rust toolchain and stdlib which IntelliJ and CLion use.
-        // Secondly, it loads all external @vaticle Rust dependencies, allowing this sync runner to sync them.
-        val rustTargets = rustTargets(buildWorkspaceDir)
-        shell.execute(listOf(BAZEL, BUILD) + rustTargets, buildWorkspaceDir)
+    private fun validateBuildWorkspace(rustTargets: List<String>) {
+        shell.execute(command = listOf(BAZEL, BUILD) + rustTargets + "--build=false", baseDir = buildWorkspaceDir)
+    }
+
+    private fun loadRustToolchainAndExternalDeps(rustTargets: List<String>) {
+        shell.execute(command = listOf(BAZEL, BUILD) + rustTargets, baseDir = buildWorkspaceDir, throwOnError = false)
     }
 
     private fun rustTargets(repoPath: Path): List<String> {
