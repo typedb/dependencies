@@ -26,10 +26,18 @@ import com.vaticle.bazel.distribution.common.Logging.LogLevel.ERROR
 import com.vaticle.bazel.distribution.common.Logging.Logger
 import com.vaticle.bazel.distribution.common.shell.Shell
 import com.vaticle.bazel.distribution.common.util.FileUtil.listFilesRecursively
+import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.ASPECTS
 import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.BAZEL
+import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.BAZEL_BIN
 import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.BUILD
 import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.INFO
+import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.OUTPUT_BASE
+import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.OUTPUT_GROUPS_RUST_IDE_SYNC
 import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.QUERY
+import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.RUST_IDE_SYNC_ASPECT
+import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.RUST_TARGETS_DEPS_QUERY
+import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.RUST_TARGETS_QUERY
+import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.VATICLE_REPO_PREFIX
 import picocli.CommandLine
 import java.io.File
 import java.nio.file.Path
@@ -47,14 +55,13 @@ class SyncRunner : Callable<Unit> {
 
     lateinit var logger: Logger
     private lateinit var shell: Shell
-    private lateinit var buildWorkspaceDir: Path
+    private val buildWorkspaceDir = Path(System.getenv("BUILD_WORKSPACE_DIRECTORY"))
     lateinit var bazelOutputBase: Path
 
     override fun call() {
         logger = Logger(logLevel = if (verbose) DEBUG else ERROR)
         shell = Shell(logger, verbose)
-        buildWorkspaceDir = Path(System.getenv("BUILD_WORKSPACE_DIRECTORY"))
-        bazelOutputBase = Path(shell.execute(listOf(BAZEL, INFO, "output_base"), buildWorkspaceDir).outputString().trim())
+        bazelOutputBase = Path(shell.execute(listOf(BAZEL, INFO, OUTPUT_BASE), buildWorkspaceDir).outputString().trim())
         val rustTargets = rustTargets(buildWorkspaceDir)
         validateBuildWorkspace(rustTargets)
         loadRustToolchainAndExternalDeps(rustTargets)
@@ -70,15 +77,15 @@ class SyncRunner : Callable<Unit> {
     }
 
     private fun rustTargets(repoPath: Path): List<String> {
-        return shell.execute(listOf(BAZEL, QUERY, "kind(rust_*, //...)"), repoPath)
+        return shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_QUERY), repoPath)
             .outputString().split("\n").filter { it.isNotBlank() }
     }
 
     private fun rustRepoPaths(): List<Path> {
         // e.g: [/Users/root/workspace/typedb-client-rust, /private/var/_bazel_root_/123abc/external/vaticle_typedb_protocol]
-        return listOf(buildWorkspaceDir) + shell.execute(listOf(BAZEL, QUERY, "kind(rust_*, deps(//...))", "--output=package"), buildWorkspaceDir)
+        return listOf(buildWorkspaceDir) + shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_DEPS_QUERY, "--output=package"), buildWorkspaceDir)
             .outputString().split("\n")
-            .filter { it.startsWith("@vaticle_") }
+            .filter { it.startsWith(VATICLE_REPO_PREFIX) }
             .map { it.split("@")[1].split("//")[0] }
             .map { bazelOutputBase.resolve("external").resolve(it) }
     }
@@ -93,23 +100,29 @@ class SyncRunner : Callable<Unit> {
 
     private fun cleanupOldSyncInfo(repoPath: Path) {
         logger.debug { "Cleaning up old sync info under $repoPath" }
-        val bazelBin = File(shell.execute(listOf(BAZEL, INFO, "bazel-bin"), repoPath).outputString().trim())
+        val bazelBin = File(shell.execute(listOf(BAZEL, INFO, BAZEL_BIN), repoPath).outputString().trim())
         bazelBin.listFilesRecursively().filter { it.name.endsWith(".ide-sync.properties") }.forEach { it.delete() }
     }
 
     private fun runSyncInfoAspect(repoPath: Path) {
         val rustTargets = rustTargets(repoPath)
-        shell.execute(listOf(BAZEL, BUILD) + rustTargets + listOf(
-            "--aspects",
-            "@vaticle_dependencies//ide/rust:sync_aspect.bzl%rust_ide_sync_aspect",
-            "--output_groups=rust-ide-sync"
-        ), repoPath)
+        shell.execute(
+            listOf(BAZEL, BUILD) + rustTargets + listOf(ASPECTS, RUST_IDE_SYNC_ASPECT, OUTPUT_GROUPS_RUST_IDE_SYNC),
+            repoPath)
     }
 
     private object ShellArgs {
+        const val ASPECTS = "--aspects"
         const val BAZEL = "bazel"
+        const val BAZEL_BIN = "bazel-bin"
         const val BUILD = "build"
         const val INFO = "info"
+        const val OUTPUT_BASE = "output_base"
+        const val OUTPUT_GROUPS_RUST_IDE_SYNC = "--output_groups=rust-ide-sync"
         const val QUERY = "query"
+        const val RUST_IDE_SYNC_ASPECT = "@vaticle_dependencies//ide/rust:sync_aspect.bzl%rust_ide_sync_aspect"
+        const val RUST_TARGETS_DEPS_QUERY = "kind(rust_*, deps(//...))"
+        const val RUST_TARGETS_QUERY = "kind(rust_*, //...)"
+        const val VATICLE_REPO_PREFIX = "@vaticle_"
     }
 }

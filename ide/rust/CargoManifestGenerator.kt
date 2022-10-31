@@ -55,14 +55,14 @@ import java.nio.file.Path
 import java.util.Properties
 import kotlin.io.path.Path
 
-class CargoManifestGenerator(private val workspaceRoot: File, private val shell: Shell) {
+class CargoManifestGenerator(private val workspaceRoot: File, shell: Shell) {
 
-    private lateinit var bazelOutputBasePath: File
-    private lateinit var bazelBinPath: File
+    private val bazelOutputBasePath = File(
+        shell.execute(listOf(BAZEL, INFO, "output_base"), workspaceRoot.toPath()).outputString().trim()
+    )
+    private val bazelBinPath = workspaceRoot.resolve(BAZEL_BIN).toPath().toRealPath().toFile()
 
     fun generateManifests() {
-        bazelOutputBasePath = File(shell.execute(listOf(BAZEL, INFO, "output_base"), workspaceRoot.toPath()).outputString().trim())
-        bazelBinPath = workspaceRoot.resolve(BAZEL_BIN).toPath().toRealPath().toFile()
         val syncInfos = loadSyncInfos()
         val outputPaths = mutableListOf<Path>()
         syncInfos.filter { shouldGenerateManifest(it) }.forEach { info ->
