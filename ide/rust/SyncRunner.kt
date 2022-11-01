@@ -65,7 +65,7 @@ class SyncRunner : Callable<Unit> {
         val rustTargets = rustTargets(buildWorkspaceDir)
         validateBuildWorkspace(rustTargets)
         loadRustToolchainAndExternalDeps(rustTargets)
-        rustRepoPaths().forEach { sync(it) }
+        vaticleRustRepoPaths().forEach { sync(it) }
     }
 
     private fun validateBuildWorkspace(rustTargets: List<String>) {
@@ -76,12 +76,7 @@ class SyncRunner : Callable<Unit> {
         shell.execute(command = listOf(BAZEL, BUILD) + rustTargets, baseDir = buildWorkspaceDir, throwOnError = false)
     }
 
-    private fun rustTargets(repoPath: Path): List<String> {
-        return shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_QUERY), repoPath)
-            .outputString().split("\n").filter { it.isNotBlank() }
-    }
-
-    private fun rustRepoPaths(): List<Path> {
+    private fun vaticleRustRepoPaths(): List<Path> {
         // e.g: [/Users/root/workspace/typedb-client-rust, /private/var/_bazel_root_/123abc/external/vaticle_typedb_protocol]
         return listOf(buildWorkspaceDir) + shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_DEPS_QUERY, "--output=package"), buildWorkspaceDir)
             .outputString().split("\n")
@@ -109,6 +104,11 @@ class SyncRunner : Callable<Unit> {
         shell.execute(
             listOf(BAZEL, BUILD) + rustTargets + listOf(ASPECTS, RUST_IDE_SYNC_ASPECT, OUTPUT_GROUPS_RUST_IDE_SYNC),
             repoPath)
+    }
+
+    private fun rustTargets(repoPath: Path): List<String> {
+        return shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_QUERY), repoPath)
+            .outputString().split("\n").filter { it.isNotBlank() }
     }
 
     private object ShellArgs {
