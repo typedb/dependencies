@@ -25,34 +25,20 @@ import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
 import com.vaticle.bazel.distribution.common.shell.Shell
 import com.vaticle.bazel.distribution.common.util.FileUtil.listFilesRecursively
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.BUILD_DEPS
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.DEPS_PREFIX
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.EDITION
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.ENTRY_POINT_PATH
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.FEATURES
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.NAME
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.PATH
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.ROOT_PATH
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.SOURCES_ARE_GENERATED
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.TYPE
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Keys.VERSION
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Type.BIN
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Type.BUILD
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Type.LIB
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.IDESyncInfo.Type.TEST
+import com.vaticle.dependencies.ide.rust.IDESyncInfo.Type.BIN
+import com.vaticle.dependencies.ide.rust.IDESyncInfo.Type.BUILD
+import com.vaticle.dependencies.ide.rust.IDESyncInfo.Type.LIB
+import com.vaticle.dependencies.ide.rust.IDESyncInfo.Type.TEST
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.BAZEL_BIN
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.CARGO_TOML
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.EXTERNAL
-import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.EXTERNAL_PLACEHOLDER
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.IDE_SYNC_PROPERTIES
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.ShellArgs.BAZEL
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.ShellArgs.INFO
 import java.io.File
-import java.io.FileInputStream
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.Properties
 import kotlin.io.path.Path
 
 class CargoManifestGenerator(private val workspaceRoot: File, shell: Shell) {
@@ -177,132 +163,10 @@ class CargoManifestGenerator(private val workspaceRoot: File, shell: Shell) {
         return workspaceRoot.resolve(projectRelativePath.toString()).resolve(CARGO_TOML).toPath()
     }
 
-    data class IDESyncInfo(
-        val path: Path,
-        val name: String,
-        val type: Type,
-        val version: String,
-        val edition: String?,
-        val deps: Collection<Dependency>,
-        val buildDeps: Collection<String>,
-        val rootPath: Path?,
-        val entryPointPath: Path?,
-        val sourcesAreGenerated: Boolean,
-        val tests: MutableCollection<IDESyncInfo>,
-        val buildScripts: MutableCollection<IDESyncInfo>,
-    ) {
-        sealed class Dependency(open val name: String) {
-            abstract fun toToml(bazelOutputBasePath: File): Config
-
-            data class Crate(override val name: String, val version: String, val features: List<String>) : Dependency(name) {
-                override fun toToml(bazelOutputBasePath: File): Config {
-                    return Config.inMemory().apply {
-                        set<String>("version", version)
-                        set<List<String>>("features", features)
-                    }
-                }
-            }
-
-            data class Path(override val name: String, val path: String) : Dependency(name) {
-                override fun toToml(bazelOutputBasePath: File): Config {
-                    return Config.inMemory().apply {
-                        set<String>("path", path.replace(EXTERNAL_PLACEHOLDER, bazelOutputBasePath.resolve(EXTERNAL).absolutePath))
-                    }
-                }
-            }
-
-            companion object {
-                fun of(rawKey: String, rawValue: String): Dependency {
-                    val name = rawKey.split(".", limit = 2)[1]
-                    val rawValueProps = rawValue.split(";")
-                        .associate { it.split("=", limit = 2).let { parts -> parts[0] to parts[1] } }
-                    return if (VERSION in rawValueProps) {
-                        Crate(
-                            name = name,
-                            version = rawValueProps[VERSION]!!,
-                            features = rawValueProps[FEATURES]?.split(",") ?: emptyList()
-                        )
-                    } else {
-                        Path(name = name, path = rawValueProps[PATH]!!)
-                    }
-                }
-            }
-        }
-
-        enum class Type {
-            LIB,
-            BIN,
-            TEST,
-            BUILD;
-
-            companion object {
-                fun of(value: String): Type {
-                    return when (value) {
-                        "lib" -> LIB
-                        "bin" -> BIN
-                        "test" -> TEST
-                        "build" -> BUILD
-                        else -> throw IllegalArgumentException()
-                    }
-                }
-            }
-        }
-
-        companion object {
-            fun fromPropertiesFile(path: Path): IDESyncInfo {
-                val props = Properties().apply { load(FileInputStream(path.toString())) }
-                try {
-                    return IDESyncInfo(
-                        path = path,
-                        name = props.getProperty(NAME),
-                        type = Type.of(props.getProperty(TYPE)),
-                        version = props.getProperty(VERSION),
-                        edition = props.getProperty(EDITION, "2021"),
-                        deps = parseDependencies(extractDependencyEntries(props)),
-                        buildDeps = props.getProperty(BUILD_DEPS, "").split(",").filter { it.isNotBlank() },
-                        rootPath = props.getProperty(ROOT_PATH)?.let { Path(it) },
-                        entryPointPath = props.getProperty(ENTRY_POINT_PATH)?.let { Path(it) },
-                        sourcesAreGenerated = props.getProperty(SOURCES_ARE_GENERATED).toBoolean(),
-                        tests = mutableListOf(),
-                        buildScripts = mutableListOf(),
-                    )
-                } catch (e: Exception) {
-                    throw IllegalStateException("Failed to parse IDE Sync properties file at $path", e)
-                }
-            }
-
-            private fun extractDependencyEntries(props: Properties): Map<String, String> {
-                return props.entries
-                    .map { it.key.toString() to it.value.toString() }
-                    .filter { it.first.startsWith("$DEPS_PREFIX.") }
-                    .toMap()
-            }
-
-            private fun parseDependencies(raw: Map<String, String>): Collection<Dependency> {
-                return raw.map { Dependency.of(it.key, it.value) }
-            }
-        }
-
-        private object Keys {
-            const val BUILD_DEPS = "build.deps"
-            const val DEPS_PREFIX = "deps"
-            const val EDITION = "edition"
-            const val ENTRY_POINT_PATH = "entry.point.path"
-            const val FEATURES = "features"
-            const val NAME = "name"
-            const val PATH = "path"
-            const val ROOT_PATH = "root.path"
-            const val TYPE = "type"
-            const val SOURCES_ARE_GENERATED = "sources.are.generated"
-            const val VERSION = "version"
-        }
-    }
-
     private object Paths {
         const val BAZEL_BIN = "bazel-bin"
         const val CARGO_TOML = "Cargo.toml"
         const val EXTERNAL = "external"
-        const val EXTERNAL_PLACEHOLDER = "{external}"
         const val IDE_SYNC_PROPERTIES = "ide-sync.properties"
     }
 

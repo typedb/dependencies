@@ -28,6 +28,7 @@ java_binary(
 kt_jvm_library(
     name = "sync_lib",
     srcs = [
+        "IDESyncInfo.kt",
         "SyncRunner.kt",
     ],
     deps = [
