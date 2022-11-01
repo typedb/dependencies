@@ -51,12 +51,12 @@ fun main(args: Array<String>): Unit = exitProcess(CommandLine(SyncRunner()).exec
 class SyncRunner : Callable<Unit> {
 
     @CommandLine.Option(names = ["--verbose", "-v"], required = false)
-    var verbose: Boolean = false
+    private var verbose: Boolean = false
 
-    lateinit var logger: Logger
+    private lateinit var logger: Logger
     private lateinit var shell: Shell
     private val buildWorkspaceDir = Path(System.getenv("BUILD_WORKSPACE_DIRECTORY"))
-    lateinit var bazelOutputBase: Path
+    private lateinit var bazelOutputBase: Path
 
     override fun call() {
         logger = Logger(logLevel = if (verbose) DEBUG else ERROR)
