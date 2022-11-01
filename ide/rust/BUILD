@@ -28,32 +28,18 @@ java_binary(
 kt_jvm_library(
     name = "sync_lib",
     srcs = [
+        "CargoManifestGenerator.kt",
         "IDESyncInfo.kt",
         "SyncRunner.kt",
     ],
     deps = [
-        "@vaticle_dependencies//ide/rust:cargo_manifest_generator",
-
         "@vaticle_bazel_distribution//common",
-        "@vaticle_bazel_distribution//common/shell",
-        "@vaticle_bazel_distribution//common/util",
-
-        "@maven//:info_picocli_picocli",
-        "@maven//:org_zeroturnaround_zt_exec",
-    ]
-)
-
-kt_jvm_library(
-    name = "cargo_manifest_generator",
-    deps = [
         "@vaticle_bazel_distribution//common/shell",
         "@vaticle_bazel_distribution//common/util",
 
         "@maven//:com_electronwill_night_config_core",
         "@maven//:com_electronwill_night_config_toml",
+        "@maven//:info_picocli_picocli",
         "@maven//:org_zeroturnaround_zt_exec",
-    ],
-    srcs = [
-        "CargoManifestGenerator.kt"
     ]
 )
