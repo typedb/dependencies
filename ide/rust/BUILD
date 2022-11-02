@@ -22,7 +22,7 @@ java_binary(
     runtime_deps = [
         ":syncer",
     ],
-    main_class = "com.vaticle.dependencies.ide.rust.WorkspaceSyncerKt",
+    main_class = "com.vaticle.dependencies.ide.rust.SyncerKt",
 )
 
 kt_jvm_library(
