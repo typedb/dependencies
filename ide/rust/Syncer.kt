@@ -26,18 +26,18 @@ import com.vaticle.bazel.distribution.common.Logging.LogLevel.ERROR
 import com.vaticle.bazel.distribution.common.Logging.Logger
 import com.vaticle.bazel.distribution.common.shell.Shell
 import com.vaticle.bazel.distribution.common.util.FileUtil.listFilesRecursively
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.ASPECTS
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.BAZEL
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.BAZEL_BIN
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.BUILD
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.INFO
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.OUTPUT_BASE
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.OUTPUT_GROUPS_RUST_IDE_SYNC
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.QUERY
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.RUST_IDE_SYNC_INFO_ASPECT
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.RUST_TARGETS_DEPS_QUERY
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.RUST_TARGETS_QUERY
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.VATICLE_REPOSITORY_PREFIX
+import com.vaticle.dependencies.ide.rust.Syncer.ShellArgs.ASPECTS
+import com.vaticle.dependencies.ide.rust.Syncer.ShellArgs.BAZEL
+import com.vaticle.dependencies.ide.rust.Syncer.ShellArgs.BAZEL_BIN
+import com.vaticle.dependencies.ide.rust.Syncer.ShellArgs.BUILD
+import com.vaticle.dependencies.ide.rust.Syncer.ShellArgs.INFO
+import com.vaticle.dependencies.ide.rust.Syncer.ShellArgs.OUTPUT_BASE
+import com.vaticle.dependencies.ide.rust.Syncer.ShellArgs.OUTPUT_GROUPS_RUST_IDE_SYNC
+import com.vaticle.dependencies.ide.rust.Syncer.ShellArgs.QUERY
+import com.vaticle.dependencies.ide.rust.Syncer.ShellArgs.RUST_IDE_SYNC_INFO_ASPECT
+import com.vaticle.dependencies.ide.rust.Syncer.ShellArgs.RUST_TARGETS_DEPS_QUERY
+import com.vaticle.dependencies.ide.rust.Syncer.ShellArgs.RUST_TARGETS_QUERY
+import com.vaticle.dependencies.ide.rust.Syncer.ShellArgs.VATICLE_REPOSITORY_PREFIX
 import picocli.CommandLine
 import java.io.File
 import java.nio.file.Path
@@ -45,10 +45,10 @@ import java.util.concurrent.Callable
 import kotlin.io.path.Path
 import kotlin.system.exitProcess
 
-fun main(args: Array<String>): Unit = exitProcess(CommandLine(WorkspaceSyncer()).execute(*args))
+fun main(args: Array<String>): Unit = exitProcess(CommandLine(Syncer()).execute(*args))
 
-@CommandLine.Command(name = "sync-workspace", mixinStandardHelpOptions = true)
-class WorkspaceSyncer : Callable<Unit> {
+@CommandLine.Command(name = "sync", mixinStandardHelpOptions = true)
+class Syncer : Callable<Unit> {
 
     @CommandLine.Option(names = ["--verbose", "-v"], required = false)
     private var verbose: Boolean = false
@@ -96,7 +96,7 @@ class WorkspaceSyncer : Callable<Unit> {
             logger.debug { "Syncing $repository" }
             cleanupOldSyncInfo()
             runSyncInfoAspect()
-            CargoProjectGenerator(repository.toFile(), shell).generateProject()
+            RepoCargoManifestGenerator(repository.toFile(), shell).generateManifests()
             logger.debug { "Sync completed in $repository" }
         }
 

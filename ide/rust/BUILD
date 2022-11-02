@@ -18,19 +18,18 @@
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
 
 java_binary(
-    name = "sync_workspace",
+    name = "sync",
     runtime_deps = [
-        ":workspace_syncer",
+        ":syncer",
     ],
     main_class = "com.vaticle.dependencies.ide.rust.WorkspaceSyncerKt",
 )
 
 kt_jvm_library(
-    name = "workspace_syncer",
+    name = "syncer",
     srcs = [
-        "CargoProjectGenerator.kt",
-        "SyncInfo.kt",
-        "WorkspaceSyncer.kt",
+        "RepoCargoManifestGenerator.kt",
+        "Syncer.kt",
     ],
     deps = [
         "@vaticle_bazel_distribution//common",
