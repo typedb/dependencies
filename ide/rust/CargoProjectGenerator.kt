@@ -139,7 +139,7 @@ class CargoProjectGenerator(private val workspaceRoot: File, shell: Shell) {
                         set<String>("path", entryPointPath)
                     }
                 }
-                TEST, BUILD -> throw IllegalStateException("$CARGO_TOML should not be generated for IDE sync info of type ${info.type}")
+                TEST, BUILD -> throw IllegalStateException("$CARGO_TOML should not be generated for sync info of type ${info.type}")
             }
         }
 
