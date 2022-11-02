@@ -55,12 +55,12 @@ import java.nio.file.Path
 import java.util.Properties
 import kotlin.io.path.Path
 
-class RepoCargoManifestGenerator(private val workspaceRoot: File, shell: Shell) {
+class RepoCargoManifestGenerator(private val repository: File, shell: Shell) {
 
-    private val bazelOutputBasePath = File(
-        shell.execute(listOf(BAZEL, INFO, "output_base"), workspaceRoot.toPath()).outputString().trim()
+    private val bazelOutputBase = File(
+        shell.execute(listOf(BAZEL, INFO, "output_base"), repository.toPath()).outputString().trim()
     )
-    private val bazelBinPath = workspaceRoot.resolve(BAZEL_BIN).toPath().toRealPath().toFile()
+    private val bazelBin = repository.resolve(BAZEL_BIN).toPath().toRealPath().toFile()
 
     fun generateManifests() {
         val manifests = loadSyncInfos()
@@ -76,7 +76,7 @@ class RepoCargoManifestGenerator(private val workspaceRoot: File, shell: Shell) 
     }
 
     private fun findSyncInfoFiles(): List<File> {
-        val bazelBinContents = bazelBinPath.listFiles() ?: throw IllegalStateException()
+        val bazelBinContents = bazelBin.listFiles() ?: throw IllegalStateException()
         val filesToCheck = bazelBinContents.filter { it.isFile } + bazelBinContents
             .filter { it.isDirectory && it.name != EXTERNAL }.flatMap { it.listFilesRecursively() }
         return filesToCheck.filter { it.name.endsWith(IDE_SYNC_PROPERTIES) }
@@ -107,8 +107,8 @@ class RepoCargoManifestGenerator(private val workspaceRoot: File, shell: Shell) 
         }
 
         private fun manifestOutputPath(): Path {
-            val projectRelativePath = bazelBinPath.toPath().relativize(info.path.parent)
-            return workspaceRoot.resolve(projectRelativePath.toString()).resolve(CARGO_TOML).toPath()
+            val projectRelativePath = bazelBin.toPath().relativize(info.path.parent)
+            return repository.resolve(projectRelativePath.toString()).resolve(CARGO_TOML).toPath()
         }
 
         private fun manifestContent(): String {
@@ -125,7 +125,7 @@ class RepoCargoManifestGenerator(private val workspaceRoot: File, shell: Shell) 
 
             cargoToml.createSubConfig().apply {
                 cargoToml.set<Config>("dependencies", this)
-                info.deps.forEach { set<Config>(it.name, it.toToml(bazelOutputBasePath)) }
+                info.deps.forEach { set<Config>(it.name, it.toToml(bazelOutputBase)) }
             }
 
             cargoToml.addDevAndBuildDependencies()
@@ -135,7 +135,7 @@ class RepoCargoManifestGenerator(private val workspaceRoot: File, shell: Shell) 
 
         private fun Config.createEntryPointSubConfig() {
             val entryPointPath = if (info.sourcesAreGenerated) {
-                bazelBinPath.resolve(info.entryPointPath.toString()).toString()
+                bazelBin.resolve(info.entryPointPath.toString()).toString()
             } else info.rootPath!!.relativize(info.entryPointPath!!).toString()
 
             when (info.type) {
@@ -164,7 +164,7 @@ class RepoCargoManifestGenerator(private val workspaceRoot: File, shell: Shell) 
                     info.tests.flatMap { it.deps }
                         .distinctBy { it.name }
                         .filter { it.name != info.name }
-                        .forEach { set<Config>(it.name, it.toToml(bazelOutputBasePath)) }
+                        .forEach { set<Config>(it.name, it.toToml(bazelOutputBase)) }
                 }
             }
 
@@ -174,7 +174,7 @@ class RepoCargoManifestGenerator(private val workspaceRoot: File, shell: Shell) 
                     info.buildScripts.flatMap { it.deps }
                         .distinctBy { it.name }
                         .filter { it.name != info.name }
-                        .forEach { set<Config>(it.name, it.toToml(bazelOutputBasePath)) }
+                        .forEach { set<Config>(it.name, it.toToml(bazelOutputBase)) }
                 }
             }
         }
@@ -195,10 +195,10 @@ class RepoCargoManifestGenerator(private val workspaceRoot: File, shell: Shell) 
         val buildScripts: MutableCollection<TargetSyncInfo>,
     ) {
         sealed class Dependency(open val name: String) {
-            abstract fun toToml(bazelOutputBasePath: File): Config
+            abstract fun toToml(bazelOutputBase: File): Config
 
             data class Crate(override val name: String, val version: String, val features: List<String>) : Dependency(name) {
-                override fun toToml(bazelOutputBasePath: File): Config {
+                override fun toToml(bazelOutputBase: File): Config {
                     return Config.inMemory().apply {
                         set<String>("version", version)
                         set<List<String>>("features", features)
@@ -207,9 +207,9 @@ class RepoCargoManifestGenerator(private val workspaceRoot: File, shell: Shell) 
             }
 
             data class Path(override val name: String, val path: String) : Dependency(name) {
-                override fun toToml(bazelOutputBasePath: File): Config {
+                override fun toToml(bazelOutputBase: File): Config {
                     return Config.inMemory().apply {
-                        set<String>("path", path.replace(EXTERNAL_PLACEHOLDER, bazelOutputBasePath.resolve(EXTERNAL).absolutePath))
+                        set<String>("path", path.replace(EXTERNAL_PLACEHOLDER, bazelOutputBase.resolve(EXTERNAL).absolutePath))
                     }
                 }
             }
