@@ -34,7 +34,7 @@ import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.INFO
 import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.OUTPUT_BASE
 import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.OUTPUT_GROUPS_RUST_IDE_SYNC
 import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.QUERY
-import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.RUST_IDE_SYNC_ASPECT
+import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.RUST_IDE_SYNC_INFO_ASPECT
 import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.RUST_TARGETS_DEPS_QUERY
 import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.RUST_TARGETS_QUERY
 import com.vaticle.dependencies.ide.rust.WorkspaceSyncer.ShellArgs.VATICLE_REPOSITORY_PREFIX
@@ -109,7 +109,7 @@ class WorkspaceSyncer : Callable<Unit> {
         private fun runSyncInfoAspect() {
             val rustTargets = rustTargets(repository)
             shell.execute(
-                listOf(BAZEL, BUILD) + rustTargets + listOf(ASPECTS, RUST_IDE_SYNC_ASPECT, OUTPUT_GROUPS_RUST_IDE_SYNC),
+                listOf(BAZEL, BUILD) + rustTargets + listOf(ASPECTS, RUST_IDE_SYNC_INFO_ASPECT, OUTPUT_GROUPS_RUST_IDE_SYNC),
                 repository)
         }
     }
@@ -123,7 +123,7 @@ class WorkspaceSyncer : Callable<Unit> {
         const val OUTPUT_BASE = "output_base"
         const val OUTPUT_GROUPS_RUST_IDE_SYNC = "--output_groups=rust-ide-sync"
         const val QUERY = "query"
-        const val RUST_IDE_SYNC_ASPECT = "@vaticle_dependencies//ide/rust:sync_aspect.bzl%rust_ide_sync_aspect"
+        const val RUST_IDE_SYNC_INFO_ASPECT = "@vaticle_dependencies//ide/rust:sync_info_aspect.bzl%rust_ide_sync_info_aspect"
         const val RUST_TARGETS_DEPS_QUERY = "kind(rust_*, deps(//...))"
         const val RUST_TARGETS_QUERY = "kind(rust_*, //...)"
         const val VATICLE_REPOSITORY_PREFIX = "@vaticle_"

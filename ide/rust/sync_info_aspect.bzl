@@ -159,7 +159,7 @@ def _build_sync_props_file(target, ctx, source_files, sync_info):
     )
     return props_file
 
-def _rust_ide_sync_aspect_impl(target, ctx):
+def _rust_ide_sync_info_aspect_impl(target, ctx):
     if ctx.rule.kind not in _TARGET_TYPES.keys():
         return struct(kind = ctx.rule.kind)
 
@@ -173,7 +173,7 @@ def _rust_ide_sync_aspect_impl(target, ctx):
         output_groups = {"rust-ide-sync": depset([sync_props_file])}
     )
 
-rust_ide_sync_aspect = aspect(
+rust_ide_sync_info_aspect = aspect(
     attr_aspects = ["deps", "proc_macro_deps", "crate"],
-    implementation = _rust_ide_sync_aspect_impl,
+    implementation = _rust_ide_sync_info_aspect_impl,
 )
