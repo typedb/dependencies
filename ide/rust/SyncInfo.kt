@@ -22,26 +22,26 @@
 package com.vaticle.dependencies.ide.rust
 
 import com.electronwill.nightconfig.core.Config
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Keys.BUILD_DEPS
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Keys.DEPS_PREFIX
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Keys.EDITION
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Keys.ENTRY_POINT_PATH
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Keys.FEATURES
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Keys.NAME
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Keys.PATH
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Keys.ROOT_PATH
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Keys.TYPE
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Keys.SOURCES_ARE_GENERATED
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Keys.VERSION
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Paths.EXTERNAL
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Paths.EXTERNAL_PLACEHOLDER
+import com.vaticle.dependencies.ide.rust.SyncInfo.Keys.BUILD_DEPS
+import com.vaticle.dependencies.ide.rust.SyncInfo.Keys.DEPS_PREFIX
+import com.vaticle.dependencies.ide.rust.SyncInfo.Keys.EDITION
+import com.vaticle.dependencies.ide.rust.SyncInfo.Keys.ENTRY_POINT_PATH
+import com.vaticle.dependencies.ide.rust.SyncInfo.Keys.FEATURES
+import com.vaticle.dependencies.ide.rust.SyncInfo.Keys.NAME
+import com.vaticle.dependencies.ide.rust.SyncInfo.Keys.PATH
+import com.vaticle.dependencies.ide.rust.SyncInfo.Keys.ROOT_PATH
+import com.vaticle.dependencies.ide.rust.SyncInfo.Keys.TYPE
+import com.vaticle.dependencies.ide.rust.SyncInfo.Keys.SOURCES_ARE_GENERATED
+import com.vaticle.dependencies.ide.rust.SyncInfo.Keys.VERSION
+import com.vaticle.dependencies.ide.rust.SyncInfo.Paths.EXTERNAL
+import com.vaticle.dependencies.ide.rust.SyncInfo.Paths.EXTERNAL_PLACEHOLDER
 import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Path
 import java.util.Properties
 import kotlin.io.path.Path
 
-data class IDESyncInfo(
+data class SyncInfo(
     val path: Path,
     val name: String,
     val type: Type,
@@ -52,8 +52,8 @@ data class IDESyncInfo(
     val rootPath: Path?,
     val entryPointPath: Path?,
     val sourcesAreGenerated: Boolean,
-    val tests: MutableCollection<IDESyncInfo>,
-    val buildScripts: MutableCollection<IDESyncInfo>,
+    val tests: MutableCollection<SyncInfo>,
+    val buildScripts: MutableCollection<SyncInfo>,
 ) {
     sealed class Dependency(open val name: String) {
         abstract fun toToml(bazelOutputBasePath: File): Config
@@ -113,10 +113,10 @@ data class IDESyncInfo(
     }
 
     companion object {
-        fun fromPropertiesFile(path: Path): IDESyncInfo {
+        fun fromPropertiesFile(path: Path): SyncInfo {
             val props = Properties().apply { load(FileInputStream(path.toString())) }
             try {
-                return IDESyncInfo(
+                return SyncInfo(
                     path = path,
                     name = props.getProperty(NAME),
                     type = Type.of(props.getProperty(TYPE)),

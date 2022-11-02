@@ -25,10 +25,10 @@ import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
 import com.vaticle.bazel.distribution.common.shell.Shell
 import com.vaticle.bazel.distribution.common.util.FileUtil.listFilesRecursively
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Type.BIN
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Type.BUILD
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Type.LIB
-import com.vaticle.dependencies.ide.rust.IDESyncInfo.Type.TEST
+import com.vaticle.dependencies.ide.rust.SyncInfo.Type.BIN
+import com.vaticle.dependencies.ide.rust.SyncInfo.Type.BUILD
+import com.vaticle.dependencies.ide.rust.SyncInfo.Type.LIB
+import com.vaticle.dependencies.ide.rust.SyncInfo.Type.TEST
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.BAZEL_BIN
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.CARGO_TOML
 import com.vaticle.dependencies.ide.rust.CargoManifestGenerator.Paths.EXTERNAL
@@ -60,9 +60,9 @@ class CargoManifestGenerator(private val workspaceRoot: File, shell: Shell) {
         println(outputPaths.joinToString("\n"))
     }
 
-    private fun loadSyncInfos(): List<IDESyncInfo> {
+    private fun loadSyncInfos(): List<SyncInfo> {
         return findSyncInfoFiles()
-            .map { IDESyncInfo.fromPropertiesFile(Path(it.path)) }
+            .map { SyncInfo.fromPropertiesFile(Path(it.path)) }
             .apply { attachTestAndBuildInfos(this) }
     }
 
@@ -73,7 +73,7 @@ class CargoManifestGenerator(private val workspaceRoot: File, shell: Shell) {
         return filesToCheck.filter { it.name.endsWith(IDE_SYNC_PROPERTIES) }
     }
 
-    private fun attachTestAndBuildInfos(syncInfos: Collection<IDESyncInfo>) {
+    private fun attachTestAndBuildInfos(syncInfos: Collection<SyncInfo>) {
         val (testInfos, nonTestInfos) = syncInfos.partition { it.type == TEST }
             .let { it.first to it.second.associateBy { info -> info.name } }
         testInfos.forEach { testInfo ->
@@ -86,11 +86,11 @@ class CargoManifestGenerator(private val workspaceRoot: File, shell: Shell) {
         }
     }
 
-    private fun shouldGenerateManifest(info: IDESyncInfo): Boolean {
+    private fun shouldGenerateManifest(info: SyncInfo): Boolean {
         return info.type in listOf(LIB, BIN)
     }
 
-    private fun generateManifest(info: IDESyncInfo): String {
+    private fun generateManifest(info: SyncInfo): String {
         val cargoToml = Config.inMemory()
 
         cargoToml.createSubConfig().apply {
@@ -112,7 +112,7 @@ class CargoManifestGenerator(private val workspaceRoot: File, shell: Shell) {
         return GENERATED_FILE_NOTICE + TomlWriter().writeToString(cargoToml.unmodifiable())
     }
 
-    private fun Config.createEntryPointSubConfig(info: IDESyncInfo) {
+    private fun Config.createEntryPointSubConfig(info: SyncInfo) {
         val entryPointPath = if (info.sourcesAreGenerated) {
             bazelBinPath.resolve(info.entryPointPath.toString()).toString()
         } else info.rootPath!!.relativize(info.entryPointPath!!).toString()
@@ -136,7 +136,7 @@ class CargoManifestGenerator(private val workspaceRoot: File, shell: Shell) {
         }
     }
 
-    private fun Config.addDevAndBuildDependencies(info: IDESyncInfo) {
+    private fun Config.addDevAndBuildDependencies(info: SyncInfo) {
         if (info.tests.isNotEmpty()) {
             createSubConfig().apply {
                 this@addDevAndBuildDependencies.set<Config>("dev-dependencies", this)
@@ -158,7 +158,7 @@ class CargoManifestGenerator(private val workspaceRoot: File, shell: Shell) {
         }
     }
 
-    private fun manifestOutputPath(info: IDESyncInfo): Path {
+    private fun manifestOutputPath(info: SyncInfo): Path {
         val projectRelativePath = bazelBinPath.toPath().relativize(info.path.parent)
         return workspaceRoot.resolve(projectRelativePath.toString()).resolve(CARGO_TOML).toPath()
     }

@@ -37,7 +37,7 @@ import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.QUERY
 import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.RUST_IDE_SYNC_ASPECT
 import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.RUST_TARGETS_DEPS_QUERY
 import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.RUST_TARGETS_QUERY
-import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.VATICLE_REPO_PREFIX
+import com.vaticle.dependencies.ide.rust.SyncRunner.ShellArgs.VATICLE_REPOSITORY_PREFIX
 import picocli.CommandLine
 import java.io.File
 import java.nio.file.Path
@@ -65,7 +65,7 @@ class SyncRunner : Callable<Unit> {
         val rustTargets = rustTargets(buildWorkspaceDir)
         validateBuildWorkspace(rustTargets)
         loadRustToolchainAndExternalDeps(rustTargets)
-        vaticleRustRepoPaths().forEach { sync(it) }
+        vaticleRustRepositories().forEach { sync(it) }
     }
 
     private fun validateBuildWorkspace(rustTargets: List<String>) {
@@ -76,38 +76,38 @@ class SyncRunner : Callable<Unit> {
         shell.execute(command = listOf(BAZEL, BUILD) + rustTargets, baseDir = buildWorkspaceDir, throwOnError = false)
     }
 
-    private fun vaticleRustRepoPaths(): List<Path> {
+    private fun vaticleRustRepositories(): List<Path> {
         // e.g: [/Users/root/workspace/typedb-client-rust, /private/var/_bazel_root_/123abc/external/vaticle_typedb_protocol]
         return listOf(buildWorkspaceDir) + shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_DEPS_QUERY, "--output=package"), buildWorkspaceDir)
             .outputString().split("\n")
-            .filter { it.startsWith(VATICLE_REPO_PREFIX) }
+            .filter { it.startsWith(VATICLE_REPOSITORY_PREFIX) }
             .map { it.split("@")[1].split("//")[0] }
             .map { bazelOutputBase.resolve("external").resolve(it) }
     }
 
-    private fun sync(repoPath: Path) {
-        logger.debug { "Syncing $repoPath" }
-        cleanupOldSyncInfo(repoPath)
-        runSyncInfoAspect(repoPath)
-        CargoManifestGenerator(repoPath.toFile(), shell).generateManifests()
-        logger.debug { "Sync completed in $repoPath" }
+    private fun sync(repository: Path) {
+        logger.debug { "Syncing $repository" }
+        cleanupOldSyncInfo(repository)
+        runSyncInfoAspect(repository)
+        CargoManifestGenerator(repository.toFile(), shell).generateManifests()
+        logger.debug { "Sync completed in $repository" }
     }
 
-    private fun cleanupOldSyncInfo(repoPath: Path) {
-        logger.debug { "Cleaning up old sync info under $repoPath" }
-        val bazelBin = File(shell.execute(listOf(BAZEL, INFO, BAZEL_BIN), repoPath).outputString().trim())
+    private fun cleanupOldSyncInfo(repository: Path) {
+        logger.debug { "Cleaning up old sync info under $repository" }
+        val bazelBin = File(shell.execute(listOf(BAZEL, INFO, BAZEL_BIN), repository).outputString().trim())
         bazelBin.listFilesRecursively().filter { it.name.endsWith(".ide-sync.properties") }.forEach { it.delete() }
     }
 
-    private fun runSyncInfoAspect(repoPath: Path) {
-        val rustTargets = rustTargets(repoPath)
+    private fun runSyncInfoAspect(repository: Path) {
+        val rustTargets = rustTargets(repository)
         shell.execute(
             listOf(BAZEL, BUILD) + rustTargets + listOf(ASPECTS, RUST_IDE_SYNC_ASPECT, OUTPUT_GROUPS_RUST_IDE_SYNC),
-            repoPath)
+            repository)
     }
 
-    private fun rustTargets(repoPath: Path): List<String> {
-        return shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_QUERY), repoPath)
+    private fun rustTargets(repository: Path): List<String> {
+        return shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_QUERY), repository)
             .outputString().split("\n").filter { it.isNotBlank() }
     }
 
@@ -123,6 +123,6 @@ class SyncRunner : Callable<Unit> {
         const val RUST_IDE_SYNC_ASPECT = "@vaticle_dependencies//ide/rust:sync_aspect.bzl%rust_ide_sync_aspect"
         const val RUST_TARGETS_DEPS_QUERY = "kind(rust_*, deps(//...))"
         const val RUST_TARGETS_QUERY = "kind(rust_*, //...)"
-        const val VATICLE_REPO_PREFIX = "@vaticle_"
+        const val VATICLE_REPOSITORY_PREFIX = "@vaticle_"
     }
 }

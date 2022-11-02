@@ -29,7 +29,7 @@ kt_jvm_library(
     name = "sync_lib",
     srcs = [
         "CargoManifestGenerator.kt",
-        "IDESyncInfo.kt",
+        "SyncInfo.kt",
         "SyncRunner.kt",
     ],
     deps = [
