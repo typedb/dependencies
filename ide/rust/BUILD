@@ -23,6 +23,7 @@ java_binary(
         ":syncer",
     ],
     main_class = "com.vaticle.dependencies.ide.rust.SyncerKt",
+    visibility = ["//visibility:public"],
 )
 
 kt_jvm_library(

@@ -148,8 +148,7 @@ class RepoCargoManifestGenerator(private val repository: File, shell: Shell) {
                 BIN -> {
                     createSubConfig().apply {
                         this@createEntryPointSubConfig.set<List<Config>>("bin", listOf(this))
-                        val binPathString = info.entryPointPath.toString()
-                        set<String>("name", binPathString.substring(0, binPathString.length - ".rs".length))
+                        set<String>("name", info.entryPointPath.toString().replace('/', '_').substringBeforeLast(".rs"))
                         set<String>("path", entryPointPath)
                     }
                 }
