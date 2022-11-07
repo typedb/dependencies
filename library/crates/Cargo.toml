@@ -14,19 +14,13 @@ cxx = "=1.0.59"
 derivative = "=2.2.0"
 enum_dispatch = "=0.3.8"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
-grpc = "=0.8.3"
-grpc-compiler = "=0.8.3"
-grpc-protobuf = "=0.8.3"
 log = "=0.4.8"
-protobuf = { version = "=2.18.2", features = ["with-bytes"] }
-protobuf-codegen = "=2.18.2"
-protoc-rust-grpc = "=0.8.3"
+prost = "=0.11.0"
 rocksdb = "=0.17.0"
 tokio = { version = "=1.20.1", features = ["rt", "rt-multi-thread"] }
-uuid = { version = "=1.1.2", features = ["fast-rng", "v4"] }
 tonic = "=0.8.0"
-prost = "=0.11.0"
 tonic-build = "=0.8.0"
+uuid = { version = "=1.1.2", features = ["fast-rng", "v4"] }
 
 [package.metadata.raze]
 # The path at which to write output files.
@@ -51,18 +45,6 @@ targets = [
 # is used to indicate whether the user is using a non-vendored or
 # vendored set of dependencies.
 genmode = "Remote"
-
-# gRPC arguments and aliased targets
-[package.metadata.raze.crates.lazy_static.'1.4.0']
-additional_flags = [
-    "--cfg=lazy_static_heap_impl",
-]
-
-[package.metadata.raze.crates.protobuf-codegen.'2.18.2']
-extra_aliased_targets = ["cargo_bin_protoc_gen_rust"]
-
-[package.metadata.raze.crates.grpc-compiler.'0.8.3']
-extra_aliased_targets = ["cargo_bin_protoc_gen_rust_grpc"]
 
 [package.metadata.raze.crates.tonic.'0.8.0']
 compile_data_attr = "glob([\"**/*.md\"])"
