@@ -41,7 +41,6 @@ rust_library(
     edition = "2015",
     rustc_flags = [
         "--cap-lints=allow",
-        "--cfg=lazy_static_heap_impl",
     ],
     tags = [
         "cargo-raze",
