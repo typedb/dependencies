@@ -38,13 +38,12 @@ load(
 )
 
 cargo_build_script(
-    name = "serde_json_build_script",
+    name = "crossbeam_queue_build_script",
     srcs = glob(["**/*.rs"]),
     build_script_env = {
     },
     crate_features = [
-        "default",
-        "raw_value",
+        "alloc",
         "std",
     ],
     crate_root = "build.rs",
@@ -57,18 +56,17 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "1.0.85",
+    version = "0.3.6",
     visibility = ["//visibility:private"],
     deps = [
     ],
 )
 
 rust_library(
-    name = "serde_json",
+    name = "crossbeam_queue",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
-        "raw_value",
+        "alloc",
         "std",
     ],
     crate_root = "src/lib.rs",
@@ -79,29 +77,18 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=serde_json",
+        "crate-name=crossbeam-queue",
         "manual",
     ],
-    version = "1.0.85",
+    version = "0.3.6",
     # buildifier: leave-alone
     deps = [
-        ":serde_json_build_script",
-        "@raze__itoa__1_0_3//:itoa",
-        "@raze__ryu__1_0_11//:ryu",
-        "@raze__serde__1_0_144//:serde",
+        ":crossbeam_queue_build_script",
+        "@raze__cfg_if__1_0_0//:cfg_if",
+        "@raze__crossbeam_utils__0_8_12//:crossbeam_utils",
     ],
 )
 
-# Unsupported target "compiletest" with type "test" omitted
+# Unsupported target "array_queue" with type "test" omitted
 
-# Unsupported target "debug" with type "test" omitted
-
-# Unsupported target "lexical" with type "test" omitted
-
-# Unsupported target "map" with type "test" omitted
-
-# Unsupported target "regression" with type "test" omitted
-
-# Unsupported target "stream" with type "test" omitted
-
-# Unsupported target "test" with type "test" omitted
+# Unsupported target "seg_queue" with type "test" omitted

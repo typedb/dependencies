@@ -26,13 +26,23 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # BSD-3-Clause from expression "BSD-3-Clause"
+    "notice",  # Apache-2.0 from expression "Apache-2.0"
 ])
 
 # Generated Targets
 
+# Unsupported target "custom_files" with type "example" omitted
+
+# Unsupported target "peg_calculator" with type "example" omitted
+
+# Unsupported target "readme_preview" with type "example" omitted
+
+# Unsupported target "reusable_diagnostic" with type "example" omitted
+
+# Unsupported target "term" with type "example" omitted
+
 rust_library(
-    name = "antlr_rust",
+    name = "codespan_reporting",
     srcs = glob(["**/*.rs"]),
     crate_features = [
     ],
@@ -44,26 +54,15 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=antlr-rust",
+        "crate-name=codespan-reporting",
         "manual",
     ],
-    version = "0.3.0-beta",
+    version = "0.11.1",
     # buildifier: leave-alone
     deps = [
-        "@raze__better_any__0_2_0//:better_any",
-        "@raze__bit_set__0_5_3//:bit_set",
-        "@raze__byteorder__1_4_3//:byteorder",
-        "@raze__lazy_static__1_4_0//:lazy_static",
-        "@raze__murmur3__0_4_1//:murmur3",
-        "@raze__once_cell__1_13_1//:once_cell",
-        "@raze__parking_lot__0_11_2//:parking_lot",
-        "@raze__typed_arena__2_0_1//:typed_arena",
-        "@raze__uuid__0_8_2//:uuid",
+        "@raze__termcolor__1_1_3//:termcolor",
+        "@raze__unicode_width__0_1_10//:unicode_width",
     ],
 )
 
-# Unsupported target "general_tests" with type "test" omitted
-
-# Unsupported target "perf" with type "test" omitted
-
-# Unsupported target "visitors_tests" with type "test" omitted
+# Unsupported target "term" with type "test" omitted

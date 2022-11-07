@@ -31,17 +31,12 @@ licenses([
 
 # Generated Targets
 
-# Unsupported target "get_timezone" with type "example" omitted
-
-# Unsupported target "stress-test" with type "example" omitted
-
 rust_library(
-    name = "iana_time_zone",
+    name = "better_any",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
     crate_features = [
-        "fallback",
+        "any",
+        "default",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -51,27 +46,19 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=iana-time-zone",
+        "crate-name=better_any",
         "manual",
     ],
-    version = "0.1.50",
+    version = "0.2.0",
     # buildifier: leave-alone
     deps = [
-    ] + selects.with_or({
-        # cfg(any(target_os = "macos", target_os = "ios"))
-        (
-            "@rules_rust//rust/platform:x86_64-apple-darwin",
-        ): [
-            "@raze__core_foundation_sys__0_8_3//:core_foundation_sys",
-        ],
-        "//conditions:default": [],
-    }) + selects.with_or({
-        # cfg(target_os = "windows")
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__winapi__0_3_9//:winapi",
-        ],
-        "//conditions:default": [],
-    }),
+    ],
 )
+
+# Unsupported target "compile_fail" with type "test" omitted
+
+# Unsupported target "expand" with type "test" omitted
+
+# Unsupported target "main_test" with type "test" omitted
+
+# Unsupported target "nightly" with type "test" omitted

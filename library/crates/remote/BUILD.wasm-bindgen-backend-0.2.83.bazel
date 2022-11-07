@@ -51,7 +51,7 @@ rust_library(
     version = "0.2.83",
     # buildifier: leave-alone
     deps = [
-        "@raze__bumpalo__3_11_0//:bumpalo",
+        "@raze__bumpalo__3_11_1//:bumpalo",
         "@raze__log__0_4_8//:log",
         "@raze__once_cell__1_13_1//:once_cell",
         "@raze__proc_macro2__1_0_43//:proc_macro2",
