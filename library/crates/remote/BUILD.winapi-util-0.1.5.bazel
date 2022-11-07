@@ -26,14 +26,16 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # BSD-3-Clause from expression "BSD-3-Clause"
+    "unencumbered",  # Unlicense from expression "Unlicense OR MIT"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "antlr_rust",
+    name = "winapi_util",
     srcs = glob(["**/*.rs"]),
+    aliases = {
+    },
     crate_features = [
     ],
     crate_root = "src/lib.rs",
@@ -44,26 +46,19 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=antlr-rust",
+        "crate-name=winapi-util",
         "manual",
     ],
-    version = "0.3.0-beta",
+    version = "0.1.5",
     # buildifier: leave-alone
     deps = [
-        "@raze__better_any__0_2_0//:better_any",
-        "@raze__bit_set__0_5_3//:bit_set",
-        "@raze__byteorder__1_4_3//:byteorder",
-        "@raze__lazy_static__1_4_0//:lazy_static",
-        "@raze__murmur3__0_4_1//:murmur3",
-        "@raze__once_cell__1_13_1//:once_cell",
-        "@raze__parking_lot__0_11_2//:parking_lot",
-        "@raze__typed_arena__2_0_1//:typed_arena",
-        "@raze__uuid__0_8_2//:uuid",
-    ],
+    ] + selects.with_or({
+        # cfg(windows)
+        (
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+        ): [
+            "@raze__winapi__0_3_9//:winapi",
+        ],
+        "//conditions:default": [],
+    }),
 )
-
-# Unsupported target "general_tests" with type "test" omitted
-
-# Unsupported target "perf" with type "test" omitted
-
-# Unsupported target "visitors_tests" with type "test" omitted

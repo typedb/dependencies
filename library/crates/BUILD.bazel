@@ -40,6 +40,15 @@ alias(
 )
 
 alias(
+    name = "crossbeam",
+    actual = "@raze__crossbeam__0_8_2//:crossbeam",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "cxx",
     actual = "@raze__cxx__1_0_59//:cxx",
     tags = [
