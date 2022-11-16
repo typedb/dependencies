@@ -32,7 +32,7 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "ipnet",
+    name = "cxxbridge_flags",
     srcs = glob(["**/*.rs"]),
     crate_features = [
         "default",
@@ -45,10 +45,10 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=ipnet",
+        "crate-name=cxxbridge-flags",
         "manual",
     ],
-    version = "2.5.0",
+    version = "1.0.59",
     # buildifier: leave-alone
     deps = [
     ],

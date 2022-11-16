@@ -31,11 +31,26 @@ licenses([
 
 # Generated Targets
 
+# Unsupported target "chrono" with type "bench" omitted
+
+# Unsupported target "serde" with type "bench" omitted
+
 rust_library(
-    name = "parking_lot",
+    name = "chrono",
     srcs = glob(["**/*.rs"]),
+    aliases = {
+    },
     crate_features = [
+        "clock",
         "default",
+        "iana-time-zone",
+        "js-sys",
+        "oldtime",
+        "std",
+        "time",
+        "wasm-bindgen",
+        "wasmbind",
+        "winapi",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -45,15 +60,24 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=parking_lot",
+        "crate-name=chrono",
         "manual",
     ],
-    version = "0.12.1",
+    version = "0.4.22",
     # buildifier: leave-alone
     deps = [
-        "@raze__lock_api__0_4_8//:lock_api",
-        "@raze__parking_lot_core__0_9_3//:parking_lot_core",
-    ],
+        "@raze__iana_time_zone__0_1_53//:iana_time_zone",
+        "@raze__num_integer__0_1_45//:num_integer",
+        "@raze__num_traits__0_2_15//:num_traits",
+        "@raze__time__0_1_44//:time",
+    ] + selects.with_or({
+        (
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+        ): [
+            "@raze__winapi__0_3_9//:winapi",
+        ],
+        "//conditions:default": [],
+    }),
 )
 
-# Unsupported target "issue_203" with type "test" omitted
+# Unsupported target "wasm" with type "test" omitted

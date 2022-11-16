@@ -32,11 +32,8 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "cxxbridge_flags",
+    name = "cxx_build",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-        "default",
-    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -45,11 +42,18 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=cxxbridge-flags",
+        "crate-name=cxx-build",
         "manual",
     ],
-    version = "1.0.73",
+    version = "1.0.81",
     # buildifier: leave-alone
     deps = [
+        "@raze__cc__1_0_73//:cc",
+        "@raze__codespan_reporting__0_11_1//:codespan_reporting",
+        "@raze__once_cell__1_13_1//:once_cell",
+        "@raze__proc_macro2__1_0_43//:proc_macro2",
+        "@raze__quote__1_0_21//:quote",
+        "@raze__scratch__1_0_2//:scratch",
+        "@raze__syn__1_0_99//:syn",
     ],
 )

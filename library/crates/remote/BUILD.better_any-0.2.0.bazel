@@ -31,9 +31,13 @@ licenses([
 
 # Generated Targets
 
-rust_proc_macro(
-    name = "cxxbridge_macro",
+rust_library(
+    name = "better_any",
     srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "any",
+        "default",
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -42,14 +46,19 @@ rust_proc_macro(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=cxxbridge-macro",
+        "crate-name=better_any",
         "manual",
     ],
-    version = "1.0.73",
+    version = "0.2.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__proc_macro2__1_0_43//:proc_macro2",
-        "@raze__quote__1_0_21//:quote",
-        "@raze__syn__1_0_99//:syn",
     ],
 )
+
+# Unsupported target "compile_fail" with type "test" omitted
+
+# Unsupported target "expand" with type "test" omitted
+
+# Unsupported target "main_test" with type "test" omitted
+
+# Unsupported target "nightly" with type "test" omitted

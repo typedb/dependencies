@@ -23,7 +23,7 @@ alias(
 
 alias(
     name = "antlr_rust",
-    actual = "@raze__antlr_rust__0_2_2//:antlr_rust",
+    actual = "@raze__antlr_rust__0_3_0_beta//:antlr_rust",
     tags = [
         "cargo-raze",
         "manual",
@@ -49,8 +49,26 @@ alias(
 )
 
 alias(
+    name = "chrono",
+    actual = "@raze__chrono__0_4_22//:chrono",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "crossbeam",
+    actual = "@raze__crossbeam__0_8_2//:crossbeam",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "cxx",
-    actual = "@raze__cxx__1_0_73//:cxx",
+    actual = "@raze__cxx__1_0_59//:cxx",
     tags = [
         "cargo-raze",
         "manual",
@@ -86,7 +104,7 @@ alias(
 
 alias(
     name = "futures",
-    actual = "@raze__futures__0_3_24//:futures",
+    actual = "@raze__futures__0_3_21//:futures",
     tags = [
         "cargo-raze",
         "manual",
@@ -96,15 +114,6 @@ alias(
 alias(
     name = "grpc",
     actual = "@raze__grpc__0_8_3//:grpc",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
-    name = "cargo_bin_protoc_gen_rust_grpc",
-    actual = "@raze__grpc_compiler__0_8_3//:cargo_bin_protoc_gen_rust_grpc",
     tags = [
         "cargo-raze",
         "manual",
@@ -131,7 +140,7 @@ alias(
 
 alias(
     name = "log",
-    actual = "@raze__log__0_4_17//:log",
+    actual = "@raze__log__0_4_8//:log",
     tags = [
         "cargo-raze",
         "manual",
@@ -159,15 +168,6 @@ alias(
 alias(
     name = "protobuf",
     actual = "@raze__protobuf__2_18_2//:protobuf",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
-    name = "cargo_bin_protoc_gen_rust",
-    actual = "@raze__protobuf_codegen__2_18_2//:cargo_bin_protoc_gen_rust",
     tags = [
         "cargo-raze",
         "manual",

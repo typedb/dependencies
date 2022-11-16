@@ -38,7 +38,7 @@ load(
 )
 
 cargo_build_script(
-    name = "parking_lot_core_build_script",
+    name = "iana_time_zone_haiku_build_script",
     srcs = glob(["**/*.rs"]),
     build_script_env = {
     },
@@ -52,31 +52,16 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "0.9.3",
+    version = "0.1.1",
     visibility = ["//visibility:private"],
     deps = [
-    ] + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-apple-darwin",
-            "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
-        ): [
-        ],
-        "//conditions:default": [],
-    }) + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__windows_sys__0_36_1//:windows_sys",
-        ],
-        "//conditions:default": [],
-    }),
+        "@raze__cxx_build__1_0_81//:cxx_build",
+    ],
 )
 
 rust_library(
-    name = "parking_lot_core",
+    name = "iana_time_zone_haiku",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -85,29 +70,13 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=parking_lot_core",
+        "crate-name=iana-time-zone-haiku",
         "manual",
     ],
-    version = "0.9.3",
+    version = "0.1.1",
     # buildifier: leave-alone
     deps = [
-        ":parking_lot_core_build_script",
-        "@raze__cfg_if__1_0_0//:cfg_if",
-        "@raze__smallvec__1_9_0//:smallvec",
-    ] + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-apple-darwin",
-            "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
-        ): [
-            "@raze__libc__0_2_132//:libc",
-        ],
-        "//conditions:default": [],
-    }) + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__windows_sys__0_36_1//:windows_sys",
-        ],
-        "//conditions:default": [],
-    }),
+        ":iana_time_zone_haiku_build_script",
+        "@raze__cxx__1_0_59//:cxx",
+    ],
 )

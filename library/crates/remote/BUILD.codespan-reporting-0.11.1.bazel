@@ -26,29 +26,41 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # Apache-2.0 from expression "Apache-2.0"
 ])
 
 # Generated Targets
 
+# Unsupported target "custom_files" with type "example" omitted
+
+# Unsupported target "peg_calculator" with type "example" omitted
+
+# Unsupported target "readme_preview" with type "example" omitted
+
+# Unsupported target "reusable_diagnostic" with type "example" omitted
+
+# Unsupported target "term" with type "example" omitted
+
 rust_library(
-    name = "pkg_config",
+    name = "codespan_reporting",
     srcs = glob(["**/*.rs"]),
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2015",
+    edition = "2018",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=pkg-config",
+        "crate-name=codespan-reporting",
         "manual",
     ],
-    version = "0.3.25",
+    version = "0.11.1",
     # buildifier: leave-alone
     deps = [
+        "@raze__termcolor__1_1_3//:termcolor",
+        "@raze__unicode_width__0_1_10//:unicode_width",
     ],
 )
 
-# Unsupported target "test" with type "test" omitted
+# Unsupported target "term" with type "test" omitted
