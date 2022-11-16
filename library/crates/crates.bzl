@@ -329,11 +329,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__cxx_build__1_0_80",
-        url = "https://crates.io/api/v1/crates/cxx-build/1.0.80/download",
+        name = "raze__cxx_build__1_0_81",
+        url = "https://crates.io/api/v1/crates/cxx-build/1.0.81/download",
         type = "tar.gz",
-        strip_prefix = "cxx-build-1.0.80",
-        build_file = Label("//library/crates/remote:BUILD.cxx-build-1.0.80.bazel"),
+        strip_prefix = "cxx-build-1.0.81",
+        build_file = Label("//library/crates/remote:BUILD.cxx-build-1.0.81.bazel"),
     )
 
     maybe(
