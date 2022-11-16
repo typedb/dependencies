@@ -40,15 +40,6 @@ alias(
 )
 
 alias(
-    name = "core_foundation_sys",
-    actual = "@raze__core_foundation_sys__0_8_3//:core_foundation_sys",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
     name = "crossbeam",
     actual = "@raze__crossbeam__0_8_2//:crossbeam",
     tags = [
@@ -87,15 +78,6 @@ alias(
 alias(
     name = "futures",
     actual = "@raze__futures__0_3_21//:futures",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
-    name = "libc",
-    actual = "@raze__libc__0_2_132//:libc",
     tags = [
         "cargo-raze",
         "manual",
@@ -167,8 +149,18 @@ alias(
 
 # Export file for Stardoc support
 exports_files(
-    [
-        "crates.bzl",
-    ],
+    glob([
+        "**/*.bazel",
+        "**/*.bzl",
+    ]),
+    visibility = ["//visibility:public"],
+)
+
+filegroup(
+    name = "srcs",
+    srcs = glob([
+        "**/*.bazel",
+        "**/*.bzl",
+    ]),
     visibility = ["//visibility:public"],
 )

@@ -10,12 +10,10 @@ antlr-rust = "=0.3.0-beta"
 axum = "=0.5.15"
 chrono = "=0.4.22"
 crossbeam = "=0.8.2"
-core-foundation-sys = "=0.8.3" # transitive dependency of 'iana_time_zone', included to patch cfg('unix') issue (#385)
 cxx = "=1.0.59"
 derivative = "=2.2.0"
 enum_dispatch = "=0.3.8"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
-libc = "=0.2.132" # transitive dependency of 'cxx', included to patch cfg('unix') issue (#385)
 log = "=0.4.8"
 prost = "=0.11.0"
 rocksdb = "=0.17.0"
@@ -38,6 +36,7 @@ package_aliases_dir = "."
 
 # The set of targets to generate BUILD rules for.
 targets = [
+    "aarch64-apple-darwin",
     "x86_64-apple-darwin",
     "x86_64-pc-windows-msvc",
     "x86_64-unknown-linux-gnu",

@@ -58,15 +58,14 @@ rust_library(
     # buildifier: leave-alone
     deps = [
     ] + selects.with_or({
-        # cfg(any(target_os = "macos", target_os = "ios"))
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
+            "@rules_rust//rust/platform:aarch64-apple-darwin",
         ): [
             "@raze__core_foundation_sys__0_8_3//:core_foundation_sys",
         ],
         "//conditions:default": [],
     }) + selects.with_or({
-        # cfg(target_os = "windows")
         (
             "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
         ): [
