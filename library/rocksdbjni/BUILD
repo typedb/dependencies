@@ -46,7 +46,7 @@ genrule(
     srcs = ["VERSION"],
     cmd = "$(execpath :builder-mac) && read -a outs <<< '$(OUTS)' && mv rocksdbjni-osx.jar $${outs[0]} && mv rocksdbjni-sources.jar $${outs[1]}",
     tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":builder-mac"],
-    tags = ["manual"]
+    tags = ["manual", "no-ide"],
 )
 
 java_import(
@@ -65,6 +65,7 @@ assemble_maven(
     target = ":rocksdbjni-dev-mac",
     version_file = "VERSION",
     workspace_refs = "@vaticle_dependencies_workspace_refs//:refs.json",
+    tags = ["manual", "no-ide"],
 )
 
 deploy_maven(
@@ -72,7 +73,7 @@ deploy_maven(
     target = ":assemble-maven-mac",
     snapshot = deployment["maven.snapshot"],
     release = deployment["maven.release"],
-    tags = ["manual"]
+    tags = ["manual", "no-ide"],
 )
 
 kt_jvm_binary(
@@ -94,7 +95,7 @@ genrule(
     srcs = ["VERSION"],
     cmd = "$(execpath :builder-linux) && read -a outs <<< '$(OUTS)' && mv rocksdbjni-linux.jar $${outs[0]}",
     tools = ["@bazel_tools//tools/jdk:current_host_java_runtime", ":builder-linux"],
-    tags = ["manual"]
+    tags = ["manual", "no-ide"],
 )
 
 java_import(
@@ -110,7 +111,7 @@ assemble_maven(
     name = "assemble-maven-linux",
     target = ":rocksdbjni-dev-linux",
     version_file = "VERSION",
-    tags = ["manual"],
+    tags = ["manual", "no-ide"],
     project_description = "RocksDB JNI Mac Dev release by Vaticle",
     project_name = "RocksDB JNI Mac Dev",
     project_url = "https://github.com/vaticle/dependencies",
@@ -123,5 +124,5 @@ deploy_maven(
     target = ":assemble-maven-linux",
     snapshot = deployment["maven.snapshot"],
     release = deployment["maven.release"],
-    tags = ["manual"]
+    tags = ["manual", "no-ide"],
 )
