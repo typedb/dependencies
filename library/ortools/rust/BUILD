@@ -26,7 +26,7 @@ rust_library(
     srcs = ["ortools.rs"],
     deps = [
         "@vaticle_dependencies//library/crates:cxx",
-        "@vaticle_dependencies//library/crates:libc",
+        "@vaticle_dependencies//library/crates:libc", # transitive dependency of 'cxx', included to patch cfg('unix') issue (#385)
         ":ortools_bridge",
     ]
 )
