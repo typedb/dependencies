@@ -65,7 +65,6 @@ rust_library(
     # buildifier: leave-alone
     deps = [
     ] + selects.with_or({
-        # x86_64-pc-windows-msvc
         (
             "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
         ): [

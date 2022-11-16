@@ -64,16 +64,15 @@ rust_library(
     deps = [
         "@raze__log__0_4_8//:log",
     ] + selects.with_or({
-        # cfg(unix)
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+            "@rules_rust//rust/platform:aarch64-apple-darwin",
         ): [
             "@raze__libc__0_2_132//:libc",
         ],
         "//conditions:default": [],
     }) + selects.with_or({
-        # cfg(windows)
         (
             "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
         ): [
