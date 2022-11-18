@@ -36,6 +36,7 @@ if __name__ == '__main__':
     workspace_files, _ = tc.shell_execute([
         'find', '.',
             '(', '-name', '.git',
+            '-o', '-name', '.DS_Store',
             '-o', '-name', '.idea',
             '-o', '-name', '.ijwb',
             '-o', '-name', '.github',
@@ -44,6 +45,7 @@ if __name__ == '__main__':
             '-o', '-name', 'VERSION',
             '-o', '-name', '*.md',
             '-o', '-name', 'node_modules',
+            '-o', '-name', 'target',
         ')', '-prune', '-o', '-type', 'f', '-print'
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
     workspace_files = workspace_files.split()
