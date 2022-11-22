@@ -22,4 +22,4 @@ build:
     build:
       image: vaticle-ubuntu-22.04
       command: |
-        bazel build //... --deleted_packages=library/rocksdbjni
+        bazel build //...
