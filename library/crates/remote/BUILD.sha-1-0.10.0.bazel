@@ -66,12 +66,13 @@ rust_library(
     # buildifier: leave-alone
     deps = [
         "@raze__cfg_if__1_0_0//:cfg_if",
-        "@raze__digest__0_10_5//:digest",
+        "@raze__digest__0_10_6//:digest",
     ] + selects.with_or({
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+            "@rules_rust//rust/platform:aarch64-apple-darwin",
         ): [
             "@raze__cpufeatures__0_2_5//:cpufeatures",
         ],

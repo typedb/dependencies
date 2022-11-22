@@ -56,7 +56,7 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "0.9.11",
+    version = "0.9.13",
     visibility = ["//visibility:private"],
     deps = [
         "@raze__autocfg__1_1_0//:autocfg",
@@ -89,13 +89,13 @@ rust_library(
         "crate-name=crossbeam-epoch",
         "manual",
     ],
-    version = "0.9.11",
+    version = "0.9.13",
     # buildifier: leave-alone
     deps = [
         ":crossbeam_epoch_build_script",
         "@raze__cfg_if__1_0_0//:cfg_if",
-        "@raze__crossbeam_utils__0_8_12//:crossbeam_utils",
-        "@raze__memoffset__0_6_5//:memoffset",
+        "@raze__crossbeam_utils__0_8_14//:crossbeam_utils",
+        "@raze__memoffset__0_7_1//:memoffset",
         "@raze__scopeguard__1_1_0//:scopeguard",
     ],
 )

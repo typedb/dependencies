@@ -54,6 +54,6 @@ rust_library(
         "@raze__base64__0_13_0//:base64",
         "@raze__openssl__0_10_42//:openssl",
         "@raze__serde__1_0_145//:serde",
-        "@raze__serde_json__1_0_87//:serde_json",
+        "@raze__serde_json__1_0_89//:serde_json",
     ],
 )

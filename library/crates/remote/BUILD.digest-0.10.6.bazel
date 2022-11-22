@@ -52,7 +52,7 @@ rust_library(
         "crate-name=digest",
         "manual",
     ],
-    version = "0.10.5",
+    version = "0.10.6",
     # buildifier: leave-alone
     deps = [
         "@raze__block_buffer__0_10_3//:block_buffer",

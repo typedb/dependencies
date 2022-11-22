@@ -59,6 +59,7 @@ cargo_build_script(
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+            "@rules_rust//rust/platform:aarch64-apple-darwin",
         ): [
         ],
         "//conditions:default": [],
@@ -102,6 +103,7 @@ rust_binary(
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+            "@rules_rust//rust/platform:aarch64-apple-darwin",
         ): [
             "@raze__unix_socket__0_5_0//:unix_socket",
         ],
@@ -147,6 +149,7 @@ rust_library(
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+            "@rules_rust//rust/platform:aarch64-apple-darwin",
         ): [
             "@raze__unix_socket__0_5_0//:unix_socket",
         ],

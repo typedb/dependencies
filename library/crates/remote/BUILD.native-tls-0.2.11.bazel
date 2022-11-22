@@ -58,6 +58,7 @@ cargo_build_script(
     ] + selects.with_or({
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
+            "@rules_rust//rust/platform:aarch64-apple-darwin",
         ): [
             "@raze__security_framework_sys__2_6_1//:security_framework_sys",
         ],
@@ -107,6 +108,7 @@ rust_library(
     ] + selects.with_or({
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",
+            "@rules_rust//rust/platform:aarch64-apple-darwin",
         ): [
             "@raze__lazy_static__1_4_0//:lazy_static",
             "@raze__libc__0_2_132//:libc",

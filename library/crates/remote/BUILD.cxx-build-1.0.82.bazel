@@ -45,7 +45,7 @@ rust_library(
         "crate-name=cxx-build",
         "manual",
     ],
-    version = "1.0.81",
+    version = "1.0.82",
     # buildifier: leave-alone
     deps = [
         "@raze__cc__1_0_73//:cc",

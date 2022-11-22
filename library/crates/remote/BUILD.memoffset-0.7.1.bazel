@@ -26,7 +26,7 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
@@ -38,16 +38,16 @@ load(
 )
 
 cargo_build_script(
-    name = "crossbeam_utils_build_script",
+    name = "memoffset_build_script",
     srcs = glob(["**/*.rs"]),
     build_script_env = {
     },
     crate_features = [
-        "std",
+        "default",
     ],
     crate_root = "build.rs",
     data = glob(["**"]),
-    edition = "2018",
+    edition = "2015",
     rustc_flags = [
         "--cap-lints=allow",
     ],
@@ -55,47 +55,33 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "0.8.12",
+    version = "0.7.1",
     visibility = ["//visibility:private"],
     deps = [
+        "@raze__autocfg__1_1_0//:autocfg",
     ],
 )
 
-# Unsupported target "atomic_cell" with type "bench" omitted
-
 rust_library(
-    name = "crossbeam_utils",
+    name = "memoffset",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "std",
+        "default",
     ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2018",
+    edition = "2015",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=crossbeam-utils",
+        "crate-name=memoffset",
         "manual",
     ],
-    version = "0.8.12",
+    version = "0.7.1",
     # buildifier: leave-alone
     deps = [
-        ":crossbeam_utils_build_script",
-        "@raze__cfg_if__1_0_0//:cfg_if",
+        ":memoffset_build_script",
     ],
 )
-
-# Unsupported target "atomic_cell" with type "test" omitted
-
-# Unsupported target "cache_padded" with type "test" omitted
-
-# Unsupported target "parker" with type "test" omitted
-
-# Unsupported target "sharded_lock" with type "test" omitted
-
-# Unsupported target "thread" with type "test" omitted
-
-# Unsupported target "wait_group" with type "test" omitted

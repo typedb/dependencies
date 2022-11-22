@@ -54,8 +54,8 @@ rust_library(
     # buildifier: leave-alone
     deps = [
         "@raze__cfg_if__1_0_0//:cfg_if",
-        "@raze__crossbeam_epoch__0_9_11//:crossbeam_epoch",
-        "@raze__crossbeam_utils__0_8_12//:crossbeam_utils",
+        "@raze__crossbeam_epoch__0_9_13//:crossbeam_epoch",
+        "@raze__crossbeam_utils__0_8_14//:crossbeam_utils",
     ],
 )
 
