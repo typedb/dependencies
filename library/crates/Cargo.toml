@@ -14,9 +14,6 @@ crossbeam = "=0.8.2"
 derivative = "=2.2.0"
 enum_dispatch = "=0.3.8"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
-grpc = "=0.8.3"
-grpc-compiler = "=0.8.3"
-grpc-protobuf = "=0.8.3"
 log = "=0.4.8"
 protobuf = { version = "=2.18.2", features = ["with-bytes"] }
 protobuf-codegen = "=2.18.2"
