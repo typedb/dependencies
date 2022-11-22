@@ -26,19 +26,15 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "restricted",  # BSD-2-Clause from expression "BSD-2-Clause"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "rand_core",
+    name = "cloudabi",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-        "alloc",
-        "std",
-    ],
-    crate_root = "src/lib.rs",
+    crate_root = "cloudabi.rs",
     data = [],
     edition = "2015",
     rustc_flags = [
@@ -46,12 +42,12 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=rand_core",
+        "crate-name=cloudabi",
         "manual",
     ],
-    version = "0.3.1",
+    version = "0.0.3",
     # buildifier: leave-alone
     deps = [
-        "@raze__rand_core__0_4_2//:rand_core",
+        "@raze__bitflags__1_3_2//:bitflags",
     ],
 )

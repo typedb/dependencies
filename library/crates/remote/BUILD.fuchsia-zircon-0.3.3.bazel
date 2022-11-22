@@ -26,47 +26,14 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # BSD-3-Clause from expression "BSD-3-Clause"
 ])
 
 # Generated Targets
-# buildifier: disable=out-of-order-load
-# buildifier: disable=load-on-top
-load(
-    "@rules_rust//cargo:cargo_build_script.bzl",
-    "cargo_build_script",
-)
-
-cargo_build_script(
-    name = "log_build_script",
-    srcs = glob(["**/*.rs"]),
-    build_script_env = {
-    },
-    crate_features = [
-        "std",
-    ],
-    crate_root = "build.rs",
-    data = glob(["**"]),
-    edition = "2015",
-    rustc_flags = [
-        "--cap-lints=allow",
-    ],
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-    version = "0.4.8",
-    visibility = ["//visibility:private"],
-    deps = [
-    ],
-)
 
 rust_library(
-    name = "log",
+    name = "fuchsia_zircon",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-        "std",
-    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2015",
@@ -75,15 +42,13 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=log",
+        "crate-name=fuchsia-zircon",
         "manual",
     ],
-    version = "0.4.8",
+    version = "0.3.3",
     # buildifier: leave-alone
     deps = [
-        ":log_build_script",
-        "@raze__cfg_if__0_1_10//:cfg_if",
+        "@raze__bitflags__1_3_2//:bitflags",
+        "@raze__fuchsia_zircon_sys__0_3_3//:fuchsia_zircon_sys",
     ],
 )
-
-# Unsupported target "filters" with type "test" omitted

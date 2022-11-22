@@ -112,6 +112,33 @@ alias(
 )
 
 alias(
+    name = "grpc",
+    actual = "@raze__grpc__0_8_3//:grpc",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "grpc_compiler",
+    actual = "@raze__grpc_compiler__0_8_3//:grpc_compiler",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "grpc_protobuf",
+    actual = "@raze__grpc_protobuf__0_8_3//:grpc_protobuf",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "log",
     actual = "@raze__log__0_4_8//:log",
     tags = [
