@@ -85,15 +85,6 @@ alias(
 )
 
 alias(
-    name = "dotenv",
-    actual = "@raze__dotenv__0_15_0//:dotenv",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
     name = "enum_dispatch",
     actual = "@raze__enum_dispatch__0_3_8//:enum_dispatch",
     tags = [

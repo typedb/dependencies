@@ -450,15 +450,6 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__dotenv__0_15_0",
-        url = "https://crates.io/api/v1/crates/dotenv/0.15.0/download",
-        type = "tar.gz",
-        strip_prefix = "dotenv-0.15.0",
-        build_file = Label("//library/crates/remote:BUILD.dotenv-0.15.0.bazel"),
-    )
-
-    maybe(
-        http_archive,
         name = "raze__either__1_8_0",
         url = "https://crates.io/api/v1/crates/either/1.8.0/download",
         type = "tar.gz",
