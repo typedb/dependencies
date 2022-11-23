@@ -20,6 +20,7 @@ prost-build = "=0.11.1"
 rocksdb = "=0.17.0"
 reqwest = { version = "=0.11.12", features = ["json"] }
 serde = "=1.0.145"
+sha2 = "=0.10.6"
 tokio = { version = "=1.20.1", features = ["rt", "rt-multi-thread"] }
 tonic = "=0.8.0"
 tonic-build = "=0.8.0"

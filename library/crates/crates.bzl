@@ -1479,6 +1479,15 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
+        name = "raze__sha2__0_10_6",
+        url = "https://crates.io/api/v1/crates/sha2/0.10.6/download",
+        type = "tar.gz",
+        strip_prefix = "sha2-0.10.6",
+        build_file = Label("//library/crates/remote:BUILD.sha2-0.10.6.bazel"),
+    )
+
+    maybe(
+        http_archive,
         name = "raze__shlex__1_1_0",
         url = "https://crates.io/api/v1/crates/shlex/1.1.0/download",
         type = "tar.gz",
