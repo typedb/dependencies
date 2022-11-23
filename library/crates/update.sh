@@ -27,4 +27,6 @@ pushd "$CARGO_RAZE_HOME" > /dev/null
 
 cargo raze
 
+cp overrides/* remote/.
+
 popd > /dev/null

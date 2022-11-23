@@ -1,0 +1,91 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//library/crates", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT OR Apache-2.0"
+])
+
+# Generated Targets
+
+rust_library(
+    name = "cucumber",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+        "macros",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    compile_data = glob(["**/*.md"]),
+    edition = "2021",
+    proc_macro_deps = [
+        "@raze__async_trait__0_1_57//:async_trait",
+        "@raze__cucumber_codegen__0_15_3//:cucumber_codegen",
+        "@raze__derive_more__0_99_17//:derive_more",
+        "@raze__sealed__0_4_0//:sealed",
+    ],
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=cucumber",
+        "manual",
+    ],
+    version = "0.15.2",
+    # buildifier: leave-alone
+    deps = [
+        "@raze__anyhow__1_0_62//:anyhow",
+        "@raze__atty__0_2_14//:atty",
+        "@raze__clap__4_0_26//:clap",
+        "@raze__console__0_15_2//:console",
+        "@raze__cucumber_expressions__0_2_1//:cucumber_expressions",
+        "@raze__drain_filter_polyfill__0_1_2//:drain_filter_polyfill",
+        "@raze__either__1_8_0//:either",
+        "@raze__futures__0_3_21//:futures",
+        "@raze__gherkin__0_13_0//:gherkin",
+        "@raze__globwalk__0_8_1//:globwalk",
+        "@raze__humantime__2_1_0//:humantime",
+        "@raze__inventory__0_3_2//:inventory",
+        "@raze__itertools__0_10_3//:itertools",
+        "@raze__linked_hash_map__0_5_6//:linked_hash_map",
+        "@raze__once_cell__1_13_1//:once_cell",
+        "@raze__regex__1_6_0//:regex",
+    ],
+)
+
+# Unsupported target "after_hook" with type "test" omitted
+
+# Unsupported target "json" with type "test" omitted
+
+# Unsupported target "junit" with type "test" omitted
+
+# Unsupported target "libtest" with type "test" omitted
+
+# Unsupported target "retry" with type "test" omitted
+
+# Unsupported target "wait" with type "test" omitted
