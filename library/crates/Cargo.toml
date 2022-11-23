@@ -10,7 +10,6 @@ alcoholic_jwt = "=4091.0.0"
 antlr-rust = "=0.3.0-beta"
 axum = { version = "=0.5.15", features = ["ws"] }
 bytes = "=1.2.1"
-cxx = "=1.0.59"
 chrono = "=0.4.22"
 crossbeam = "=0.8.2"
 derivative = "=2.2.0"

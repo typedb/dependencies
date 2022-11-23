@@ -67,15 +67,6 @@ alias(
 )
 
 alias(
-    name = "cxx",
-    actual = "@raze__cxx__1_0_59//:cxx",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
     name = "derivative",
     actual = "@raze__derivative__2_2_0//:derivative",
     tags = [
