@@ -103,33 +103,6 @@ alias(
 )
 
 alias(
-    name = "grpc",
-    actual = "@raze__grpc__0_8_3//:grpc",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
-    name = "grpc_compiler",
-    actual = "@raze__grpc_compiler__0_8_3//:grpc_compiler",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
-    name = "grpc_protobuf",
-    actual = "@raze__grpc_protobuf__0_8_3//:grpc_protobuf",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
     name = "log",
     actual = "@raze__log__0_4_8//:log",
     tags = [
@@ -150,33 +123,6 @@ alias(
 alias(
     name = "prost_build",
     actual = "@raze__prost_build__0_11_1//:prost_build",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
-    name = "protobuf",
-    actual = "@raze__protobuf__2_18_2//:protobuf",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
-    name = "protobuf_codegen",
-    actual = "@raze__protobuf_codegen__2_18_2//:protobuf_codegen",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
-    name = "protoc_rust_grpc",
-    actual = "@raze__protoc_rust_grpc__0_8_3//:protoc_rust_grpc",
     tags = [
         "cargo-raze",
         "manual",
