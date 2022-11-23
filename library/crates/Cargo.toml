@@ -6,8 +6,10 @@ version = "0.0.0"
 path = "" # ignored by cargo raze
 
 [dependencies]
+alcoholic_jwt = "=4091.0.0"
 antlr-rust = "=0.3.0-beta"
 axum = { version = "=0.5.15", features = ["ws"] }
+bytes = "=1.2.1"
 cxx = "=1.0.59"
 chrono = "=0.4.22"
 crossbeam = "=0.8.2"
@@ -15,18 +17,16 @@ derivative = "=2.2.0"
 enum_dispatch = "=0.3.8"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
 log = "=0.4.8"
-rocksdb = "=0.17.0"
-tokio = { version = "=1.20.1", features = ["rt", "rt-multi-thread"] }
-uuid = { version = "=1.1.2", features = ["fast-rng", "v4"] }
-tonic = "=0.8.0"
-tonic-build = "=0.8.0"
 prost = "=0.11.0"
 prost-build = "=0.11.1"
-alcoholic_jwt = "=4091.0.0"
-serde = "=1.0.145"
+rocksdb = "=0.17.0"
 reqwest = { version = "=0.11.12", features = ["json"] }
-bytes = "=1.2.1"
+serde = "=1.0.145"
 sha2 = "=0.10.6"
+tokio = { version = "=1.20.1", features = ["rt", "rt-multi-thread"] }
+tonic = "=0.8.0"
+tonic-build = "=0.8.0"
+uuid = { version = "=1.1.2", features = ["fast-rng", "v4"] }
 
 [package.metadata.raze]
 # The path at which to write output files.
