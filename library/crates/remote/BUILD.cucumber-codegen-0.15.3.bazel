@@ -36,6 +36,7 @@ rust_proc_macro(
     srcs = glob(["**/*.rs"]),
     crate_root = "src/lib.rs",
     data = [],
+    compile_data = glob(["**/*.md"]),
     edition = "2021",
     rustc_flags = [
         "--cap-lints=allow",

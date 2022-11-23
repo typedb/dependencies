@@ -49,6 +49,7 @@ rust_binary(
     ],
     crate_root = "src/bin/stdio-fixture.rs",
     data = [],
+    compile_data = glob(["**/*.md"]),
     edition = "2021",
     proc_macro_deps = [
         "@raze__clap_derive__4_0_21//:clap_derive",
@@ -201,6 +202,7 @@ rust_library(
     ],
     crate_root = "src/lib.rs",
     data = [],
+    compile_data = glob(["**/*.md"]),
     edition = "2021",
     proc_macro_deps = [
         "@raze__clap_derive__4_0_21//:clap_derive",

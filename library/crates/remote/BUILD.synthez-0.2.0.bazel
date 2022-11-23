@@ -36,6 +36,7 @@ rust_library(
     srcs = glob(["**/*.rs"]),
     crate_root = "src/lib.rs",
     data = [],
+    compile_data = glob(["**/*.md"]),
     edition = "2021",
     proc_macro_deps = [
         "@raze__synthez_codegen__0_2_0//:synthez_codegen",

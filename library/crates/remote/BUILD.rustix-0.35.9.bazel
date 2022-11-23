@@ -124,8 +124,17 @@ rust_library(
     ] + selects.with_or({
         (
             "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+            "@rules_rust//rust/platform:x86_64-apple-darwin",
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+            "@rules_rust//rust/platform:aarch64-apple-darwin",
         ): [
             "@raze__libc__0_2_132//:libc",
+        ],
+        "//conditions:default": [],
+    }) + selects.with_or({
+        (
+            "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+        ): [
             "@raze__linux_raw_sys__0_0_46//:linux_raw_sys",
         ],
         "//conditions:default": [],
@@ -136,7 +145,6 @@ rust_library(
             "@rules_rust//rust/platform:aarch64-apple-darwin",
         ): [
             "@raze__errno__0_2_8//:errno",
-            "@raze__libc__0_2_132//:libc",
         ],
         "//conditions:default": [],
     }) + selects.with_or({
