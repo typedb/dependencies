@@ -365,12 +365,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__cxx__1_0_73",
-        url = "https://crates.io/api/v1/crates/cxx/1.0.73/download",
+        name = "raze__cxx__1_0_59",
+        url = "https://crates.io/api/v1/crates/cxx/1.0.59/download",
         type = "tar.gz",
-        sha256 = "873c2e83af70859af2aaecd1f5d862f3790b747b1f4f50fb45a931d000ac0422",
-        strip_prefix = "cxx-1.0.73",
-        build_file = Label("//library/crates/remote:BUILD.cxx-1.0.73.bazel"),
+        strip_prefix = "cxx-1.0.59",
+        build_file = Label("//library/crates/remote:BUILD.cxx-1.0.59.bazel"),
     )
 
     maybe(
@@ -384,22 +383,20 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__cxxbridge_flags__1_0_73",
-        url = "https://crates.io/api/v1/crates/cxxbridge-flags/1.0.73/download",
+        name = "raze__cxxbridge_flags__1_0_59",
+        url = "https://crates.io/api/v1/crates/cxxbridge-flags/1.0.59/download",
         type = "tar.gz",
-        sha256 = "f46b787c15af80277db5c88c6ac6c502ae545e622f010e06f95e540d34931acf",
-        strip_prefix = "cxxbridge-flags-1.0.73",
-        build_file = Label("//library/crates/remote:BUILD.cxxbridge-flags-1.0.73.bazel"),
+        strip_prefix = "cxxbridge-flags-1.0.59",
+        build_file = Label("//library/crates/remote:BUILD.cxxbridge-flags-1.0.59.bazel"),
     )
 
     maybe(
         http_archive,
-        name = "raze__cxxbridge_macro__1_0_73",
-        url = "https://crates.io/api/v1/crates/cxxbridge-macro/1.0.73/download",
+        name = "raze__cxxbridge_macro__1_0_59",
+        url = "https://crates.io/api/v1/crates/cxxbridge-macro/1.0.59/download",
         type = "tar.gz",
-        sha256 = "2ba3f3a7efa46626878fb5d324fabca4d19d2956b6ae97ce43044ef4515f5abc",
-        strip_prefix = "cxxbridge-macro-1.0.73",
-        build_file = Label("//library/crates/remote:BUILD.cxxbridge-macro-1.0.73.bazel"),
+        strip_prefix = "cxxbridge-macro-1.0.59",
+        build_file = Label("//library/crates/remote:BUILD.cxxbridge-macro-1.0.59.bazel"),
     )
 
     maybe(

@@ -77,6 +77,6 @@ rust_library(
     # buildifier: leave-alone
     deps = [
         ":iana_time_zone_haiku_build_script",
-        "@raze__cxx__1_0_73//:cxx",
+        "@raze__cxx__1_0_59//:cxx",
     ],
 )

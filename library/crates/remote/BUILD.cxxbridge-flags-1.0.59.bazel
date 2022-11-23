@@ -34,6 +34,9 @@ licenses([
 rust_library(
     name = "cxxbridge_flags",
     srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -45,7 +48,7 @@ rust_library(
         "crate-name=cxxbridge-flags",
         "manual",
     ],
-    version = "1.0.73",
+    version = "1.0.59",
     # buildifier: leave-alone
     deps = [
     ],

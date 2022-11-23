@@ -11,6 +11,7 @@ antlr-rust = "=0.3.0-beta"
 axum = { version = "=0.5.15", features = ["ws"] }
 chrono = "=0.4.22"
 crossbeam = "=0.8.2"
+cxx = "=1.0.59"
 derivative = "=2.2.0"
 enum_dispatch = "=0.3.8"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }

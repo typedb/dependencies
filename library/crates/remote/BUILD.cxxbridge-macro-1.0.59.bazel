@@ -45,7 +45,7 @@ rust_proc_macro(
         "crate-name=cxxbridge-macro",
         "manual",
     ],
-    version = "1.0.73",
+    version = "1.0.59",
     # buildifier: leave-alone
     deps = [
         "@raze__proc_macro2__1_0_43//:proc_macro2",
