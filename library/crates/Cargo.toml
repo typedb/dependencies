@@ -9,7 +9,6 @@ path = "" # ignored by cargo raze
 alcoholic_jwt = "=4091.0.0"
 antlr-rust = "=0.3.0-beta"
 axum = { version = "=0.5.15", features = ["ws"] }
-bytes = "=1.2.1"
 chrono = "=0.4.22"
 crossbeam = "=0.8.2"
 derivative = "=2.2.0"
@@ -21,7 +20,6 @@ prost-build = "=0.11.1"
 rocksdb = "=0.17.0"
 reqwest = { version = "=0.11.12", features = ["json"] }
 serde = "=1.0.145"
-sha2 = "=0.10.6"
 tokio = { version = "=1.20.1", features = ["rt", "rt-multi-thread"] }
 tonic = "=0.8.0"
 tonic-build = "=0.8.0"
