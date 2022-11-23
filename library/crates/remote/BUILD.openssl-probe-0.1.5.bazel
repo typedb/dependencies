@@ -31,30 +31,24 @@ licenses([
 
 # Generated Targets
 
+# Unsupported target "probe" with type "example" omitted
+
 rust_library(
-    name = "serde_urlencoded",
+    name = "openssl_probe",
     srcs = glob(["**/*.rs"]),
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2018",
+    edition = "2015",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=serde_urlencoded",
+        "crate-name=openssl-probe",
         "manual",
     ],
-    version = "0.7.1",
+    version = "0.1.5",
     # buildifier: leave-alone
     deps = [
-        "@raze__form_urlencoded__1_0_1//:form_urlencoded",
-        "@raze__itoa__1_0_3//:itoa",
-        "@raze__ryu__1_0_11//:ryu",
-        "@raze__serde__1_0_145//:serde",
     ],
 )
-
-# Unsupported target "test_deserialize" with type "test" omitted
-
-# Unsupported target "test_serialize" with type "test" omitted

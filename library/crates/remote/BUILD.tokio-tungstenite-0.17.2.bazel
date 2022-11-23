@@ -26,14 +26,31 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
+# Unsupported target "autobahn-client" with type "example" omitted
+
+# Unsupported target "autobahn-server" with type "example" omitted
+
+# Unsupported target "client" with type "example" omitted
+
+# Unsupported target "echo-server" with type "example" omitted
+
+# Unsupported target "interval-server" with type "example" omitted
+
+# Unsupported target "server" with type "example" omitted
+
 rust_library(
-    name = "serde_urlencoded",
+    name = "tokio_tungstenite",
     srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "connect",
+        "default",
+        "stream",
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -42,19 +59,15 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=serde_urlencoded",
+        "crate-name=tokio-tungstenite",
         "manual",
     ],
-    version = "0.7.1",
+    version = "0.17.2",
     # buildifier: leave-alone
     deps = [
-        "@raze__form_urlencoded__1_0_1//:form_urlencoded",
-        "@raze__itoa__1_0_3//:itoa",
-        "@raze__ryu__1_0_11//:ryu",
-        "@raze__serde__1_0_145//:serde",
+        "@raze__futures_util__0_3_24//:futures_util",
+        "@raze__log__0_4_8//:log",
+        "@raze__tokio__1_20_1//:tokio",
+        "@raze__tungstenite__0_17_3//:tungstenite",
     ],
 )
-
-# Unsupported target "test_deserialize" with type "test" omitted
-
-# Unsupported target "test_serialize" with type "test" omitted

@@ -26,7 +26,7 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # Apache-2.0 from expression "Apache-2.0"
 ])
 
 # Generated Targets
@@ -38,14 +38,12 @@ load(
 )
 
 cargo_build_script(
-    name = "gherkin_build_script",
+    name = "openssl_build_script",
     srcs = glob(["**/*.rs"]),
     build_script_env = {
     },
     crate_features = [
         "default",
-        "parser",
-        "typed-builder",
     ],
     crate_root = "build.rs",
     data = glob(["**"]),
@@ -57,47 +55,47 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "0.13.0",
+    version = "0.10.42",
     visibility = ["//visibility:private"],
     deps = [
-        "@raze__heck__0_4_0//:heck",
-        "@raze__quote__1_0_21//:quote",
-        "@raze__serde__1_0_145//:serde",
-        "@raze__serde_json__1_0_89//:serde_json",
-        "@raze__syn__1_0_99//:syn",
+        "@raze__openssl_sys__0_9_77//:openssl_sys",
     ],
 )
 
+# Unsupported target "mk_certs" with type "example" omitted
+
 rust_library(
-    name = "gherkin",
+    name = "openssl",
     srcs = glob(["**/*.rs"]),
+    aliases = {
+        "@raze__openssl_sys__0_9_77//:openssl_sys": "ffi",
+    },
     crate_features = [
         "default",
-        "parser",
-        "typed-builder",
     ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
     proc_macro_deps = [
-        "@raze__typed_builder__0_10_0//:typed_builder",
+        "@raze__openssl_macros__0_1_0//:openssl_macros",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=gherkin",
+        "crate-name=openssl",
         "manual",
     ],
-    version = "0.13.0",
+    version = "0.10.42",
     # buildifier: leave-alone
     deps = [
-        ":gherkin_build_script",
-        "@raze__peg__0_6_3//:peg",
-        "@raze__textwrap__0_16_0//:textwrap",
-        "@raze__thiserror__1_0_37//:thiserror",
+        ":openssl_build_script",
+        "@raze__bitflags__1_3_2//:bitflags",
+        "@raze__cfg_if__1_0_0//:cfg_if",
+        "@raze__foreign_types__0_3_2//:foreign_types",
+        "@raze__libc__0_2_132//:libc",
+        "@raze__once_cell__1_13_1//:once_cell",
+        "@raze__openssl_sys__0_9_77//:openssl_sys",
     ],
 )
-
-# Unsupported target "cucumber" with type "test" omitted

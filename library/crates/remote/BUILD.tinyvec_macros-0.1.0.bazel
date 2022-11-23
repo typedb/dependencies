@@ -26,13 +26,13 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT OR (Apache-2.0 OR Zlib)"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "serde_urlencoded",
+    name = "tinyvec_macros",
     srcs = glob(["**/*.rs"]),
     crate_root = "src/lib.rs",
     data = [],
@@ -42,19 +42,11 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=serde_urlencoded",
+        "crate-name=tinyvec_macros",
         "manual",
     ],
-    version = "0.7.1",
+    version = "0.1.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__form_urlencoded__1_0_1//:form_urlencoded",
-        "@raze__itoa__1_0_3//:itoa",
-        "@raze__ryu__1_0_11//:ryu",
-        "@raze__serde__1_0_145//:serde",
     ],
 )
-
-# Unsupported target "test_deserialize" with type "test" omitted
-
-# Unsupported target "test_serialize" with type "test" omitted

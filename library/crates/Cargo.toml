@@ -6,8 +6,9 @@ version = "0.0.0"
 path = "" # ignored by cargo raze
 
 [dependencies]
+alcoholic_jwt = "=4091.0.0"
 antlr-rust = "=0.3.0-beta"
-axum = "=0.5.15"
+axum = { version = "=0.5.15", features = ["ws"] }
 chrono = "=0.4.22"
 clap = "=4.0.26"
 clap_derive = "=4.0.21"
@@ -21,9 +22,13 @@ enum_dispatch = "=0.3.8"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
 log = "=0.4.8"
 prost = "=0.11.0"
+prost-build = "=0.11.1"
+reqwest = { version = "=0.11.12", features = ["json"] }
 regex = "=1.6.0"
 rocksdb = "=0.17.0"
 rustix = "=0.35.9"
+serde = "=1.0.145"
+sha2 = "=0.10.6"
 synthez = "=0.2.0"
 synthez-codegen = "=0.2.0"
 synthez-core = "=0.2.0"

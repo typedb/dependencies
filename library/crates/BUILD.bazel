@@ -13,6 +13,15 @@ licenses([
 
 # Aliased targets
 alias(
+    name = "alcoholic_jwt",
+    actual = "@raze__alcoholic_jwt__4091_0_0//:alcoholic_jwt",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "antlr_rust",
     actual = "@raze__antlr_rust__0_3_0_beta//:antlr_rust",
     tags = [
@@ -148,8 +157,26 @@ alias(
 )
 
 alias(
+    name = "prost_build",
+    actual = "@raze__prost_build__0_11_1//:prost_build",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "regex",
     actual = "@raze__regex__1_6_0//:regex",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "reqwest",
+    actual = "@raze__reqwest__0_11_12//:reqwest",
     tags = [
         "cargo-raze",
         "manual",
@@ -168,6 +195,24 @@ alias(
 alias(
     name = "rustix",
     actual = "@raze__rustix__0_35_9//:rustix",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "serde",
+    actual = "@raze__serde__1_0_145//:serde",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "sha2",
+    actual = "@raze__sha2__0_10_6//:sha2",
     tags = [
         "cargo-raze",
         "manual",

@@ -32,8 +32,11 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "serde_urlencoded",
+    name = "ipnet",
     srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -42,19 +45,11 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=serde_urlencoded",
+        "crate-name=ipnet",
         "manual",
     ],
-    version = "0.7.1",
+    version = "2.5.1",
     # buildifier: leave-alone
     deps = [
-        "@raze__form_urlencoded__1_0_1//:form_urlencoded",
-        "@raze__itoa__1_0_3//:itoa",
-        "@raze__ryu__1_0_11//:ryu",
-        "@raze__serde__1_0_145//:serde",
     ],
 )
-
-# Unsupported target "test_deserialize" with type "test" omitted
-
-# Unsupported target "test_serialize" with type "test" omitted

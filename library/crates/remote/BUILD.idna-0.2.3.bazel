@@ -31,8 +31,10 @@ licenses([
 
 # Generated Targets
 
+# Unsupported target "all" with type "bench" omitted
+
 rust_library(
-    name = "serde_urlencoded",
+    name = "idna",
     srcs = glob(["**/*.rs"]),
     crate_root = "src/lib.rs",
     data = [],
@@ -42,19 +44,18 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=serde_urlencoded",
+        "crate-name=idna",
         "manual",
     ],
-    version = "0.7.1",
+    version = "0.2.3",
     # buildifier: leave-alone
     deps = [
-        "@raze__form_urlencoded__1_0_1//:form_urlencoded",
-        "@raze__itoa__1_0_3//:itoa",
-        "@raze__ryu__1_0_11//:ryu",
-        "@raze__serde__1_0_145//:serde",
+        "@raze__matches__0_1_9//:matches",
+        "@raze__unicode_bidi__0_3_8//:unicode_bidi",
+        "@raze__unicode_normalization__0_1_22//:unicode_normalization",
     ],
 )
 
-# Unsupported target "test_deserialize" with type "test" omitted
+# Unsupported target "tests" with type "test" omitted
 
-# Unsupported target "test_serialize" with type "test" omitted
+# Unsupported target "unit" with type "test" omitted

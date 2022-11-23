@@ -26,13 +26,13 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "serde_urlencoded",
+    name = "schannel",
     srcs = glob(["**/*.rs"]),
     crate_root = "src/lib.rs",
     data = [],
@@ -42,19 +42,13 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=serde_urlencoded",
+        "crate-name=schannel",
         "manual",
     ],
-    version = "0.7.1",
+    version = "0.1.20",
     # buildifier: leave-alone
     deps = [
-        "@raze__form_urlencoded__1_0_1//:form_urlencoded",
-        "@raze__itoa__1_0_3//:itoa",
-        "@raze__ryu__1_0_11//:ryu",
-        "@raze__serde__1_0_145//:serde",
+        "@raze__lazy_static__1_4_0//:lazy_static",
+        "@raze__windows_sys__0_36_1//:windows_sys",
     ],
 )
-
-# Unsupported target "test_deserialize" with type "test" omitted
-
-# Unsupported target "test_serialize" with type "test" omitted

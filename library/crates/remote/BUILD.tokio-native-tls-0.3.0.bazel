@@ -26,13 +26,17 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
+# Unsupported target "download-rust-lang" with type "example" omitted
+
+# Unsupported target "echo" with type "example" omitted
+
 rust_library(
-    name = "serde_urlencoded",
+    name = "tokio_native_tls",
     srcs = glob(["**/*.rs"]),
     crate_root = "src/lib.rs",
     data = [],
@@ -42,19 +46,19 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=serde_urlencoded",
+        "crate-name=tokio-native-tls",
         "manual",
     ],
-    version = "0.7.1",
+    version = "0.3.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__form_urlencoded__1_0_1//:form_urlencoded",
-        "@raze__itoa__1_0_3//:itoa",
-        "@raze__ryu__1_0_11//:ryu",
-        "@raze__serde__1_0_145//:serde",
+        "@raze__native_tls__0_2_11//:native_tls",
+        "@raze__tokio__1_20_1//:tokio",
     ],
 )
 
-# Unsupported target "test_deserialize" with type "test" omitted
+# Unsupported target "bad" with type "test" omitted
 
-# Unsupported target "test_serialize" with type "test" omitted
+# Unsupported target "google" with type "test" omitted
+
+# Unsupported target "smoke" with type "test" omitted

@@ -31,9 +31,15 @@ licenses([
 
 # Generated Targets
 
+# Unsupported target "bench" with type "bench" omitted
+
 rust_library(
-    name = "serde_urlencoded",
+    name = "unicode_normalization",
     srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+        "std",
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -42,19 +48,12 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=serde_urlencoded",
+        "crate-name=unicode-normalization",
         "manual",
     ],
-    version = "0.7.1",
+    version = "0.1.22",
     # buildifier: leave-alone
     deps = [
-        "@raze__form_urlencoded__1_0_1//:form_urlencoded",
-        "@raze__itoa__1_0_3//:itoa",
-        "@raze__ryu__1_0_11//:ryu",
-        "@raze__serde__1_0_145//:serde",
+        "@raze__tinyvec__1_6_0//:tinyvec",
     ],
 )
-
-# Unsupported target "test_deserialize" with type "test" omitted
-
-# Unsupported target "test_serialize" with type "test" omitted

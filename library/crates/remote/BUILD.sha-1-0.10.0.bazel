@@ -31,9 +31,26 @@ licenses([
 
 # Generated Targets
 
+# Unsupported target "mod" with type "bench" omitted
+
+alias(
+    name = "sha_1",
+    actual = ":sha1",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
 rust_library(
-    name = "serde_urlencoded",
+    name = "sha1",
     srcs = glob(["**/*.rs"]),
+    aliases = {
+    },
+    crate_features = [
+        "default",
+        "std",
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -42,19 +59,25 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=serde_urlencoded",
+        "crate-name=sha1",
         "manual",
     ],
-    version = "0.7.1",
+    version = "0.10.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__form_urlencoded__1_0_1//:form_urlencoded",
-        "@raze__itoa__1_0_3//:itoa",
-        "@raze__ryu__1_0_11//:ryu",
-        "@raze__serde__1_0_145//:serde",
-    ],
+        "@raze__cfg_if__1_0_0//:cfg_if",
+        "@raze__digest__0_10_6//:digest",
+    ] + selects.with_or({
+        (
+            "@rules_rust//rust/platform:x86_64-apple-darwin",
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+            "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+            "@rules_rust//rust/platform:aarch64-apple-darwin",
+        ): [
+            "@raze__cpufeatures__0_2_5//:cpufeatures",
+        ],
+        "//conditions:default": [],
+    }),
 )
 
-# Unsupported target "test_deserialize" with type "test" omitted
-
-# Unsupported target "test_serialize" with type "test" omitted
+# Unsupported target "mod" with type "test" omitted
