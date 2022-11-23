@@ -37,6 +37,7 @@ rust_library(
     name = "regex_syntax",
     srcs = glob(["**/*.rs"]),
     crate_features = [
+        "default",
         "unicode",
         "unicode-age",
         "unicode-bool",

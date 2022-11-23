@@ -38,7 +38,7 @@ rust_library(
     data = [],
     edition = "2015",
     proc_macro_deps = [
-        "@raze__serde_derive__1_0_147//:serde_derive",
+        "@raze__serde_derive__1_0_145//:serde_derive",
     ],
     rustc_flags = [
         "--cap-lints=allow",

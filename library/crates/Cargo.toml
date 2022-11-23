@@ -10,7 +10,12 @@ alcoholic_jwt = "=4091.0.0"
 antlr-rust = "=0.3.0-beta"
 axum = { version = "=0.5.15", features = ["ws"] }
 chrono = "=0.4.22"
+clap = "=4.0.26"
+clap_derive = "=4.0.21"
 crossbeam = "=0.8.2"
+cucumber = "=0.15.2"
+cucumber-codegen = "=0.15.3"
+cucumber-expressions = "=0.2.1"
 cxx = "=1.0.59"
 derivative = "=2.2.0"
 enum_dispatch = "=0.3.8"
@@ -18,10 +23,15 @@ futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
 log = "=0.4.8"
 prost = "=0.11.0"
 prost-build = "=0.11.1"
-rocksdb = "=0.17.0"
 reqwest = { version = "=0.11.12", features = ["json"] }
+regex = "=1.6.0"
+rocksdb = "=0.17.0"
+rustix = "=0.35.9"
 serde = "=1.0.145"
 sha2 = "=0.10.6"
+synthez = "=0.2.0"
+synthez-codegen = "=0.2.0"
+synthez-core = "=0.2.0"
 tokio = { version = "=1.20.1", features = ["rt", "rt-multi-thread"] }
 tonic = "=0.8.0"
 tonic-build = "=0.8.0"
@@ -52,11 +62,35 @@ targets = [
 # vendored set of dependencies.
 genmode = "Remote"
 
-[package.metadata.raze.crates.tonic.'0.8.0']
+[package.metadata.raze.crates.axum.'0.5.15']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.clap.'4.0.26']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.clap_derive.'4.0.21']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.cucumber-codegen.'0.15.3']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.cucumber-expressions.'0.2.1']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.cucumber.'0.15.2']
 compile_data_attr = "glob([\"**/*.md\"])"
 
 [package.metadata.raze.crates.prost.'0.11.0']
 compile_data_attr = "glob([\"**/*.md\"])"
 
-[package.metadata.raze.crates.axum.'0.5.15']
+[package.metadata.raze.crates.synthez-codegen.'0.2.0']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.synthez-core.'0.2.0']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.synthez.'0.2.0']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.tonic.'0.8.0']
 compile_data_attr = "glob([\"**/*.md\"])"
