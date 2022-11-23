@@ -148,8 +148,26 @@ alias(
 )
 
 alias(
+    name = "regex",
+    actual = "@raze__regex__1_6_0//:regex",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "rocksdb",
     actual = "@raze__rocksdb__0_17_0//:rocksdb",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "rustix",
+    actual = "@raze__rustix__0_35_9//:rustix",
     tags = [
         "cargo-raze",
         "manual",
