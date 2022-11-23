@@ -1,0 +1,61 @@
+[package]
+name = "vaticle-dependencies"
+version = "0.0.0"
+
+[lib]
+path = "" # ignored by cargo raze
+
+[dependencies]
+antlr-rust = "=0.3.0-beta"
+axum = "=0.5.15"
+chrono = "=0.4.22"
+<<<<<<< HEAD
+crossbeam = "=0.8.2"
+=======
+cucumber = "=0.15.2"
+>>>>>>> 68dbed4 (stub)
+cxx = "=1.0.59"
+derivative = "=2.2.0"
+enum_dispatch = "=0.3.8"
+futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
+log = "=0.4.8"
+prost = "=0.11.0"
+rocksdb = "=0.17.0"
+tokio = { version = "=1.20.1", features = ["rt", "rt-multi-thread"] }
+tonic = "=0.8.0"
+tonic-build = "=0.8.0"
+uuid = { version = "=1.1.2", features = ["fast-rng", "v4"] }
+
+[package.metadata.raze]
+# The path at which to write output files.
+#
+# `cargo raze` will generate Bazel-compatible BUILD files into this path.
+# This can either be a relative path (e.g. "foo/bar"), relative to this
+# Cargo.toml file; or relative to the Bazel workspace root (e.g. "//foo/bar").
+workspace_path = "//library/crates"
+
+# This causes aliases for dependencies to be rendered in the BUILD
+# file located next to this `Cargo.toml` file.
+package_aliases_dir = "."
+
+# The set of targets to generate BUILD rules for.
+targets = [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "x86_64-pc-windows-msvc",
+    "x86_64-unknown-linux-gnu",
+]
+
+# The two acceptable options are "Remote" and "Vendored" which
+# is used to indicate whether the user is using a non-vendored or
+# vendored set of dependencies.
+genmode = "Remote"
+
+[package.metadata.raze.crates.tonic.'0.8.0']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.prost.'0.11.0']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.axum.'0.5.15']
+compile_data_attr = "glob([\"**/*.md\"])"

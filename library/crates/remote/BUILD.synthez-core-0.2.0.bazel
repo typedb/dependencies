@@ -1,0 +1,58 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//library/crates", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "restricted",  # BlueOak-1.0.0 from expression "BlueOak-1.0.0"
+])
+
+# Generated Targets
+
+rust_library(
+    name = "synthez_core",
+    srcs = glob(["**/*.rs"]),
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2021",
+    proc_macro_deps = [
+        "@raze__sealed__0_3_0//:sealed",
+    ],
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=synthez-core",
+        "manual",
+    ],
+    version = "0.2.0",
+    # buildifier: leave-alone
+    deps = [
+        "@raze__proc_macro2__1_0_43//:proc_macro2",
+        "@raze__quote__1_0_21//:quote",
+        "@raze__syn__1_0_99//:syn",
+    ],
+)

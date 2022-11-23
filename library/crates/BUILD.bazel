@@ -49,6 +49,15 @@ alias(
 )
 
 alias(
+    name = "cucumber",
+    actual = "@raze__cucumber__0_15_2//:cucumber",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "cxx",
     actual = "@raze__cxx__1_0_59//:cxx",
     tags = [

@@ -38,12 +38,12 @@ load(
 )
 
 cargo_build_script(
-    name = "crossbeam_epoch_build_script",
+    name = "crossbeam_utils_build_script",
     srcs = glob(["**/*.rs"]),
     build_script_env = {
     },
     crate_features = [
-        "alloc",
+        "default",
         "std",
     ],
     crate_root = "build.rs",
@@ -56,26 +56,19 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "0.9.11",
+    version = "0.8.14",
     visibility = ["//visibility:private"],
     deps = [
-        "@raze__autocfg__1_1_0//:autocfg",
     ],
 )
 
-# Unsupported target "defer" with type "bench" omitted
-
-# Unsupported target "flush" with type "bench" omitted
-
-# Unsupported target "pin" with type "bench" omitted
-
-# Unsupported target "sanitize" with type "example" omitted
+# Unsupported target "atomic_cell" with type "bench" omitted
 
 rust_library(
-    name = "crossbeam_epoch",
+    name = "crossbeam_utils",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "alloc",
+        "default",
         "std",
     ],
     crate_root = "src/lib.rs",
@@ -86,18 +79,25 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=crossbeam-epoch",
+        "crate-name=crossbeam-utils",
         "manual",
     ],
-    version = "0.9.11",
+    version = "0.8.14",
     # buildifier: leave-alone
     deps = [
-        ":crossbeam_epoch_build_script",
+        ":crossbeam_utils_build_script",
         "@raze__cfg_if__1_0_0//:cfg_if",
-        "@raze__crossbeam_utils__0_8_12//:crossbeam_utils",
-        "@raze__memoffset__0_6_5//:memoffset",
-        "@raze__scopeguard__1_1_0//:scopeguard",
     ],
 )
 
-# Unsupported target "loom" with type "test" omitted
+# Unsupported target "atomic_cell" with type "test" omitted
+
+# Unsupported target "cache_padded" with type "test" omitted
+
+# Unsupported target "parker" with type "test" omitted
+
+# Unsupported target "sharded_lock" with type "test" omitted
+
+# Unsupported target "thread" with type "test" omitted
+
+# Unsupported target "wait_group" with type "test" omitted
