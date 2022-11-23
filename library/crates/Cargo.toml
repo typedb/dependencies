@@ -22,6 +22,7 @@ futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
 log = "=0.4.8"
 prost = "=0.11.0"
 rocksdb = "=0.17.0"
+rustix = "=0.35.9"
 synthez = "=0.2.0"
 synthez-codegen = "=0.2.0"
 synthez-core = "=0.2.0"
