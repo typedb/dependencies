@@ -23,7 +23,6 @@ package com.vaticle.dependencies.ide.rust
 
 import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
-import com.vaticle.bazel.distribution.common.shell.Shell
 import com.vaticle.bazel.distribution.common.util.FileUtil.listFilesRecursively
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Type.BIN
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Type.BUILD
@@ -34,8 +33,6 @@ import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.Paths.CARGO_
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.Paths.EXTERNAL
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.Paths.EXTERNAL_PLACEHOLDER
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.Paths.IDE_SYNC_PROPERTIES
-import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.ShellArgs.BAZEL
-import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.ShellArgs.INFO
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.BUILD_DEPS
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.DEPS_PREFIX
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.EDITION
@@ -55,11 +52,8 @@ import java.nio.file.Path
 import java.util.Properties
 import kotlin.io.path.Path
 
-class RepoCargoManifestGenerator(private val repository: File, shell: Shell) {
+class RepoCargoManifestGenerator(private val repository: File, private val bazelOutputBase: File) {
 
-    private val bazelOutputBase = File(
-        shell.execute(listOf(BAZEL, INFO, "output_base"), repository.toPath()).outputString().trim()
-    )
     private val bazelBin = repository.resolve(BAZEL_BIN).toPath().toRealPath().toFile()
 
     fun generateManifests() {
@@ -306,11 +300,6 @@ class RepoCargoManifestGenerator(private val repository: File, shell: Shell) {
         const val EXTERNAL = "external"
         const val EXTERNAL_PLACEHOLDER = "{external}"
         const val IDE_SYNC_PROPERTIES = "ide-sync.properties"
-    }
-
-    private object ShellArgs {
-        const val BAZEL = "bazel"
-        const val INFO = "info"
     }
 
     companion object {

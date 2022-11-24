@@ -6,3 +6,10 @@ bazel-out
 bazel-dependencies
 bazel-testlogs
 tool/bazelcache/.terraform/*
+target
+
+builder/grpc/rust/Cargo.lock
+builder/grpc/rust/Cargo.toml
+
+library/ortools/rust/Cargo.lock
+library/ortools/rust/Cargo.toml
