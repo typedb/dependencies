@@ -22,15 +22,6 @@ alias(
 )
 
 alias(
-    name = "antlr_rust",
-    actual = "@raze__antlr_rust__0_3_0_beta//:antlr_rust",
-    tags = [
-        "cargo-raze",
-        "manual",
-    ],
-)
-
-alias(
     name = "axum",
     actual = "@raze__axum__0_5_15//:axum",
     tags = [
@@ -141,6 +132,24 @@ alias(
 alias(
     name = "log",
     actual = "@raze__log__0_4_8//:log",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "pest",
+    actual = "@raze__pest__2_4_1//:pest",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "pest_derive",
+    actual = "@raze__pest_derive__2_4_1//:pest_derive",
     tags = [
         "cargo-raze",
         "manual",
