@@ -41,7 +41,7 @@ import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncIn
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.NAME
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.PATH
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.ROOT_PATH
-import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.SOURCES_ARE_GENERATED
+import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.CONTAINS_GENERATED_SOURCES
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.TYPE
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.VERSION
 import java.io.File
@@ -128,7 +128,7 @@ class RepoCargoManifestGenerator(private val repository: File, private val bazel
         }
 
         private fun Config.createEntryPointSubConfig() {
-            val entryPointPath = if (info.sourcesAreGenerated) {
+            val entryPointPath = if (info.containsGeneratedSources) {
                 bazelBin.resolve(info.entryPointPath.toString()).toString()
             } else info.rootPath!!.relativize(info.entryPointPath!!).toString()
 
@@ -183,7 +183,7 @@ class RepoCargoManifestGenerator(private val repository: File, private val bazel
         val buildDeps: Collection<String>,
         val rootPath: Path?,
         val entryPointPath: Path?,
-        val sourcesAreGenerated: Boolean,
+        val containsGeneratedSources: Boolean,
         val tests: MutableCollection<TargetSyncInfo>,
         val buildScripts: MutableCollection<TargetSyncInfo>,
     ) {
@@ -258,7 +258,7 @@ class RepoCargoManifestGenerator(private val repository: File, private val bazel
                         buildDeps = props.getProperty(BUILD_DEPS, "").split(",").filter { it.isNotBlank() },
                         rootPath = props.getProperty(ROOT_PATH)?.let { Path(it) },
                         entryPointPath = props.getProperty(ENTRY_POINT_PATH)?.let { Path(it) },
-                        sourcesAreGenerated = props.getProperty(SOURCES_ARE_GENERATED).toBoolean(),
+                        containsGeneratedSources = props.getProperty(CONTAINS_GENERATED_SOURCES).toBoolean(),
                         tests = mutableListOf(),
                         buildScripts = mutableListOf(),
                     )
@@ -289,7 +289,7 @@ class RepoCargoManifestGenerator(private val repository: File, private val bazel
             const val PATH = "path"
             const val ROOT_PATH = "root.path"
             const val TYPE = "type"
-            const val SOURCES_ARE_GENERATED = "sources.are.generated"
+            const val CONTAINS_GENERATED_SOURCES = "contains.generated.sources"
             const val VERSION = "version"
         }
     }

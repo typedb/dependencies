@@ -132,6 +132,7 @@ def _sync_info(target, ctx, source_files, crate_info):
     props = {}
     target_type = "build" if _looks_like_cargo_build_script(target) else _TARGET_TYPES[ctx.rule.kind]
 
+
     props["name"] = crate_info.name
     props["type"] = target_type
     props["version"] = crate_info.version
@@ -140,7 +141,11 @@ def _sync_info(target, ctx, source_files, crate_info):
         props["root.path"] = _target_root_path(target)
         entry_point_file = _entry_point_file(target, ctx, source_files)
         props["entry.point.path"] = entry_point_file.short_path
-        props["sources.are.generated"] = not entry_point_file.is_source
+        contains_generated_sources = False
+        for source_file in source_files:
+            if not source_file.is_source:
+                contains_generated_sources = True
+        props["contains.generated.sources"] = contains_generated_sources
         props["build.deps"] = ",".join(crate_info.build_deps)
     for dep in crate_info.deps.items():
         props["deps." + dep[0]] = dep[1]
