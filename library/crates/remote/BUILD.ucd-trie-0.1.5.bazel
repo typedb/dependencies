@@ -26,26 +26,17 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # Apache-2.0 from expression "Apache-2.0 OR MIT"
+    "notice",  # MIT from expression "MIT OR Apache-2.0"
 ])
 
 # Generated Targets
 
-# Unsupported target "format_str" with type "bench" omitted
-
-# Unsupported target "invalid_parse_str" with type "bench" omitted
-
-# Unsupported target "mod" with type "bench" omitted
-
-# Unsupported target "serde_support" with type "bench" omitted
-
-# Unsupported target "valid_parse_str" with type "bench" omitted
+# Unsupported target "bench" with type "bench" omitted
 
 rust_library(
-    name = "uuid",
+    name = "ucd_trie",
     srcs = glob(["**/*.rs"]),
     crate_features = [
-        "default",
         "std",
     ],
     crate_root = "src/lib.rs",
@@ -56,10 +47,10 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=uuid",
+        "crate-name=ucd-trie",
         "manual",
     ],
-    version = "0.8.2",
+    version = "0.1.5",
     # buildifier: leave-alone
     deps = [
     ],
