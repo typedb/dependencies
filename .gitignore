@@ -6,3 +6,7 @@ bazel-out
 bazel-dependencies
 bazel-testlogs
 tool/bazelcache/.terraform/*
+target
+Cargo.lock
+Cargo.toml
+!library/crates/Cargo.toml

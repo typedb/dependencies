@@ -96,7 +96,7 @@ class Syncer : Callable<Unit> {
             logger.debug { "Syncing $repository" }
             cleanupOldSyncInfo()
             runSyncInfoAspect()
-            RepoCargoManifestGenerator(repository.toFile(), shell).generateManifests()
+            RepoCargoManifestGenerator(repository.toFile(), bazelOutputBase.toFile()).generateManifests()
             logger.debug { "Sync completed in $repository" }
         }
 
