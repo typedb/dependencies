@@ -19,6 +19,7 @@ cxx = "=1.0.59"
 derivative = "=2.2.0"
 enum_dispatch = "=0.3.8"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
+itertools = "=0.10.3"
 log = "=0.4.8"
 pest = "=2.4.1"
 pest_derive = "=2.4.1"
