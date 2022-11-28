@@ -23,6 +23,7 @@ package com.vaticle.dependencies.ide.rust
 
 import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
+import com.vaticle.bazel.distribution.common.shell.Shell
 import com.vaticle.bazel.distribution.common.util.FileUtil.listFilesRecursively
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Type.BIN
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Type.BUILD
@@ -33,6 +34,7 @@ import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.Paths.CARGO_
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.Paths.EXTERNAL
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.Paths.EXTERNAL_PLACEHOLDER
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.Paths.IDE_SYNC_PROPERTIES
+import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.ShellArgs.BAZEL
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.BUILD_DEPS
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.DEPS_PREFIX
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.EDITION
@@ -42,6 +44,7 @@ import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncIn
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.PATH
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.ROOT_PATH
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.CONTAINS_GENERATED_SOURCES
+import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.LABEL
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.TYPE
 import com.vaticle.dependencies.ide.rust.RepoCargoManifestGenerator.TargetSyncInfo.Keys.VERSION
 import java.io.File
@@ -52,7 +55,7 @@ import java.nio.file.Path
 import java.util.Properties
 import kotlin.io.path.Path
 
-class RepoCargoManifestGenerator(private val repository: File, private val bazelOutputBase: File) {
+class RepoCargoManifestGenerator(private val repository: File, private val bazelOutputBase: File, private val shell: Shell) {
 
     private val bazelBin = repository.resolve(BAZEL_BIN).toPath().toRealPath().toFile()
 
@@ -95,9 +98,14 @@ class RepoCargoManifestGenerator(private val repository: File, private val bazel
 
     private inner class TargetCargoManifestGenerator(private val info: TargetSyncInfo) {
         fun generateManifest(): File {
+            if (info.containsGeneratedSources) buildTarget()
             val outputPath = manifestOutputPath()
             Files.newOutputStream(outputPath).use { it.write(manifestContent().toByteArray(StandardCharsets.UTF_8)) }
             return outputPath.toFile()
+        }
+
+        private fun buildTarget() {
+            shell.execute(listOf(BAZEL, ShellArgs.BUILD, info.label), baseDir = repository.toPath())
         }
 
         private fun manifestOutputPath(): Path {
@@ -176,6 +184,7 @@ class RepoCargoManifestGenerator(private val repository: File, private val bazel
     data class TargetSyncInfo(
         val path: Path,
         val name: String,
+        val label: String,
         val type: Type,
         val version: String,
         val edition: String?,
@@ -251,6 +260,7 @@ class RepoCargoManifestGenerator(private val repository: File, private val bazel
                     return TargetSyncInfo(
                         path = path,
                         name = props.getProperty(NAME),
+                        label = props.getProperty(LABEL),
                         type = Type.of(props.getProperty(TYPE)),
                         version = props.getProperty(VERSION),
                         edition = props.getProperty(EDITION, "2021"),
@@ -285,6 +295,7 @@ class RepoCargoManifestGenerator(private val repository: File, private val bazel
             const val EDITION = "edition"
             const val ENTRY_POINT_PATH = "entry.point.path"
             const val FEATURES = "features"
+            const val LABEL = "label"
             const val NAME = "name"
             const val PATH = "path"
             const val ROOT_PATH = "root.path"
@@ -300,6 +311,11 @@ class RepoCargoManifestGenerator(private val repository: File, private val bazel
         const val EXTERNAL = "external"
         const val EXTERNAL_PLACEHOLDER = "{external}"
         const val IDE_SYNC_PROPERTIES = "ide-sync.properties"
+    }
+
+    private object ShellArgs {
+        const val BAZEL = "bazel"
+        const val BUILD = "build"
     }
 
     companion object {
