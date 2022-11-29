@@ -135,6 +135,7 @@ def _sync_info(target, ctx, source_files, crate_info):
 
     props["name"] = crate_info.name
     props["type"] = target_type
+    props["label"] = target.label
     props["version"] = crate_info.version
     if target_type in ["bin", "lib"]:
         props["edition"] = ctx.rule.attr.edition or "2021"
