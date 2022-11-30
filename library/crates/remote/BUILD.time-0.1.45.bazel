@@ -47,7 +47,7 @@ rust_library(
         "crate-name=time",
         "manual",
     ],
-    version = "0.1.44",
+    version = "0.1.45",
     # buildifier: leave-alone
     deps = [
         "@raze__libc__0_2_132//:libc",

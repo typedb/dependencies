@@ -148,6 +148,24 @@ alias(
 )
 
 alias(
+    name = "mime",
+    actual = "@raze__mime__0_3_16//:mime",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "mime_guess",
+    actual = "@raze__mime_guess__2_0_4//:mime_guess",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "pest",
     actual = "@raze__pest__2_4_1//:pest",
     tags = [

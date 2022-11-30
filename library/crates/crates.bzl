@@ -1187,6 +1187,15 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
+        name = "raze__mime_guess__2_0_4",
+        url = "https://crates.io/api/v1/crates/mime_guess/2.0.4/download",
+        type = "tar.gz",
+        strip_prefix = "mime_guess-2.0.4",
+        build_file = Label("//library/crates/remote:BUILD.mime_guess-2.0.4.bazel"),
+    )
+
+    maybe(
+        http_archive,
         name = "raze__minimal_lexical__0_2_1",
         url = "https://crates.io/api/v1/crates/minimal-lexical/0.2.1/download",
         type = "tar.gz",
@@ -1794,11 +1803,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__sha_1__0_10_0",
-        url = "https://crates.io/api/v1/crates/sha-1/0.10.0/download",
+        name = "raze__sha_1__0_10_1",
+        url = "https://crates.io/api/v1/crates/sha-1/0.10.1/download",
         type = "tar.gz",
-        strip_prefix = "sha-1-0.10.0",
-        build_file = Label("//library/crates/remote:BUILD.sha-1-0.10.0.bazel"),
+        strip_prefix = "sha-1-0.10.1",
+        build_file = Label("//library/crates/remote:BUILD.sha-1-0.10.1.bazel"),
     )
 
     maybe(
@@ -1989,11 +1998,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__time__0_1_44",
-        url = "https://crates.io/api/v1/crates/time/0.1.44/download",
+        name = "raze__time__0_1_45",
+        url = "https://crates.io/api/v1/crates/time/0.1.45/download",
         type = "tar.gz",
-        strip_prefix = "time-0.1.44",
-        build_file = Label("//library/crates/remote:BUILD.time-0.1.44.bazel"),
+        strip_prefix = "time-0.1.45",
+        build_file = Label("//library/crates/remote:BUILD.time-0.1.45.bazel"),
     )
 
     maybe(
@@ -2225,6 +2234,15 @@ def raze_fetch_remote_crates():
         type = "tar.gz",
         strip_prefix = "ucd-trie-0.1.5",
         build_file = Label("//library/crates/remote:BUILD.ucd-trie-0.1.5.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "raze__unicase__2_6_0",
+        url = "https://crates.io/api/v1/crates/unicase/2.6.0/download",
+        type = "tar.gz",
+        strip_prefix = "unicase-2.6.0",
+        build_file = Label("//library/crates/remote:BUILD.unicase-2.6.0.bazel"),
     )
 
     maybe(
