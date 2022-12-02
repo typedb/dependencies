@@ -1,0 +1,100 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//library/crates", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT"
+])
+
+# Generated Targets
+
+# Unsupported target "configure_addr_incoming" with type "example" omitted
+
+# Unsupported target "configure_http" with type "example" omitted
+
+# Unsupported target "from_std_listener" with type "example" omitted
+
+# Unsupported target "from_std_listener_rustls" with type "example" omitted
+
+# Unsupported target "graceful_shutdown" with type "example" omitted
+
+# Unsupported target "hello_world" with type "example" omitted
+
+# Unsupported target "http_and_https" with type "example" omitted
+
+# Unsupported target "remote_address" with type "example" omitted
+
+# Unsupported target "remote_address_using_tower" with type "example" omitted
+
+# Unsupported target "rustls_reload" with type "example" omitted
+
+# Unsupported target "rustls_server" with type "example" omitted
+
+# Unsupported target "rustls_session" with type "example" omitted
+
+# Unsupported target "shutdown" with type "example" omitted
+
+rust_library(
+    name = "axum_server",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "arc-swap",
+        "default",
+        "pin-project-lite",
+        "rustls",
+        "rustls-pemfile",
+        "tls-rustls",
+        "tokio-rustls",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    compile_data = glob(["**/*.der"]),
+    edition = "2018",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=axum-server",
+        "manual",
+    ],
+    version = "0.4.4",
+    # buildifier: leave-alone
+    deps = [
+        "@raze__arc_swap__1_5_1//:arc_swap",
+        "@raze__bytes__1_2_1//:bytes",
+        "@raze__futures_util__0_3_24//:futures_util",
+        "@raze__http__0_2_8//:http",
+        "@raze__http_body__0_4_5//:http_body",
+        "@raze__hyper__0_14_23//:hyper",
+        "@raze__pin_project_lite__0_2_9//:pin_project_lite",
+        "@raze__rustls__0_20_7//:rustls",
+        "@raze__rustls_pemfile__1_0_1//:rustls_pemfile",
+        "@raze__tokio__1_20_1//:tokio",
+        "@raze__tokio_rustls__0_23_4//:tokio_rustls",
+        "@raze__tower_service__0_3_2//:tower_service",
+    ],
+)

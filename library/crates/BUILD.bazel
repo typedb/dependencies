@@ -31,6 +31,15 @@ alias(
 )
 
 alias(
+    name = "axum_server",
+    actual = "@raze__axum_server__0_4_4//:axum_server",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "chrono",
     actual = "@raze__chrono__0_4_22//:chrono",
     tags = [

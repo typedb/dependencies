@@ -93,7 +93,7 @@ rust_library(
             "@raze__futures_util__0_3_24//:futures_util",
             "@raze__h2__0_3_14//:h2",
             "@raze__http_body__0_4_5//:http_body",
-            "@raze__hyper__0_14_20//:hyper",
+            "@raze__hyper__0_14_23//:hyper",
             "@raze__hyper_tls__0_5_0//:hyper_tls",
             "@raze__ipnet__2_5_1//:ipnet",
             "@raze__log__0_4_8//:log",

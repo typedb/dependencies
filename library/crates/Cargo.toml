@@ -8,6 +8,7 @@ path = "" # ignored by cargo raze
 [dependencies]
 alcoholic_jwt = "=4091.0.0"
 axum = { version = "=0.5.15", features = ["ws"] }
+axum-server = { version = "=0.4.4", features = ["tls-rustls"]}
 chrono = "=0.4.22"
 clap = "=4.0.26"
 clap_derive = "=4.0.21"
@@ -68,6 +69,15 @@ genmode = "Remote"
 
 [package.metadata.raze.crates.axum.'0.5.15']
 compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.axum-server.'0.4.4']
+compile_data_attr = "glob([\"**/*.der\"])"
+
+[package.metadata.raze.crates.ring.'0.16.20']
+compile_data_attr = "glob([\"**/*.der\"])"
+
+[package.metadata.raze.crates.webpki.'0.22.0']
+compile_data_attr = "glob([\"**/*.der\"])"
 
 [package.metadata.raze.crates.clap.'4.0.26']
 compile_data_attr = "glob([\"**/*.md\"])"
