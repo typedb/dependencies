@@ -41,15 +41,16 @@ load("//library/maven:rules.bzl", "maven")
 # Load //builder/kotlin
 load("//builder/kotlin:deps.bzl", kotlin_deps = "deps")
 kotlin_deps()
-load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories", "kotlinc_version")
-kotlin_repositories(
-    compiler_release = kotlinc_version(
-        release = "1.7.20",
-        sha256 = "5e3c8d0f965410ff12e90d6f8dc5df2fc09fd595a684d514616851ce7e94ae7d"
-    )
+load("@io_bazel_rules_kotlin//kotlin:toolchains.bzl", "define_kt_toolchain")
+
+define_kt_toolchain(
+    name= "custom_toolchain",
+    api_version = "1.7.20",
+    language_version = "1.7.20",
+    experimental_strict_kotlin_deps = "error",
 )
-load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
-kt_register_toolchains()
+
+kt_register_toolchains("//:custom_toolchain")
 
 # Load //library/ortools
 load("//library/ortools/java:deps.bzl", "google_or_tools_mac", "google_or_tools_linux", "google_or_tools_windows")
