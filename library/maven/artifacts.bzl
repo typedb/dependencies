@@ -251,9 +251,9 @@ artifacts = {
     "org.jetbrains.kotlin:kotlin-reflect": "1.7.20",
     "org.jetbrains.kotlin:kotlin-stdlib-jdk7": "1.7.20",
     "org.jetbrains.kotlin:kotlin-test": "1.7.20",
-    "org.jetbrains.kotlinx:kotlinx-coroutines-core": "1.6.4",
-    "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm": "1.6.4",
-    "org.jetbrains.kotlinx:kotlinx-coroutines-test": "1.6.4",
+    "org.jetbrains.kotlinx:kotlinx-coroutines-core": "1.6.0",
+    "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm": "1.6.0",
+    "org.jetbrains.kotlinx:kotlinx-coroutines-test": "1.6.0",
     # Find out the Skiko version we need by viewing dependencies of @maven//org_jetbrains_compose_ui_ui_graphics_desktop
     "org.jetbrains.skiko:skiko-awt": "0.7.34",
     "org.jetbrains.skiko:skiko-awt-runtime-linux-x64": "0.7.34",
