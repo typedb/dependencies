@@ -52,7 +52,7 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "0.1.57",
+    version = "0.1.59",
     visibility = ["//visibility:private"],
     deps = [
     ],
@@ -72,7 +72,7 @@ rust_proc_macro(
         "crate-name=async-trait",
         "manual",
     ],
-    version = "0.1.57",
+    version = "0.1.59",
     # buildifier: leave-alone
     deps = [
         ":async_trait_build_script",

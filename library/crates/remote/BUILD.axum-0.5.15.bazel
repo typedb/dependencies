@@ -58,7 +58,7 @@ rust_library(
     compile_data = glob(["**/*.md"]),
     edition = "2021",
     proc_macro_deps = [
-        "@raze__async_trait__0_1_57//:async_trait",
+        "@raze__async_trait__0_1_59//:async_trait",
     ],
     rustc_flags = [
         "--cap-lints=allow",

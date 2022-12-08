@@ -61,7 +61,7 @@ rust_library(
     compile_data = glob(["**/*.md"]),
     edition = "2018",
     proc_macro_deps = [
-        "@raze__async_trait__0_1_57//:async_trait",
+        "@raze__async_trait__0_1_59//:async_trait",
         "@raze__prost_derive__0_11_0//:prost_derive",
     ],
     rustc_flags = [

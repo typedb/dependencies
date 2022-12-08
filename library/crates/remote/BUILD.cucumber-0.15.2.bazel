@@ -43,7 +43,7 @@ rust_library(
     compile_data = glob(["**/*.md"]),
     edition = "2021",
     proc_macro_deps = [
-        "@raze__async_trait__0_1_57//:async_trait",
+        "@raze__async_trait__0_1_59//:async_trait",
         "@raze__cucumber_codegen__0_15_3//:cucumber_codegen",
         "@raze__derive_more__0_99_17//:derive_more",
         "@raze__sealed__0_4_0//:sealed",

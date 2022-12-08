@@ -88,12 +88,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__async_trait__0_1_57",
-        url = "https://crates.io/api/v1/crates/async-trait/0.1.57/download",
+        name = "raze__async_trait__0_1_59",
+        url = "https://crates.io/api/v1/crates/async-trait/0.1.59/download",
         type = "tar.gz",
-        sha256 = "76464446b8bc32758d7e88ee1a804d9914cd9b1cb264c029899680b0be29826f",
-        strip_prefix = "async-trait-0.1.57",
-        build_file = Label("//library/crates/remote:BUILD.async-trait-0.1.57.bazel"),
+        strip_prefix = "async-trait-0.1.59",
+        build_file = Label("//library/crates/remote:BUILD.async-trait-0.1.59.bazel"),
     )
 
     maybe(
@@ -471,11 +470,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__cxx_build__1_0_82",
-        url = "https://crates.io/api/v1/crates/cxx-build/1.0.82/download",
+        name = "raze__cxx_build__1_0_83",
+        url = "https://crates.io/api/v1/crates/cxx-build/1.0.83/download",
         type = "tar.gz",
-        strip_prefix = "cxx-build-1.0.82",
-        build_file = Label("//library/crates/remote:BUILD.cxx-build-1.0.82.bazel"),
+        strip_prefix = "cxx-build-1.0.83",
+        build_file = Label("//library/crates/remote:BUILD.cxx-build-1.0.83.bazel"),
     )
 
     maybe(
@@ -2289,11 +2288,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__typenum__1_15_0",
-        url = "https://crates.io/api/v1/crates/typenum/1.15.0/download",
+        name = "raze__typenum__1_16_0",
+        url = "https://crates.io/api/v1/crates/typenum/1.16.0/download",
         type = "tar.gz",
-        strip_prefix = "typenum-1.15.0",
-        build_file = Label("//library/crates/remote:BUILD.typenum-1.15.0.bazel"),
+        strip_prefix = "typenum-1.16.0",
+        build_file = Label("//library/crates/remote:BUILD.typenum-1.16.0.bazel"),
     )
 
     maybe(
