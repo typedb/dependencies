@@ -13,4 +13,5 @@ maven_artifacts = [
   "com.google.http-client:google-http-client",
   "org.zeroturnaround:zt-exec",
   "info.picocli:picocli",
+  "org.jetbrains.compose.compiler:compiler",
 ]
