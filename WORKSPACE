@@ -41,6 +41,10 @@ load("//library/maven:rules.bzl", "maven")
 # Load //builder/kotlin
 load("//builder/kotlin:deps.bzl", kotlin_deps = "deps")
 kotlin_deps()
+load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories")
+kotlin_repositories()
+load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
+kt_register_toolchains()
 
 # Load //library/ortools
 load("//library/ortools/java:deps.bzl", "google_or_tools_mac", "google_or_tools_linux", "google_or_tools_windows")
