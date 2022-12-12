@@ -1019,11 +1019,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__ipnet__2_5_1",
-        url = "https://crates.io/api/v1/crates/ipnet/2.5.1/download",
+        name = "raze__ipnet__2_7_0",
+        url = "https://crates.io/api/v1/crates/ipnet/2.7.0/download",
         type = "tar.gz",
-        strip_prefix = "ipnet-2.5.1",
-        build_file = Label("//library/crates/remote:BUILD.ipnet-2.5.1.bazel"),
+        strip_prefix = "ipnet-2.7.0",
+        build_file = Label("//library/crates/remote:BUILD.ipnet-2.7.0.bazel"),
     )
 
     maybe(
@@ -1307,11 +1307,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__openssl__0_10_43",
-        url = "https://crates.io/api/v1/crates/openssl/0.10.43/download",
+        name = "raze__openssl__0_10_44",
+        url = "https://crates.io/api/v1/crates/openssl/0.10.44/download",
         type = "tar.gz",
-        strip_prefix = "openssl-0.10.43",
-        build_file = Label("//library/crates/remote:BUILD.openssl-0.10.43.bazel"),
+        strip_prefix = "openssl-0.10.44",
+        build_file = Label("//library/crates/remote:BUILD.openssl-0.10.44.bazel"),
     )
 
     maybe(
@@ -1334,11 +1334,11 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
-        name = "raze__openssl_sys__0_9_78",
-        url = "https://crates.io/api/v1/crates/openssl-sys/0.9.78/download",
+        name = "raze__openssl_sys__0_9_79",
+        url = "https://crates.io/api/v1/crates/openssl-sys/0.9.79/download",
         type = "tar.gz",
-        strip_prefix = "openssl-sys-0.9.78",
-        build_file = Label("//library/crates/remote:BUILD.openssl-sys-0.9.78.bazel"),
+        strip_prefix = "openssl-sys-0.9.79",
+        build_file = Label("//library/crates/remote:BUILD.openssl-sys-0.9.79.bazel"),
     )
 
     maybe(

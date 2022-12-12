@@ -95,7 +95,7 @@ rust_library(
             "@raze__http_body__0_4_5//:http_body",
             "@raze__hyper__0_14_23//:hyper",
             "@raze__hyper_tls__0_5_0//:hyper_tls",
-            "@raze__ipnet__2_5_1//:ipnet",
+            "@raze__ipnet__2_7_0//:ipnet",
             "@raze__log__0_4_8//:log",
             "@raze__mime__0_3_16//:mime",
             "@raze__native_tls__0_2_11//:native_tls",

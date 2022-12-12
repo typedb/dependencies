@@ -48,7 +48,7 @@ rust_library(
         "crate-name=ipnet",
         "manual",
     ],
-    version = "2.5.1",
+    version = "2.7.0",
     # buildifier: leave-alone
     deps = [
     ],
