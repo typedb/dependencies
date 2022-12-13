@@ -38,16 +38,14 @@ load(
 )
 
 cargo_build_script(
-    name = "generic_array_build_script",
+    name = "openssl_sys_build_script",
     srcs = glob(["**/*.rs"]),
     build_script_env = {
     },
-    crate_features = [
-        "more_lengths",
-    ],
-    crate_root = "build.rs",
+    crate_root = "build/main.rs",
     data = glob(["**"]),
     edition = "2015",
+    links = "openssl",
     rustc_flags = [
         "--cap-lints=allow",
     ],
@@ -55,19 +53,27 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "0.14.6",
+    version = "0.9.79",
     visibility = ["//visibility:private"],
     deps = [
-        "@raze__version_check__0_9_4//:version_check",
-    ],
+        "@raze__autocfg__1_1_0//:autocfg",
+        "@raze__cc__1_0_73//:cc",
+        "@raze__pkg_config__0_3_26//:pkg_config",
+    ] + selects.with_or({
+        (
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+        ): [
+            "@raze__vcpkg__0_2_15//:vcpkg",
+        ],
+        "//conditions:default": [],
+    }),
 )
 
 rust_library(
-    name = "generic_array",
+    name = "openssl_sys",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-        "more_lengths",
-    ],
+    aliases = {
+    },
     crate_root = "src/lib.rs",
     data = [],
     edition = "2015",
@@ -76,13 +82,19 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=generic_array",
+        "crate-name=openssl-sys",
         "manual",
     ],
-    version = "0.14.6",
+    version = "0.9.79",
     # buildifier: leave-alone
     deps = [
-        ":generic_array_build_script",
-        "@raze__typenum__1_16_0//:typenum",
-    ],
+        ":openssl_sys_build_script",
+        "@raze__libc__0_2_132//:libc",
+    ] + selects.with_or({
+        (
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+        ): [
+        ],
+        "//conditions:default": [],
+    }),
 )

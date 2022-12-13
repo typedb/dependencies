@@ -31,11 +31,14 @@ licenses([
 
 # Generated Targets
 
-# Unsupported target "buffer" with type "bench" omitted
-
 rust_library(
-    name = "tungstenite",
+    name = "tokio_rustls",
     srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+        "logging",
+        "tls12",
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -44,22 +47,22 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tungstenite",
+        "crate-name=tokio-rustls",
         "manual",
     ],
-    version = "0.17.3",
+    version = "0.23.4",
     # buildifier: leave-alone
     deps = [
-        "@raze__base64__0_13_0//:base64",
-        "@raze__byteorder__1_4_3//:byteorder",
-        "@raze__bytes__1_2_1//:bytes",
-        "@raze__http__0_2_8//:http",
-        "@raze__httparse__1_7_1//:httparse",
-        "@raze__log__0_4_8//:log",
-        "@raze__rand__0_8_5//:rand",
-        "@raze__sha_1__0_10_1//:sha_1",
-        "@raze__thiserror__1_0_37//:thiserror",
-        "@raze__url__2_3_0//:url",
-        "@raze__utf_8__0_7_6//:utf_8",
+        "@raze__rustls__0_20_7//:rustls",
+        "@raze__tokio__1_20_1//:tokio",
+        "@raze__webpki__0_22_0//:webpki",
     ],
 )
+
+# Unsupported target "badssl" with type "test" omitted
+
+# Unsupported target "early-data" with type "test" omitted
+
+# Unsupported target "test" with type "test" omitted
+
+# Unsupported target "utils" with type "test" omitted
