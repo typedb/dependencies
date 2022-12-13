@@ -17,7 +17,7 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_binary", "kt_jvm_library")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary", "kt_jvm_library")
 load("@vaticle_bazel_distribution//maven:rules.bzl", "assemble_maven", "deploy_maven")
 load("@vaticle_dependencies//distribution:deployment.bzl", "deployment")
 
