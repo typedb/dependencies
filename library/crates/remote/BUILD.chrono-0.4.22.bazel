@@ -69,7 +69,7 @@ rust_library(
         "@raze__iana_time_zone__0_1_53//:iana_time_zone",
         "@raze__num_integer__0_1_45//:num_integer",
         "@raze__num_traits__0_2_15//:num_traits",
-        "@raze__time__0_1_44//:time",
+        "@raze__time__0_1_45//:time",
     ] + selects.with_or({
         (
             "@rules_rust//rust/platform:x86_64-pc-windows-msvc",

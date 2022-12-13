@@ -26,15 +26,13 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
-# Unsupported target "buffer" with type "bench" omitted
-
 rust_library(
-    name = "tungstenite",
+    name = "dashmap",
     srcs = glob(["**/*.rs"]),
     crate_root = "src/lib.rs",
     data = [],
@@ -44,22 +42,16 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=tungstenite",
+        "crate-name=dashmap",
         "manual",
     ],
-    version = "0.17.3",
+    version = "5.4.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__base64__0_13_0//:base64",
-        "@raze__byteorder__1_4_3//:byteorder",
-        "@raze__bytes__1_2_1//:bytes",
-        "@raze__http__0_2_8//:http",
-        "@raze__httparse__1_7_1//:httparse",
-        "@raze__log__0_4_8//:log",
-        "@raze__rand__0_8_5//:rand",
-        "@raze__sha_1__0_10_1//:sha_1",
-        "@raze__thiserror__1_0_37//:thiserror",
-        "@raze__url__2_3_0//:url",
-        "@raze__utf_8__0_7_6//:utf_8",
+        "@raze__cfg_if__1_0_0//:cfg_if",
+        "@raze__hashbrown__0_12_3//:hashbrown",
+        "@raze__lock_api__0_4_8//:lock_api",
+        "@raze__once_cell__1_13_1//:once_cell",
+        "@raze__parking_lot_core__0_9_5//:parking_lot_core",
     ],
 )

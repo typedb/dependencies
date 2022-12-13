@@ -26,17 +26,14 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
-rust_library(
-    name = "ipnet",
+rust_proc_macro(
+    name = "serial_test_derive",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-        "default",
-    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -45,11 +42,15 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=ipnet",
+        "crate-name=serial_test_derive",
         "manual",
     ],
-    version = "2.5.1",
+    version = "0.9.0",
     # buildifier: leave-alone
     deps = [
+        "@raze__proc_macro2__1_0_43//:proc_macro2",
+        "@raze__proc_macro_error__1_0_4//:proc_macro_error",
+        "@raze__quote__1_0_21//:quote",
+        "@raze__syn__1_0_99//:syn",
     ],
 )
