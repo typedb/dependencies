@@ -31,11 +31,14 @@ licenses([
 
 # Generated Targets
 
-# Unsupported target "client" with type "example" omitted
-
 rust_library(
-    name = "hyper_timeout",
+    name = "socket2",
     srcs = glob(["**/*.rs"]),
+    aliases = {
+    },
+    crate_features = [
+        "all",
+    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -44,15 +47,27 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=hyper-timeout",
+        "crate-name=socket2",
         "manual",
     ],
-    version = "0.4.1",
+    version = "0.4.7",
     # buildifier: leave-alone
     deps = [
-        "@raze__hyper__0_14_23//:hyper",
-        "@raze__pin_project_lite__0_2_9//:pin_project_lite",
-        "@raze__tokio__1_20_1//:tokio",
-        "@raze__tokio_io_timeout__1_2_0//:tokio_io_timeout",
-    ],
+    ] + selects.with_or({
+        (
+            "@rules_rust//rust/platform:x86_64-apple-darwin",
+            "@rules_rust//rust/platform:x86_64-unknown-linux-gnu",
+            "@rules_rust//rust/platform:aarch64-apple-darwin",
+        ): [
+            "@raze__libc__0_2_132//:libc",
+        ],
+        "//conditions:default": [],
+    }) + selects.with_or({
+        (
+            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
+        ): [
+            "@raze__winapi__0_3_9//:winapi",
+        ],
+        "//conditions:default": [],
+    }),
 )

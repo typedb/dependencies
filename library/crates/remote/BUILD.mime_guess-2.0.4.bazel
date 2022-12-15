@@ -26,7 +26,7 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
@@ -38,13 +38,13 @@ load(
 )
 
 cargo_build_script(
-    name = "httparse_build_script",
+    name = "mime_guess_build_script",
     srcs = glob(["**/*.rs"]),
     build_script_env = {
     },
     crate_features = [
         "default",
-        "std",
+        "rev-mappings",
     ],
     crate_root = "build.rs",
     data = glob(["**"]),
@@ -56,20 +56,23 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "1.7.1",
+    version = "2.0.4",
     visibility = ["//visibility:private"],
     deps = [
+        "@raze__unicase__2_6_0//:unicase",
     ],
 )
 
-# Unsupported target "parse" with type "bench" omitted
+# Unsupported target "benchmark" with type "bench" omitted
+
+# Unsupported target "rev_map" with type "example" omitted
 
 rust_library(
-    name = "httparse",
+    name = "mime_guess",
     srcs = glob(["**/*.rs"]),
     crate_features = [
         "default",
-        "std",
+        "rev-mappings",
     ],
     crate_root = "src/lib.rs",
     data = [],
@@ -79,14 +82,14 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=httparse",
+        "crate-name=mime_guess",
         "manual",
     ],
-    version = "1.7.1",
+    version = "2.0.4",
     # buildifier: leave-alone
     deps = [
-        ":httparse_build_script",
+        ":mime_guess_build_script",
+        "@raze__mime__0_3_16//:mime",
+        "@raze__unicase__2_6_0//:unicase",
     ],
 )
-
-# Unsupported target "uri" with type "test" omitted

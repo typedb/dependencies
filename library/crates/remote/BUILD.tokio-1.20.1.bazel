@@ -45,6 +45,7 @@ cargo_build_script(
     crate_features = [
         "bytes",
         "default",
+        "fs",
         "io-std",
         "io-util",
         "libc",
@@ -101,6 +102,7 @@ rust_library(
     crate_features = [
         "bytes",
         "default",
+        "fs",
         "io-std",
         "io-util",
         "libc",
@@ -142,7 +144,7 @@ rust_library(
         "@raze__num_cpus__1_13_1//:num_cpus",
         "@raze__once_cell__1_13_1//:once_cell",
         "@raze__pin_project_lite__0_2_9//:pin_project_lite",
-        "@raze__socket2__0_4_6//:socket2",
+        "@raze__socket2__0_4_7//:socket2",
     ] + selects.with_or({
         (
             "@rules_rust//rust/platform:x86_64-apple-darwin",

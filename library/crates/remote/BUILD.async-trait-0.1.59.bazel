@@ -26,7 +26,7 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # Apache-2.0 from expression "Apache-2.0 OR (ISC OR MIT)"
+    "notice",  # MIT from expression "MIT OR Apache-2.0"
 ])
 
 # Generated Targets
@@ -38,17 +38,10 @@ load(
 )
 
 cargo_build_script(
-    name = "rustls_build_script",
+    name = "async_trait_build_script",
     srcs = glob(["**/*.rs"]),
     build_script_env = {
     },
-    crate_features = [
-        "dangerous_configuration",
-        "default",
-        "log",
-        "logging",
-        "tls12",
-    ],
     crate_root = "build.rs",
     data = glob(["**"]),
     edition = "2018",
@@ -59,30 +52,15 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "0.20.7",
+    version = "0.1.59",
     visibility = ["//visibility:private"],
     deps = [
     ],
 )
 
-# Unsupported target "benchmarks" with type "bench" omitted
-
-# Unsupported target "bench" with type "example" omitted
-
-# Unsupported target "bogo_shim" with type "example" omitted
-
-# Unsupported target "trytls_shim" with type "example" omitted
-
-rust_library(
-    name = "rustls",
+rust_proc_macro(
+    name = "async_trait",
     srcs = glob(["**/*.rs"]),
-    crate_features = [
-        "dangerous_configuration",
-        "default",
-        "log",
-        "logging",
-        "tls12",
-    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -91,26 +69,19 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=rustls",
+        "crate-name=async-trait",
         "manual",
     ],
-    version = "0.20.7",
+    version = "0.1.59",
     # buildifier: leave-alone
     deps = [
-        ":rustls_build_script",
-        "@raze__log__0_4_8//:log",
-        "@raze__ring__0_16_20//:ring",
-        "@raze__sct__0_7_0//:sct",
-        "@raze__webpki__0_22_0//:webpki",
+        ":async_trait_build_script",
+        "@raze__proc_macro2__1_0_43//:proc_macro2",
+        "@raze__quote__1_0_21//:quote",
+        "@raze__syn__1_0_99//:syn",
     ],
 )
 
-# Unsupported target "api" with type "test" omitted
+# Unsupported target "compiletest" with type "test" omitted
 
-# Unsupported target "benchmarks" with type "test" omitted
-
-# Unsupported target "client_cert_verifier" with type "test" omitted
-
-# Unsupported target "key_log_file_env" with type "test" omitted
-
-# Unsupported target "server_cert_verifier" with type "test" omitted
+# Unsupported target "test" with type "test" omitted

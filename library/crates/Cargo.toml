@@ -7,7 +7,9 @@ path = "" # ignored by cargo raze
 
 [dependencies]
 alcoholic_jwt = "=4091.0.0"
+async-trait = "0.1.59"
 axum = { version = "=0.5.15", features = ["ws"] }
+axum-server = { version = "=0.4.4", features = ["tls-rustls"]}
 chrono = "=0.4.22"
 clap = "=4.0.26"
 clap_derive = "=4.0.21"
@@ -21,6 +23,8 @@ enum_dispatch = "=0.3.8"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
 itertools = "=0.10.3"
 log = "=0.4.8"
+mime = "0.3.16"
+mime_guess = "2.0.4"
 pest = "=2.4.1"
 pest_derive = "=2.4.1"
 prost = "=0.11.0"
@@ -31,6 +35,7 @@ ring = "=0.16.20"
 rocksdb = "=0.17.0"
 rustix = "=0.35.9"
 serde = "=1.0.145"
+serde_json = "1.0"
 serial_test = "0.9.0"
 sha2 = "=0.10.6"
 synthez = "=0.2.0"
@@ -70,10 +75,16 @@ genmode = "Remote"
 [package.metadata.raze.crates.axum.'0.5.15']
 compile_data_attr = "glob([\"**/*.md\"])"
 
+[package.metadata.raze.crates.axum-server.'0.4.4']
+compile_data_attr = "glob([\"**/*.der\"])"
+
 [package.metadata.raze.crates.clap.'4.0.26']
 compile_data_attr = "glob([\"**/*.md\"])"
 
 [package.metadata.raze.crates.clap_derive.'4.0.21']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.cucumber.'0.15.2']
 compile_data_attr = "glob([\"**/*.md\"])"
 
 [package.metadata.raze.crates.cucumber-codegen.'0.15.3']
@@ -82,22 +93,19 @@ compile_data_attr = "glob([\"**/*.md\"])"
 [package.metadata.raze.crates.cucumber-expressions.'0.2.1']
 compile_data_attr = "glob([\"**/*.md\"])"
 
-[package.metadata.raze.crates.cucumber.'0.15.2']
-compile_data_attr = "glob([\"**/*.md\"])"
-
 [package.metadata.raze.crates.prost.'0.11.0']
 compile_data_attr = "glob([\"**/*.md\"])"
 
 [package.metadata.raze.crates.ring.'0.16.20']
 compile_data_attr = "glob([\"**/*.der\"])"
 
+[package.metadata.raze.crates.synthez.'0.2.0']
+compile_data_attr = "glob([\"**/*.md\"])"
+
 [package.metadata.raze.crates.synthez-codegen.'0.2.0']
 compile_data_attr = "glob([\"**/*.md\"])"
 
 [package.metadata.raze.crates.synthez-core.'0.2.0']
-compile_data_attr = "glob([\"**/*.md\"])"
-
-[package.metadata.raze.crates.synthez.'0.2.0']
 compile_data_attr = "glob([\"**/*.md\"])"
 
 [package.metadata.raze.crates.tonic.'0.8.0']
