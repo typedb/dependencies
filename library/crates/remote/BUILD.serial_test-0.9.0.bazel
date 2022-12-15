@@ -26,46 +26,44 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT OR Apache-2.0"
+    "notice",  # MIT from expression "MIT"
 ])
 
 # Generated Targets
 
 rust_library(
-    name = "windows_sys",
+    name = "serial_test",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
     crate_features = [
-        "Win32",
-        "Win32_Foundation",
-        "Win32_System",
-        "Win32_System_Console",
-        "Win32_System_LibraryLoader",
-        "Win32_System_SystemServices",
-        "Win32_System_WindowsProgramming",
+        "async",
         "default",
+        "futures",
+        "log",
+        "logging",
     ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
+    proc_macro_deps = [
+        "@raze__serial_test_derive__0_9_0//:serial_test_derive",
+    ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=windows-sys",
+        "crate-name=serial_test",
         "manual",
     ],
-    version = "0.42.0",
+    version = "0.9.0",
     # buildifier: leave-alone
     deps = [
-    ] + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__windows_x86_64_msvc__0_42_0//:windows_x86_64_msvc",
-        ],
-        "//conditions:default": [],
-    }),
+        "@raze__dashmap__5_4_0//:dashmap",
+        "@raze__futures__0_3_21//:futures",
+        "@raze__lazy_static__1_4_0//:lazy_static",
+        "@raze__log__0_4_8//:log",
+        "@raze__parking_lot__0_12_1//:parking_lot",
+    ],
 )
+
+# Unsupported target "tests" with type "test" omitted

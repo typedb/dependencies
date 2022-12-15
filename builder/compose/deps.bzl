@@ -2,13 +2,6 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 
 def deps():
     http_file(
-        name = "org_jetbrains_compose_compiler",
-        urls = ["https://maven.pkg.jetbrains.space/public/p/compose/dev/org/jetbrains/compose/compiler/compiler-hosted/1.0.0-rc3/compiler-hosted-1.0.0-rc3.jar"],
-        sha256 = "1e628a81ad501bc737ca4ea193b8c5072a4baa022b3152aacb928bf076af8226",
-        downloaded_file_path = "compiler-hosted-1.0.0-rc3.jar",
-    )
-
-    http_file(
         name = "jdk16_mac",
         urls = ["https://download.java.net/java/GA/jdk16.0.2/d4a915d82b4c4fbb9bde534da945d746/7/GPL/openjdk-16.0.2_osx-x64_bin.tar.gz"],
         sha256 = "e65f2437585f16a01fa8e10139d0d855e8a74396a1dfb0163294ed17edd704b8",

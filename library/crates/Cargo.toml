@@ -7,6 +7,7 @@ path = "" # ignored by cargo raze
 
 [dependencies]
 alcoholic_jwt = "=4091.0.0"
+async-trait = "0.1.59"
 axum = { version = "=0.5.15", features = ["ws"] }
 axum-server = { version = "=0.4.4", features = ["tls-rustls"]}
 chrono = "=0.4.22"
@@ -30,19 +31,21 @@ prost = "=0.11.0"
 prost-build = "=0.11.1"
 reqwest = { version = "=0.11.12", features = ["json"] }
 regex = "=1.6.0"
+ring = "=0.16.20"
 rocksdb = "=0.17.0"
 rustix = "=0.35.9"
-sha2 = "=0.10.6"
 serde = "=1.0.145"
 serde_json = "1.0"
+serial_test = "0.9.0"
+sha2 = "=0.10.6"
 synthez = "=0.2.0"
 synthez-codegen = "=0.2.0"
 synthez-core = "=0.2.0"
 tokio = { version = "=1.20.1", features = ["rt", "rt-multi-thread"] }
-tonic = "=0.8.0"
+tonic = { version = "=0.8.0", features = ["tls"] }
 tonic-build = "=0.8.0"
 uuid = { version = "=1.1.2", features = ["fast-rng", "v4"] }
-async-trait = "0.1.59"
+webpki = "=0.22.0"
 
 [package.metadata.raze]
 # The path at which to write output files.
@@ -75,16 +78,13 @@ compile_data_attr = "glob([\"**/*.md\"])"
 [package.metadata.raze.crates.axum-server.'0.4.4']
 compile_data_attr = "glob([\"**/*.der\"])"
 
-[package.metadata.raze.crates.ring.'0.16.20']
-compile_data_attr = "glob([\"**/*.der\"])"
-
-[package.metadata.raze.crates.webpki.'0.22.0']
-compile_data_attr = "glob([\"**/*.der\"])"
-
 [package.metadata.raze.crates.clap.'4.0.26']
 compile_data_attr = "glob([\"**/*.md\"])"
 
 [package.metadata.raze.crates.clap_derive.'4.0.21']
+compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.cucumber.'0.15.2']
 compile_data_attr = "glob([\"**/*.md\"])"
 
 [package.metadata.raze.crates.cucumber-codegen.'0.15.3']
@@ -93,10 +93,13 @@ compile_data_attr = "glob([\"**/*.md\"])"
 [package.metadata.raze.crates.cucumber-expressions.'0.2.1']
 compile_data_attr = "glob([\"**/*.md\"])"
 
-[package.metadata.raze.crates.cucumber.'0.15.2']
+[package.metadata.raze.crates.prost.'0.11.0']
 compile_data_attr = "glob([\"**/*.md\"])"
 
-[package.metadata.raze.crates.prost.'0.11.0']
+[package.metadata.raze.crates.ring.'0.16.20']
+compile_data_attr = "glob([\"**/*.der\"])"
+
+[package.metadata.raze.crates.synthez.'0.2.0']
 compile_data_attr = "glob([\"**/*.md\"])"
 
 [package.metadata.raze.crates.synthez-codegen.'0.2.0']
@@ -105,8 +108,8 @@ compile_data_attr = "glob([\"**/*.md\"])"
 [package.metadata.raze.crates.synthez-core.'0.2.0']
 compile_data_attr = "glob([\"**/*.md\"])"
 
-[package.metadata.raze.crates.synthez.'0.2.0']
-compile_data_attr = "glob([\"**/*.md\"])"
-
 [package.metadata.raze.crates.tonic.'0.8.0']
 compile_data_attr = "glob([\"**/*.md\"])"
+
+[package.metadata.raze.crates.webpki.'0.22.0']
+compile_data_attr = "glob([\"**/*.der\"])"

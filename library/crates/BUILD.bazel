@@ -238,6 +238,15 @@ alias(
 )
 
 alias(
+    name = "ring",
+    actual = "@raze__ring__0_16_20//:ring",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
     name = "rocksdb",
     actual = "@raze__rocksdb__0_17_0//:rocksdb",
     tags = [
@@ -267,6 +276,15 @@ alias(
 alias(
     name = "serde_json",
     actual = "@raze__serde_json__1_0_89//:serde_json",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "serial_test",
+    actual = "@raze__serial_test__0_9_0//:serial_test",
     tags = [
         "cargo-raze",
         "manual",
@@ -339,6 +357,15 @@ alias(
 alias(
     name = "uuid",
     actual = "@raze__uuid__1_1_2//:uuid",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "webpki",
+    actual = "@raze__webpki__0_22_0//:webpki",
     tags = [
         "cargo-raze",
         "manual",

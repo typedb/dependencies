@@ -32,18 +32,9 @@ licenses([
 # Generated Targets
 
 rust_library(
-    name = "windows_sys",
+    name = "parking_lot",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
     crate_features = [
-        "Win32",
-        "Win32_Foundation",
-        "Win32_System",
-        "Win32_System_Console",
-        "Win32_System_LibraryLoader",
-        "Win32_System_SystemServices",
-        "Win32_System_WindowsProgramming",
         "default",
     ],
     crate_root = "src/lib.rs",
@@ -54,18 +45,15 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=windows-sys",
+        "crate-name=parking_lot",
         "manual",
     ],
-    version = "0.42.0",
+    version = "0.12.1",
     # buildifier: leave-alone
     deps = [
-    ] + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__windows_x86_64_msvc__0_42_0//:windows_x86_64_msvc",
-        ],
-        "//conditions:default": [],
-    }),
+        "@raze__lock_api__0_4_8//:lock_api",
+        "@raze__parking_lot_core__0_9_5//:parking_lot_core",
+    ],
 )
+
+# Unsupported target "issue_203" with type "test" omitted

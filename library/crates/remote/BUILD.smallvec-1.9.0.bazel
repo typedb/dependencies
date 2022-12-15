@@ -31,21 +31,11 @@ licenses([
 
 # Generated Targets
 
+# Unsupported target "bench" with type "bench" omitted
+
 rust_library(
-    name = "windows_sys",
+    name = "smallvec",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
-    crate_features = [
-        "Win32",
-        "Win32_Foundation",
-        "Win32_System",
-        "Win32_System_Console",
-        "Win32_System_LibraryLoader",
-        "Win32_System_SystemServices",
-        "Win32_System_WindowsProgramming",
-        "default",
-    ],
     crate_root = "src/lib.rs",
     data = [],
     edition = "2018",
@@ -54,18 +44,13 @@ rust_library(
     ],
     tags = [
         "cargo-raze",
-        "crate-name=windows-sys",
+        "crate-name=smallvec",
         "manual",
     ],
-    version = "0.42.0",
+    version = "1.9.0",
     # buildifier: leave-alone
     deps = [
-    ] + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__windows_x86_64_msvc__0_42_0//:windows_x86_64_msvc",
-        ],
-        "//conditions:default": [],
-    }),
+    ],
 )
+
+# Unsupported target "macro" with type "test" omitted
