@@ -20,6 +20,7 @@ cucumber-expressions = "=0.2.1"
 cxx = "=1.0.59"
 derivative = "=2.2.0"
 enum_dispatch = "=0.3.8"
+fluvio-helm = "=0.4.3"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
 itertools = "=0.10.3"
 log = "=0.4.8"

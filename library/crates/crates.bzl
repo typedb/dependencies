@@ -619,6 +619,24 @@ def raze_fetch_remote_crates():
 
     maybe(
         http_archive,
+        name = "raze__fluvio_command__0_2_1",
+        url = "https://crates.io/api/v1/crates/fluvio-command/0.2.1/download",
+        type = "tar.gz",
+        strip_prefix = "fluvio-command-0.2.1",
+        build_file = Label("//library/crates/remote:BUILD.fluvio-command-0.2.1.bazel"),
+    )
+
+    maybe(
+        http_archive,
+        name = "raze__fluvio_helm__0_4_3",
+        url = "https://crates.io/api/v1/crates/fluvio-helm/0.4.3/download",
+        type = "tar.gz",
+        strip_prefix = "fluvio-helm-0.4.3",
+        build_file = Label("//library/crates/remote:BUILD.fluvio-helm-0.4.3.bazel"),
+    )
+
+    maybe(
+        http_archive,
         name = "raze__fnv__1_0_7",
         url = "https://crates.io/api/v1/crates/fnv/1.0.7/download",
         type = "tar.gz",
