@@ -61,7 +61,7 @@ rust_library(
         "@raze__dashmap__5_4_0//:dashmap",
         "@raze__futures__0_3_21//:futures",
         "@raze__lazy_static__1_4_0//:lazy_static",
-        "@raze__log__0_4_8//:log",
+        "@raze__log__0_4_17//:log",
         "@raze__parking_lot__0_12_1//:parking_lot",
     ],
 )

@@ -1,0 +1,70 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//library/crates", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # Apache-2.0 from expression "Apache-2.0"
+])
+
+# Generated Targets
+
+rust_library(
+    name = "kube_runtime",
+    srcs = glob(["**/*.rs"]),
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2021",
+    proc_macro_deps = [
+        "@raze__derivative__2_2_0//:derivative",
+    ],
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=kube-runtime",
+        "manual",
+    ],
+    version = "0.77.0",
+    # buildifier: leave-alone
+    deps = [
+        "@raze__ahash__0_8_2//:ahash",
+        "@raze__backoff__0_4_0//:backoff",
+        "@raze__futures__0_3_21//:futures",
+        "@raze__json_patch__0_3_0//:json_patch",
+        "@raze__k8s_openapi__0_16_0//:k8s_openapi",
+        "@raze__kube_client__0_77_0//:kube_client",
+        "@raze__parking_lot__0_12_1//:parking_lot",
+        "@raze__pin_project__1_0_12//:pin_project",
+        "@raze__serde__1_0_149//:serde",
+        "@raze__serde_json__1_0_91//:serde_json",
+        "@raze__smallvec__1_9_0//:smallvec",
+        "@raze__thiserror__1_0_38//:thiserror",
+        "@raze__tokio__1_20_1//:tokio",
+        "@raze__tokio_util__0_7_3//:tokio_util",
+        "@raze__tracing__0_1_36//:tracing",
+    ],
+)

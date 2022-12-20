@@ -41,11 +41,13 @@ rust_library(
     aliases = {
     },
     crate_features = [
+        "alloc",
         "clock",
         "default",
         "iana-time-zone",
         "js-sys",
         "oldtime",
+        "serde",
         "std",
         "time",
         "wasm-bindgen",
@@ -63,12 +65,13 @@ rust_library(
         "crate-name=chrono",
         "manual",
     ],
-    version = "0.4.22",
+    version = "0.4.23",
     # buildifier: leave-alone
     deps = [
         "@raze__iana_time_zone__0_1_53//:iana_time_zone",
         "@raze__num_integer__0_1_45//:num_integer",
         "@raze__num_traits__0_2_15//:num_traits",
+        "@raze__serde__1_0_149//:serde",
         "@raze__time__0_1_45//:time",
     ] + selects.with_or({
         (
@@ -79,5 +82,7 @@ rust_library(
         "//conditions:default": [],
     }),
 )
+
+# Unsupported target "dateutils" with type "test" omitted
 
 # Unsupported target "wasm" with type "test" omitted

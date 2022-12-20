@@ -43,7 +43,7 @@ rust_library(
     compile_data = glob(["**/*.md"]),
     edition = "2021",
     proc_macro_deps = [
-        "@raze__async_trait__0_1_59//:async_trait",
+        "@raze__async_trait__0_1_60//:async_trait",
         "@raze__cucumber_codegen__0_15_3//:cucumber_codegen",
         "@raze__derive_more__0_99_17//:derive_more",
         "@raze__sealed__0_4_0//:sealed",
@@ -70,7 +70,7 @@ rust_library(
         "@raze__gherkin__0_13_0//:gherkin",
         "@raze__globwalk__0_8_1//:globwalk",
         "@raze__humantime__2_1_0//:humantime",
-        "@raze__inventory__0_3_2//:inventory",
+        "@raze__inventory__0_3_3//:inventory",
         "@raze__itertools__0_10_3//:itertools",
         "@raze__linked_hash_map__0_5_6//:linked_hash_map",
         "@raze__once_cell__1_13_1//:once_cell",

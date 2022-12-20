@@ -64,7 +64,7 @@ rust_library(
     compile_data = glob(["**/*.md"]),
     edition = "2018",
     proc_macro_deps = [
-        "@raze__async_trait__0_1_59//:async_trait",
+        "@raze__async_trait__0_1_60//:async_trait",
         "@raze__prost_derive__0_11_0//:prost_derive",
     ],
     rustc_flags = [
@@ -100,7 +100,7 @@ rust_library(
         "@raze__tower__0_4_13//:tower",
         "@raze__tower_layer__0_3_1//:tower_layer",
         "@raze__tower_service__0_3_2//:tower_service",
-        "@raze__tracing__0_1_35//:tracing",
+        "@raze__tracing__0_1_36//:tracing",
         "@raze__tracing_futures__0_2_5//:tracing_futures",
     ],
 )

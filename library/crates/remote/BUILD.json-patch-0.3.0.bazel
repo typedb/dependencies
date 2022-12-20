@@ -1,0 +1,67 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//library/crates", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT OR Apache-2.0"
+])
+
+# Generated Targets
+
+# Unsupported target "bench" with type "bench" omitted
+
+rust_library(
+    name = "json_patch",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+        "diff",
+        "treediff",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2021",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=json-patch",
+        "manual",
+    ],
+    version = "0.3.0",
+    # buildifier: leave-alone
+    deps = [
+        "@raze__serde__1_0_149//:serde",
+        "@raze__serde_json__1_0_91//:serde_json",
+        "@raze__thiserror__1_0_38//:thiserror",
+        "@raze__treediff__4_0_2//:treediff",
+    ],
+)
+
+# Unsupported target "basic" with type "test" omitted
+
+# Unsupported target "suite" with type "test" omitted

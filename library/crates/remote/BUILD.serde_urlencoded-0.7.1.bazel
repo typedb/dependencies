@@ -50,8 +50,8 @@ rust_library(
     deps = [
         "@raze__form_urlencoded__1_0_1//:form_urlencoded",
         "@raze__itoa__1_0_3//:itoa",
-        "@raze__ryu__1_0_11//:ryu",
-        "@raze__serde__1_0_145//:serde",
+        "@raze__ryu__1_0_12//:ryu",
+        "@raze__serde__1_0_149//:serde",
     ],
 )
 

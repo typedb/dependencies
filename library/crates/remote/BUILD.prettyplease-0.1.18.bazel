@@ -77,7 +77,7 @@ rust_library(
     # buildifier: leave-alone
     deps = [
         ":prettyplease_build_script",
-        "@raze__proc_macro2__1_0_43//:proc_macro2",
-        "@raze__syn__1_0_99//:syn",
+        "@raze__proc_macro2__1_0_49//:proc_macro2",
+        "@raze__syn__1_0_107//:syn",
     ],
 )

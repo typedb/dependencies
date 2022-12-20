@@ -55,7 +55,7 @@ rust_library(
         "@raze__crossbeam_utils__0_8_14//:crossbeam_utils",
         "@raze__globset__0_4_9//:globset",
         "@raze__lazy_static__1_4_0//:lazy_static",
-        "@raze__log__0_4_8//:log",
+        "@raze__log__0_4_17//:log",
         "@raze__memchr__2_5_0//:memchr",
         "@raze__regex__1_6_0//:regex",
         "@raze__same_file__1_0_6//:same_file",

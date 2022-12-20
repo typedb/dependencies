@@ -52,7 +52,7 @@ rust_library(
     version = "0.2.0",
     # buildifier: leave-alone
     deps = [
-        "@raze__syn__1_0_99//:syn",
+        "@raze__syn__1_0_107//:syn",
         "@raze__synthez_core__0_2_0//:synthez_core",
     ],
 )

@@ -58,7 +58,7 @@ rust_library(
     compile_data = glob(["**/*.md"]),
     edition = "2021",
     proc_macro_deps = [
-        "@raze__async_trait__0_1_59//:async_trait",
+        "@raze__async_trait__0_1_60//:async_trait",
     ],
     rustc_flags = [
         "--cap-lints=allow",
@@ -85,8 +85,8 @@ rust_library(
         "@raze__mime__0_3_16//:mime",
         "@raze__percent_encoding__2_1_0//:percent_encoding",
         "@raze__pin_project_lite__0_2_9//:pin_project_lite",
-        "@raze__serde__1_0_145//:serde",
-        "@raze__serde_json__1_0_89//:serde_json",
+        "@raze__serde__1_0_149//:serde",
+        "@raze__serde_json__1_0_91//:serde_json",
         "@raze__serde_urlencoded__0_7_1//:serde_urlencoded",
         "@raze__sha_1__0_10_1//:sha_1",
         "@raze__sync_wrapper__0_1_1//:sync_wrapper",

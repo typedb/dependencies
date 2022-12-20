@@ -26,7 +26,7 @@ package(default_visibility = [
 ])
 
 licenses([
-    "notice",  # MIT from expression "MIT"
+    "notice",  # MIT from expression "MIT OR Apache-2.0"
 ])
 
 # Generated Targets
@@ -38,14 +38,17 @@ load(
 )
 
 cargo_build_script(
-    name = "openssl_sys_build_script",
+    name = "hyper_openssl_build_script",
     srcs = glob(["**/*.rs"]),
     build_script_env = {
     },
-    crate_root = "build/main.rs",
+    crate_features = [
+        "default",
+        "tcp",
+    ],
+    crate_root = "build.rs",
     data = glob(["**"]),
-    edition = "2015",
-    links = "openssl",
+    edition = "2018",
     rustc_flags = [
         "--cap-lints=allow",
     ],
@@ -53,48 +56,44 @@ cargo_build_script(
         "cargo-raze",
         "manual",
     ],
-    version = "0.9.79",
+    version = "0.9.2",
     visibility = ["//visibility:private"],
     deps = [
-        "@raze__autocfg__1_1_0//:autocfg",
-        "@raze__cc__1_0_73//:cc",
-        "@raze__pkg_config__0_3_26//:pkg_config",
-    ] + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-            "@raze__vcpkg__0_2_15//:vcpkg",
-        ],
-        "//conditions:default": [],
-    }),
+        "@raze__openssl_sys__0_9_80//:openssl_sys",
+    ],
 )
 
 rust_library(
-    name = "openssl_sys",
+    name = "hyper_openssl",
     srcs = glob(["**/*.rs"]),
-    aliases = {
-    },
+    crate_features = [
+        "default",
+        "tcp",
+    ],
     crate_root = "src/lib.rs",
     data = [],
-    edition = "2015",
+    edition = "2018",
     rustc_flags = [
         "--cap-lints=allow",
     ],
     tags = [
         "cargo-raze",
-        "crate-name=openssl-sys",
+        "crate-name=hyper-openssl",
         "manual",
     ],
-    version = "0.9.79",
+    version = "0.9.2",
     # buildifier: leave-alone
     deps = [
-        ":openssl_sys_build_script",
-        "@raze__libc__0_2_132//:libc",
-    ] + selects.with_or({
-        (
-            "@rules_rust//rust/platform:x86_64-pc-windows-msvc",
-        ): [
-        ],
-        "//conditions:default": [],
-    }),
+        ":hyper_openssl_build_script",
+        "@raze__http__0_2_8//:http",
+        "@raze__hyper__0_14_23//:hyper",
+        "@raze__linked_hash_set__0_1_4//:linked_hash_set",
+        "@raze__once_cell__1_13_1//:once_cell",
+        "@raze__openssl__0_10_45//:openssl",
+        "@raze__openssl_sys__0_9_80//:openssl_sys",
+        "@raze__parking_lot__0_12_1//:parking_lot",
+        "@raze__tokio__1_20_1//:tokio",
+        "@raze__tokio_openssl__0_6_3//:tokio_openssl",
+        "@raze__tower_layer__0_3_1//:tower_layer",
+    ],
 )

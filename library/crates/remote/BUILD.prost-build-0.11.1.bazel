@@ -55,7 +55,7 @@ rust_library(
         "@raze__heck__0_4_0//:heck",
         "@raze__itertools__0_10_3//:itertools",
         "@raze__lazy_static__1_4_0//:lazy_static",
-        "@raze__log__0_4_8//:log",
+        "@raze__log__0_4_17//:log",
         "@raze__multimap__0_8_3//:multimap",
         "@raze__petgraph__0_6_2//:petgraph",
         "@raze__prost__0_11_0//:prost",

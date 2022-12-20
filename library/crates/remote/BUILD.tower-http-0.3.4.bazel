@@ -35,9 +35,13 @@ rust_library(
     name = "tower_http",
     srcs = glob(["**/*.rs"]),
     crate_features = [
+        "auth",
+        "base64",
         "default",
         "map-response-body",
         "tower",
+        "trace",
+        "tracing",
         "util",
     ],
     crate_root = "src/lib.rs",
@@ -54,6 +58,7 @@ rust_library(
     version = "0.3.4",
     # buildifier: leave-alone
     deps = [
+        "@raze__base64__0_13_0//:base64",
         "@raze__bitflags__1_3_2//:bitflags",
         "@raze__bytes__1_2_1//:bytes",
         "@raze__futures_core__0_3_24//:futures_core",
@@ -65,5 +70,6 @@ rust_library(
         "@raze__tower__0_4_13//:tower",
         "@raze__tower_layer__0_3_1//:tower_layer",
         "@raze__tower_service__0_3_2//:tower_service",
+        "@raze__tracing__0_1_36//:tracing",
     ],
 )

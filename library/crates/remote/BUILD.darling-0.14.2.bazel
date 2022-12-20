@@ -1,0 +1,116 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//library/crates", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # MIT from expression "MIT"
+])
+
+# Generated Targets
+
+# Unsupported target "automatic_bounds" with type "example" omitted
+
+# Unsupported target "consume_fields" with type "example" omitted
+
+# Unsupported target "fallible_read" with type "example" omitted
+
+# Unsupported target "shorthand_or_long_field" with type "example" omitted
+
+# Unsupported target "supports_struct" with type "example" omitted
+
+rust_library(
+    name = "darling",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "default",
+        "suggestions",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2018",
+    proc_macro_deps = [
+        "@raze__darling_macro__0_14_2//:darling_macro",
+    ],
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=darling",
+        "manual",
+    ],
+    version = "0.14.2",
+    # buildifier: leave-alone
+    deps = [
+        "@raze__darling_core__0_14_2//:darling_core",
+    ],
+)
+
+# Unsupported target "accrue_errors" with type "test" omitted
+
+# Unsupported target "computed_bound" with type "test" omitted
+
+# Unsupported target "custom_bound" with type "test" omitted
+
+# Unsupported target "defaults" with type "test" omitted
+
+# Unsupported target "enums_newtype" with type "test" omitted
+
+# Unsupported target "enums_struct" with type "test" omitted
+
+# Unsupported target "enums_unit" with type "test" omitted
+
+# Unsupported target "error" with type "test" omitted
+
+# Unsupported target "from_generics" with type "test" omitted
+
+# Unsupported target "from_meta" with type "test" omitted
+
+# Unsupported target "from_type_param" with type "test" omitted
+
+# Unsupported target "from_type_param_default" with type "test" omitted
+
+# Unsupported target "from_variant" with type "test" omitted
+
+# Unsupported target "generics" with type "test" omitted
+
+# Unsupported target "happy_path" with type "test" omitted
+
+# Unsupported target "hash_map" with type "test" omitted
+
+# Unsupported target "multiple" with type "test" omitted
+
+# Unsupported target "newtype" with type "test" omitted
+
+# Unsupported target "skip" with type "test" omitted
+
+# Unsupported target "split_declaration" with type "test" omitted
+
+# Unsupported target "suggestions" with type "test" omitted
+
+# Unsupported target "supports" with type "test" omitted
+
+# Unsupported target "unsupported_attributes" with type "test" omitted

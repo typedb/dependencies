@@ -31,11 +31,25 @@ licenses([
 
 # Generated Targets
 
-# Unsupported target "global_subscriber" with type "bench" omitted
+# Unsupported target "baseline" with type "bench" omitted
 
-# Unsupported target "no_subscriber" with type "bench" omitted
+# Unsupported target "dispatch_get_clone" with type "bench" omitted
 
-# Unsupported target "subscriber" with type "bench" omitted
+# Unsupported target "dispatch_get_ref" with type "bench" omitted
+
+# Unsupported target "empty_span" with type "bench" omitted
+
+# Unsupported target "enter_span" with type "bench" omitted
+
+# Unsupported target "event" with type "bench" omitted
+
+# Unsupported target "shared" with type "bench" omitted
+
+# Unsupported target "span_fields" with type "bench" omitted
+
+# Unsupported target "span_no_fields" with type "bench" omitted
+
+# Unsupported target "span_repeated" with type "bench" omitted
 
 rust_library(
     name = "tracing",
@@ -61,11 +75,11 @@ rust_library(
         "crate-name=tracing",
         "manual",
     ],
-    version = "0.1.35",
+    version = "0.1.36",
     # buildifier: leave-alone
     deps = [
         "@raze__cfg_if__1_0_0//:cfg_if",
-        "@raze__log__0_4_8//:log",
+        "@raze__log__0_4_17//:log",
         "@raze__pin_project_lite__0_2_9//:pin_project_lite",
         "@raze__tracing_core__0_1_29//:tracing_core",
     ],

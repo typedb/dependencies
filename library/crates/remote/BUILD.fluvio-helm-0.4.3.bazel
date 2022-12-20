@@ -49,9 +49,9 @@ rust_library(
     # buildifier: leave-alone
     deps = [
         "@raze__fluvio_command__0_2_1//:fluvio_command",
-        "@raze__serde__1_0_145//:serde",
-        "@raze__serde_json__1_0_89//:serde_json",
-        "@raze__thiserror__1_0_37//:thiserror",
-        "@raze__tracing__0_1_35//:tracing",
+        "@raze__serde__1_0_149//:serde",
+        "@raze__serde_json__1_0_91//:serde_json",
+        "@raze__thiserror__1_0_38//:thiserror",
+        "@raze__tracing__0_1_36//:tracing",
     ],
 )

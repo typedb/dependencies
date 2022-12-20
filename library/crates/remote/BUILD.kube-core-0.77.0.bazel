@@ -1,0 +1,68 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//library/crates", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # Apache-2.0 from expression "Apache-2.0"
+])
+
+# Generated Targets
+
+rust_library(
+    name = "kube_core",
+    srcs = glob(["**/*.rs"]),
+    crate_features = [
+        "json-patch",
+        "jsonpatch",
+        "schema",
+        "schemars",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2021",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=kube-core",
+        "manual",
+    ],
+    version = "0.77.0",
+    # buildifier: leave-alone
+    deps = [
+        "@raze__chrono__0_4_23//:chrono",
+        "@raze__form_urlencoded__1_0_1//:form_urlencoded",
+        "@raze__http__0_2_8//:http",
+        "@raze__json_patch__0_3_0//:json_patch",
+        "@raze__k8s_openapi__0_16_0//:k8s_openapi",
+        "@raze__once_cell__1_13_1//:once_cell",
+        "@raze__schemars__0_8_11//:schemars",
+        "@raze__serde__1_0_149//:serde",
+        "@raze__serde_json__1_0_91//:serde_json",
+        "@raze__thiserror__1_0_38//:thiserror",
+    ],
+)

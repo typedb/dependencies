@@ -57,6 +57,8 @@ cargo_build_script(
         "once_cell",
         "rt",
         "rt-multi-thread",
+        "signal",
+        "signal-hook-registry",
         "socket2",
         "sync",
         "time",
@@ -114,6 +116,8 @@ rust_library(
         "once_cell",
         "rt",
         "rt-multi-thread",
+        "signal",
+        "signal-hook-registry",
         "socket2",
         "sync",
         "time",
@@ -152,6 +156,7 @@ rust_library(
             "@rules_rust//rust/platform:aarch64-apple-darwin",
         ): [
             "@raze__libc__0_2_132//:libc",
+            "@raze__signal_hook_registry__1_4_0//:signal_hook_registry",
         ],
         "//conditions:default": [],
     }) + selects.with_or({

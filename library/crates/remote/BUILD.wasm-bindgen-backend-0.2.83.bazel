@@ -49,11 +49,11 @@ rust_library(
     # buildifier: leave-alone
     deps = [
         "@raze__bumpalo__3_11_1//:bumpalo",
-        "@raze__log__0_4_8//:log",
+        "@raze__log__0_4_17//:log",
         "@raze__once_cell__1_13_1//:once_cell",
-        "@raze__proc_macro2__1_0_43//:proc_macro2",
+        "@raze__proc_macro2__1_0_49//:proc_macro2",
         "@raze__quote__1_0_21//:quote",
-        "@raze__syn__1_0_99//:syn",
+        "@raze__syn__1_0_107//:syn",
         "@raze__wasm_bindgen_shared__0_2_83//:wasm_bindgen_shared",
     ],
 )

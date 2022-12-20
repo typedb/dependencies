@@ -1,0 +1,109 @@
+"""
+@generated
+cargo-raze crate build file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+# buildifier: disable=load
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
+# buildifier: disable=load
+load(
+    "@rules_rust//rust:defs.bzl",
+    "rust_binary",
+    "rust_library",
+    "rust_proc_macro",
+    "rust_test",
+)
+
+package(default_visibility = [
+    # Public for visibility by "@raze__crate__version//" targets.
+    #
+    # Prefer access through "//library/crates", which limits external
+    # visibility to explicit Cargo.toml dependencies.
+    "//visibility:public",
+])
+
+licenses([
+    "notice",  # Apache-2.0 from expression "Apache-2.0"
+])
+
+# Generated Targets
+
+rust_library(
+    name = "kube_client",
+    srcs = glob(["**/*.rs"]),
+    aliases = {
+        "@raze__dirs_next__2_0_0//:dirs_next": "dirs",
+    },
+    crate_features = [
+        "__non_core",
+        "base64",
+        "bytes",
+        "chrono",
+        "client",
+        "config",
+        "dirs",
+        "either",
+        "futures",
+        "http-body",
+        "hyper",
+        "hyper-openssl",
+        "hyper-timeout",
+        "jsonpatch",
+        "jsonpath_lib",
+        "openssl",
+        "openssl-tls",
+        "pem",
+        "pin-project",
+        "serde_yaml",
+        "tokio",
+        "tokio-util",
+        "tower",
+        "tower-http",
+        "tracing",
+    ],
+    crate_root = "src/lib.rs",
+    data = [],
+    edition = "2021",
+    rustc_flags = [
+        "--cap-lints=allow",
+    ],
+    tags = [
+        "cargo-raze",
+        "crate-name=kube-client",
+        "manual",
+    ],
+    version = "0.77.0",
+    # buildifier: leave-alone
+    deps = [
+        "@raze__base64__0_13_0//:base64",
+        "@raze__bytes__1_2_1//:bytes",
+        "@raze__chrono__0_4_23//:chrono",
+        "@raze__dirs_next__2_0_0//:dirs_next",
+        "@raze__either__1_8_0//:either",
+        "@raze__futures__0_3_21//:futures",
+        "@raze__http__0_2_8//:http",
+        "@raze__http_body__0_4_5//:http_body",
+        "@raze__hyper__0_14_23//:hyper",
+        "@raze__hyper_openssl__0_9_2//:hyper_openssl",
+        "@raze__hyper_timeout__0_4_1//:hyper_timeout",
+        "@raze__jsonpath_lib__0_3_0//:jsonpath_lib",
+        "@raze__k8s_openapi__0_16_0//:k8s_openapi",
+        "@raze__kube_core__0_77_0//:kube_core",
+        "@raze__openssl__0_10_45//:openssl",
+        "@raze__pem__1_1_0//:pem",
+        "@raze__pin_project__1_0_12//:pin_project",
+        "@raze__secrecy__0_8_0//:secrecy",
+        "@raze__serde__1_0_149//:serde",
+        "@raze__serde_json__1_0_91//:serde_json",
+        "@raze__serde_yaml__0_8_26//:serde_yaml",
+        "@raze__thiserror__1_0_38//:thiserror",
+        "@raze__tokio__1_20_1//:tokio",
+        "@raze__tokio_util__0_7_3//:tokio_util",
+        "@raze__tower__0_4_13//:tower",
+        "@raze__tower_http__0_3_4//:tower_http",
+        "@raze__tracing__0_1_36//:tracing",
+    ],
+)

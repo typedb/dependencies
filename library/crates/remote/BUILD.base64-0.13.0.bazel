@@ -41,6 +41,7 @@ rust_library(
     name = "base64",
     srcs = glob(["**/*.rs"]),
     crate_features = [
+        "alloc",
         "default",
         "std",
     ],

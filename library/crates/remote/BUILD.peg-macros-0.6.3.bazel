@@ -52,7 +52,7 @@ rust_binary(
     deps = [
         ":peg_macros",
         "@raze__peg_runtime__0_6_3//:peg_runtime",
-        "@raze__proc_macro2__1_0_43//:proc_macro2",
+        "@raze__proc_macro2__1_0_49//:proc_macro2",
         "@raze__quote__1_0_21//:quote",
     ],
 )
@@ -75,7 +75,7 @@ rust_proc_macro(
     # buildifier: leave-alone
     deps = [
         "@raze__peg_runtime__0_6_3//:peg_runtime",
-        "@raze__proc_macro2__1_0_43//:proc_macro2",
+        "@raze__proc_macro2__1_0_49//:proc_macro2",
         "@raze__quote__1_0_21//:quote",
     ],
 )

@@ -62,9 +62,9 @@ cargo_build_script(
     deps = [
         "@raze__heck__0_4_0//:heck",
         "@raze__quote__1_0_21//:quote",
-        "@raze__serde__1_0_145//:serde",
-        "@raze__serde_json__1_0_89//:serde_json",
-        "@raze__syn__1_0_99//:syn",
+        "@raze__serde__1_0_149//:serde",
+        "@raze__serde_json__1_0_91//:serde_json",
+        "@raze__syn__1_0_107//:syn",
     ],
 )
 
@@ -96,7 +96,7 @@ rust_library(
         ":gherkin_build_script",
         "@raze__peg__0_6_3//:peg",
         "@raze__textwrap__0_16_0//:textwrap",
-        "@raze__thiserror__1_0_37//:thiserror",
+        "@raze__thiserror__1_0_38//:thiserror",
     ],
 )
 

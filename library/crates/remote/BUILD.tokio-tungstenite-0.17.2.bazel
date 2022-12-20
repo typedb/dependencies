@@ -66,7 +66,7 @@ rust_library(
     # buildifier: leave-alone
     deps = [
         "@raze__futures_util__0_3_24//:futures_util",
-        "@raze__log__0_4_8//:log",
+        "@raze__log__0_4_17//:log",
         "@raze__tokio__1_20_1//:tokio",
         "@raze__tungstenite__0_17_3//:tungstenite",
     ],
