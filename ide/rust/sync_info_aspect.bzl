@@ -29,8 +29,8 @@ def _should_generate_dep_info(dependency):
 def _should_generate_build_dep_info(dependency):
     return dependency.kind in _TARGET_TYPES and _TARGET_TYPES[dependency.kind] == "build"
 
-def _is_raze_crate(rust_target):
-    return str(rust_target.label).startswith("@raze__")
+def _is_rust_crate(rust_target):
+    return str(rust_target.label).startswith("@crate__")
 
 def _dep_path(current_target, dep_target):
     if str(current_target.label).split("//")[0] == str(dep_target.label).split("//")[0]:
@@ -69,7 +69,7 @@ def _crate_deps_info(ctx, target):
             continue
         dep_info = dependency.crate_info
         features_str = ",".join(dep_info.features)
-        if _is_raze_crate(dependency):
+        if _is_rust_crate(dependency):
             deps_info[dependency.crate_info.name] = "version=%s;features=%s" % (dep_info.version, features_str) if features_str else "version=%s" % dep_info.version
         else:
             path = _dep_path(target, dependency)
