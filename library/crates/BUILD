@@ -22,11 +22,6 @@ filegroup(
 )
 
 filegroup(
-    name = "cargo-bazel-lock.json",
-    srcs = ["cargo-bazel-lock.json"],
-)
-
-filegroup(
     name = "Cargo.toml",
     srcs = ["Cargo.toml"],
 )

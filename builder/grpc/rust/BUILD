@@ -21,7 +21,7 @@ load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 rust_binary(
     name = "compile",
     srcs = ["compile.rs"],
-    deps = ["@vaticle_dependencies//library/crates:tonic_build"],
+    deps = ["@crates//:tonic-build"],
     visibility = ["//visibility:public"]
 )
 
