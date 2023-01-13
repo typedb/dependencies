@@ -17,11 +17,11 @@
 #
 
 filegroup(
-    name = "Cargo.lock",
+    name = "cargo-lockfile",
     srcs = ["Cargo.lock"],
 )
 
 filegroup(
-    name = "Cargo.toml",
+    name = "cargo-manifest",
     srcs = ["Cargo.toml"],
 )
