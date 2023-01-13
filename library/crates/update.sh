@@ -21,10 +21,16 @@
 set -ex
 
 [[ $(readlink $0) ]] && path=$(readlink $0) || path=$0
-CARGO_RAZE_HOME=$(cd "$(dirname "${path}")" && pwd -P)
 
-pushd "$CARGO_RAZE_HOME" > /dev/null
+cargo_target=@rules_rust//rust/toolchain:current_cargo_files
 
-CARGO_BAZEL_REPIN=full bazel sync --only=//library/rust/crates
+bazel build $cargo_target
 
+project_dir=$(bazel info workspace)
+cargo_relpath=$(bazel cquery $cargo_target --output starlark --starlark:expr="target.files.to_list()[0].path" 2>/dev/null)
+cargo=${project_dir}/${cargo_relpath}
+
+crates_home=$(cd "$(dirname "${path}")" && pwd -P)
+pushd "$crates_home" > /dev/null
+$cargo generate-lockfile
 popd > /dev/null

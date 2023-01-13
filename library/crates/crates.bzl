@@ -22,13 +22,18 @@ def fetch_crates():
     crates_repository(
         name = "crates",
         cargo_lockfile = "@vaticle_dependencies//library/crates:Cargo.lock",
-        lockfile = "@vaticle_dependencies//library/crates:cargo-bazel-lock.json",
         manifests = ["@vaticle_dependencies//library/crates:Cargo.toml"],
         annotations = {
             "librocksdb-sys": [crate.annotation(
                 build_script_env = {"ROCKSDB_LIB_DIR": "./lib"},
             )],
         },
+        supported_platform_triples = [
+            "aarch64-apple-darwin",
+            "x86_64-apple-darwin",
+            "x86_64-pc-windows-msvc",
+            "x86_64-unknown-linux-gnu",
+        ],
         # Setting the default package name to `""` forces the use of the macros defined in this repository
         # to always use the root package when looking for dependencies or aliases. This should be considered
         # optional as the repository also exposes alises for easy access to all dependencies.
