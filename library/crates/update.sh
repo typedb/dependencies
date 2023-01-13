@@ -25,8 +25,7 @@ CARGO_RAZE_HOME=$(cd "$(dirname "${path}")" && pwd -P)
 
 pushd "$CARGO_RAZE_HOME" > /dev/null
 
-cargo raze
-
-cp overrides/* remote/.
+cargo generate-lockfile
+CARGO_BAZEL_REPIN=true bazel sync --only=//library/rust/crates
 
 popd > /dev/null

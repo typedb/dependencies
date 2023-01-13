@@ -7,109 +7,33 @@ path = "" # ignored by cargo raze
 
 [dependencies]
 alcoholic_jwt = "=4091.0.0"
-async-trait = "0.1.59"
 axum = { version = "=0.5.15", features = ["ws"] }
-axum-server = { version = "=0.4.4", features = ["tls-rustls"]}
-chrono = "=0.4.22"
+chrono = "=0.4.23"
 clap = "=4.0.26"
-clap_derive = "=4.0.21"
 crossbeam = "=0.8.2"
 cucumber = "=0.15.2"
-cucumber-codegen = "=0.15.3"
-cucumber-expressions = "=0.2.1"
 cxx = "=1.0.59"
-derivative = "=2.2.0"
-enum_dispatch = "=0.3.8"
+fluvio-helm = "=0.4.3"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
 itertools = "=0.10.3"
-log = "=0.4.8"
-mime = "0.3.16"
-mime_guess = "2.0.4"
+k8s-openapi = { version = "=0.16.0", features = ["v1_25"] }
+kube = { version = "=0.77.0", features = ["runtime", "derive"] }
+librocksdb-sys = "=0.8.0+7.4.4"
+log = "=0.4.17"
+mime = "=0.3.16"
+mime_guess = "=2.0.4"
 pest = "=2.4.1"
 pest_derive = "=2.4.1"
 prost = "=0.11.0"
-prost-build = "=0.11.1"
-reqwest = { version = "=0.11.12", features = ["json"] }
+prost-build = "=0.11.0"
 regex = "=1.6.0"
-ring = "=0.16.20"
-rocksdb = "=0.17.0"
-rustix = "=0.35.9"
-serde = "=1.0.145"
-serde_json = "1.0"
-serial_test = "0.9.0"
+reqwest = { version = "=0.11.12", features = ["json"] }
+rocksdb = "=0.19.0"
+serde = "=1.0.152"
+serde_json = "=1.0"
+serial_test = "=0.9.0"
 sha2 = "=0.10.6"
-synthez = "=0.2.0"
-synthez-codegen = "=0.2.0"
-synthez-core = "=0.2.0"
-tokio = { version = "=1.20.1", features = ["rt", "rt-multi-thread"] }
+tokio = { version = "=1.24.1", features = ["rt", "rt-multi-thread"] }
 tonic = { version = "=0.8.0", features = ["tls"] }
 tonic-build = "=0.8.0"
 uuid = { version = "=1.1.2", features = ["fast-rng", "v4"] }
-webpki = "=0.22.0"
-
-[package.metadata.raze]
-# The path at which to write output files.
-#
-# `cargo raze` will generate Bazel-compatible BUILD files into this path.
-# This can either be a relative path (e.g. "foo/bar"), relative to this
-# Cargo.toml file; or relative to the Bazel workspace root (e.g. "//foo/bar").
-workspace_path = "//library/crates"
-
-# This causes aliases for dependencies to be rendered in the BUILD
-# file located next to this `Cargo.toml` file.
-package_aliases_dir = "."
-
-# The set of targets to generate BUILD rules for.
-targets = [
-    "aarch64-apple-darwin",
-    "x86_64-apple-darwin",
-    "x86_64-pc-windows-msvc",
-    "x86_64-unknown-linux-gnu",
-]
-
-# The two acceptable options are "Remote" and "Vendored" which
-# is used to indicate whether the user is using a non-vendored or
-# vendored set of dependencies.
-genmode = "Remote"
-
-[package.metadata.raze.crates.axum.'0.5.15']
-compile_data_attr = "glob([\"**/*.md\"])"
-
-[package.metadata.raze.crates.axum-server.'0.4.4']
-compile_data_attr = "glob([\"**/*.der\"])"
-
-[package.metadata.raze.crates.clap.'4.0.26']
-compile_data_attr = "glob([\"**/*.md\"])"
-
-[package.metadata.raze.crates.clap_derive.'4.0.21']
-compile_data_attr = "glob([\"**/*.md\"])"
-
-[package.metadata.raze.crates.cucumber.'0.15.2']
-compile_data_attr = "glob([\"**/*.md\"])"
-
-[package.metadata.raze.crates.cucumber-codegen.'0.15.3']
-compile_data_attr = "glob([\"**/*.md\"])"
-
-[package.metadata.raze.crates.cucumber-expressions.'0.2.1']
-compile_data_attr = "glob([\"**/*.md\"])"
-
-[package.metadata.raze.crates.prost.'0.11.0']
-compile_data_attr = "glob([\"**/*.md\"])"
-
-[package.metadata.raze.crates.ring.'0.16.20']
-compile_data_attr = "glob([\"**/*.der\"])"
-
-[package.metadata.raze.crates.synthez.'0.2.0']
-compile_data_attr = "glob([\"**/*.md\"])"
-
-[package.metadata.raze.crates.synthez-codegen.'0.2.0']
-compile_data_attr = "glob([\"**/*.md\"])"
-
-[package.metadata.raze.crates.synthez-core.'0.2.0']
-compile_data_attr = "glob([\"**/*.md\"])"
-
-[package.metadata.raze.crates.tonic.'0.8.0']
-compile_data_attr = "glob([\"**/*.md\"])"
-
-[package.metadata.raze.crates.webpki.'0.22.0']
-compile_data_attr = "glob([\"**/*.der\"])"
