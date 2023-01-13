@@ -34,10 +34,4 @@ def fetch_crates():
             "x86_64-pc-windows-msvc",
             "x86_64-unknown-linux-gnu",
         ],
-        # Setting the default package name to `""` forces the use of the macros defined in this repository
-        # to always use the root package when looking for dependencies or aliases. This should be considered
-        # optional as the repository also exposes alises for easy access to all dependencies.
-        render_config = render_config(
-            default_package_name = "",
-        ),
     )
