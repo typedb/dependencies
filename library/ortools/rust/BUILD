@@ -25,7 +25,7 @@ rust_library(
     name = "ortools",
     srcs = ["ortools.rs"],
     deps = [
-        "@vaticle_dependencies//library/crates:cxx",
+        "@crates//:cxx",
         ":ortools_bridge",
     ]
 )

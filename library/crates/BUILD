@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Copyright (C) 2022 Vaticle
 #
@@ -14,20 +15,3 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-
-load("@rules_rust//rust:defs.bzl", "rust_binary")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
-
-rust_binary(
-    name = "compile",
-    srcs = ["compile.rs"],
-    deps = ["@crates//:tonic-build"],
-    visibility = ["//visibility:public"]
-)
-
-checkstyle_test(
-    name = "checkstyle",
-    include = glob(["*"]),
-    license_type = "agpl-header",
-    size = "small",
-)

@@ -88,8 +88,13 @@ maven(vaticle_dependencies_tool_maven_artifacts)
 
 # Load Rust Crate dependencies
 
-load("//library/crates:crates.bzl", "raze_fetch_remote_crates")
-raze_fetch_remote_crates()
+load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
+crate_universe_dependencies()
+
+load("//library/crates:crates.bzl", "fetch_crates")
+fetch_crates()
+load("@crates//:defs.bzl", "crate_repositories")
+crate_repositories()
 
 ###############################################
 # Create @vaticle_typedb_workspace_refs #
