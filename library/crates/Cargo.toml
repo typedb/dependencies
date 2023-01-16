@@ -21,10 +21,11 @@ name = "vaticle-dependencies"
 version = "0.0.0"
 
 [lib]
-path = "" # ignored by cargo raze
+path = "" # ignored by cargo generate-lockfile
 
 [dependencies]
 alcoholic_jwt = "=4091.0.0"
+async-trait = "=0.1.59"
 axum = { version = "=0.5.15", features = ["ws"] }
 chrono = "=0.4.23"
 clap = "=4.0.26"
