@@ -25,7 +25,7 @@ set -ex
 crates_home=$(cd "$(dirname "${path}")" && pwd -P)
 pushd "$crates_home" > /dev/null
 if [ ! -x cargo ]; then
-    wget https://repo.vaticle.com/repository/artifact/cargo-1.66.0_darwin_x86_64/cargo -O cargo
+    curl -o cargo https://repo.vaticle.com/repository/artifact/cargo-1.66.0_darwin_x86_64/cargo
     chmod +x cargo
 fi
 ./cargo generate-lockfile
