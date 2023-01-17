@@ -22,15 +22,11 @@ set -ex
 
 [[ $(readlink $0) ]] && path=$(readlink $0) || path=$0
 
-cargo_target=@rules_rust//rust/toolchain:current_cargo_files
-
-bazel build $cargo_target
-
-project_dir=$(bazel info workspace)
-cargo_relpath=$(bazel cquery $cargo_target --output starlark --starlark:expr="target.files.to_list()[0].path" 2>/dev/null)
-cargo=${project_dir}/${cargo_relpath}
-
 crates_home=$(cd "$(dirname "${path}")" && pwd -P)
 pushd "$crates_home" > /dev/null
-$cargo generate-lockfile
+if [ ! -x cargo ]; then
+    wget https://repo.vaticle.com/repository/artifact/cargo-1.66.0_darwin_x86_64/cargo -O cargo
+    chmod +x cargo
+fi
+./cargo generate-lockfile
 popd > /dev/null
