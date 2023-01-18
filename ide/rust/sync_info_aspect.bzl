@@ -29,8 +29,11 @@ def _should_generate_dep_info(dependency):
 def _should_generate_build_dep_info(dependency):
     return dependency.kind in _TARGET_TYPES and _TARGET_TYPES[dependency.kind] == "build"
 
-def _is_universe_crate(rust_target):
-    return str(rust_target.label).startswith("@crates__")
+def _is_universe_crate(target):
+    return str(target.label).startswith("@crates__")
+
+def _universe_crate_name(target):
+    return str(target.label).split(".")[0].rsplit("-", 1)[0].removeprefix("@crates__")
 
 def _dep_path(current_target, dep_target):
     if str(current_target.label).split("//")[0] == str(dep_target.label).split("//")[0]:
@@ -85,10 +88,13 @@ def _crate_build_deps_info(ctx, target):
     return build_deps_info
 
 def _crate_info(ctx, target):
-    crate_name = ctx.rule.attr.name
-    for tag in ctx.rule.attr.tags:
-        if tag.startswith("crate-name"):
-            crate_name = tag.split("=")[1]
+    if _is_universe_crate(target):
+        crate_name = _universe_crate_name(target)
+    else:
+        crate_name = ctx.rule.attr.name
+        for tag in ctx.rule.attr.tags:
+            if tag.startswith("crate-name"):
+                crate_name = tag.split("=")[1]
 
     return struct(
         name = crate_name,
