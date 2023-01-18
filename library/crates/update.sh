@@ -22,15 +22,20 @@ set -ex
 
 [[ $(readlink $0) ]] && path=$(readlink $0) || path=$0
 
-cargo_target=@rules_rust//rust/toolchain:current_cargo_files
-
-bazel build $cargo_target
-
-project_dir=$(bazel info workspace)
-cargo_relpath=$(bazel cquery $cargo_target --output starlark --starlark:expr="target.files.to_list()[0].path" 2>/dev/null)
-cargo=${project_dir}/${cargo_relpath}
-
 crates_home=$(cd "$(dirname "${path}")" && pwd -P)
 pushd "$crates_home" > /dev/null
-$cargo generate-lockfile
+if [ ! -x cargo ]; then
+    arch=$(bash --version | head -n1 | grep -o '\S\+$')  # (arch-vendor-os)
+    arch=${arch#(} && arch=${arch%)} # strip parentheses
+    if [[ $arch == x86_64-apple-darwin* ]]; then
+        curl -o cargo https://repo.vaticle.com/repository/artifact/cargo-1.66.0_darwin_x86_64/cargo
+    elif [[ $arch == arm64-apple-darwin* ]]; then
+        curl -o cargo https://repo.vaticle.com/repository/artifact/cargo-1.66.0_darwin_arm64/cargo
+    else
+        echo "Unsupported architecture: $arch"
+        exit 1
+    fi
+    chmod +x cargo
+fi
+./cargo generate-lockfile
 popd > /dev/null
