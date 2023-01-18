@@ -29,8 +29,8 @@ if [ ! -x cargo ]; then
     arch=${arch#(} && arch=${arch%)} # strip parentheses
     if [[ $arch == x86_64-apple-darwin* ]]; then
         curl -o cargo https://repo.vaticle.com/repository/artifact/cargo-1.66.0_darwin_x86_64/cargo
-    elif [[ $arch == arm64-apple-darwin* ]]; then  # relying on rosetta
-        curl -o cargo https://repo.vaticle.com/repository/artifact/cargo-1.66.0_darwin_x86_64/cargo
+    elif [[ $arch == arm64-apple-darwin* ]]; then
+        curl -o cargo https://repo.vaticle.com/repository/artifact/cargo-1.66.0_darwin_arm64/cargo
     else
         echo "Unsupported architecture: $arch"
         exit 1
