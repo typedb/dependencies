@@ -5,7 +5,7 @@ bazel-bin
 bazel-out
 bazel-dependencies
 bazel-testlogs
-cargo
+library/crates/cargo
 tool/bazelcache/.terraform/*
 target
 Cargo.lock
