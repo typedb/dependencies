@@ -25,7 +25,14 @@ set -ex
 crates_home=$(cd "$(dirname "${path}")" && pwd -P)
 pushd "$crates_home" > /dev/null
 if [ ! -x cargo ]; then
-    curl -o cargo https://repo.vaticle.com/repository/artifact/cargo-1.66.0_darwin_x86_64/cargo
+    arch=$(bash --version | head -n1 | grep -o '\S\+$')  # (arch-vendor-os)
+    arch=${arch#(} && arch=${arch%)} # strip parentheses
+    if [[ $arch == x86_64-apple-darwin* ]]; then
+        curl -o cargo https://repo.vaticle.com/repository/artifact/cargo-1.66.0_darwin_x86_64/cargo
+    else
+        echo "Unsupported architecture: $arch"
+        exit 1
+    fi
     chmod +x cargo
 fi
 ./cargo generate-lockfile
