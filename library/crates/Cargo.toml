@@ -34,7 +34,6 @@ cucumber = "=0.15.2"
 cxx = "=1.0.59"
 fluvio-helm = "=0.4.3"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
-google-logging2 = "=4.0.1"
 itertools = "=0.10.3"
 k8s-openapi = { version = "=0.16.0", features = ["v1_25"] }
 kube = { version = "=0.77.0", features = ["runtime", "derive"] }
