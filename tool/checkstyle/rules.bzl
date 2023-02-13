@@ -1,5 +1,5 @@
 #
-# Copyright (C) 2022 Vaticle
+# Copyright (C) 2018-present Vaticle
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -20,32 +20,38 @@ def _checkstyle_test_impl(ctx):
     opts = ctx.attr.opts
     sopts = ctx.attr.string_opts
 
-    args = ""
-    inputs = []
-
     license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-%s.txt" % ctx.attr.license_type
+
+    expanded_license_file = ctx.actions.declare_file("checkstyle-file-expanded-%s.txt" % ctx.attr.license_type)
+    ctx.actions.run_shell(
+        outputs = [ expanded_license_file ],
+        inputs = ctx.files._license_files,
+        command = 'sed "s/YEAR/{}/g" {} > {}'.format(ctx.attr.year, license_file, expanded_license_file.path),
+    )
 
     config = ctx.actions.declare_file("%s.xml" % ctx.attr.name)
     ctx.actions.expand_template(
         template = ctx.file._checkstyle_xml_template,
         output = config,
         substitutions = {
-            "{licenseFile}" : license_file
+            "{licenseFile}" : (ctx.label.package + '/' + expanded_license_file.basename) if ctx.label.package else expanded_license_file.basename
         }
     )
 
+    args = ""
     args += " -c "
     if ctx.label.package:
         args += ctx.label.package + '/'
     args += config.basename
 
+    inputs = []
     inputs.append(config)
 
     if properties:
       args += " -p %s" % properties.path
       inputs.append(properties)
 
-    files = []
+    files = [ ]
     for target in ctx.attr.include:
         path = target.files.to_list()[0].path;
         if target not in ctx.attr.exclude:
@@ -67,7 +73,7 @@ def _checkstyle_test_impl(ctx):
         is_executable = True,
     )
 
-    files = [checkstyle_wrapper] + ctx.files._license_files + files + ctx.files._classpath + inputs
+    files = [checkstyle_wrapper, expanded_license_file] + files + ctx.files._classpath + inputs
     runfiles = ctx.runfiles(
         files = files,
         collect_data = True,
@@ -93,6 +99,10 @@ checkstyle_test = rule(
                 "commercial-fulltext",
             ],
             mandatory = True,
+        ),
+        "year": attr.string(
+            doc = "The year the covered code was originally authored.",
+            default = "2015"
         ),
         "properties": attr.label(
             allow_single_file=True,

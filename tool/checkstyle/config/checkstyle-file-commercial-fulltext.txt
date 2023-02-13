@@ -1,4 +1,4 @@
-^Copyright \(C\) 2022 Vaticle$
+^Copyright \(C\) YEAR-present Vaticle$
 ^$
 ^This unpublished material is proprietary to Vaticle\.$
 ^All rights reserved\. The methods and$
