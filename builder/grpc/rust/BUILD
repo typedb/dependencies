@@ -29,5 +29,6 @@ checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
     license_type = "agpl-header",
+    year = "2018",
     size = "small",
 )

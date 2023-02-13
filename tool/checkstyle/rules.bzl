@@ -20,8 +20,10 @@ def _checkstyle_test_impl(ctx):
     opts = ctx.attr.opts
     sopts = ctx.attr.string_opts
 
-    license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-%s.txt" % ctx.attr.license_type
+    license_file = "tool/checkstyle/config/checkstyle-file-%s.txt" % ctx.attr.license_type
 
+    if ctx.workspace_name != "vaticle_dependencies":
+        license_file = "external/vaticle_dependencies/" + license_file
     expanded_license_file = ctx.actions.declare_file("checkstyle-file-expanded-%s.txt" % ctx.attr.license_type)
     ctx.actions.run_shell(
         outputs = [ expanded_license_file ],
