@@ -22,7 +22,7 @@ java_binary(
     runtime_deps = [
         ":syncer",
     ],
-    main_class = "com.vaticle.dependencies.tool.cargo.manifest.SyncerKt",
+    main_class = "com.vaticle.dependencies.tool.cargo.SyncerKt",
     visibility = ["//visibility:public"],
 )
 

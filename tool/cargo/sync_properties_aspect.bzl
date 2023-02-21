@@ -134,7 +134,7 @@ def _entry_point_file(target, ctx, source_files):
     else:
         return _find_entry_point_in_sources(target, ctx, source_files)
 
-def _sync_props(target, ctx, source_files, crate_info):
+def _get_sync_properties(target, ctx, source_files, crate_info):
     props = {}
     target_type = "build" if _looks_like_cargo_build_script(target) else _TARGET_TYPES[ctx.rule.kind]
 
@@ -159,7 +159,7 @@ def _sync_props(target, ctx, source_files, crate_info):
 
 def _build_cargo_sync_properties_file(target, ctx, source_files, crate_info):
     file = ctx.actions.declare_file("%s.cargo-sync.properties" % ctx.rule.attr.name)
-    props = _sync_props(target, ctx, source_files, crate_info)
+    props = _get_sync_properties(target, ctx, source_files, crate_info)
 
     content = ""
     for prop in props.items():
