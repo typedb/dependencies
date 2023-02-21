@@ -38,7 +38,6 @@ http = "=0.2.8"
 itertools = "=0.10.3"
 k8s-openapi = { version = "=0.16.0", features = ["v1_25"] }
 kube = { version = "=0.77.0", features = ["runtime", "derive"] }
-librocksdb-sys = "=0.8.0+7.4.4"
 log = "=0.4.17"
 mime = "=0.3.16"
 mime_guess = "=2.0.4"
@@ -48,7 +47,7 @@ prost = "=0.11.0"
 prost-build = "=0.11.0"
 regex = "=1.6.0"
 reqwest = { version = "=0.11.12", features = ["json"] }
-rocksdb = "=0.19.0"
+rocksdb = {version="=0.19.0", features = ["lz4"], default-features = false }
 serde = "=1.0.152"
 serde_json = "=1.0"
 sha2 = "=0.10.6"
