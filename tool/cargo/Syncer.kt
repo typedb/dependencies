@@ -16,7 +16,7 @@
  *
  */
 
-package com.vaticle.dependencies.tool.cargo.manifest
+package com.vaticle.dependencies.tool.cargo
 
 import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
@@ -25,18 +25,18 @@ import com.vaticle.bazel.distribution.common.Logging.LogLevel.ERROR
 import com.vaticle.bazel.distribution.common.Logging.Logger
 import com.vaticle.bazel.distribution.common.shell.Shell
 import com.vaticle.bazel.distribution.common.util.FileUtil.listFilesRecursively
-import com.vaticle.dependencies.tool.cargo.manifest.Syncer.ShellArgs.ASPECTS
-import com.vaticle.dependencies.tool.cargo.manifest.Syncer.ShellArgs.BAZEL
-import com.vaticle.dependencies.tool.cargo.manifest.Syncer.ShellArgs.BAZEL_BIN
-import com.vaticle.dependencies.tool.cargo.manifest.Syncer.ShellArgs.BUILD
-import com.vaticle.dependencies.tool.cargo.manifest.Syncer.ShellArgs.INFO
-import com.vaticle.dependencies.tool.cargo.manifest.Syncer.ShellArgs.OUTPUT_BASE
-import com.vaticle.dependencies.tool.cargo.manifest.Syncer.ShellArgs.OUTPUT_GROUPS_RUST_CARGO_SYNC_PROPERTIES
-import com.vaticle.dependencies.tool.cargo.manifest.Syncer.ShellArgs.QUERY
-import com.vaticle.dependencies.tool.cargo.manifest.Syncer.ShellArgs.RUST_CARGO_SYNC_PROPERTIES_ASPECT
-import com.vaticle.dependencies.tool.cargo.manifest.Syncer.ShellArgs.RUST_TARGETS_DEPS_QUERY
-import com.vaticle.dependencies.tool.cargo.manifest.Syncer.ShellArgs.RUST_TARGETS_QUERY
-import com.vaticle.dependencies.tool.cargo.manifest.Syncer.ShellArgs.VATICLE_REPOSITORY_PREFIX
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.ASPECTS
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.BAZEL
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.BAZEL_BIN
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.BUILD
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.INFO
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.OUTPUT_BASE
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.OUTPUT_GROUPS_RUST_CARGO_SYNC_PROPERTIES
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.QUERY
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.RUST_CARGO_SYNC_PROPERTIES_ASPECT
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.RUST_TARGETS_DEPS_QUERY
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.RUST_TARGETS_QUERY
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.VATICLE_REPOSITORY_PREFIX
 
 
 import picocli.CommandLine
@@ -399,7 +399,7 @@ class Syncer : Callable<Unit> {
         const val OUTPUT_BASE = "output_base"
         const val OUTPUT_GROUPS_RUST_CARGO_SYNC_PROPERTIES = "--output_groups=rust-cargo-sync-properties"
         const val QUERY = "query"
-        const val RUST_CARGO_SYNC_PROPERTIES_ASPECT = "@vaticle_dependencies//tool/cargo/:sync_properties_aspect.bzl%rust_cargo_sync_properties_aspect"
+        const val RUST_CARGO_SYNC_PROPERTIES_ASPECT = "@vaticle_dependencies//tool/cargo:sync_properties_aspect.bzl%rust_cargo_sync_properties_aspect"
         const val RUST_TARGETS_DEPS_QUERY = "kind(rust_*, deps(//...))"
         const val RUST_TARGETS_QUERY = "kind(rust_*, //...)"
         const val VATICLE_REPOSITORY_PREFIX = "@vaticle_"
