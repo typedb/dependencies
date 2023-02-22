@@ -181,7 +181,7 @@ def _rust_cargo_sync_properties_aspect_impl(target, ctx):
     return struct(
         kind = ctx.rule.kind,
         crate_info = crate_info,
-        output_groups = {"rust-manifest-sync": depset([sync_info_file])}
+        output_groups = {"rust-cargo-sync-properties": depset([sync_info_file])}
     )
 
 rust_cargo_sync_properties_aspect = aspect(
