@@ -91,7 +91,7 @@ class Syncer : Callable<Unit> {
     }
 
     private fun loadRustToolchainAndExternalDeps(rustTargets: List<String>) {
-        shell.execute(command = listOf(BAZEL, BUILD) + rustTargets, baseDir = workspaceDir, throwOnError = false)
+        shell.execute(command = listOf(BAZEL, BUILD) + rustTargets + "--keep_going", baseDir = workspaceDir, throwOnError = false)
     }
 
     private fun vaticleRustWorkspaces(): List<Path> {
