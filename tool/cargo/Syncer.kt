@@ -412,7 +412,7 @@ class Syncer : Callable<Unit> {
         const val OUTPUT_GROUPS_RUST_CARGO_SYNC_PROPERTIES = "--output_groups=rust-cargo-sync-properties"
         const val QUERY = "query"
         const val RUST_CARGO_SYNC_PROPERTIES_ASPECT = "@vaticle_dependencies//tool/cargo:sync_properties_aspect.bzl%rust_cargo_sync_properties_aspect"
-        const val RUST_TARGETS_DEPS_QUERY = "kind(rust_*, deps(//...))"
+        const val RUST_TARGETS_DEPS_QUERY = "kind(rust_*, deps(kind(rust_*, //...)))" // deps of RUST_TARGETS_QUERY
         const val RUST_TARGETS_QUERY = "kind(rust_*, //...)"
         const val VATICLE_REPOSITORY_PREFIX = "@vaticle_"
     }
