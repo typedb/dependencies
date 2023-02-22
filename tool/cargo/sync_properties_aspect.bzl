@@ -176,12 +176,12 @@ def _rust_cargo_sync_properties_aspect_impl(target, ctx):
 
     sources = [f for src in getattr(ctx.rule.attr, "srcs", []) for f in src.files.to_list()]
     crate_info = _crate_info(ctx, target)
-    sync_info_file = _build_cargo_sync_properties_file(target, ctx, sources, crate_info)
+    sync_properties_file = _build_cargo_sync_properties_file(target, ctx, sources, crate_info)
 
     return struct(
         kind = ctx.rule.kind,
         crate_info = crate_info,
-        output_groups = {"rust-cargo-sync-properties": depset([sync_info_file])}
+        output_groups = {"rust-cargo-sync-properties": depset([sync_properties_file])}
     )
 
 rust_cargo_sync_properties_aspect = aspect(

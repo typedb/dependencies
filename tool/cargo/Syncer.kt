@@ -37,6 +37,18 @@ import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.RUST_CARGO_SYNC_PROP
 import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.RUST_TARGETS_DEPS_QUERY
 import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.RUST_TARGETS_QUERY
 import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.VATICLE_REPOSITORY_PREFIX
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.BUILD_DEPS
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.CONTAINS_GENERATED_SOURCES
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.DEPS_PREFIX
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.EDITION
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.ENTRY_POINT_PATH
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.FEATURES
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.LABEL
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.NAME
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.PATH
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.ROOT_PATH
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.TYPE
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.VERSION
 
 
 import picocli.CommandLine
@@ -118,7 +130,6 @@ class Syncer : Callable<Unit> {
 
         private fun runSyncPropertiesAspect() {
             val rustTargets = rustTargets(shell, workspace)
-            logger.debug{ "Rust targets: $rustTargets" }
             shell.execute(
                     listOf(BAZEL, BUILD) + rustTargets + listOf(ASPECTS, RUST_CARGO_SYNC_PROPERTIES_ASPECT, OUTPUT_GROUPS_RUST_CARGO_SYNC_PROPERTIES),
                     workspace
@@ -159,7 +170,6 @@ class Syncer : Callable<Unit> {
         }
 
         private fun shouldGenerateManifest(properties: TargetProperties): Boolean {
-            logger.debug { "Should generate: $properties" }
             return properties.type in listOf(TargetProperties.Type.LIB, TargetProperties.Type.BIN)
         }
 
@@ -290,14 +300,14 @@ class Syncer : Callable<Unit> {
                         val name = rawKey.split(".", limit = 2)[1]
                         val rawValueProps = rawValue.split(";")
                                 .associate { it.split("=", limit = 2).let { parts -> parts[0] to parts[1] } }
-                        return if (Keys.VERSION in rawValueProps) {
+                        return if (VERSION in rawValueProps) {
                             Crate(
                                     name = name,
-                                    version = rawValueProps[Keys.VERSION]!!,
-                                    features = rawValueProps[Keys.FEATURES]?.split(",") ?: emptyList()
+                                    version = rawValueProps[VERSION]!!,
+                                    features = rawValueProps[FEATURES]?.split(",") ?: emptyList()
                             )
                         } else {
-                            Path(name = name, path = rawValueProps[Keys.PATH]!!)
+                            Path(name = name, path = rawValueProps[PATH]!!)
                         }
                     }
                 }
@@ -328,16 +338,16 @@ class Syncer : Callable<Unit> {
                     try {
                         return TargetProperties(
                                 path = path,
-                                name = props.getProperty(Keys.NAME),
-                                label = props.getProperty(Keys.LABEL),
-                                type = Type.of(props.getProperty(Keys.TYPE)),
-                                version = props.getProperty(Keys.VERSION),
-                                edition = props.getProperty(Keys.EDITION, "2021"),
+                                name = props.getProperty(NAME),
+                                label = props.getProperty(LABEL),
+                                type = Type.of(props.getProperty(TYPE)),
+                                version = props.getProperty(VERSION),
+                                edition = props.getProperty(EDITION, "2021"),
                                 deps = parseDependencies(extractDependencyEntries(props)),
-                                buildDeps = props.getProperty(Keys.BUILD_DEPS, "").split(",").filter { it.isNotBlank() },
-                                rootPath = props.getProperty(Keys.ROOT_PATH)?.let { Path(it) },
-                                entryPointPath = props.getProperty(Keys.ENTRY_POINT_PATH)?.let { Path(it) },
-                                containsGeneratedSources = props.getProperty(Keys.CONTAINS_GENERATED_SOURCES).toBoolean(),
+                                buildDeps = props.getProperty(BUILD_DEPS, "").split(",").filter { it.isNotBlank() },
+                                rootPath = props.getProperty(ROOT_PATH)?.let { Path(it) },
+                                entryPointPath = props.getProperty(ENTRY_POINT_PATH)?.let { Path(it) },
+                                containsGeneratedSources = props.getProperty(CONTAINS_GENERATED_SOURCES).toBoolean(),
                                 tests = mutableListOf(),
                                 buildScripts = mutableListOf(),
                         )
@@ -349,7 +359,7 @@ class Syncer : Callable<Unit> {
                 private fun extractDependencyEntries(props: Properties): Map<String, String> {
                     return props.entries
                             .map { it.key.toString() to it.value.toString() }
-                            .filter { it.first.startsWith("${Keys.DEPS_PREFIX}.") }
+                            .filter { it.first.startsWith("$DEPS_PREFIX.") }
                             .toMap()
                 }
 
