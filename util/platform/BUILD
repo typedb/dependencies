@@ -18,3 +18,35 @@ config_setting(
         "@platforms//os:windows",
     ],
 )
+
+platform(
+    name = "mac_arm64",
+    constraint_values = [
+        "@platforms//cpu:arm64",
+        "@platforms//os:osx"
+    ]
+)
+
+platform(
+    name = "mac_x86_64",
+    constraint_values = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:osx"
+    ]
+)
+
+platform(
+    name = "win_x86_64",
+    constraint_values = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:windows"
+    ]
+)
+
+platform(
+    name = "linux_x86_64",
+    constraint_values = [
+        "@platforms//cpu:x86_64",
+        "@platforms//os:linux"
+    ]
+)
