@@ -76,6 +76,7 @@ class Syncer : Callable<Unit> {
     private lateinit var bazelOutputBase: Path
 
     override fun call() {
+        System.setProperty("line.separator", "\n");
         logger = Logger(logLevel = if (verbose) DEBUG else ERROR)
         shell = Shell(logger, verbose)
         bazelOutputBase = Path(shell.execute(listOf(BAZEL, INFO, OUTPUT_BASE), workspaceDir).outputString().trim())
