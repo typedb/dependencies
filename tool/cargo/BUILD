@@ -22,14 +22,13 @@ java_binary(
     runtime_deps = [
         ":syncer",
     ],
-    main_class = "com.vaticle.dependencies.ide.rust.SyncerKt",
+    main_class = "com.vaticle.dependencies.tool.cargo.SyncerKt",
     visibility = ["//visibility:public"],
 )
 
 kt_jvm_library(
     name = "syncer",
     srcs = [
-        "RepoCargoManifestGenerator.kt",
         "Syncer.kt",
     ],
     deps = [

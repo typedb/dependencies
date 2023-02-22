@@ -23,10 +23,10 @@ _TARGET_TYPES = {
     "_build_script_run": "build"
 }
 
-def _should_generate_dep_info(dependency):
+def _should_generate_dep_properties(dependency):
     return dependency.kind in _TARGET_TYPES and _TARGET_TYPES[dependency.kind] in ["bin", "lib"]
 
-def _should_generate_build_dep_info(dependency):
+def _should_generate_build_dep_properties(dependency):
     return dependency.kind in _TARGET_TYPES and _TARGET_TYPES[dependency.kind] == "build"
 
 def _is_universe_crate(target):
@@ -68,7 +68,7 @@ def _crate_deps_info(ctx, target):
     deps_info = {}
     all_deps = getattr(ctx.rule.attr, "deps", []) + getattr(ctx.rule.attr, "proc_macro_deps", []) + ([ctx.rule.attr.crate] if hasattr(ctx.rule.attr, "crate") and ctx.rule.attr.crate else [])
     for dependency in all_deps:
-        if not _should_generate_dep_info(dependency):
+        if not _should_generate_dep_properties(dependency):
             continue
         dep_info = dependency.crate_info
         features_str = ",".join(dep_info.features)
@@ -82,7 +82,7 @@ def _crate_deps_info(ctx, target):
 def _crate_build_deps_info(ctx, target):
     build_deps_info = []
     for dependency in getattr(ctx.rule.attr, "deps", []):
-        if not _should_generate_build_dep_info(dependency):
+        if not _should_generate_build_dep_properties(dependency):
             continue
         build_deps_info.append(dependency.crate_info.name)
     return build_deps_info
@@ -134,10 +134,9 @@ def _entry_point_file(target, ctx, source_files):
     else:
         return _find_entry_point_in_sources(target, ctx, source_files)
 
-def _sync_info(target, ctx, source_files, crate_info):
+def _get_sync_properties(target, ctx, source_files, crate_info):
     props = {}
     target_type = "build" if _looks_like_cargo_build_script(target) else _TARGET_TYPES[ctx.rule.kind]
-
 
     props["name"] = crate_info.name
     props["type"] = target_type
@@ -158,9 +157,9 @@ def _sync_info(target, ctx, source_files, crate_info):
         props["deps." + dep[0]] = dep[1]
     return props
 
-def _build_sync_info_file(target, ctx, source_files, crate_info):
-    file = ctx.actions.declare_file("%s.ide-sync.properties" % ctx.rule.attr.name)
-    props = _sync_info(target, ctx, source_files, crate_info)
+def _build_cargo_sync_properties_file(target, ctx, source_files, crate_info):
+    file = ctx.actions.declare_file("%s.cargo-sync.properties" % ctx.rule.attr.name)
+    props = _get_sync_properties(target, ctx, source_files, crate_info)
 
     content = ""
     for prop in props.items():
@@ -171,21 +170,21 @@ def _build_sync_info_file(target, ctx, source_files, crate_info):
     )
     return file
 
-def _rust_ide_sync_info_aspect_impl(target, ctx):
+def _rust_cargo_sync_properties_aspect_impl(target, ctx):
     if ctx.rule.kind not in _TARGET_TYPES.keys():
         return struct(kind = ctx.rule.kind)
 
     sources = [f for src in getattr(ctx.rule.attr, "srcs", []) for f in src.files.to_list()]
     crate_info = _crate_info(ctx, target)
-    sync_info_file = _build_sync_info_file(target, ctx, sources, crate_info)
+    sync_properties_file = _build_cargo_sync_properties_file(target, ctx, sources, crate_info)
 
     return struct(
         kind = ctx.rule.kind,
         crate_info = crate_info,
-        output_groups = {"rust-ide-sync": depset([sync_info_file])}
+        output_groups = {"rust-cargo-sync-properties": depset([sync_properties_file])}
     )
 
-rust_ide_sync_info_aspect = aspect(
+rust_cargo_sync_properties_aspect = aspect(
     attr_aspects = ["deps", "proc_macro_deps", "crate"],
-    implementation = _rust_ide_sync_info_aspect_impl,
+    implementation = _rust_cargo_sync_properties_aspect_impl,
 )
