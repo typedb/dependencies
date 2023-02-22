@@ -129,6 +129,7 @@ class Syncer : Callable<Unit> {
 
         private fun runSyncPropertiesAspect() {
             val rustTargets = rustTargets(shell, workspace)
+            logger.debug{ "Rust targets: $rustTargets" }
             shell.execute(
                     listOf(BAZEL, BUILD) + rustTargets + listOf(ASPECTS, RUST_CARGO_SYNC_PROPERTIES_ASPECT, OUTPUT_GROUPS_RUST_CARGO_SYNC_PROPERTIES),
                     workspace
@@ -169,6 +170,7 @@ class Syncer : Callable<Unit> {
         }
 
         private fun shouldGenerateManifest(properties: TargetProperties): Boolean {
+            logger.debug { "Should generate: $properties" }
             return properties.type in listOf(TargetProperties.Type.LIB, TargetProperties.Type.BIN)
         }
 
