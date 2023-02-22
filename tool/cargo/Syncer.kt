@@ -76,14 +76,6 @@ class Syncer : Callable<Unit> {
     private lateinit var bazelOutputBase: Path
 
     override fun call() {
-        System.setProperty("line.separator", "\n")
-        if (System.lineSeparator() == "\n") {
-            println("\\n");
-        } else if (System.lineSeparator() == "\r\n") {
-            println("\\r\\n")
-        } else {
-            print("Other");
-        }
         logger = Logger(logLevel = if (verbose) DEBUG else ERROR)
         shell = Shell(logger, verbose)
         bazelOutputBase = Path(shell.execute(listOf(BAZEL, INFO, OUTPUT_BASE), workspaceDir).outputString().trim())
@@ -105,7 +97,7 @@ class Syncer : Callable<Unit> {
     private fun vaticleRustWorkspaces(): List<Path> {
         // e.g: [/Users/root/workspace/typedb-client-rust, /private/var/_bazel_root_/123abc/external/vaticle_typedb_protocol]
         return listOf(workspaceDir) + shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_DEPS_QUERY, "--output=package"), workspaceDir)
-                .outputString().split("\n")
+                .outputString().split(System.lineSeparator())
                 .filter { it.startsWith(VATICLE_REPOSITORY_PREFIX) }
                 .map { it.split("@")[1].split("//")[0] }
                 .map { bazelOutputBase.resolve("external").resolve(it) }
@@ -114,7 +106,7 @@ class Syncer : Callable<Unit> {
     companion object {
         private fun rustTargets(shell: Shell, workspace: Path): List<String> {
             return shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_QUERY), workspace)
-                    .outputString().split("\n").filter { it.isNotBlank() }
+                    .outputString().split(System.lineSeparator()).filter { it.isNotBlank() }
         }
     }
 
@@ -148,7 +140,7 @@ class Syncer : Callable<Unit> {
             val manifests = loadSyncProperties()
                     .filter { shouldGenerateManifest(it) }
                     .map { ManifestGenerator(it).generateManifest() }
-            println(manifests.joinToString("\n"))
+            println(manifests.joinToString(System.lineSeparator()))
         }
 
         private fun loadSyncProperties(): List<TargetProperties> {
