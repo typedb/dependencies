@@ -11,3 +11,4 @@ target
 Cargo.lock
 Cargo.toml
 !library/crates/Cargo.toml
+!library/crates/Cargo.lock
