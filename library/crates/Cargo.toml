@@ -30,6 +30,7 @@ axum = { version = "=0.5.15", features = ["ws"] }
 chrono = "=0.4.23"
 clap = "=4.0.26"
 crossbeam = "=0.8.2"
+coerce = "0.8.3"
 cxx = "=1.0.59"
 fluvio-helm = "=0.4.3"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
