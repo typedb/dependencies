@@ -19,6 +19,20 @@ config_setting(
     ],
 )
 
+config_setting(
+    name = "is_arm64",
+    constraint_values = [
+        "@platforms//cpu:arm64"
+    ]
+)
+
+config_setting(
+    name = "is_x86_64",
+    constraint_values = [
+        "@platforms//cpu:x86_64"
+    ]
+)
+
 platform(
     name = "mac_arm64",
     constraint_values = [
