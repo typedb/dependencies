@@ -98,7 +98,7 @@ visibility = ['//visibility:public'],
     git_repository(
         name = "com_google_ortools",
         remote = "https://github.com/google/or-tools.git",
-        #tag = "v9.3",
-        commit = "525162feaadaeef640783b2eaea38cf4b623877f",
-        shallow_since = "1647023481 +0100",
+        tag = "v9.6"
+#        commit = "525162feaadaeef640783b2eaea38cf4b623877f",
+#        depth = 1,
     )
