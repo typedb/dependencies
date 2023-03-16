@@ -33,37 +33,68 @@ rust_library(
 rust_cxx_bridge(
     name = "ortools_bridge",
     src = "ortools.rs",
-    deps = select({
-        "@vaticle_dependencies//util/platform:is_mac": [
-            "@or_tools_mac//:lib",
-            "@or_tools_mac//:incl",
-        ],
-        "@vaticle_dependencies//util/platform:is_linux": [
-            "@or_tools_linux//:lib",
-            "@or_tools_linux//:incl",
-        ],
-        "@vaticle_dependencies//util/platform:is_windows": [
-            "@or_tools_windows//:lib",
-            "@or_tools_windows//:incl",
-        ],
-    }) + [":ortools_bridge_wrapper"],
+    deps = [
+        ":ortools-wrapper",
+        "@com_google_ortools//ortools/base",
+        "@com_google_ortools//ortools/linear_solver",
+        "@com_google_ortools//ortools/linear_solver:linear_solver_cc_proto",
+    ]
 )
 
 cc_library(
-    name = "ortools_bridge_wrapper",
-    hdrs = ["OrToolsWrapper.h"],
-    deps = select({
-        "@vaticle_dependencies//util/platform:is_mac": [
-            "@or_tools_mac//:lib",
-            "@or_tools_mac//:incl",
-        ],
-        "@vaticle_dependencies//util/platform:is_linux": [
-            "@or_tools_linux//:lib",
-            "@or_tools_linux//:incl",
-        ],
-        "@vaticle_dependencies//util/platform:is_windows": [
-            "@or_tools_windows//:lib",
-            "@or_tools_windows//:incl",
-        ],
-    })
+    name = "ortools-wrapper",
+    srcs = [":OrToolsWrapper.h"],
+    deps = [
+        "@com_google_ortools//ortools/base",
+        "@com_google_ortools//ortools/linear_solver",
+        "@com_google_ortools//ortools/linear_solver:linear_solver_cc_proto",
+    ],
 )
+
+#
+#rust_library(
+#    name = "ortools",
+#    srcs = ["ortools.rs"],
+#    deps = [
+#        "@crates//:cxx",
+#        ":ortools_bridge",
+#    ]
+#)
+#
+#rust_cxx_bridge(
+#    name = "ortools_bridge",
+#    src = "ortools.rs",
+#    deps = select({
+#        "@vaticle_dependencies//util/platform:is_mac": [
+#            "@or_tools_mac//:lib",
+#            "@or_tools_mac//:incl",
+#        ],
+#        "@vaticle_dependencies//util/platform:is_linux": [
+#            "@or_tools_linux//:lib",
+#            "@or_tools_linux//:incl",
+#        ],
+#        "@vaticle_dependencies//util/platform:is_windows": [
+#            "@or_tools_windows//:lib",
+#            "@or_tools_windows//:incl",
+#        ],
+#    }) + [":ortools_bridge_wrapper"],
+#)
+#
+#cc_library(
+#    name = "ortools_bridge_wrapper",
+#    hdrs = ["OrToolsWrapper.h"],
+#    deps = select({
+#        "@vaticle_dependencies//util/platform:is_mac": [
+#            "@or_tools_mac//:lib",
+#            "@or_tools_mac//:incl",
+#        ],
+#        "@vaticle_dependencies//util/platform:is_linux": [
+#            "@or_tools_linux//:lib",
+#            "@or_tools_linux//:incl",
+#        ],
+#        "@vaticle_dependencies//util/platform:is_windows": [
+#            "@or_tools_windows//:lib",
+#            "@or_tools_windows//:incl",
+#        ],
+#    })
+#)
