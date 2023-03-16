@@ -5,5 +5,5 @@ build:linux --cxxopt=-std=c++20
 build:macos --cxxopt=-std=c++20
 build:windows --cxxopt=-std:c++20
 
-run --incompatible_strict_action_env --cxxopt=-std=c++20
-test --incompatible_strict_action_env --cxxopt=-std=c++20
+run --incompatible_strict_action_env
+test --incompatible_strict_action_env
