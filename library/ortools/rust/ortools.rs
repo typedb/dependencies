@@ -49,7 +49,9 @@ pub mod ffi {
         type MPConstraint;
         type MPObjective;
 
-        fn new_mpsolver() -> UniquePtr<MPSolver>;
+        fn new_mpsolver_sat() -> UniquePtr<MPSolver>;
+        fn new_mpsolver_scip() -> UniquePtr<MPSolver>;
+
         fn MakeIntVar(self: Pin<&mut MPSolver>, lb: f64, ub: f64, name: &CxxString) -> *mut MPVariable;
 
         fn solution_value(self: &MPVariable) -> f64;

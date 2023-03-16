@@ -1,3 +1,3 @@
-build --incompatible_strict_action_env
-run --incompatible_strict_action_env
-test --incompatible_strict_action_env
+build --incompatible_strict_action_env --cxxopt=-std=c++20
+run --incompatible_strict_action_env --cxxopt=-std=c++20
+test --incompatible_strict_action_env --cxxopt=-std=c++20

@@ -20,7 +20,11 @@ using namespace std;
 namespace operations_research {
     using MPSolverResultStatus = MPSolver::ResultStatus;
 
-    std::unique_ptr<MPSolver> new_mpsolver() {
+    std::unique_ptr<MPSolver> new_mpsolver_sat() {
+      return std::unique_ptr<MPSolver>(MPSolver::CreateSolver("SAT"));
+    }
+
+    std::unique_ptr<MPSolver> new_mpsolver_scip() {
       return std::unique_ptr<MPSolver>(MPSolver::CreateSolver("SCIP"));
     }
 }
