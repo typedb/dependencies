@@ -1,3 +1,5 @@
+load("@bazel_skylib//lib:selects.bzl", "selects")
+
 config_setting(
     name = "is_mac",
     constraint_values = [
@@ -30,6 +32,22 @@ config_setting(
     name = "is_x86_64",
     constraint_values = [
         "@platforms//cpu:x86_64"
+    ]
+)
+
+selects.config_setting_group(
+    name = "is_mac_x86_64",
+    match_all = [
+        ":is_mac",
+        ":is_x86_64"
+    ]
+)
+
+selects.config_setting_group(
+    name = "is_mac_arm64",
+    match_all = [
+        ":is_mac",
+        ":is_arm64"
     ]
 )
 
