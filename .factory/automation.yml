@@ -26,5 +26,6 @@ build:
     deploy-ubuntu-docker:
       image: vaticle-ubuntu-22.04
       command: |
+        docker login -u $REPO_DOCKER_USERNAME -p $REPO_DOCKER_PASSWORD
         bazel run //images/docker/ubuntu:assemble-docker
         bazel run //images/docker/ubuntu:deploy-docker
