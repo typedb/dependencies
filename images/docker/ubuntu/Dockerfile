@@ -16,4 +16,7 @@
 #
 
 FROM ubuntu:focal-20210723
-RUN apt-get -y update && apt-get install -y openjdk-11-jre-headless && rm -rf /var/lib/apt/lists
+RUN apt-get -y update && apt-get install -y openjdk-11-jre-headless curl bash && rm -rf /var/lib/apt/lists
+RUN curl -sL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get -y install nodejs
+RUN npm install -g pnpm

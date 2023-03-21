@@ -23,3 +23,8 @@ build:
       image: vaticle-ubuntu-22.04
       command: |
         bazel build //...
+    deploy-ubuntu-docker:
+      image: vaticle-ubuntu-22.04
+      command: |
+        bazel run //images/docker/ubuntu:assemble-docker
+        bazel run //images/docker/ubuntu:deploy-docker
