@@ -1,4 +1,17 @@
-load("@bazel_skylib//lib:selects.bzl", "selects")
+MAC_ARM64 = [
+    "@platforms//cpu:arm64",
+    "@platforms//os:osx"
+]
+
+MAC_X86_64 = [
+    "@platforms//cpu:x86_64",
+    "@platforms//os:osx"
+]
+
+LINUX_X86_64 = [
+    "@platforms//cpu:x86_64",
+    "@platforms//os:linux"
+]
 
 config_setting(
     name = "is_mac",
@@ -8,10 +21,25 @@ config_setting(
 )
 
 config_setting(
+    name = "is_mac_arm64",
+    constraint_values = MAC_ARM64
+)
+
+config_setting(
+    name = "is_mac_x86_64",
+    constraint_values = MAC_X86_64
+)
+
+config_setting(
     name = "is_linux",
     constraint_values = [
         "@platforms//os:linux",
     ],
+)
+
+config_setting(
+    name = "is_linux_x86_64",
+    constraint_values = LINUX_X86_64
 )
 
 config_setting(
@@ -35,36 +63,14 @@ config_setting(
     ]
 )
 
-selects.config_setting_group(
-    name = "is_mac_x86_64",
-    match_all = [
-        ":is_mac",
-        ":is_x86_64"
-    ]
-)
-
-selects.config_setting_group(
-    name = "is_mac_arm64",
-    match_all = [
-        ":is_mac",
-        ":is_arm64"
-    ]
-)
-
 platform(
     name = "mac_arm64",
-    constraint_values = [
-        "@platforms//cpu:arm64",
-        "@platforms//os:osx"
-    ]
+    constraint_values = MAC_ARM64
 )
 
 platform(
     name = "mac_x86_64",
-    constraint_values = [
-        "@platforms//cpu:x86_64",
-        "@platforms//os:osx"
-    ]
+    constraint_values = MAC_X86_64
 )
 
 platform(
@@ -77,8 +83,5 @@ platform(
 
 platform(
     name = "linux_x86_64",
-    constraint_values = [
-        "@platforms//cpu:x86_64",
-        "@platforms//os:linux"
-    ]
+    constraint_values = LINUX_X86_64
 )
