@@ -112,13 +112,12 @@ class Syncer : Callable<Unit> {
 
     private class WorkspaceSyncer(private val workspace: Path, private var logger: Logger, private var shell: Shell, var bazelOutputBase: Path) {
 
-        private val bazelBin = workspace.resolve(BAZEL_BIN).toRealPath().toFile()
-
         fun sync() {
             logger.debug { "Syncing $workspace" }
             cleanupOldSyncProperties()
             runSyncPropertiesAspect()
-            generateManifests()
+            val bazelBin = workspace.resolve(BAZEL_BIN).toRealPath().toFile()
+            generateManifests(bazelBin);
             logger.debug { "Sync completed in $workspace" }
         }
 
@@ -136,20 +135,20 @@ class Syncer : Callable<Unit> {
             )
         }
 
-        fun generateManifests() {
-            val manifests = loadSyncProperties()
+        fun generateManifests(bazelBin: File) {
+            val manifests = loadSyncProperties(bazelBin)
                     .filter { shouldGenerateManifest(it) }
-                    .map { ManifestGenerator(it).generateManifest() }
+                    .map { ManifestGenerator(it).generateManifest(bazelBin) }
             println(manifests.joinToString(System.lineSeparator()))
         }
 
-        private fun loadSyncProperties(): List<TargetProperties> {
-            return findSyncPropertiesFiles()
+        private fun loadSyncProperties(bazelBin: File): List<TargetProperties> {
+            return findSyncPropertiesFiles(bazelBin)
                     .map { TargetProperties.fromPropertiesFile(Path(it.path)) }
                     .apply { attachTestAndBuildProperties(this) }
         }
 
-        private fun findSyncPropertiesFiles(): List<File> {
+        private fun findSyncPropertiesFiles(bazelBin: File): List<File> {
             val bazelBinContents = bazelBin.listFiles() ?: throw IllegalStateException()
             val filesToCheck = bazelBinContents.filter { it.isFile } + bazelBinContents
                     .filter { it.isDirectory && it.name != Paths.EXTERNAL }.flatMap { it.listFilesRecursively() }
@@ -174,10 +173,10 @@ class Syncer : Callable<Unit> {
         }
 
         private inner class ManifestGenerator(private val properties: TargetProperties) {
-            fun generateManifest(): File {
+            fun generateManifest(bazelBin: File): File {
                 if (properties.containsGeneratedSources) buildTarget()
-                val outputPath = manifestOutputPath()
-                Files.newOutputStream(outputPath).use { it.write(manifestContent().toByteArray(StandardCharsets.UTF_8)) }
+                val outputPath = manifestOutputPath(bazelBin)
+                Files.newOutputStream(outputPath).use { it.write(manifestContent(bazelBin).toByteArray(StandardCharsets.UTF_8)) }
                 return outputPath.toFile()
             }
 
@@ -185,12 +184,12 @@ class Syncer : Callable<Unit> {
                 shell.execute(listOf(BAZEL, ShellArgs.BUILD, properties.label), baseDir = workspace)
             }
 
-            private fun manifestOutputPath(): Path {
+            private fun manifestOutputPath(bazelBin: File): Path {
                 val projectRelativePath = bazelBin.toPath().relativize(properties.path.parent)
                 return workspace.resolve(projectRelativePath.toString()).resolve(Paths.CARGO_TOML)
             }
 
-            private fun manifestContent(): String {
+            private fun manifestContent(bazelBin: File): String {
                 val cargoToml = Config.inMemory()
 
                 cargoToml.createSubConfig().apply {
@@ -200,7 +199,7 @@ class Syncer : Callable<Unit> {
                     set<String>("version", properties.version)
                 }
 
-                cargoToml.createEntryPointSubConfig()
+                cargoToml.createEntryPointSubConfig(bazelBin)
 
                 cargoToml.createSubConfig().apply {
                     cargoToml.set<Config>("dependencies", this)
@@ -212,7 +211,7 @@ class Syncer : Callable<Unit> {
                 return GENERATED_FILE_NOTICE + TomlWriter().writeToString(cargoToml.unmodifiable())
             }
 
-            private fun Config.createEntryPointSubConfig() {
+            private fun Config.createEntryPointSubConfig(bazelBin: File) {
                 val entryPointPath = if (properties.containsGeneratedSources) {
                     bazelBin.resolve(properties.entryPointPath.toString()).toString()
                 } else properties.rootPath!!.relativize(properties.entryPointPath!!).toString()
