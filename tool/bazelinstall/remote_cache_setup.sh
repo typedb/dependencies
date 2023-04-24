@@ -4,7 +4,7 @@ set -e
 
 if [[ -n "$BAZEL_CACHE_CREDENTIAL" ]] && [[ -n "$BAZEL_CACHE_URL" ]]; then
     echo "Installing remote cache credential..."
-    BAZEL_CACHE_CREDENTIAL_LOCATION=./bazel_cache_credential.json
+    BAZEL_CACHE_CREDENTIAL_LOCATION=./bazel-cache-credential.json
     echo "A remote cache credential is found and will be saved to $BAZEL_CACHE_CREDENTIAL_LOCATION. Artifact and test results will be cached remotely."
     BAZEL_CACHE_CREDENTIAL_JSON=$(echo "$BAZEL_CACHE_CREDENTIAL" | base64 -d)
     if [[ -n "$BAZEL_CACHE_CREDENTIAL_JSON" ]]; then
