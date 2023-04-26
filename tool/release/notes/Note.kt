@@ -70,7 +70,8 @@ class Note {
             }
         }
 
-        private fun getPRGoal(description: String): String {
+        private fun getPRGoal(description: String?): String? {
+            if (description == null) return null
             val goal = StringBuilder()
             var header = 0
             for (line in description.lines()) {
