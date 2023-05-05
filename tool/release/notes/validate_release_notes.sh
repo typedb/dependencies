@@ -19,8 +19,8 @@
 # under the License.
 #
 
-if [ git diff HEAD^ HEAD LATEST_RELEASE_NOTES.md --exit-code ]; then
-    echo "LATEST_RELEASE_NOTES.md was not changed in the latest commit. Aborting release." && exit 1
+if git diff HEAD^ HEAD -- LATEST_RELEASE_NOTES.md --exit-code; then
+    echo "LATEST_RELEASE_NOTES.md was not changed in the latest commit; aborting release." && exit 1
 else
     exit 0
 fi
