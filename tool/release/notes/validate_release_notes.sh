@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#
 # Copyright (C) 2022 Vaticle
 #
 # Licensed to the Apache Software Foundation (ASF) under one
