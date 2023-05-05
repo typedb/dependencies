@@ -1,4 +1,4 @@
-#
+#!/usr/bin/env bash
 # Copyright (C) 2022 Vaticle
 #
 # Licensed to the Apache Software Foundation (ASF) under one
@@ -19,22 +19,8 @@
 # under the License.
 #
 
-load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
-
-package(default_visibility = ["//visibility:public"])
-
-sh_binary(
-    name = "validate",
-    srcs = ["validate_release_notes.sh"],
-)
-
-kt_jvm_binary(
-    name = "create",
-    srcs = glob(["*.kt"]),
-    main_class = "com.vaticle.dependencies.tool.release.notes.NotesCreateKt",
-    deps = [
-        "@maven//:com_eclipsesource_minimal_json_minimal_json",
-        "@maven//:com_google_http_client_google_http_client",
-        "@maven//:org_zeroturnaround_zt_exec",
-    ],
-)
+if [ git diff HEAD^ HEAD LATEST_RELEASE_NOTES.md --exit-code ]; then
+    echo "LATEST_RELEASE_NOTES.md was not changed in the latest commit. Aborting release." && exit 1
+else
+    exit 0
+fi
