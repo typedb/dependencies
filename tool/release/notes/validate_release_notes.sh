@@ -19,7 +19,7 @@
 # under the License.
 #
 
-if git -C $BUILD_WORKSPACE_DIRECTORY diff HEAD^ HEAD -- LATEST_RELEASE_NOTES.md --exit-code; then
+if git -C $BUILD_WORKSPACE_DIRECTORY diff --exit-code HEAD^ HEAD -- LATEST_RELEASE_NOTES.md; then
     echo "LATEST_RELEASE_NOTES.md was not changed in the latest commit; aborting release." && exit 1
 else
     exit 0
