@@ -20,12 +20,14 @@
 # under the License.
 #
 
-if git -C $BUILD_WORKSPACE_DIRECTORY diff --exit-code HEAD^ HEAD -- LATEST_RELEASE_NOTES.md; then
+git="git -C $BUILD_WORKSPACE_DIRECTORY"
+
+if $git diff --exit-code HEAD^ HEAD -- LATEST_RELEASE_NOTES.md; then
     echo -n "Detected changes in the repository since the last time the release notes had been updated. "
     echo "Please make sure those changes have been reflected in the LATEST_RELEASE_NOTES.md"
     echo
-    echo "Latest change in LATEST_RELEASE_NOTES.md: $(git log -n 1 --pretty='%h (%aD)' -- LATEST_RELEASE_NOTES.md)"
-    echo "Latest commit: $(git log -n 1 --pretty='%h (%aD)')"
+    echo "Latest change in LATEST_RELEASE_NOTES.md: $($git log -n 1 --pretty='%h (%aD)' -- LATEST_RELEASE_NOTES.md)"
+    echo "Latest commit: $($git log -n 1 --pretty='%h (%aD)')"
     echo
     echo "Aborting release."
     exit 1
