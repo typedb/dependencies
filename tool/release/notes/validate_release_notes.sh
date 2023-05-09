@@ -29,6 +29,9 @@ if $git diff --exit-code HEAD^ HEAD -- LATEST_RELEASE_NOTES.md; then
     echo "Latest change in LATEST_RELEASE_NOTES.md: $($git log -n 1 --pretty='%h (%aD)' -- LATEST_RELEASE_NOTES.md)"
     echo "Latest commit: $($git log -n 1 --pretty='%h (%aD)')"
     echo
+    echo "Commit log:"
+    $git log $($git log -n 1 --pretty='%H' -- LATEST_RELEASE_NOTES.md)..$($git log -n 1 --pretty='%H') --oneline --decorate=no
+    echo
     echo "Aborting release."
     exit 1
 else
