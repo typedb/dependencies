@@ -23,6 +23,11 @@ load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
 package(default_visibility = ["//visibility:public"])
 
+sh_binary(
+    name = "validate",
+    srcs = ["validate_release_notes.sh"],
+)
+
 kt_jvm_binary(
     name = "create",
     srcs = glob(["*.kt"]),

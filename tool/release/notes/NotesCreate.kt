@@ -29,10 +29,14 @@ import kotlin.text.Regex.Companion.escapeReplacement
 fun main(args: Array<String>) {
     val bazelWorkspaceDir = Paths.get(getEnv("BUILD_WORKSPACE_DIRECTORY"))
     val githubToken = getEnv("NOTES_CREATE_TOKEN")
-    if (args.size != 5) throw RuntimeException("org, repo, commit, version, and template must be supplied")
-    val (org, repo, commit, version, templateFileLocation) = args
+    if (args.size != 6) throw RuntimeException("org, repo, commit, version, template, and output destination must be supplied")
+
+    operator fun <T> Array<T>.component6() = this[5]
+    val (org, repo, commit, version, templateFileLocation, outputFileLocation) = args
+
     val templateFile = bazelWorkspaceDir.resolve(templateFileLocation)
     if (templateFile.notExists()) throw RuntimeException("Template file '$templateFile' does not exist.")
+    val outputFile = bazelWorkspaceDir.resolve(outputFileLocation)
 
     println("Commit: $org/$repo@$commit")
     println("Version: $version")
@@ -40,17 +44,17 @@ fun main(args: Array<String>) {
     val commits = collectCommits(org, repo, commit, Version.parse(version), bazelWorkspaceDir, githubToken)
     println("Found ${commits.size} commits to be collected into the release note.")
     val notes = collectNotes(org, repo, commits.reversed(), githubToken)
-    writeNotesMd(notes, templateFile)
+    writeNotesMd(notes, templateFile, outputFile)
 }
 
 private fun getEnv(env: String): String {
     return System.getenv(env) ?: throw RuntimeException("'$env' environment variable must be set.")
 }
 
-private fun writeNotesMd(notes: List<Note>, releaseTemplateFile: Path) {
+private fun writeNotesMd(notes: List<Note>, releaseTemplateFile: Path, releaseNotesFile: Path) {
     val template = releaseTemplateFile.toFile().readText()
     if (!template.matches(".*${Constant.releaseTemplateRegex.pattern}.*".toRegex(RegexOption.DOT_MATCHES_ALL)))
         throw RuntimeException("The release-template does not contain the '${Constant.releaseTemplateRegex}' placeholder")
     val markdown = template.replace(Constant.releaseTemplateRegex, escapeReplacement(Note.toMarkdown(notes)))
-    releaseTemplateFile.toFile().writeText(markdown)
+    releaseNotesFile.toFile().writeText(markdown)
 }
