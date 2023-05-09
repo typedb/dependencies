@@ -31,7 +31,7 @@ if $git diff --exit-code HEAD^ HEAD -- LATEST_RELEASE_NOTES.md; then
     echo "LATEST_RELEASE_NOTES.md was last updated on $($git log -n 1 --pretty='%aD, commit SHA %h' -- LATEST_RELEASE_NOTES.md)"
     echo
     echo "Since then, the following commits have been added:"
-    $git log $($git log -n 1 --pretty='%H' -- LATEST_RELEASE_NOTES.md)..$($git log -n 1 --pretty='%H') --oneline --decorate=no |
+    $git log $($git log -n 1 --pretty='%H' -- LATEST_RELEASE_NOTES.md)..HEAD --oneline --decorate=no |
         awk '{ buf[i++] = $0; } END { while (i--) { print buf[i]; } }'  # reverse git log output
     echo
     echo "Aborting release."
