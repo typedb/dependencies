@@ -26,7 +26,7 @@ if $git diff --exit-code HEAD^ HEAD -- LATEST_RELEASE_NOTES.md; then
     echo "validate_release_notes.sh failed!"
     echo
     echo -n "The script has detected changes in the repository since the last time the release notes had been updated. "
-    echo "Please make sure those changes have been reflected in the LATEST_RELEASE_NOTES.md."
+    echo "Please make sure those changes are reflected in the LATEST_RELEASE_NOTES.md."
     echo
     echo "LATEST_RELEASE_NOTES.md was last updated on $($git log -n 1 --pretty='%aD, commit SHA %h' -- LATEST_RELEASE_NOTES.md)"
     echo
