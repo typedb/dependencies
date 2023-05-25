@@ -26,7 +26,7 @@ path = "" # ignored by cargo generate-lockfile
 [dependencies]
 hmac = "=0.12.1"
 alcoholic_jwt = "=4091.0.0"
-async-stripe = { version = "=0.18.4", features = ["runtime-tokio-hyper"] }
+async-stripe = { version = "=0.22.2", features = ["runtime-tokio-hyper"] }
 async-trait = "=0.1.59"
 axum = { version = "=0.5.15", features = ["ws"] }
 chrono = "=0.4.23"
