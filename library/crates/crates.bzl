@@ -23,6 +23,9 @@ def fetch_crates():
         name = "crates",
         cargo_lockfile = "@vaticle_dependencies//library/crates:Cargo.lock",
         manifests = ["@vaticle_dependencies//library/crates:Cargo.toml"],
+        annotations = {
+            "cbindgen": [crate.annotation(gen_binaries = True)],
+        },
         supported_platform_triples = [
             "aarch64-apple-darwin",
             "x86_64-apple-darwin",
