@@ -23,14 +23,20 @@ load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
 package(default_visibility = ["//visibility:public"])
 
-sh_binary(
+kt_jvm_binary(
     name = "validate",
-    srcs = ["validate_release_notes.sh"],
+    srcs = glob(["NotesValidate.kt", "Commit.kt", "Common.kt", "Version.kt"]),
+    main_class = "com.vaticle.dependencies.tool.release.notes.NotesValidateKt",
+    deps = [
+        "@maven//:com_eclipsesource_minimal_json_minimal_json",
+        "@maven//:com_google_http_client_google_http_client",
+        "@maven//:org_zeroturnaround_zt_exec",
+    ],
 )
 
 kt_jvm_binary(
     name = "create",
-    srcs = glob(["*.kt"]),
+    srcs = glob(["NotesCreate.kt", "Note.kt", "Commit.kt", "Common.kt", "Version.kt"]),
     main_class = "com.vaticle.dependencies.tool.release.notes.NotesCreateKt",
     deps = [
         "@maven//:com_eclipsesource_minimal_json_minimal_json",

@@ -19,22 +19,26 @@ object Constant {
     const val labelRefactor = "$labelPrefix: refactor"
 }
 
+fun getEnv(env: String): String {
+    return System.getenv(env) ?: throw RuntimeException("'$env' environment variable must be set.")
+}
+
 fun httpGet(url: String, githubToken: String): HttpResponse {
     return NetHttpTransport()
-        .createRequestFactory()
-        .buildGetRequest(GenericUrl(url))
-        .setHeaders(
-            HttpHeaders().setAuthorization("${Constant.headerAuthPrefix} $githubToken").setAccept(Constant.headerAccept)
-        )
-        .execute()
+            .createRequestFactory()
+            .buildGetRequest(GenericUrl(url))
+            .setHeaders(
+                    HttpHeaders().setAuthorization("${Constant.headerAuthPrefix} $githubToken").setAccept(Constant.headerAccept)
+            )
+            .execute()
 }
 
 fun bash(script: String, baseDir: Path): ProcessResult {
     val builder = ProcessExecutor(script.split(" "))
-        .readOutput(true)
-        .redirectOutput(System.out)
-        .redirectError(System.err)
-        .directory(baseDir.toFile())
-        .exitValueNormal()
+            .readOutput(true)
+            .redirectOutput(System.out)
+            .redirectError(System.err)
+            .directory(baseDir.toFile())
+            .exitValueNormal()
     return builder.execute()
 }

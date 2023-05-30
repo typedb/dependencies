@@ -47,9 +47,6 @@ fun main(args: Array<String>) {
     writeNotesMd(notes, templateFile, outputFile)
 }
 
-private fun getEnv(env: String): String {
-    return System.getenv(env) ?: throw RuntimeException("'$env' environment variable must be set.")
-}
 
 private fun writeNotesMd(notes: List<Note>, releaseTemplateFile: Path, releaseNotesFile: Path) {
     val template = releaseTemplateFile.toFile().readText()
