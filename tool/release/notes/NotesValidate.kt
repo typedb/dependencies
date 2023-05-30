@@ -34,7 +34,7 @@ fun main(args: Array<String>) {
 
     val lastTag = getLastVersion(org, repo, githubToken)
 
-    val result = bash("git diff --exit-code $lastTag HEAD -- $releaseNotesFile", bazelWorkspaceDir)
+    val result = bash("git diff --exit-code --quiet $lastTag HEAD -- $releaseNotesFile", bazelWorkspaceDir, false)
     if (result.getExitValue() == 0) {
         println("Error: the release notes file '$releaseNotesFile' has not changed since the last release (tag '$lastTag').")
     }

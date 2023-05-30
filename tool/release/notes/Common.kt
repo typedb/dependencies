@@ -33,12 +33,12 @@ fun httpGet(url: String, githubToken: String): HttpResponse {
             .execute()
 }
 
-fun bash(script: String, baseDir: Path): ProcessResult {
-    val builder = ProcessExecutor(script.split(" "))
+fun bash(script: String, baseDir: Path, requireNormalExit: Boolean = true): ProcessResult {
+    var builder = ProcessExecutor(script.split(" "))
             .readOutput(true)
             .redirectOutput(System.out)
             .redirectError(System.err)
-            .directory(baseDir.toFile())
-            .exitValueNormal()
+            .directory(baseDir.toFile());
+    if (requireNormalExit) builder = builder.exitValueNormal();
     return builder.execute()
 }
