@@ -21,20 +21,25 @@
 #
 
 git="git -C $BUILD_WORKSPACE_DIRECTORY"
+release_notes_file="$1"
 
-if $git diff --exit-code HEAD^ HEAD -- LATEST_RELEASE_NOTES.md; then
+if [ ! -f "$release_notes_file" ]; then
+  echo "Release notes file $release_notes_file does not exist."
+  exit 1
+fi
+
+if $git diff --exit-code HEAD^ HEAD -- "$release_notes_file"; then
     echo "validate_release_notes.sh failed!"
     echo
     echo -n "The script has detected changes in the repository since the last time the release notes had been updated. "
-    echo "Please make sure those changes are reflected in the LATEST_RELEASE_NOTES.md."
+    echo "Please make sure those changes are reflected in the $release_notes_file."
     echo
-    echo "LATEST_RELEASE_NOTES.md was last updated on $($git log -n 1 --pretty='%aD, commit SHA %h' -- LATEST_RELEASE_NOTES.md)"
+    echo "$release_notes_file was last updated on $($git log -n 1 --pretty='%aD, commit SHA %h' -- $release_notes_file)"
     echo
     echo "Since then, the following commits have been added:"
-    $git log $($git log -n 1 --pretty='%H' -- LATEST_RELEASE_NOTES.md)..HEAD --oneline --decorate=no |
+    $git log $($git log -n 1 --pretty='%H' -- "$release_notes_file")..HEAD --oneline --decorate=no |
         awk '{ buf[i++] = $0; } END { while (i--) { print buf[i]; } }'  # reverse git log output
     echo
-    echo "Aborting release."
     exit 1
 else
     exit 0
