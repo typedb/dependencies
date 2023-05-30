@@ -20,27 +20,30 @@
 # under the License.
 #
 
-git="git -C $BUILD_WORKSPACE_DIRECTORY"
+pushd "$BUILD_WORKSPACE_DIRECTORY"  > /dev/null 2>&1 || exit
 release_notes_file="$1"
 
 if [ ! -f "$release_notes_file" ]; then
-  echo "Error: release notes file '$release_notes_file' does not exist."
-  exit 1
+    echo "Error: release notes file '$release_notes_file' does not exist."
+    pushd > /dev/null 2>&1 || exit
+    exit 1
 fi
 
-if $git diff --exit-code HEAD^ HEAD -- "$release_notes_file"; then
+if git diff --exit-code HEAD^ HEAD -- "$release_notes_file"; then
     echo "Error: validation failed!"
     echo
     echo -n "The script has detected changes in the repository since the last time the release notes had been updated. "
     echo "Please make sure those changes are reflected in the '$release_notes_file'."
     echo
-    echo "'$release_notes_file' was last updated on $($git log -n 1 --pretty='%aD, commit SHA %h' -- $release_notes_file)"
+    echo "'$release_notes_file' was last updated on $(git log -n 1 --pretty='%aD, commit SHA %h' -- $release_notes_file)"
     echo
     echo "Since then, the following commits have been added:"
-    $git log $($git log -n 1 --pretty='%H' -- "$release_notes_file")..HEAD --oneline --decorate=no |
+    git log $(git log -n 1 --pretty='%H' -- "$release_notes_file")..HEAD --oneline --decorate=no |
         awk '{ buf[i++] = $0; } END { while (i--) { print buf[i]; } }'  # reverse git log output
     echo
+    popd > /dev/null 2>&1 || exit
     exit 1
 else
+    popd > /dev/null 2>&1 || exit
     exit 0
 fi
