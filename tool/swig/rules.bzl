@@ -16,18 +16,22 @@
 #
 
 def _swig_java_impl(ctx):
+    module_name = getattr(ctx.attr, "class_name", ctx.attr.name)
     if ctx.file.interface:
         interface = ctx.file.interface
     else:
-        interface = _create_interface(ctx)
-    wrap_c = ctx.actions.declare_file("{}_wrap.c".format(ctx.attr.name))
-    wrap_java = ctx.actions.declare_file("{}.java".format(ctx.attr.name))
+        interface = _create_interface(ctx, module_name)
+
+    wrap_c = ctx.actions.declare_file("{}_wrap.c".format(module_name))
+    wrap_java = ctx.actions.declare_file("{}.java".format(module_name))
+    wrap_java_jni = ctx.actions.declare_file("{}JNI.java".format(module_name))
+
     ctx.actions.run(
         inputs = depset([interface], transitive = [
             ctx.attr.lib[CcInfo].compilation_context.headers,
             ctx.attr._swig.data_runfiles.files,
         ]),
-        outputs = [wrap_c, wrap_java],
+        outputs = [wrap_c, wrap_java, wrap_java_jni],
         executable = ctx.file._swig,
         arguments = [
             "-java",
@@ -42,6 +46,7 @@ def _swig_java_impl(ctx):
         outputs = [jni_h],
         command = "cp -f '%s' '%s'" % (ctx.file._jni_header.path, jni_h.path),
     )
+
     jni_md_h = ctx.actions.declare_file("jni_md.h")
     ctx.actions.run_shell(
         inputs = [ctx.file._jni_md_header],
@@ -64,7 +69,7 @@ def _swig_java_impl(ctx):
     )
 
     return [
-        DefaultInfo(files = depset([interface, jni_h, jni_md_h, wrap_c, wrap_java])),
+        DefaultInfo(files = depset([interface, jni_h, jni_md_h, wrap_c, wrap_java, wrap_java_jni])),
         CcInfo(
             compilation_context = compilation_context,
             linking_context = ctx.attr.lib[CcInfo].linking_context,
@@ -78,6 +83,9 @@ swig_java = rule(
             doc = "The C library for which to generate the wrapper",
             providers = [CcInfo],
             mandatory = True,
+        ),
+        "class_name": attr.string(
+            doc = "optional override for the java class name (default: same as target name)",
         ),
         "interface": attr.label(
             doc = "Optional override for the generated SWIG interface (.i) file.",
@@ -103,8 +111,9 @@ swig_java = rule(
     }
 )
 
-def _create_interface(ctx):
-    interface = ctx.actions.declare_file(ctx.attr.name + ".i")
+
+def _create_interface(ctx, module_name):
+    interface = ctx.actions.declare_file(module_name + ".i")
     includes = "\n".join([
         "#include \"{}\"".format(hdr.path)
         for hdr in ctx.attr.lib[CcInfo].compilation_context.headers.to_list()
@@ -113,6 +122,6 @@ def _create_interface(ctx):
     ctx.actions.write(
         interface,
         # TODO template
-        "%module {}\n%{{\n{}\n%}}\n%include \"stdint.i\"\n{}".format(ctx.attr.name, includes, swig_includes)
+        "%module {}\n%{{\n{}\n%}}\n%include \"stdint.i\"\n{}".format(module_name, includes, swig_includes)
     )
     return interface
