@@ -1,5 +1,24 @@
+#
+# Copyright (C) 2022 Vaticle
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
+
 load("@bazel_skylib//rules:run_binary.bzl", "run_binary")
 load("@rules_cc//cc:defs.bzl", "cc_library")
+load("@vaticle_dependencies//builder/rust/cargo:project_aspect.bzl", "CargoProjectInfo", "rust_cargo_project_aspect")
+load("@rules_rust//rust/private:providers.bzl", "TestCrateInfo", "DepInfo")
 
 def rust_cxx_bridge(name, src, deps = []):
     run_binary(
@@ -34,3 +53,117 @@ def rust_cxx_bridge(name, src, deps = []):
         srcs = [src + ".cc"],
         deps = deps + [":%s_include" % name],
     )
+
+def _rust_cbindgen_impl(ctx):
+    rust_lib = ctx.attr.lib
+
+    output_header = ctx.actions.declare_file(
+        ctx.attr.header_name if ctx.attr.header_name else "{}.h".format(ctx.label.name),
+    )
+
+    args = ctx.actions.args()
+    args.add("--clean")
+    args.add("--lang")
+    args.add("c")
+    args.add("--output")
+    args.add(output_header)
+    args.add(rust_lib[CargoProjectInfo].manifest.path.rsplit("/", 1)[0])
+
+    inputs = rust_lib[OutputGroupInfo].rust_cargo_project
+
+    rust_toolchain = ctx.toolchains["@rules_rust//rust:toolchain"]
+    cargo_home = ctx.actions.declare_directory("cargo-home")
+    env = {
+        "CARGO": rust_toolchain.cargo.path,
+        "CARGO_HOME": cargo_home.path,
+        "HOST": rust_toolchain.exec_triple,
+        "RUSTC": rust_toolchain.rustc.path,
+        "TARGET": rust_toolchain.target_triple,
+    }
+
+    tools = depset([
+            rust_toolchain.cargo,
+            rust_toolchain.rustc,
+        ],
+        transitive = [
+            rust_toolchain.rust_std,
+            rust_toolchain.rustc_lib,
+        ],
+    )
+
+    ctx.actions.run(
+        executable = ctx.file._cbindgen,
+        inputs = inputs,
+        outputs = [output_header, cargo_home],
+        arguments = [args],
+        env = env,
+        tools = tools,
+    )
+
+    rust_compilation_context = rust_lib[CcInfo].compilation_context
+    compilation_context = cc_common.create_compilation_context(
+        headers = depset([output_header], transitive = [rust_compilation_context.headers]),
+        defines = rust_compilation_context.defines,
+        framework_includes = rust_compilation_context.framework_includes,
+        includes = rust_compilation_context.includes,
+        local_defines = rust_compilation_context.local_defines,
+        quote_includes = rust_compilation_context.quote_includes,
+        system_includes = rust_compilation_context.system_includes,
+    )
+
+    return [
+        rust_lib[DepInfo],
+        CcInfo(
+            compilation_context = compilation_context,
+            linking_context = rust_lib[CcInfo].linking_context,
+        ),
+        DefaultInfo(
+            files = depset([output_header], transitive = [rust_lib.files]),
+            runfiles = ctx.runfiles([output_header], transitive_files = rust_lib.files),
+        ),
+     ]
+
+rust_cbindgen = rule(
+    implementation = _rust_cbindgen_impl,
+    attrs = {
+        "lib": attr.label(
+            doc = "The `rust_static_library` or `rust_shared_library` target which to run cbindgen on.",
+            providers = [CcInfo, CargoProjectInfo],
+            aspects = [rust_cargo_project_aspect],
+            mandatory = True,
+        ),
+        "cbindgen_flags": attr.string_list(
+            doc = (
+                "Optional flags to pass directly to the bindgen executable. " +
+                "See https://docs.rs/cbindgen/latest/cbindgen/ for details."
+            ),
+        ),
+        "header_name": attr.string(
+            doc = (
+                "Optional override for the name of the generated header. The default is the " +
+                "name of the target created by this rule."
+            ),
+        ),
+        #"config": attr.label(
+        #    doc = "Optional Cbindgen configuration template",
+        #    allow_single_file = True,
+        #),
+        #"_config_default_template": attr.label(
+        #    doc = "Default cbindgen configuration template. This is treated as fallback from `config`",
+        #    default = Label("@vaticle_dependencies//builder/rust/private:cbindgen.toml.template"),
+        #    allow_single_file = True,
+        #),
+        "_cbindgen": attr.label(
+            default = Label("@crates//:cbindgen__cbindgen"),
+            allow_single_file = True,
+            executable = True,
+            cfg = "host",
+        )
+    },
+    outputs = {
+        #"config": "%{name}.cbindgen.toml",
+    },
+    toolchains = [
+        "@rules_rust//rust:toolchain",
+    ],
+)
