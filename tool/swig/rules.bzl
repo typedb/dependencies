@@ -15,7 +15,7 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-def _swig_java_impl(ctx):
+def _swig_java_wrapper_impl(ctx):
     module_name = getattr(ctx.attr, "class_name", ctx.attr.name)
     if ctx.file.interface:
         interface = ctx.file.interface
@@ -76,8 +76,9 @@ def _swig_java_impl(ctx):
         ),
     ]
 
-swig_java = rule(
-    implementation = _swig_java_impl,
+
+swig_java_wrapper = rule(
+    implementation = _swig_java_wrapper_impl,
     attrs = {
         "lib": attr.label(
             doc = "The C library for which to generate the wrapper",
@@ -105,11 +106,27 @@ swig_java = rule(
             allow_single_file = True,
         ),
         "_jni_md_header": attr.label(
-            default = Label("@bazel_tools//tools/jdk:jni_md_header-darwin"),
+            default = Label("@bazel_tools//tools/jdk:jni_md_header-linux"),
             allow_single_file = True,
         ),
     }
 )
+
+
+def swig_java(name, lib, **kwargs):
+    swig_java_wrapper(
+        name = name + "__swig",
+        class_name = name,
+        lib = lib,
+        **kwargs,
+    )
+    native.cc_binary(
+        name = "lib" + name + ".so",
+        deps = [lib, name + "__swig"],
+        srcs = [name + "__swig"],
+        linkshared = True,
+    )
+    native.java_library(name = name, srcs = [name + "__swig"])
 
 
 def _create_interface(ctx, module_name):
