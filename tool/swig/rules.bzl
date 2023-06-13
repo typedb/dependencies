@@ -49,9 +49,9 @@ def _swig_java_wrapper_impl(ctx):
 
     jni_md_h = ctx.actions.declare_file("jni_md.h")
     ctx.actions.run_shell(
-        inputs = [ctx.file._jni_md_header],
+        inputs = [ctx.file.jni_md_header],
         outputs = [jni_md_h],
-        command = "cp -f '%s' '%s'" % (ctx.file._jni_md_header.path, jni_md_h.path),
+        command = "cp -f '%s' '%s'" % (ctx.file.jni_md_header.path, jni_md_h.path),
     )
 
     lib_compilation_context = ctx.attr.lib[CcInfo].compilation_context
@@ -77,7 +77,7 @@ def _swig_java_wrapper_impl(ctx):
     ]
 
 
-swig_java_wrapper = rule(
+_swig_java_wrapper = rule(
     implementation = _swig_java_wrapper_impl,
     attrs = {
         "lib": attr.label(
@@ -105,28 +105,63 @@ swig_java_wrapper = rule(
             default = Label("@bazel_tools//tools/jdk:jni_header"),
             allow_single_file = True,
         ),
-        "_jni_md_header": attr.label(
-            default = Label("@bazel_tools//tools/jdk:jni_md_header-linux"),
+        "jni_md_header": attr.label(
             allow_single_file = True,
         ),
     }
 )
 
 
-def swig_java(name, lib, **kwargs):
+def swig_java_wrapper(**kwargs):
+    # workaround for select() not being allowed as a default argument
+    # cf. https://github.com/bazelbuild/bazel/issues/287
+    _swig_java_wrapper(
+        jni_md_header = select({
+            "@vaticle_dependencies//util/platform:is_mac": Label("@bazel_tools//tools/jdk:jni_md_header-darwin"),
+            "@vaticle_dependencies//util/platform:is_linux": Label("@bazel_tools//tools/jdk:jni_md_header-linux"),
+            "@vaticle_dependencies//util/platform:is_windows": Label("@bazel_tools//tools/jdk:jni_md_header-windows"),
+        }),
+        **kwargs,
+    )
+
+
+def swig_java(name, lib, shared_lib_name=None, **kwargs):
+    swig_wrapper_name = name + "__swig"
     swig_java_wrapper(
-        name = name + "__swig",
+        name = swig_wrapper_name,
         class_name = name,
         lib = lib,
         **kwargs,
     )
-    native.cc_binary(
-        name = "lib" + name + ".so",
-        deps = [lib, name + "__swig"],
-        srcs = [name + "__swig"],
-        linkshared = True,
+
+    if not shared_lib_name:
+        shared_lib_name = "lib" + name
+
+    def swig_cc_binary(shared_lib_filename):
+        # name doesn't accept select() either
+        native.cc_binary(
+            name = shared_lib_filename,
+            deps = [lib, swig_wrapper_name],
+            srcs = [swig_wrapper_name],
+            linkshared = True,
+        )
+
+    select({
+        "@vaticle_dependencies//util/platform:is_mac": swig_cc_binary(shared_lib_name + ".dylib"),
+        "@vaticle_dependencies//util/platform:is_linux": swig_cc_binary(shared_lib_name + ".so"),
+        "@vaticle_dependencies//util/platform:is_windows": swig_cc_binary(shared_lib_name + ".lib"),
+    })
+
+    native.alias(
+        name = shared_lib_name,
+        actual = select({
+            "@vaticle_dependencies//util/platform:is_mac": (shared_lib_name + ".dylib"),
+            "@vaticle_dependencies//util/platform:is_linux": (shared_lib_name + ".so"),
+            "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".lib"),
+        })
     )
-    native.java_library(name = name, srcs = [name + "__swig"])
+
+    native.java_library(name = name, srcs = [swig_wrapper_name])
 
 
 def _create_interface(ctx, module_name):
