@@ -20,4 +20,4 @@ package(default_visibility = ["//visibility:public"])
 alias(
     name = "swig",
     actual = Label("@swig//:swig"),
- )
+)
