@@ -15,10 +15,18 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+def _copy_to_bin(ctx, src, dst):
+    ctx.actions.run_shell(
+        inputs = [src],
+        outputs = [dst],
+        command = "cp -f '%s' '%s'" % (src.path, dst.path),
+    )
+
 def _swig_java_wrapper_impl(ctx):
     module_name = getattr(ctx.attr, "class_name", ctx.attr.name)
     if ctx.file.interface:
-        interface = ctx.file.interface
+        interface = ctx.actions.declare_file(module_name + ".i")
+        _copy_to_bin(ctx, ctx.file.interface, interface)
     else:
         interface = _create_interface(ctx, module_name)
 
