@@ -15,11 +15,13 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
+load(":rules.bzl", "create_swig_interface")
+
 def _copy_to_bin(ctx, src, dst):
     ctx.actions.run_shell(
         inputs = [src],
         outputs = [dst],
-        command = "cp -f '%s' '%s'" % (src.path, dst.path),
+        command = "cp -f '{}' '{}'".format(src.path, dst.path),
     )
 
 def _swig_java_wrapper_impl(ctx):
@@ -28,7 +30,7 @@ def _swig_java_wrapper_impl(ctx):
         interface = ctx.actions.declare_file(module_name + ".i")
         _copy_to_bin(ctx, ctx.file.interface, interface)
     else:
-        interface = _create_interface(ctx, module_name)
+        interface = create_swig_interface(ctx, module_name)
 
     wrap_c = ctx.actions.declare_file("{}_wrap.c".format(module_name))
     wrap_java_dir = ctx.actions.declare_directory("{}".format(module_name))
@@ -63,25 +65,13 @@ def _swig_java_wrapper_impl(ctx):
     )
 
     wrap_srcjar = ctx.actions.declare_file(module_name + ".srcjar")
-    ctx.actions.run_shell(
-        inputs = [wrap_zip],
-        outputs = [wrap_srcjar],
-        command = "mv {} {}".format(wrap_zip.path, wrap_srcjar.path),
-    )
+    _copy_to_bin(ctx, wrap_zip, wrap_srcjar)
 
     jni_h = ctx.actions.declare_file("jni.h")
-    ctx.actions.run_shell(
-        inputs = [ctx.file._jni_header],
-        outputs = [jni_h],
-        command = "cp -f '%s' '%s'" % (ctx.file._jni_header.path, jni_h.path),
-    )
+    _copy_to_bin(ctx, ctx.file._jni_header, jni_h)
 
     jni_md_h = ctx.actions.declare_file("jni_md.h")
-    ctx.actions.run_shell(
-        inputs = [ctx.file.jni_md_header],
-        outputs = [jni_md_h],
-        command = "cp -f '%s' '%s'" % (ctx.file.jni_md_header.path, jni_md_h.path),
-    )
+    _copy_to_bin(ctx, ctx.file.jni_md_header, jni_md_h)
 
     lib_compilation_context = ctx.attr.lib[CcInfo].compilation_context
     compilation_context = cc_common.create_compilation_context(
@@ -136,6 +126,10 @@ _swig_java_wrapper = rule(
             allow_single_file = True,
             executable = True,
             cfg = "host",
+        ),
+        "_swig_interface_template": attr.label(
+            default = Label("//builder/swig:template.i"),
+            allow_single_file = True,
         ),
         "_zipper": attr.label(
             default = Label("@bazel_tools//tools/zip:zipper"),
@@ -197,18 +191,3 @@ def swig_java(name, lib, shared_lib_name=None, **kwargs):
     )
 
     native.java_library(name = name, srcs = [swig_wrapper_name])
-
-
-def _create_interface(ctx, module_name):
-    interface = ctx.actions.declare_file(module_name + ".i")
-    includes = "\n".join([
-        "#include \"{}\"".format(hdr.path)
-        for hdr in ctx.attr.lib[CcInfo].compilation_context.headers.to_list()
-    ])
-    swig_includes = includes.replace("#", "%")
-    ctx.actions.write(
-        interface,
-        # TODO template
-        "%module {}\n%{{\n{}\n%}}\n%include \"stdint.i\"\n{}".format(module_name, includes, swig_includes)
-    )
-    return interface

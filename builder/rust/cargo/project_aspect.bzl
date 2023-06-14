@@ -144,7 +144,7 @@ def _copy_to_bin(ctx, src, dst):
     ctx.actions.run_shell(
         inputs = [src],
         outputs = [dst],
-        command = "cp -f '%s' '%s'" % (src.path, dst.path),
+        command = "cp -f '{}' '{}'".format(src.path, dst.path),
     )
 
 def _should_generate_cargo_manifest(ctx, target):
@@ -155,12 +155,12 @@ def _is_universe_crate(target):
     return str(target.label).startswith("@crates__")
 
 def _build_cargo_properties_file(target, ctx, source_files, crate_info):
-    properties_file = ctx.actions.declare_file("%s.cargo.properties" % ctx.rule.attr.name)
+    properties_file = ctx.actions.declare_file("{}.cargo.properties".format(ctx.rule.attr.name))
     properties = _get_properties(target, ctx, source_files, crate_info)
 
     content = ""
     for prop in properties.items():
-        content = content + ("%s: %s\n" % (prop[0], prop[1]))
+        content = content + ("{}: {}\n".format(prop[0], prop[1]))
     ctx.actions.write(
         output = properties_file,
         content = content
@@ -190,11 +190,11 @@ def _crate_deps_info(crate_info):
     for dependency in crate_info.deps:
         dependency_info = dependency[CrateInfo]
         if _is_universe_crate(dependency):
-            location = "version=%s" % dependency_info.version
+            location = "version={}".format(dependency_info.version)
         else:
-            location = "path=../%s" % dependency_info.crate_name
+            location = "path=../{}".format(dependency_info.crate_name)
         features = ",".join(dependency_info.features)
-        info = location + (";features=%s" % features if features else "")
+        info = location + (";features={}".format(features) if features else "")
         deps_info[dependency_info.crate_name] = info
     return deps_info
 
@@ -215,21 +215,27 @@ def _entry_point_file(target, ctx, source_files):
 
 def _find_entry_point_in_sources(target, ctx, source_files):
     standard_entry_point_name = "main.rs" if ctx.rule.kind == "rust_binary" else "lib.rs"
-    alternative_entry_point_name = "%s.rs" % ctx.rule.attr.name
+    alternative_entry_point_name = "{}.rs".format(ctx.rule.attr.name)
 
     standard_entry_points = [f for f in source_files if f.basename == standard_entry_point_name]
     if len(standard_entry_points) == 1:
         return standard_entry_points[0]
     elif len(standard_entry_points) > 1:
-        fail("cannot determine entry point for %s target '%s': multiple files named '%s' found in srcs, and no explicit crate_root" % (ctx.rule.kind, target.label.name, standard_entry_point_name))
+        fail("cannot determine entry point for {} target '{}': multiple files named '{}' found in srcs, and no explicit crate_root".format(
+            ctx.rule.kind, target.label.name, standard_entry_point_name
+        ))
 
     alternative_entry_points = [f for f in source_files if f.basename == alternative_entry_point_name]
     if len(alternative_entry_points) == 1:
         return alternative_entry_points[0]
     elif len(alternative_entry_points) > 1:
-        fail("cannot determine entry point for %s target '%s': multiple files named '%s' found in srcs, and no explicit crate_root" % (ctx.rule.kind, target.label.name, alternative_entry_point_name))
+        fail("cannot determine entry point for {} target '{}': multiple files named '{}' found in srcs, and no explicit crate_root".format(
+            ctx.rule.kind, target.label.name, alternative_entry_point_name
+        ))
 
-    fail("cannot determine entry point for %s target '%s': no files named '%s' or '%s' found in srcs, and no explicit crate_root" % (ctx.rule.kind, target.label.name, standard_entry_point_name, alternative_entry_point_name))
+    fail("cannot determine entry point for {} target '{}': no files named '{}' or '{}' found in srcs, and no explicit crate_root".format(
+        ctx.rule.kind, target.label.name, standard_entry_point_name, alternative_entry_point_name
+    ))
 
 def _src_relpath(ctx, src):
     path = src.path

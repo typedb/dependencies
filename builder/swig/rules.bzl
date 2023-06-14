@@ -15,6 +15,20 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-exports_files([
-    "template.i",
-])
+def create_swig_interface(ctx, module_name):
+    interface = ctx.actions.declare_file(module_name + ".i")
+    c_includes = "\n".join([
+        "#include \"{}\"".format(header.path)
+        for header in ctx.attr.lib[CcInfo].compilation_context.headers.to_list()
+    ])
+    swig_includes = c_includes.replace("#", "%")
+    ctx.actions.expand_template(
+        template = ctx.file._swig_interface_template,
+        output = interface,
+        substitutions = {
+            "{moduleName}": module_name,
+            "{CIncludes}": c_includes,
+            "{swigIncludes}": swig_includes,
+        }
+    )
+    return interface
