@@ -23,21 +23,42 @@ def _swig_java_wrapper_impl(ctx):
         interface = _create_interface(ctx, module_name)
 
     wrap_c = ctx.actions.declare_file("{}_wrap.c".format(module_name))
-    wrap_java = ctx.actions.declare_file("{}.java".format(module_name))
-    wrap_java_jni = ctx.actions.declare_file("{}JNI.java".format(module_name))
+    wrap_java_dir = ctx.actions.declare_directory("{}".format(module_name))
 
     ctx.actions.run(
         inputs = depset([interface], transitive = [
             ctx.attr.lib[CcInfo].compilation_context.headers,
             ctx.attr._swig.data_runfiles.files,
         ]),
-        outputs = [wrap_c, wrap_java, wrap_java_jni],
+        outputs = [wrap_c, wrap_java_dir],
         executable = ctx.file._swig,
         arguments = [
             "-java",
             "-package", ctx.attr.package,
+            "-outdir", wrap_java_dir.path,
             interface.path,
         ],
+    )
+
+    wrap_zip = ctx.actions.declare_file(module_name + ".zip")
+
+    args = ctx.actions.args()
+    args.add("c")
+    args.add(wrap_zip.path)
+    args.add_all([wrap_java_dir])
+
+    ctx.actions.run(
+        inputs = [wrap_java_dir],
+        outputs = [wrap_zip],
+        executable = ctx.executable._zipper,
+        arguments = [args],
+    )
+
+    wrap_srcjar = ctx.actions.declare_file(module_name + ".srcjar")
+    ctx.actions.run_shell(
+        inputs = [wrap_zip],
+        outputs = [wrap_srcjar],
+        command = "mv {} {}".format(wrap_zip.path, wrap_srcjar.path),
     )
 
     jni_h = ctx.actions.declare_file("jni.h")
@@ -69,7 +90,7 @@ def _swig_java_wrapper_impl(ctx):
     )
 
     return [
-        DefaultInfo(files = depset([interface, jni_h, jni_md_h, wrap_c, wrap_java, wrap_java_jni])),
+        DefaultInfo(files = depset([interface, jni_h, jni_md_h, wrap_c, wrap_srcjar])),
         CcInfo(
             compilation_context = compilation_context,
             linking_context = ctx.attr.lib[CcInfo].linking_context,
@@ -95,12 +116,6 @@ _swig_java_wrapper = rule(
         "package": attr.string(
             mandatory = True,
         ),
-        "_swig": attr.label(
-            default = Label("@swig//:swig"),
-            allow_single_file = True,
-            executable = True,
-            cfg = "host",
-        ),
         "_jni_header": attr.label(
             default = Label("@bazel_tools//tools/jdk:jni_header"),
             allow_single_file = True,
@@ -108,7 +123,19 @@ _swig_java_wrapper = rule(
         "jni_md_header": attr.label(
             allow_single_file = True,
         ),
-    }
+        "_swig": attr.label(
+            default = Label("@swig//:swig"),
+            allow_single_file = True,
+            executable = True,
+            cfg = "host",
+        ),
+        "_zipper": attr.label(
+            default = Label("@bazel_tools//tools/zip:zipper"),
+            allow_single_file = True,
+            executable = True,
+            cfg = "host",
+        ),
+    },
 )
 
 
