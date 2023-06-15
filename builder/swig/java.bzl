@@ -190,4 +190,4 @@ def swig_java(name, lib, shared_lib_name=None, **kwargs):
         })
     )
 
-    native.java_library(name = name, srcs = [swig_wrapper_name])
+    native.java_library(name = name, srcs = [swig_wrapper_name], deps = [shared_lib_name])
