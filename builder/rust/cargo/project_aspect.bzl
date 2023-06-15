@@ -49,51 +49,22 @@ def _rust_cargo_project_aspect_impl(target, ctx):
     properties_file = _build_cargo_properties_file(target, ctx, sources, crate_info)
 
     output_groups = OutputGroupInfo(rust_cargo_properties = depset([properties_file]))
-    providers = [crate_info, output_groups]
 
-    if _should_generate_cargo_manifest(ctx, target):
-        build_deps = []
-        manifest_file = ctx.actions.declare_file(crate_info.crate_name + "/Cargo.toml")
-        args = ["--properties", properties_file.path, "--output", manifest_file.path] + [f.path for f in build_deps]
-        ctx.actions.run(
-            inputs = build_deps + [properties_file],
-            outputs = [manifest_file],
-            executable = ctx.attr._manifest_writer.files_to_run.executable,
-            arguments = args,
-        )
-
-        project_sources = {}
-
-        for src in sources:
-            src_path = _src_relpath(ctx, src)
-            dst = ctx.actions.declare_file(crate_info.crate_name + "/" + src_path)
-            _copy_to_bin(ctx, src, dst)
-            project_sources[src_path] = dst
-
-        workspace_sources = list(project_sources.values())
-        for dep in crate_info.deps:
-            if CargoProjectInfo in dep:
-                dep_info = dep[CrateInfo]
-                project_info = dep[CargoProjectInfo]
-                dep_manifest = ctx.actions.declare_file(dep_info.crate_name + "/" + project_info.manifest.basename)
-                workspace_sources.append(dep_manifest)
-                _copy_to_bin(ctx, project_info.manifest, dep_manifest)
-                for path, file in project_info.sources.items():
-                    dst = ctx.actions.declare_file(dep_info.crate_name + "/" + path)
-                    _copy_to_bin(ctx, file, dst)
-                    workspace_sources.append(dst)
-
-        cargo_project_info = CargoProjectInfo(
-            manifest = manifest_file,
-            sources = project_sources,
-        )
-        output_groups = OutputGroupInfo(
-            rust_cargo_properties = depset([properties_file]),
-            rust_cargo_project = depset([manifest_file] + workspace_sources),
-        )
-        providers = [crate_info, cargo_project_info, output_groups]
-
-    return providers
+    if _should_generate_cargo_project(ctx, target):
+        cargo_project_info = _generate_cargo_project(ctx, target, crate_info, properties_file, sources)
+        return [
+            crate_info,
+            cargo_project_info,
+            OutputGroupInfo(
+                rust_cargo_properties = depset([properties_file]),
+                rust_cargo_project = depset([cargo_project_info.manifest] + list(cargo_project_info.sources.values())),
+            ),
+        ]
+    else:
+        return [
+            crate_info,
+            OutputGroupInfo(rust_cargo_properties = depset([properties_file])),
+        ]
 
 rust_cargo_project_aspect = aspect(
     attr_aspects = ["deps", "proc_macro_deps", "crate"],
@@ -106,6 +77,45 @@ rust_cargo_project_aspect = aspect(
         )
     }
 )
+
+def _generate_cargo_project(ctx, target, crate_info, properties_file, sources):
+    workspace_root = target.label.name + "-cargo-workspace"
+
+    manifest_file = ctx.actions.declare_file(workspace_root + "/" + crate_info.crate_name + "/Cargo.toml")
+    build_deps = []
+    args = ["--properties", properties_file.path, "--output", manifest_file.path] + [f.path for f in build_deps]
+    ctx.actions.run(
+        inputs = build_deps + [properties_file],
+        outputs = [manifest_file],
+        executable = ctx.executable._manifest_writer,
+        arguments = args,
+    )
+
+    project_sources = {}
+
+    for src in sources:
+        src_path = _src_relpath(target, ctx, src)
+        dst = ctx.actions.declare_file(workspace_root + "/" + crate_info.crate_name + "/" + src_path)
+        _copy_to_bin(ctx, src, dst)
+        project_sources[src_path] = dst
+
+    workspace_sources = list(project_sources.values())
+    for dep in crate_info.deps:
+        if CargoProjectInfo in dep:
+            dep_info = dep[CrateInfo]
+            project_info = dep[CargoProjectInfo]
+            dep_manifest = ctx.actions.declare_file(workspace_root + "/" + dep_info.crate_name + "/" + project_info.manifest.basename)
+            workspace_sources.append(dep_manifest)
+            _copy_to_bin(ctx, project_info.manifest, dep_manifest)
+            for path, file in project_info.sources.items():
+                dst = ctx.actions.declare_file(workspace_root + "/" + dep_info.crate_name + "/" + path)
+                _copy_to_bin(ctx, file, dst)
+                workspace_sources.append(dst)
+
+    return CargoProjectInfo(
+        manifest = manifest_file,
+        sources = project_sources,
+    )
 
 def _crate_info(ctx, target):
     if _is_universe_crate(target):
@@ -147,7 +157,7 @@ def _copy_to_bin(ctx, src, dst):
         command = "cp -f '{}' '{}'".format(src.path, dst.path),
     )
 
-def _should_generate_cargo_manifest(ctx, target):
+def _should_generate_cargo_project(ctx, target):
     return (str(target.label).startswith("@vaticle") or str(target.label).startswith("//")) and \
         ctx.rule.kind in _TARGET_TYPES and _TARGET_TYPES[ctx.rule.kind] in ["bin", "lib", "test"]
 
@@ -172,20 +182,19 @@ def _get_properties(target, ctx, source_files, crate_info):
 
     properties = {}
     properties["name"] = crate_info.crate_name
+    properties["target.name"] = target.label.name
     properties["type"] = target_type
-    properties["label"] = target.label
     properties["version"] = crate_info.version
     if target_type in ["bin", "lib"]:
         properties["edition"] = ctx.rule.attr.edition or "2021"
-        properties["root.path"] = _target_root_path(target)
         entry_point_file = _entry_point_file(target, ctx, source_files)
-        properties["entry.point.path"] = _src_relpath(ctx, entry_point_file)
+        properties["entry.point.path"] = _src_relpath(target, ctx, entry_point_file)
         properties["build.deps"] = ",".join(_crate_build_deps_info(crate_info))
-    for dep in _crate_deps_info(crate_info).items():
+    for dep in _crate_deps_info(target, crate_info).items():
         properties["deps." + dep[0]] = dep[1]
     return properties
 
-def _crate_deps_info(crate_info):
+def _crate_deps_info(target, crate_info):
     deps_info = {}
     for dependency in crate_info.deps:
         dependency_info = dependency[CrateInfo]
@@ -204,12 +213,9 @@ def _crate_build_deps_info(crate_info):
 def _looks_like_cargo_build_script(target):
     return str(target.label).endswith("_")
 
-def _target_root_path(target):
-    return str(target.label).split("//")[1].split(":")[0] if "//" in str(target.label) else ""
-
 def _entry_point_file(target, ctx, source_files):
     if getattr(ctx.rule.attr, "crate_root", None):
-        return ctx.rule.attr.crate_root.files.to_list()[0]
+        return ctx.rule.file.crate_root
     else:
         return _find_entry_point_in_sources(target, ctx, source_files)
 
@@ -237,15 +243,22 @@ def _find_entry_point_in_sources(target, ctx, source_files):
         ctx.rule.kind, target.label.name, standard_entry_point_name, alternative_entry_point_name
     ))
 
-def _src_relpath(ctx, src):
+def _src_relpath(target, ctx, src):
     path = src.path
+
     if "external" in path:
-        x = path.find("external")
-        path = path[x:].split("/", 2)[2]
-    path_elements = path.split("/")
-    for el in ctx.build_file_path.split("/")[:-1]:
-        if el != path_elements[0]:
-            print("ACHTUNG")
-            break
-        path_elements = path_elements[1:]
-    return "/".join(path_elements)
+        path = path[path.find("external"):].split("/", 2)[2]
+
+    if "bazel-out" in path:
+        path = path[path.find("bazel-out"):].split("/", 3)[3]
+
+    if "/" in ctx.build_file_path:
+        build_file_directory = ctx.build_file_path.rsplit("/", 1)[0] + "/"
+        if not path.startswith(build_file_directory):
+            fail("source file {} of the target '{}' is not located under the target path ({})".format(
+                src.path, target.label.name, build_file_directory
+            ))
+
+        return path[len(build_file_directory):]
+    else: # BUILD in root
+        return path

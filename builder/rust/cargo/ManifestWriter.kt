@@ -22,7 +22,6 @@ import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
 
 import picocli.CommandLine
-import java.io.File
 import java.io.FileInputStream
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
@@ -129,9 +128,8 @@ class ManifestWriter : Callable<Unit> {
             val type: Type,
             val version: String,
             val edition: String?,
-            val deps: Collection<Dependency>,
-            val rootPath: Path?,
             val entryPointPath: Path?,
+            val deps: Collection<Dependency>,
             var buildScripts: Collection<TargetProperties>,
     ) {
         fun attach(properties: List<TargetProperties>) {
@@ -149,7 +147,6 @@ class ManifestWriter : Callable<Unit> {
                             version = props.getProperty(Keys.VERSION),
                             edition = props.getProperty(Keys.EDITION, "2021"),
                             deps = parseDependencies(extractDependencyEntries(props)),
-                            rootPath = props.getProperty(Keys.ROOT_PATH)?.let { Path(it) },
                             entryPointPath = props.getProperty(Keys.ENTRY_POINT_PATH)?.let { Path(it) },
                             buildScripts = listOf(),
                     )
@@ -190,15 +187,12 @@ class ManifestWriter : Callable<Unit> {
         }
 
         private object Keys {
-            const val BUILD_DEPS = "build.deps"
             const val DEPS_PREFIX = "deps"
             const val EDITION = "edition"
             const val ENTRY_POINT_PATH = "entry.point.path"
             const val FEATURES = "features"
-            const val LABEL = "label"
             const val NAME = "name"
             const val PATH = "path"
-            const val ROOT_PATH = "root.path"
             const val TYPE = "type"
             const val VERSION = "version"
         }

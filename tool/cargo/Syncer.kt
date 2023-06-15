@@ -30,23 +30,21 @@ import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.BAZEL
 import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.BAZEL_BIN
 import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.BUILD
 import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.INFO
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.OUTPUT_BASE
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.OUTPUT_GROUPS_RUST_CARGO_SYNC_PROPERTIES
+import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.OUTPUT_GROUPS
 import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.QUERY
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.RUST_CARGO_SYNC_PROPERTIES_ASPECT
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.RUST_TARGETS_DEPS_QUERY
 import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.RUST_TARGETS_QUERY
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.VATICLE_REPOSITORY_PREFIX
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.Paths.CARGO_TOML
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.Paths.CARGO_WORKSPACE_SUFFIX
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.Paths.EXTERNAL_PLACEHOLDER
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.Paths.MANIFEST_PROPERTIES_SUFFIX
 import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.BUILD_DEPS
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.CONTAINS_GENERATED_SOURCES
 import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.DEPS_PREFIX
 import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.EDITION
 import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.ENTRY_POINT_PATH
 import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.FEATURES
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.LABEL
 import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.NAME
 import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.PATH
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.ROOT_PATH
+import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.TARGET_NAME
 import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.TYPE
 import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.VERSION
 
@@ -73,17 +71,15 @@ class Syncer : Callable<Unit> {
     private lateinit var logger: Logger
     private lateinit var shell: Shell
     private val workspaceDir = Path(System.getenv("BUILD_WORKSPACE_DIRECTORY"))
-    private lateinit var bazelOutputBase: Path
 
     override fun call() {
         logger = Logger(logLevel = if (verbose) DEBUG else ERROR)
         shell = Shell(logger, verbose)
-        bazelOutputBase = Path(shell.execute(listOf(BAZEL, INFO, OUTPUT_BASE), workspaceDir).outputString().trim())
 
         val rustTargets = rustTargets(shell, workspaceDir)
         validateTargets(rustTargets)
         loadRustToolchainAndExternalDeps(rustTargets)
-        vaticleRustWorkspaces().forEach { WorkspaceSyncer(it, logger, shell, bazelOutputBase).sync() }
+        WorkspaceSyncer(workspaceDir, logger, shell).sync()
     }
 
     private fun validateTargets(targets: List<String>) {
@@ -94,15 +90,6 @@ class Syncer : Callable<Unit> {
         shell.execute(command = listOf(BAZEL, BUILD) + rustTargets + "--keep_going", baseDir = workspaceDir, throwOnError = false)
     }
 
-    private fun vaticleRustWorkspaces(): List<Path> {
-        // e.g: [/Users/root/workspace/typedb-client-rust, /private/var/_bazel_root_/123abc/external/vaticle_typedb_protocol]
-        return listOf(workspaceDir) + shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_DEPS_QUERY, "--output=package"), workspaceDir)
-                .outputString().split(System.lineSeparator())
-                .filter { it.startsWith(VATICLE_REPOSITORY_PREFIX) }
-                .map { it.split("@")[1].split("//")[0] }
-                .map { bazelOutputBase.resolve("external").resolve(it) }
-    }
-
     companion object {
         private fun rustTargets(shell: Shell, workspace: Path): List<String> {
             return shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_QUERY), workspace)
@@ -110,12 +97,12 @@ class Syncer : Callable<Unit> {
         }
     }
 
-    private class WorkspaceSyncer(private val workspace: Path, private var logger: Logger, private var shell: Shell, var bazelOutputBase: Path) {
+    private class WorkspaceSyncer(private val workspace: Path, private var logger: Logger, private var shell: Shell) {
 
         fun sync() {
             logger.debug { "Syncing $workspace" }
             cleanupOldSyncProperties()
-            runSyncPropertiesAspect()
+            runCargoProjectAspect()
             val bazelBin = workspace.resolve(BAZEL_BIN).toRealPath().toFile()
             generateManifests(bazelBin);
             logger.debug { "Sync completed in $workspace" }
@@ -124,27 +111,24 @@ class Syncer : Callable<Unit> {
         private fun cleanupOldSyncProperties() {
             logger.debug { "Cleaning up old cargo sync properties under $workspace" }
             val bazelBin = File(shell.execute(listOf(BAZEL, INFO, BAZEL_BIN), workspace).outputString().trim())
-            bazelBin.listFilesRecursively().filter { it.name.endsWith(Paths.MANIFEST_SYNC_PROPERTIES_SUFFIX) }.forEach { it.delete() }
+            bazelBin.listFilesRecursively().filter { it.name.endsWith(MANIFEST_PROPERTIES_SUFFIX) }.forEach { it.delete() }
         }
 
-        private fun runSyncPropertiesAspect() {
+        private fun runCargoProjectAspect() {
             val rustTargets = rustTargets(shell, workspace)
-            shell.execute(
-                    listOf(BAZEL, BUILD) + rustTargets + listOf(ASPECTS, RUST_CARGO_SYNC_PROPERTIES_ASPECT, OUTPUT_GROUPS_RUST_CARGO_SYNC_PROPERTIES),
-                    workspace
-            )
+            shell.execute(listOf(BAZEL, BUILD) + rustTargets + listOf(ASPECTS, OUTPUT_GROUPS), workspace)
         }
 
         fun generateManifests(bazelBin: File) {
             val manifests = loadSyncProperties(bazelBin)
                     .filter { shouldGenerateManifest(it) }
-                    .map { ManifestGenerator(it).generateManifest(bazelBin) }
+                    .map { ManifestGenerator(it).generateManifest() }
             println(manifests.joinToString(System.lineSeparator()))
         }
 
         private fun loadSyncProperties(bazelBin: File): List<TargetProperties> {
             return findSyncPropertiesFiles(bazelBin)
-                    .map { TargetProperties.fromPropertiesFile(Path(it.path)) }
+                    .map { TargetProperties.fromPropertiesFile(it) }
                     .apply { attachTestAndBuildProperties(this) }
         }
 
@@ -152,7 +136,7 @@ class Syncer : Callable<Unit> {
             val bazelBinContents = bazelBin.listFiles() ?: throw IllegalStateException()
             val filesToCheck = bazelBinContents.filter { it.isFile } + bazelBinContents
                     .filter { it.isDirectory && it.name != Paths.EXTERNAL }.flatMap { it.listFilesRecursively() }
-            return filesToCheck.filter { it.name.endsWith(Paths.MANIFEST_SYNC_PROPERTIES_SUFFIX) }
+            return filesToCheck.filter { it.name.endsWith(MANIFEST_PROPERTIES_SUFFIX) }
         }
 
         private fun attachTestAndBuildProperties(properties: Collection<TargetProperties>) {
@@ -173,23 +157,18 @@ class Syncer : Callable<Unit> {
         }
 
         private inner class ManifestGenerator(private val properties: TargetProperties) {
-            fun generateManifest(bazelBin: File): File {
-                if (properties.containsGeneratedSources) buildTarget()
-                val outputPath = manifestOutputPath(bazelBin)
-                Files.newOutputStream(outputPath).use { it.write(manifestContent(bazelBin).toByteArray(StandardCharsets.UTF_8)) }
+            fun generateManifest(): File {
+                val outputPath = manifestOutputPath()
+                val cargoWorkspaceDir = properties.path.parentFile.resolve(properties.targetName + CARGO_WORKSPACE_SUFFIX)
+                Files.newOutputStream(outputPath).use { it.write(manifestContent(cargoWorkspaceDir).toByteArray(StandardCharsets.UTF_8)) }
                 return outputPath.toFile()
             }
 
-            private fun buildTarget() {
-                shell.execute(listOf(BAZEL, ShellArgs.BUILD, properties.label), baseDir = workspace)
+            private fun manifestOutputPath(): Path {
+                return workspace.resolve(properties.path.parent.toString()).resolve(CARGO_TOML)
             }
 
-            private fun manifestOutputPath(bazelBin: File): Path {
-                val projectRelativePath = bazelBin.toPath().relativize(properties.path.parent)
-                return workspace.resolve(projectRelativePath.toString()).resolve(Paths.CARGO_TOML)
-            }
-
-            private fun manifestContent(bazelBin: File): String {
+            private fun manifestContent(cargoWorkspaceDir: File): String {
                 val cargoToml = Config.inMemory()
 
                 cargoToml.createSubConfig().apply {
@@ -199,22 +178,20 @@ class Syncer : Callable<Unit> {
                     set<String>("version", properties.version)
                 }
 
-                cargoToml.createEntryPointSubConfig(bazelBin)
+                cargoToml.createEntryPointSubConfig()
 
                 cargoToml.createSubConfig().apply {
                     cargoToml.set<Config>("dependencies", this)
-                    properties.deps.forEach { set<Config>(it.name, it.toToml(bazelOutputBase.toFile())) }
+                    properties.deps.forEach { set<Config>(it.name, it.toToml(cargoWorkspaceDir)) }
                 }
 
-                cargoToml.addDevAndBuildDependencies()
+                cargoToml.addDevAndBuildDependencies(cargoWorkspaceDir)
 
                 return GENERATED_FILE_NOTICE + TomlWriter().writeToString(cargoToml.unmodifiable())
             }
 
-            private fun Config.createEntryPointSubConfig(bazelBin: File) {
-                val entryPointPath = if (properties.containsGeneratedSources) {
-                    bazelBin.resolve(properties.entryPointPath.toString()).toString()
-                } else properties.rootPath!!.relativize(properties.entryPointPath!!).toString()
+            private fun Config.createEntryPointSubConfig() {
+                val entryPointPath = properties.entryPointPath.toString()
 
                 when (properties.type) {
                     TargetProperties.Type.LIB -> {
@@ -232,18 +209,20 @@ class Syncer : Callable<Unit> {
                         }
                     }
 
-                    TargetProperties.Type.TEST, TargetProperties.Type.BUILD -> throw IllegalStateException("${Paths.CARGO_TOML} should not be generated for sync properties of type ${properties.type}")
+                    TargetProperties.Type.TEST, TargetProperties.Type.BUILD -> throw IllegalStateException(
+                        "$CARGO_TOML should not be generated for sync properties of type ${properties.type}"
+                    )
                 }
             }
 
-            private fun Config.addDevAndBuildDependencies() {
+            private fun Config.addDevAndBuildDependencies(cargoWorkspaceDir: File) {
                 if (properties.tests.isNotEmpty()) {
                     createSubConfig().apply {
                         this@addDevAndBuildDependencies.set<Config>("dev-dependencies", this)
                         properties.tests.flatMap { it.deps }
                                 .distinctBy { it.name }
                                 .filter { it.name != properties.name }
-                                .forEach { set<Config>(it.name, it.toToml(bazelOutputBase.toFile())) }
+                                .forEach { set<Config>(it.name, it.toToml(cargoWorkspaceDir)) }
                     }
                 }
 
@@ -253,32 +232,30 @@ class Syncer : Callable<Unit> {
                         properties.buildScripts.flatMap { it.deps }
                                 .distinctBy { it.name }
                                 .filter { it.name != properties.name }
-                                .forEach { set<Config>(it.name, it.toToml(bazelOutputBase.toFile())) }
+                                .forEach { set<Config>(it.name, it.toToml(cargoWorkspaceDir)) }
                     }
                 }
             }
         }
 
         class TargetProperties(
-                val path: Path,
+                val path: File,
                 val name: String,
-                val label: String,
+                val targetName: String,
                 val type: Type,
                 val version: String,
                 val edition: String?,
-                val deps: Collection<Dependency>,
-                val buildDeps: Collection<String>,
-                val rootPath: Path?,
                 val entryPointPath: Path?,
-                val containsGeneratedSources: Boolean,
+                val buildDeps: Collection<String>,
+                val deps: Collection<Dependency>,
                 val tests: MutableCollection<TargetProperties>,
                 val buildScripts: MutableCollection<TargetProperties>,
         ) {
             sealed class Dependency(open val name: String) {
-                abstract fun toToml(bazelOutputBase: File): Config
+                abstract fun toToml(cargoWorkspaceDir: File): Config
 
                 data class Crate(override val name: String, val version: String, val features: List<String>) : Dependency(name) {
-                    override fun toToml(bazelOutputBase: File): Config {
+                    override fun toToml(cargoWorkspaceDir: File): Config {
                         return Config.inMemory().apply {
                             set<String>("version", version)
                             set<List<String>>("features", features)
@@ -286,10 +263,10 @@ class Syncer : Callable<Unit> {
                     }
                 }
 
-                data class Path(override val name: String, val path: String) : Dependency(name) {
-                    override fun toToml(bazelOutputBase: File): Config {
+                data class Local(override val name: String, val path: String) : Dependency(name) {
+                    override fun toToml(cargoWorkspaceDir: File): Config {
                         return Config.inMemory().apply {
-                            set<String>("path", path.replace(Paths.EXTERNAL_PLACEHOLDER, bazelOutputBase.resolve(Paths.EXTERNAL).absolutePath))
+                            set<String>("path", path.replace(EXTERNAL_PLACEHOLDER, cargoWorkspaceDir.toString()))
                         }
                     }
                 }
@@ -306,7 +283,7 @@ class Syncer : Callable<Unit> {
                                     features = rawValueProps[FEATURES]?.split(",") ?: emptyList()
                             )
                         } else {
-                            Path(name = name, path = rawValueProps[PATH]!!)
+                            Local(name = name, path = rawValueProps[PATH]!!)
                         }
                     }
                 }
@@ -332,21 +309,19 @@ class Syncer : Callable<Unit> {
             }
 
             companion object {
-                fun fromPropertiesFile(path: Path): TargetProperties {
+                fun fromPropertiesFile(path: File): TargetProperties {
                     val props = Properties().apply { load(FileInputStream(path.toString())) }
                     try {
                         return TargetProperties(
                                 path = path,
                                 name = props.getProperty(NAME),
-                                label = props.getProperty(LABEL),
+                                targetName = props.getProperty(TARGET_NAME),
                                 type = Type.of(props.getProperty(TYPE)),
                                 version = props.getProperty(VERSION),
                                 edition = props.getProperty(EDITION, "2021"),
                                 deps = parseDependencies(extractDependencyEntries(props)),
                                 buildDeps = props.getProperty(BUILD_DEPS, "").split(",").filter { it.isNotBlank() },
-                                rootPath = props.getProperty(ROOT_PATH)?.let { Path(it) },
                                 entryPointPath = props.getProperty(ENTRY_POINT_PATH)?.let { Path(it) },
-                                containsGeneratedSources = props.getProperty(CONTAINS_GENERATED_SOURCES).toBoolean(),
                                 tests = mutableListOf(),
                                 buildScripts = mutableListOf(),
                         )
@@ -373,22 +348,20 @@ class Syncer : Callable<Unit> {
                 const val EDITION = "edition"
                 const val ENTRY_POINT_PATH = "entry.point.path"
                 const val FEATURES = "features"
-                const val LABEL = "label"
+                const val TARGET_NAME = "target.name"
                 const val NAME = "name"
                 const val PATH = "path"
-                const val ROOT_PATH = "root.path"
                 const val TYPE = "type"
-                const val CONTAINS_GENERATED_SOURCES = "contains.generated.sources"
                 const val VERSION = "version"
             }
         }
 
         private object Paths {
-            const val BAZEL_BIN = "bazel-bin"
             const val CARGO_TOML = "Cargo.toml"
             const val EXTERNAL = "external"
-            const val EXTERNAL_PLACEHOLDER = "{external}"
-            const val MANIFEST_SYNC_PROPERTIES_SUFFIX = ".cargo-sync.properties"
+            const val EXTERNAL_PLACEHOLDER = ".."
+            const val MANIFEST_PROPERTIES_SUFFIX = ".cargo.properties"
+            const val CARGO_WORKSPACE_SUFFIX = "-cargo-workspace"
         }
 
         companion object {
@@ -402,17 +375,13 @@ class Syncer : Callable<Unit> {
     }
 
     private object ShellArgs {
-        const val ASPECTS = "--aspects"
+        const val ASPECTS = "--aspects=@vaticle_dependencies//builder/rust/cargo:project_aspect.bzl%rust_cargo_project_aspect"
         const val BAZEL = "bazel"
         const val BAZEL_BIN = "bazel-bin"
         const val BUILD = "build"
         const val INFO = "info"
-        const val OUTPUT_BASE = "output_base"
-        const val OUTPUT_GROUPS_RUST_CARGO_SYNC_PROPERTIES = "--output_groups=rust-cargo-sync-properties"
+        const val OUTPUT_GROUPS = "--output_groups=rust_cargo_project"
         const val QUERY = "query"
-        const val RUST_CARGO_SYNC_PROPERTIES_ASPECT = "@vaticle_dependencies//tool/cargo:sync_properties_aspect.bzl%rust_cargo_sync_properties_aspect"
-        const val RUST_TARGETS_DEPS_QUERY = "kind(rust_*, deps(kind(rust_*, //...)))" // deps of RUST_TARGETS_QUERY
         const val RUST_TARGETS_QUERY = "kind(rust_*, //...)"
-        const val VATICLE_REPOSITORY_PREFIX = "@vaticle_"
     }
 }
