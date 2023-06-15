@@ -105,13 +105,14 @@ _swig_java_wrapper = rule(
             mandatory = True,
         ),
         "class_name": attr.string(
-            doc = "optional override for the java class name (default: same as target name)",
+            doc = "Optional override for the java class name (default: same as target name)",
         ),
         "interface": attr.label(
-            doc = "Optional override for the generated SWIG interface (.i) file.",
+            doc = "Optional SWIG interface (.i) file",
             allow_single_file = True,
         ),
         "package": attr.string(
+            doc = "Java package for which to generate the sources",
             mandatory = True,
         ),
         "_jni_header": attr.label(

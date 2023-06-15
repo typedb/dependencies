@@ -65,6 +65,9 @@ def _rust_cbindgen_impl(ctx):
     args.add("--clean")
     args.add("--lang")
     args.add("c")
+    if ctx.file.config:
+        args.add("--config")
+        args.add(ctx.file.config)
     args.add("--output")
     args.add(output_header)
     args.add(rust_lib[CargoProjectInfo].manifest.path.rsplit("/", 1)[0])
@@ -133,26 +136,15 @@ rust_cbindgen = rule(
             mandatory = True,
         ),
         "cbindgen_flags": attr.string_list(
-            doc = (
-                "Optional flags to pass directly to the bindgen executable. " +
-                "See https://docs.rs/cbindgen/latest/cbindgen/ for details."
-            ),
+            doc = "Optional flags to pass directly to the Cbindgen executable. See https://docs.rs/cbindgen/latest/cbindgen/ for details.",
         ),
         "header_name": attr.string(
-            doc = (
-                "Optional override for the name of the generated header. The default is the " +
-                "name of the target created by this rule."
-            ),
+            doc = "Optional override for the name of the generated header. The default is the name of the target created by this rule.",
         ),
-        #"config": attr.label(
-        #    doc = "Optional Cbindgen configuration template",
-        #    allow_single_file = True,
-        #),
-        #"_config_default_template": attr.label(
-        #    doc = "Default cbindgen configuration template. This is treated as fallback from `config`",
-        #    default = Label("@vaticle_dependencies//builder/rust/private:cbindgen.toml.template"),
-        #    allow_single_file = True,
-        #),
+        "config": attr.label(
+            doc = "Optional Cbindgen configuration file",
+            allow_single_file = True,
+        ),
         "_cbindgen": attr.label(
             default = Label("@crates//:cbindgen__cbindgen"),
             allow_single_file = True,
