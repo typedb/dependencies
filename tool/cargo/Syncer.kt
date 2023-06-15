@@ -122,7 +122,7 @@ class Syncer : Callable<Unit> {
         fun generateManifests(bazelBin: File) {
             val manifests = loadSyncProperties(bazelBin)
                     .filter { shouldGenerateManifest(it) }
-                    .map { ManifestGenerator(it).generateManifest() }
+                    .map { ManifestGenerator(it).generateManifest(bazelBin) }
             println(manifests.joinToString(System.lineSeparator()))
         }
 
@@ -157,15 +157,17 @@ class Syncer : Callable<Unit> {
         }
 
         private inner class ManifestGenerator(private val properties: TargetProperties) {
-            fun generateManifest(): File {
-                val outputPath = manifestOutputPath()
+            fun generateManifest(bazelBin: File): File {
+                val outputPath = manifestOutputPath(bazelBin)
                 val cargoWorkspaceDir = properties.path.parentFile.resolve(properties.targetName + CARGO_WORKSPACE_SUFFIX)
-                Files.newOutputStream(outputPath).use { it.write(manifestContent(cargoWorkspaceDir).toByteArray(StandardCharsets.UTF_8)) }
+                Files.newOutputStream(outputPath).use {
+                    it.write(manifestContent(cargoWorkspaceDir).toByteArray(StandardCharsets.UTF_8))
+                }
                 return outputPath.toFile()
             }
 
-            private fun manifestOutputPath(): Path {
-                return workspace.resolve(properties.path.parent.toString()).resolve(CARGO_TOML)
+            private fun manifestOutputPath(bazelBin: File): Path {
+                return workspace.resolve(bazelBin.toPath().relativize(Path(properties.path.parent)).resolve(CARGO_TOML))
             }
 
             private fun manifestContent(cargoWorkspaceDir: File): String {
