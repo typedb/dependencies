@@ -35,8 +35,9 @@ CrateInfo = provider(fields = [
 ])
 
 CargoProjectInfo = provider(fields = [
-    "manifest",    # File
-    "sources",     # Map[relpath:str, File]
+    "manifest",         # File
+    "sources",          # Map[relpath:str, File]
+    "workspace_files",  # List[File]
 ])
 
 def _rust_cargo_project_aspect_impl(target, ctx):
@@ -57,7 +58,7 @@ def _rust_cargo_project_aspect_impl(target, ctx):
             cargo_project_info,
             OutputGroupInfo(
                 rust_cargo_properties = depset([properties_file]),
-                rust_cargo_project = depset([cargo_project_info.manifest] + list(cargo_project_info.sources.values())),
+                rust_cargo_project = depset(cargo_project_info.workspace_files),
             ),
         ]
     else:
@@ -99,22 +100,23 @@ def _generate_cargo_project(ctx, target, crate_info, properties_file, sources):
         _copy_to_bin(ctx, src, dst)
         project_sources[src_path] = dst
 
-    workspace_sources = list(project_sources.values())
+    workspace_files = [manifest_file] + list(project_sources.values())
     for dep in crate_info.deps:
         if CargoProjectInfo in dep:
             dep_info = dep[CrateInfo]
             project_info = dep[CargoProjectInfo]
             dep_manifest = ctx.actions.declare_file(workspace_root + "/" + dep_info.crate_name + "/" + project_info.manifest.basename)
-            workspace_sources.append(dep_manifest)
+            workspace_files.append(dep_manifest)
             _copy_to_bin(ctx, project_info.manifest, dep_manifest)
             for path, file in project_info.sources.items():
                 dst = ctx.actions.declare_file(workspace_root + "/" + dep_info.crate_name + "/" + path)
                 _copy_to_bin(ctx, file, dst)
-                workspace_sources.append(dst)
+                workspace_files.append(dst)
 
     return CargoProjectInfo(
         manifest = manifest_file,
         sources = project_sources,
+        workspace_files = workspace_files,
     )
 
 def _crate_info(ctx, target):
