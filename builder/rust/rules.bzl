@@ -62,7 +62,6 @@ def _rust_cbindgen_impl(ctx):
     )
 
     args = ctx.actions.args()
-    args.add("--clean")
     args.add("--lang")
     args.add("c")
     if ctx.file.config:
@@ -151,9 +150,6 @@ rust_cbindgen = rule(
             executable = True,
             cfg = "host",
         )
-    },
-    outputs = {
-        #"config": "%{name}.cbindgen.toml",
     },
     toolchains = [
         "@rules_rust//rust:toolchain",
