@@ -79,6 +79,23 @@ rust_cargo_project_aspect = aspect(
     }
 )
 
+def _crate_info(ctx, target):
+    if _is_universe_crate(target):
+        crate_name = str(target.label).split(".")[0].rsplit("-", 1)[0].removeprefix("@crates__")
+    else:
+        crate_name = ctx.rule.attr.name
+        for tag in ctx.rule.attr.tags:
+            if tag.startswith("crate-name"):
+                crate_name = tag.split("=")[1]
+    return CrateInfo(
+        kind = ctx.rule.kind,
+        crate_name = crate_name,
+        version = getattr(ctx.rule.attr, "version", "0.0.0"),
+        features = getattr(ctx.rule.attr, "crate_features", []),
+        deps = _crate_deps(ctx, target),
+        build_deps = _crate_build_deps(ctx, target),
+    )
+
 def _generate_cargo_project(ctx, target, crate_info, properties_file, sources):
     workspace_root = target.label.name + "-cargo-workspace"
 
@@ -117,23 +134,6 @@ def _generate_cargo_project(ctx, target, crate_info, properties_file, sources):
         manifest = manifest_file,
         sources = project_sources,
         workspace_files = workspace_files,
-    )
-
-def _crate_info(ctx, target):
-    if _is_universe_crate(target):
-        crate_name = str(target.label).split(".")[0].rsplit("-", 1)[0].removeprefix("@crates__")
-    else:
-        crate_name = ctx.rule.attr.name
-        for tag in ctx.rule.attr.tags:
-            if tag.startswith("crate-name"):
-                crate_name = tag.split("=")[1]
-    return CrateInfo(
-        kind = ctx.rule.kind,
-        crate_name = crate_name,
-        version = getattr(ctx.rule.attr, "version", "0.0.0"),
-        features = getattr(ctx.rule.attr, "crate_features", []),
-        deps = _crate_deps(ctx, target),
-        build_deps = _crate_build_deps(ctx, target),
     )
 
 def _crate_deps(ctx, target):
