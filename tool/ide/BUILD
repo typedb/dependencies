@@ -18,18 +18,18 @@
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
 
 java_binary(
-    name = "sync",
+    name = "rust_sync",
     runtime_deps = [
-        ":syncer",
+        ":rust_manifest_syncer",
     ],
-    main_class = "com.vaticle.dependencies.tool.cargo.SyncerKt",
+    main_class = "com.vaticle.dependencies.tool.ide.RustManifestSyncerKt",
     visibility = ["//visibility:public"],
 )
 
 kt_jvm_library(
-    name = "syncer",
+    name = "rust_manifest_syncer",
     srcs = [
-        "Syncer.kt",
+        "RustManifestSyncer.kt",
     ],
     deps = [
         "@vaticle_bazel_distribution//common",

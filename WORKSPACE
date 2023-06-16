@@ -73,6 +73,10 @@ unuseddeps_deps()
 load("//tool/sonarcloud:deps.bzl", "sonarcloud_dependencies")
 sonarcloud_dependencies()
 
+# Load //tool/swig
+load("//tool/swig:deps.bzl", swig_deps = "deps")
+swig_deps()
+
 # Load @vaticle_bazel_distribution
 load("//distribution:deps.bzl", "vaticle_bazel_distribution")
 vaticle_bazel_distribution()
