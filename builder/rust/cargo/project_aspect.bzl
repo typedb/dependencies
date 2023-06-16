@@ -147,7 +147,7 @@ def _generate_cargo_project(ctx, target, crate_info, properties_file, sources):
     )
 
 def _transitive_crate_deps(deps):
-    transitive_deps = []
+    transitive_deps = deps[:]
     for dep in deps:
         if CrateInfo in dep:
             for tdep in dep[CrateInfo].transitive_deps:
