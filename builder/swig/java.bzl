@@ -15,8 +15,6 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load(":rules.bzl", "create_swig_interface")
-
 def _copy_to_bin(ctx, src, dst):
     ctx.actions.run_shell(
         inputs = [src],
@@ -26,11 +24,9 @@ def _copy_to_bin(ctx, src, dst):
 
 def _swig_java_wrapper_impl(ctx):
     module_name = getattr(ctx.attr, "class_name", ctx.attr.name)
-    if ctx.file.interface:
-        interface = ctx.actions.declare_file(module_name + ".i")
-        _copy_to_bin(ctx, ctx.file.interface, interface)
-    else:
-        interface = create_swig_interface(ctx, module_name)
+
+    interface = ctx.actions.declare_file(module_name + ".i")
+    _copy_to_bin(ctx, ctx.file.interface, interface)
 
     wrap_c = ctx.actions.declare_file("{}_wrap.c".format(module_name))
     wrap_java_dir = ctx.actions.declare_directory("{}".format(module_name))
