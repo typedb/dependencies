@@ -42,6 +42,7 @@ itertools = "=0.10.3"
 k8s-openapi = { version = "=0.16.0", features = ["v1_25"] }
 kube = { version = "=0.77.0", features = ["runtime", "derive"] }
 log = "=0.4.17"
+maybe-async = "=0.2.7"
 mime = "=0.3.16"
 mime_guess = "=2.0.4"
 pest = "=2.4.0"
