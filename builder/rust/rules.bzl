@@ -61,17 +61,18 @@ def _rust_cbindgen_impl(ctx):
         ctx.attr.header_name if ctx.attr.header_name else "{}.h".format(ctx.label.name),
     )
 
+    inputs = rust_lib[OutputGroupInfo].rust_cargo_project
+
     args = ctx.actions.args()
     args.add("--lang")
     args.add("c")
     if ctx.file.config:
         args.add("--config")
         args.add(ctx.file.config)
+        inputs = depset([ctx.file.config], transitive = [inputs])
     args.add("--output")
     args.add(output_header)
     args.add(rust_lib[CargoProjectInfo].manifest.path.rsplit("/", 1)[0])
-
-    inputs = rust_lib[OutputGroupInfo].rust_cargo_project
 
     rust_toolchain = ctx.toolchains["@rules_rust//rust:toolchain"]
     cargo_home = ctx.actions.declare_directory("cargo-home")
