@@ -25,6 +25,11 @@ _TARGET_TYPES = {
     "_build_script_run": "build"
 }
 
+_DEFAULT_RUST_EDITION = "2021"
+
+_BIN_ENTRY_POINT = "main.rs"
+_LIB_ENTRY_POINT = "lib.rs"
+
 CrateInfo = provider(fields = [
     "kind",            # str
     "crate_name",      # str
@@ -202,7 +207,7 @@ def _get_properties(target, ctx, source_files, crate_info):
     properties["type"] = target_type
     properties["version"] = crate_info.version
     if target_type in ["bin", "lib"]:
-        properties["edition"] = ctx.rule.attr.edition or "2021"
+        properties["edition"] = ctx.rule.attr.edition or _DEFAULT_RUST_EDITION
         entry_point_file = _entry_point_file(target, ctx, source_files)
         properties["entry.point.path"] = _src_relpath(target, ctx, entry_point_file)
         properties["build.deps"] = ",".join(_crate_build_deps_info(crate_info))
@@ -236,7 +241,7 @@ def _entry_point_file(target, ctx, source_files):
         return _find_entry_point_in_sources(target, ctx, source_files)
 
 def _find_entry_point_in_sources(target, ctx, source_files):
-    standard_entry_point_name = "main.rs" if ctx.rule.kind == "rust_binary" else "lib.rs"
+    standard_entry_point_name = _BIN_ENTRY_POINT if ctx.rule.kind == "rust_binary" else _LIB_ENTRY_POINT
     alternative_entry_point_name = "{}.rs".format(ctx.rule.attr.name)
 
     standard_entry_points = [f for f in source_files if f.basename == standard_entry_point_name]
