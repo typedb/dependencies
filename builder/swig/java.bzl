@@ -124,10 +124,6 @@ _swig_java_wrapper = rule(
             executable = True,
             cfg = "host",
         ),
-        "_swig_interface_template": attr.label(
-            default = Label("//builder/swig:template.i"),
-            allow_single_file = True,
-        ),
         "_zipper": attr.label(
             default = Label("@bazel_tools//tools/zip:zipper"),
             allow_single_file = True,
