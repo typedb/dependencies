@@ -49,8 +49,6 @@ def _rust_cargo_project_aspect_impl(target, ctx):
     sources = [f for src in getattr(ctx.rule.attr, "srcs", []) + getattr(ctx.rule.attr, "compile_data", []) for f in src.files.to_list()]
     properties_file = _build_cargo_properties_file(target, ctx, sources, crate_info)
 
-    output_groups = OutputGroupInfo(rust_cargo_properties = depset([properties_file]))
-
     if _should_generate_cargo_project(ctx, target):
         cargo_project_info = _generate_cargo_project(ctx, target, crate_info, properties_file, sources)
         return [
