@@ -26,12 +26,13 @@ _TARGET_TYPES = {
 }
 
 CrateInfo = provider(fields = [
-    "kind",        # str
-    "crate_name",  # str
-    "version",     # str
-    "features",    # List[str]
-    "deps",        # List[target]
-    "build_deps",  # List[target]
+    "kind",            # str
+    "crate_name",      # str
+    "version",         # str
+    "features",        # List[str]
+    "deps",            # List[target]
+    "transitive_deps", # List[target]
+    "build_deps",      # List[target]
 ])
 
 CargoProjectInfo = provider(fields = [
@@ -85,12 +86,17 @@ def _crate_info(ctx, target):
         for tag in ctx.rule.attr.tags:
             if tag.startswith("crate-name"):
                 crate_name = tag.split("=")[1]
+
+    deps = _crate_deps(ctx, target)
+    transitive_deps = _transitive_crate_deps(deps)
+
     return CrateInfo(
         kind = ctx.rule.kind,
         crate_name = crate_name,
         version = getattr(ctx.rule.attr, "version", "0.0.0"),
         features = getattr(ctx.rule.attr, "crate_features", []),
-        deps = _crate_deps(ctx, target),
+        deps = deps,
+        transitive_deps = transitive_deps,
         build_deps = _crate_build_deps(ctx, target),
     )
 
@@ -117,7 +123,7 @@ def _generate_cargo_project(ctx, target, crate_info, properties_file, sources):
 
     workspace_files = [manifest_file] + list(project_sources.values())
 
-    for dep in _transitive_deps():
+    for dep in crate_info.transitive_deps:
         if CargoProjectInfo in dep:
             dep_info = dep[CrateInfo]
             project_info = dep[CargoProjectInfo]
@@ -135,13 +141,14 @@ def _generate_cargo_project(ctx, target, crate_info, properties_file, sources):
         workspace_files = workspace_files,
     )
 
-def _transitive_deps(crate_info):
-    all_deps = crate_info.deps + [d for dep in crate_info.deps for d in _transitive_deps(dep[CrateInfo])]
-    deps = []
-    for dep in all_deps:
-        if dep not in deps:
-            deps.append(dep)
-    return deps
+def _transitive_crate_deps(deps):
+    transitive_deps = []
+    for dep in deps:
+        if CrateInfo in dep:
+            for tdep in dep[CrateInfo].transitive_deps:
+                if tdep not in transitive_deps:
+                    transitive_deps.append(tdep)
+    return transitive_deps
 
 def _crate_deps(ctx, target):
     return [dep for dep in _all_deps(ctx) if _TARGET_TYPES[dep[CrateInfo].kind] in ["bin", "lib"]]
