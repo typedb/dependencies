@@ -16,7 +16,7 @@
  *
  */
 
-package com.vaticle.dependencies.tool.cargo
+package com.vaticle.dependencies.tool.ide
 
 import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
@@ -25,28 +25,28 @@ import com.vaticle.bazel.distribution.common.Logging.LogLevel.ERROR
 import com.vaticle.bazel.distribution.common.Logging.Logger
 import com.vaticle.bazel.distribution.common.shell.Shell
 import com.vaticle.bazel.distribution.common.util.FileUtil.listFilesRecursively
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.ASPECTS
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.BAZEL
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.BAZEL_BIN
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.BUILD
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.INFO
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.OUTPUT_GROUPS
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.QUERY
-import com.vaticle.dependencies.tool.cargo.Syncer.ShellArgs.RUST_TARGETS_QUERY
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.Paths.CARGO_TOML
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.Paths.CARGO_WORKSPACE_SUFFIX
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.Paths.EXTERNAL_PLACEHOLDER
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.Paths.MANIFEST_PROPERTIES_SUFFIX
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.BUILD_DEPS
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.DEPS_PREFIX
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.EDITION
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.ENTRY_POINT_PATH
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.FEATURES
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.NAME
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.PATH
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.TARGET_NAME
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.TYPE
-import com.vaticle.dependencies.tool.cargo.Syncer.WorkspaceSyncer.TargetProperties.Keys.VERSION
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.ASPECTS
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BAZEL
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BAZEL_BIN
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BUILD
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.INFO
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.OUTPUT_GROUPS
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.QUERY
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.RUST_TARGETS_QUERY
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.CARGO_TOML
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.CARGO_WORKSPACE_SUFFIX
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.EXTERNAL_PLACEHOLDER
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.MANIFEST_PROPERTIES_SUFFIX
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.BUILD_DEPS
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.DEPS_PREFIX
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.EDITION
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.ENTRY_POINT_PATH
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.FEATURES
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.NAME
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.PATH
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TARGET_NAME
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TYPE
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.VERSION
 
 
 import picocli.CommandLine
@@ -60,10 +60,10 @@ import java.util.concurrent.Callable
 import kotlin.io.path.Path
 import kotlin.system.exitProcess
 
-fun main(args: Array<String>): Unit = exitProcess(CommandLine(Syncer()).execute(*args))
+fun main(args: Array<String>): Unit = exitProcess(CommandLine(RustManifestSyncer()).execute(*args))
 
 @CommandLine.Command(name = "sync", mixinStandardHelpOptions = true)
-class Syncer : Callable<Unit> {
+class RustManifestSyncer : Callable<Unit> {
 
     @CommandLine.Option(names = ["--verbose", "-v"], required = false)
     private var verbose: Boolean = false
