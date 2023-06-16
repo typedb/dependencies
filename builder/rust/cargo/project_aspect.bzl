@@ -116,7 +116,8 @@ def _generate_cargo_project(ctx, target, crate_info, properties_file, sources):
         project_sources[src_path] = dst
 
     workspace_files = [manifest_file] + list(project_sources.values())
-    for dep in crate_info.deps:
+
+    for dep in _transitive_deps():
         if CargoProjectInfo in dep:
             dep_info = dep[CrateInfo]
             project_info = dep[CargoProjectInfo]
@@ -133,6 +134,14 @@ def _generate_cargo_project(ctx, target, crate_info, properties_file, sources):
         sources = project_sources,
         workspace_files = workspace_files,
     )
+
+def _transitive_deps(crate_info):
+    all_deps = crate_info.deps + [d for dep in crate_info.deps for d in _transitive_deps(dep[CrateInfo])]
+    deps = []
+    for dep in all_deps:
+        if dep not in deps:
+            deps.append(dep)
+    return deps
 
 def _crate_deps(ctx, target):
     return [dep for dep in _all_deps(ctx) if _TARGET_TYPES[dep[CrateInfo].kind] in ["bin", "lib"]]
