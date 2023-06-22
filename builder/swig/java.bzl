@@ -52,7 +52,7 @@ def _swig_java_wrapper_impl(ctx):
         ]),
         outputs = [wrap_src, wrap_java_dir] + swig_headers,
         executable = ctx.file._swig,
-        arguments = ctx.attr.extra_args + args,
+        arguments = args,
     )
 
     wrap_zip = ctx.actions.declare_file(module_name + ".zip")
