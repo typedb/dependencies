@@ -28,22 +28,31 @@ def _swig_java_wrapper_impl(ctx):
     interface = ctx.actions.declare_file(module_name + ".i")
     _copy_to_bin(ctx, ctx.file.interface, interface)
 
-    wrap_c = ctx.actions.declare_file("{}_wrap.c".format(module_name))
     wrap_java_dir = ctx.actions.declare_directory("{}".format(module_name))
 
+    args = ctx.attr.extra_args + [
+        "-java",
+        "-package", ctx.attr.package,
+        "-outdir", wrap_java_dir.path,
+        interface.path,
+    ]
+
+    if ctx.attr.enable_cxx:
+        wrap_src = ctx.actions.declare_file("{}_wrap.cxx".format(module_name))
+        swig_headers = [ctx.actions.declare_file("{}_wrap.h".format(module_name))]
+        args = ["-c++"] + args
+    else:
+        wrap_src = ctx.actions.declare_file("{}_wrap.c".format(module_name))
+        swig_headers = []
+
     ctx.actions.run(
-        inputs = depset([interface], transitive = [
+        inputs = depset([interface] + ctx.files.includes, transitive = [
             ctx.attr.lib[CcInfo].compilation_context.headers,
             ctx.attr._swig.data_runfiles.files,
         ]),
-        outputs = [wrap_c, wrap_java_dir],
+        outputs = [wrap_src, wrap_java_dir] + swig_headers,
         executable = ctx.file._swig,
-        arguments = [
-            "-java",
-            "-package", ctx.attr.package,
-            "-outdir", wrap_java_dir.path,
-            interface.path,
-        ],
+        arguments = ctx.attr.extra_args + args,
     )
 
     wrap_zip = ctx.actions.declare_file(module_name + ".zip")
@@ -71,7 +80,7 @@ def _swig_java_wrapper_impl(ctx):
 
     lib_compilation_context = ctx.attr.lib[CcInfo].compilation_context
     compilation_context = cc_common.create_compilation_context(
-        headers = lib_compilation_context.headers,
+        headers = depset(swig_headers, transitive = [lib_compilation_context.headers]),
         defines = lib_compilation_context.defines,
         framework_includes = lib_compilation_context.framework_includes,
         includes = lib_compilation_context.includes,
@@ -84,7 +93,7 @@ def _swig_java_wrapper_impl(ctx):
     )
 
     return [
-        DefaultInfo(files = depset([interface, jni_h, jni_md_h, wrap_c, wrap_srcjar])),
+        DefaultInfo(files = depset([interface, jni_h, jni_md_h, wrap_src, wrap_srcjar])),
         CcInfo(
             compilation_context = compilation_context,
             linking_context = ctx.attr.lib[CcInfo].linking_context,
@@ -107,9 +116,20 @@ _swig_java_wrapper = rule(
             doc = "Optional SWIG interface (.i) file",
             allow_single_file = True,
         ),
+        "includes": attr.label_list(
+            doc = "Additional SWIG files required for wrapper generation",
+            allow_files = True,
+        ),
         "package": attr.string(
             doc = "Java package for which to generate the sources",
             mandatory = True,
+        ),
+        "enable_cxx": attr.bool(
+            doc = "Enable SWIG C++ processing (default: False)",
+            default = False,
+        ),
+        "extra_args": attr.string_list(
+            doc = "Extra arguments to be passed to SWIG",
         ),
         "_jni_header": attr.label(
             default = Label("@bazel_tools//tools/jdk:jni_header"),
