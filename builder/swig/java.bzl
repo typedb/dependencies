@@ -45,8 +45,14 @@ def _swig_java_wrapper_impl(ctx):
         wrap_src = ctx.actions.declare_file("{}_wrap.c".format(module_name))
         swig_headers = []
 
+    includes = []
+    for f in ctx.files.includes:
+        include = ctx.actions.declare_file(f.short_path)
+        _copy_to_bin(ctx, f, include)
+        includes.append(include)
+
     ctx.actions.run(
-        inputs = depset([interface] + ctx.files.includes, transitive = [
+        inputs = depset([interface] + includes, transitive = [
             ctx.attr.lib[CcInfo].compilation_context.headers,
             ctx.attr._swig.data_runfiles.files,
         ]),
