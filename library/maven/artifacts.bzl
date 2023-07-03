@@ -78,7 +78,7 @@ artifacts = {
     "io.cucumber:cucumber-java": "5.1.3",
     "io.cucumber:cucumber-junit": "5.1.3",
     "io.github.microutils:kotlin-logging-jvm": "2.0.10",
-    "io.github.speedb-io:speedbjni": "2.4.1",
+    "io.github.speedb-io:speedbjni": "2.4.1.2",
     "io.grpc:grpc-api": "1.43.0",
     "io.grpc:grpc-context": "1.43.0",
     "io.grpc:grpc-core": "1.43.0",
