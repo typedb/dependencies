@@ -16,20 +16,30 @@
 #
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def deps():
+
+    git_repository(
+        name = "bazelruby_rules_ruby",
+        remote = "https://github.com/bazelruby/rules_ruby.git",
+        branch = "master"
+    )
+
+
     git_repository(
         name = "com_github_grpc_grpc",
-        remote = "https://github.com/vaticle/grpc",
-        commit = "4a1528f6f20a8aa68bdbdc9a66286ec2394fc170"
+        remote = "https://github.com/grpc/grpc",
+        tag = "v1.56.0"
     )
     git_repository(
         name = "io_grpc_grpc_java",
         remote = "https://github.com/grpc/grpc-java",
-        commit = "62e8655f1bc4dfb474afbf332ca7571c1454e6ef"
+        tag = "v1.56.1"
     )
-    git_repository(
-        name = "stackb_rules_proto",
-        remote = "https://github.com/vaticle/rules_proto",
-        commit = "fd3aa227fdaa178c077ef9d72156b772d3b8c05d",
+    http_archive(
+        name = "build_stack_rules_proto",
+        sha256 = "ac7e2966a78660e83e1ba84a06db6eda9a7659a841b6a7fd93028cd8757afbfb",
+        strip_prefix = "rules_proto-2.0.1",
+        urls = ["https://github.com/stackb/rules_proto/archive/v2.0.1.tar.gz"],
     )
