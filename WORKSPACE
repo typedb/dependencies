@@ -36,6 +36,14 @@ python_deps()
 # Load //builder/java
 load("//builder/java:deps.bzl", java_deps = "deps")
 java_deps()
+
+load("@rules_jvm_external//:repositories.bzl", "rules_jvm_external_deps")
+rules_jvm_external_deps()
+
+load("@rules_jvm_external//:setup.bzl", "rules_jvm_external_setup")
+rules_jvm_external_setup()
+
+
 load("//library/maven:rules.bzl", "maven")
 
 # Load //builder/kotlin
