@@ -33,6 +33,13 @@ rust_register_toolchains(edition = "2021", include_rustc_srcs = True)
 load("//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
 
+load("@rules_python//python:repositories.bzl", "py_repositories", "python_register_toolchains")
+py_repositories()
+python_register_toolchains(
+    name = "python39",
+    python_version = "3.9",
+)
+
 # Load //builder/java
 load("//builder/java:deps.bzl", java_deps = "deps")
 java_deps()
@@ -42,9 +49,6 @@ rules_jvm_external_deps()
 
 load("@rules_jvm_external//:setup.bzl", "rules_jvm_external_setup")
 rules_jvm_external_setup()
-
-
-load("//library/maven:rules.bzl", "maven")
 
 # Load //builder/kotlin
 load("//builder/kotlin:deps.bzl", kotlin_deps = "deps")
@@ -92,6 +96,7 @@ load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
 # Load Maven artifacts
+load("//library/maven:rules.bzl", "maven")
 maven(vaticle_dependencies_tool_maven_artifacts)
 
 # Load Rust Crate dependencies

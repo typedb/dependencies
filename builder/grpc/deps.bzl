@@ -26,20 +26,10 @@ def deps():
         urls = ["https://github.com/rules-proto-grpc/rules_proto_grpc/releases/download/4.4.0/rules_proto_grpc-4.4.0.tar.gz"],
     )
 
-
-#    git_repository(
-#        name = "com_github_grpc_grpc",
-#        remote = "https://github.com/grpc/grpc",
-#        tag = "v1.56.0"
-#    )
-#    git_repository(
-#        name = "io_grpc_grpc_java",
-#        remote = "https://github.com/grpc/grpc-java",
-#        tag = "v1.56.1"
-#    )
-#    http_archive(
-#        name = "build_stack_rules_proto",
-#        sha256 = "ac7e2966a78660e83e1ba84a06db6eda9a7659a841b6a7fd93028cd8757afbfb",
-#        strip_prefix = "rules_proto-2.0.1",
-#        urls = ["https://github.com/stackb/rules_proto/archive/v2.0.1.tar.gz"],
-#    )
+    http_archive(
+        name = "com_github_grpc_grpc",
+        patches = ["@vaticle_dependencies//builder/grpc/patches:grpc-hermitic-python.patch"],
+        sha256 = "9717ffc52120861136e478155c2ff3a9c21740e2244de52fa966f376d7471adf",
+        strip_prefix = "grpc-1.53.0",
+        urls = ["https://github.com/grpc/grpc/archive/v1.53.0.tar.gz"],
+    )
