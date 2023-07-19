@@ -25,28 +25,30 @@ def _copy_to_bin(ctx, src, dst):
 def _swig_java_wrapper_impl(ctx):
     module_name = getattr(ctx.attr, "class_name", ctx.attr.name)
 
-    interface = ctx.actions.declare_file(module_name + ".i")
-    _copy_to_bin(ctx, ctx.file.interface, interface)
-
     wrap_java_dir = ctx.actions.declare_directory("{}".format(module_name))
 
     args = ctx.attr.extra_args + [
         "-java",
         "-package", ctx.attr.package,
         "-outdir", wrap_java_dir.path,
-        interface.path,
+        ctx.file.interface.path,
     ]
 
     if ctx.attr.enable_cxx:
         wrap_src = ctx.actions.declare_file("{}_wrap.cxx".format(module_name))
-        swig_headers = [ctx.actions.declare_file("{}_wrap.h".format(module_name))]
-        args = ["-c++"] + args
+        directors_header = ctx.actions.declare_file("{}_wrap.h".format(module_name))
+        args = ["-c++", "-o", wrap_src.path, "-oh", directors_header.path] + args
+        swig_headers = [directors_header]
     else:
         wrap_src = ctx.actions.declare_file("{}_wrap.c".format(module_name))
+        args = ["-o", wrap_src.path] + args
         swig_headers = []
+    
+    for h in ctx.attr.lib[CcInfo].compilation_context.headers.to_list():
+        args = ["-I" + h.dirname] + args
 
     ctx.actions.run(
-        inputs = depset([interface] + ctx.files.includes, transitive = [
+        inputs = depset([ctx.file.interface] + ctx.files.includes, transitive = [
             ctx.attr.lib[CcInfo].compilation_context.headers,
             ctx.attr._swig.data_runfiles.files,
         ]),
@@ -93,7 +95,7 @@ def _swig_java_wrapper_impl(ctx):
     )
 
     return [
-        DefaultInfo(files = depset([interface, jni_h, jni_md_h, wrap_src, wrap_srcjar])),
+        DefaultInfo(files = depset([jni_h, jni_md_h, wrap_src, wrap_srcjar])),
         CcInfo(
             compilation_context = compilation_context,
             linking_context = ctx.attr.lib[CcInfo].linking_context,
