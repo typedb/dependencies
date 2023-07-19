@@ -32,6 +32,8 @@ rust_register_toolchains(edition = "2021", include_rustc_srcs = True)
 # Load //builder/python
 load("//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
+load("@rules_python//python:repositories.bzl", "py_repositories")
+py_repositories()
 
 # Load //builder/java
 load("//builder/java:deps.bzl", java_deps = "deps")
