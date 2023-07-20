@@ -27,6 +27,7 @@ def _swig_python_wrapper_impl(ctx):
 
     args = ctx.attr.extra_args + [
         "-python",
+        "-module", module_name,
         ctx.file.interface.path,
     ]
 
@@ -128,13 +129,14 @@ def swig_python_wrapper(**kwargs):
 def swig_python(name, lib, shared_lib_name=None, **kwargs):
     swig_wrapper_name = name + "__swig"
     swig_python_wrapper(
+        class_name = name,
         name = swig_wrapper_name,
         lib = lib,
         **kwargs,
     )
 
     if not shared_lib_name:
-        shared_lib_name = "lib" + name
+        shared_lib_name = "_" + name
 
     def swig_cc_binary(shared_lib_filename):
         # name doesn't accept select() either
@@ -146,16 +148,16 @@ def swig_python(name, lib, shared_lib_name=None, **kwargs):
         )
 
     select({
-        "@vaticle_dependencies//util/platform:is_mac": swig_cc_binary(shared_lib_name + ".dylib"),
-        "@vaticle_dependencies//util/platform:is_linux": swig_cc_binary(shared_lib_name + ".so"),
+        "@vaticle_dependencies//util/platform:is_mac": swig_cc_binary(shared_lib_name + ".so"),
+#        "@vaticle_dependencies//util/platform:is_linux": swig_cc_binary(shared_lib_name + ".so"),
         "@vaticle_dependencies//util/platform:is_windows": swig_cc_binary(shared_lib_name + ".lib"),
     })
 
     native.alias(
         name = shared_lib_name,
         actual = select({
-            "@vaticle_dependencies//util/platform:is_mac": (shared_lib_name + ".dylib"),
-            "@vaticle_dependencies//util/platform:is_linux": (shared_lib_name + ".so"),
+            "@vaticle_dependencies//util/platform:is_mac": (shared_lib_name + ".so"),
+#            "@vaticle_dependencies//util/platform:is_linux": (shared_lib_name + ".so"),
             "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".lib"),
         })
     )
