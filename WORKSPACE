@@ -52,10 +52,10 @@ google_or_tools_mac()
 google_or_tools_linux()
 google_or_tools_windows()
 
-load("//library/ortools/cc:deps.bzl", "google_or_tools_mac", "google_or_tools_linux", "google_or_tools_windows")
-google_or_tools_mac()
-google_or_tools_linux()
-google_or_tools_windows()
+load("//library/ortools/cc:deps.bzl", "google_or_tools")
+google_or_tools()
+load("@com_google_protobuf//:protobuf_deps.bzl", google_or_tools_protobuf_deps = "protobuf_deps")
+google_or_tools_protobuf_deps()
 
 # Load //tool/common
 load("//tool/common:deps.bzl", "vaticle_dependencies_ci_pip", vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
