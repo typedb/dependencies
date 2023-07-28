@@ -19,17 +19,16 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def deps():
-    http_archive(
+    git_repository(
         name = "rules_proto_grpc",
-        sha256 = "928e4205f701b7798ce32f3d2171c1918b363e9a600390a25c876f075f1efc0a",
-        strip_prefix = "rules_proto_grpc-4.4.0",
-        urls = ["https://github.com/rules-proto-grpc/rules_proto_grpc/releases/download/4.4.0/rules_proto_grpc-4.4.0.tar.gz"],
+        remote = "https://github.com/rules-proto-grpc/rules_proto_grpc",
+        commit = "7064b28a75b3feb014b20d3276e17498987a68e2"
     )
 
     http_archive(
         name = "com_github_grpc_grpc",
         patches = ["@vaticle_dependencies//builder/grpc:grpc-hermitic-python.patch"],
-        sha256 = "9717ffc52120861136e478155c2ff3a9c21740e2244de52fa966f376d7471adf",
-        strip_prefix = "grpc-1.53.0",
-        urls = ["https://github.com/grpc/grpc/archive/v1.53.0.tar.gz"],
+        sha256 = "79e3ff93f7fa3c8433e2165f2550fa14889fce147c15d9828531cbfc7ad11e01",
+        strip_prefix = "grpc-1.54.1",
+        urls = ["https://github.com/grpc/grpc/archive/v1.54.1.tar.gz"],
     )
