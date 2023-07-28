@@ -48,7 +48,6 @@ def maven_artifact(artifact, artifact_info):
             exclusions = []
             for e in artifact_info['exclude']:
                 exclusions.append(e)
-        print(artifact_info)
         artifact = rje_maven.artifact(
             group = group,
             artifact = artifact_id,
