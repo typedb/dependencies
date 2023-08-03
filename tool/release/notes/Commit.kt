@@ -60,3 +60,13 @@ private fun getPrecedingVersion(org: String, repo: String, version: Version, git
         else throw IllegalStateException("Version '$version' not found: currentIdx = '$currentIdx'")
     return preceding
 }
+
+fun getLastVersion(org: String, repo: String, githubToken: String): Version? {
+    val response = httpGet("$github/repos/$org/$repo/releases", githubToken)
+    val body = Json.parse(response.parseAsString())
+    val tags = mutableListOf<Version>()
+    tags.addAll(body.asArray().map { release -> Version.parse(release.asObject().get("tag_name").asString()) })
+    tags.sort()
+    if (tags.size == 0) return null;
+    else return tags.last();
+}

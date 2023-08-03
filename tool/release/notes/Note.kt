@@ -51,9 +51,10 @@ class Note {
 
     companion object {
         fun fromGithubPR(pr: JsonObject): Note {
+            val bodyJsonValue = pr.get("body");
             return Note(
                     title = pr.get("title").asString(),
-                    goal = getPRGoal(pr.get("body").asString()),
+                    goal = getPRGoal(if (bodyJsonValue.isNull) null else bodyJsonValue.asString()),
                     type = getPRType(pr.get("labels").asArray())
             )
         }
@@ -70,7 +71,8 @@ class Note {
             }
         }
 
-        private fun getPRGoal(description: String): String {
+        private fun getPRGoal(description: String?): String? {
+            if (description == null) return null
             val goal = StringBuilder()
             var header = 0
             for (line in description.lines()) {
