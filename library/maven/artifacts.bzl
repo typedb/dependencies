@@ -275,4 +275,5 @@ artifacts = {
     "org.yaml:snakeyaml": "1.25",
     "org.zeromq:jeromq": "0.5.2",
     "org.zeroturnaround:zt-exec": "1.10",
+    "com.mailgun:mailgun-java": "1.0.8",
 }
