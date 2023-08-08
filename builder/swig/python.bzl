@@ -147,9 +147,10 @@ def swig_python(name, lib, shared_lib_name=None, **kwargs):
             linkshared = True,
         )
 
+    swig_cc_binary_so = swig_cc_binary(shared_lib_name + ".so")
     select({
-        "@vaticle_dependencies//util/platform:is_mac": swig_cc_binary(shared_lib_name + ".so"),
-#        "@vaticle_dependencies//util/platform:is_linux": swig_cc_binary(shared_lib_name + ".so"),
+        "@vaticle_dependencies//util/platform:is_mac": swig_cc_binary_so,
+        "@vaticle_dependencies//util/platform:is_linux": swig_cc_binary_so,
         "@vaticle_dependencies//util/platform:is_windows": swig_cc_binary(shared_lib_name + ".lib"),
     })
 
@@ -157,7 +158,7 @@ def swig_python(name, lib, shared_lib_name=None, **kwargs):
         name = shared_lib_name,
         actual = select({
             "@vaticle_dependencies//util/platform:is_mac": (shared_lib_name + ".so"),
-#            "@vaticle_dependencies//util/platform:is_linux": (shared_lib_name + ".so"),
+            "@vaticle_dependencies//util/platform:is_linux": (shared_lib_name + ".so"),
             "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".lib"),
         })
     )
