@@ -30,7 +30,6 @@ artifacts = {
     "com.google.code.gson:gson": "2.8.5",
     "com.google.errorprone:error_prone_annotations": "2.4.0",
     "com.google.guava:guava": "30.1-jre",
-    "com.google.guava:listenablefuture": "1.0",
     "com.google.http-client:google-http-client": "1.34.2",
     "com.google.inject:guice": "4.2.2",
     "com.google.ortools:ortools-java": "9.6.2534",
