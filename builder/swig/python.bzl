@@ -24,10 +24,12 @@ def _copy_to_bin(ctx, src, dst):
 
 def _swig_python_wrapper_impl(ctx):
     module_name = getattr(ctx.attr, "class_name", ctx.attr.name)
+    interface_name = getattr(ctx.attr, "shared_lib_name", "_" + ctx.attr.name)
 
     args = ctx.attr.extra_args + [
         "-python",
         "-module", module_name,
+        "-interface", interface_name,
         ctx.file.interface.path,
     ]
 
@@ -90,6 +92,9 @@ _swig_python_wrapper = rule(
         "class_name": attr.string(
             doc = "Optional override for the python class name (default: same as target name)",
         ),
+        "shared_lib_name": attr.string(
+            doc = "Optional override for the dynamic library name (default: '_' + target name)",
+        ),
         "interface": attr.label(
             doc = "Optional SWIG interface (.i) file",
             allow_single_file = True,
@@ -128,15 +133,16 @@ def swig_python_wrapper(**kwargs):
 
 def swig_python(name, lib, shared_lib_name=None, **kwargs):
     swig_wrapper_name = name + "__swig"
+    if not shared_lib_name:
+        shared_lib_name = "_" + name
+
     swig_python_wrapper(
         class_name = name,
         name = swig_wrapper_name,
+        shared_lib_name = shared_lib_name,
         lib = lib,
         **kwargs,
     )
-
-    if not shared_lib_name:
-        shared_lib_name = "_" + name
 
     def swig_cc_binary(shared_lib_filename):
         # name doesn't accept select() either
