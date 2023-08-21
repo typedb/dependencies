@@ -81,7 +81,7 @@ def _swig_python_wrapper_impl(ctx):
     ]
 
 
-_swig_python_wrapper = rule(
+swig_python_wrapper = rule(
     implementation = _swig_python_wrapper_impl,
     attrs = {
         "lib": attr.label(
@@ -123,14 +123,6 @@ _swig_python_wrapper = rule(
 )
 
 
-def swig_python_wrapper(**kwargs):
-    # workaround for select() not being allowed as a default argument
-    # cf. https://github.com/bazelbuild/bazel/issues/287
-    _swig_python_wrapper(
-        **kwargs,
-    )
-
-
 def swig_python(name, lib, shared_lib_name=None, **kwargs):
     swig_wrapper_name = name + "__swig"
     if not shared_lib_name:
@@ -145,7 +137,7 @@ def swig_python(name, lib, shared_lib_name=None, **kwargs):
     )
 
     def swig_cc_binary(shared_lib_filename):
-        # name doesn't accept select() either
+        # name doesn't accept select()
         native.cc_binary(
             name = shared_lib_filename,
             deps = [lib, swig_wrapper_name],
@@ -153,12 +145,8 @@ def swig_python(name, lib, shared_lib_name=None, **kwargs):
             linkshared = True,
         )
 
-    swig_cc_binary_so = swig_cc_binary(shared_lib_name + ".so")
-    select({
-        "@vaticle_dependencies//util/platform:is_mac": swig_cc_binary_so,
-        "@vaticle_dependencies//util/platform:is_linux": swig_cc_binary_so,
-        "@vaticle_dependencies//util/platform:is_windows": swig_cc_binary(shared_lib_name + ".lib"),
-    })
+    swig_cc_binary(shared_lib_name + ".so")
+    swig_cc_binary(shared_lib_name + ".lib")
 
     native.alias(
         name = shared_lib_name,
