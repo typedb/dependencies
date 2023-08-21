@@ -32,7 +32,17 @@ artifacts = {
     "com.google.guava:guava": "30.1-jre",
     "com.google.http-client:google-http-client": "1.34.2",
     "com.google.inject:guice": "4.2.2",
-    "com.google.ortools:ortools-java": "9.6.2534",
+    "com.google.ortools:ortools-java": {
+        "version": "9.6.2534",
+        # these transitive dependencies must be explicitly included
+        "exclude": [
+           "com.google.ortools:ortools-darwin-x86-64",
+           "com.google.ortools:ortools-darwin-aarch64",
+           "com.google.ortools:ortools-linux-x86-64",
+           "com.google.ortools:ortools-linux-aarch64",
+           "com.google.ortools:ortools-win32-x86-64"
+        ]
+    },
     "com.google.ortools:ortools-darwin-x86-64": "9.6.2534",
     "com.google.ortools:ortools-darwin-aarch64": "9.6.2534",
     "com.google.ortools:ortools-linux-x86-64": "9.6.2534",
