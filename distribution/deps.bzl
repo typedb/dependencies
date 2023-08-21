@@ -20,6 +20,6 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 def vaticle_bazel_distribution():
     git_repository(
         name = "vaticle_bazel_distribution",
-        remote = "https://github.com/vaticle/bazel-distribution",
-        commit = "3da5196dfc18fc2e235a3ccc146ea6a90a20702f" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_bazel_distribution
+        remote = "https://github.com/dmikhalin/bazel-distribution",
+        commit = "268fa37e0e3194e8a4e5e05021eeef8631fe0364" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_bazel_distribution
     )
