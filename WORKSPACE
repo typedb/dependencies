@@ -32,6 +32,8 @@ rust_register_toolchains(edition = "2021", include_rustc_srcs = True)
 # Load //builder/python
 load("//builder/python:deps.bzl", python_deps = "deps")
 python_deps()
+load("@rules_python//python:repositories.bzl", "py_repositories")
+py_repositories()
 
 # Load //builder/java
 load("//builder/java:deps.bzl", java_deps = "deps")
@@ -60,6 +62,8 @@ google_or_tools_windows()
 # Load //tool/common
 load("//tool/common:deps.bzl", "vaticle_dependencies_ci_pip", vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
 vaticle_dependencies_ci_pip()
+load("@vaticle_dependencies_ci_pip//:requirements.bzl", "install_deps")
+install_deps()
 
 # Load //tool/checkstyle
 load("//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
