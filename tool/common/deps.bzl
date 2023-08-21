@@ -1,9 +1,9 @@
-load("@rules_python//python:pip.bzl", "pip_install")
+load("@rules_python//python:pip.bzl", "pip_parse")
 
 def vaticle_dependencies_ci_pip():
-    pip_install(
+    pip_parse(
         name = "vaticle_dependencies_ci_pip",
-        requirements = "@vaticle_dependencies//tool:requirements.txt",
+        requirements_lock = "@vaticle_dependencies//tool:requirements.txt",
     )
 
 maven_artifacts = [
