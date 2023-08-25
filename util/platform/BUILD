@@ -8,6 +8,11 @@ MAC_X86_64 = [
     "@platforms//os:osx"
 ]
 
+LINUX_ARM64 = [
+    "@platforms//cpu:arm64",
+    "@platforms//os:linux"
+]
+
 LINUX_X86_64 = [
     "@platforms//cpu:x86_64",
     "@platforms//os:linux"
@@ -35,6 +40,11 @@ config_setting(
     constraint_values = [
         "@platforms//os:linux",
     ],
+)
+
+config_setting(
+    name = "is_linux_arm64",
+    constraint_values = LINUX_ARM64
 )
 
 config_setting(
