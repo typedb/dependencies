@@ -20,17 +20,13 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 def deps():
     git_repository(
+       name = "rules_proto_grpc",
+       remote = "https://github.com/rules-proto-grpc/rules_proto_grpc",
+       commit = "7064b28a75b3feb014b20d3276e17498987a68e2"
+    )
+    http_archive(
         name = "com_github_grpc_grpc",
-        remote = "https://github.com/grpc/grpc",
-        tag = "v1.52.0",
-    )
-    git_repository(
-        name = "io_grpc_grpc_java",
-        remote = "https://github.com/grpc/grpc-java",
-        tag = "v1.52.0",
-    )
-    git_repository(
-        name = "stackb_rules_proto",
-        remote = "https://github.com/stackb/rules_proto",
-        tag = "1.0.0"
+        sha256 = "79e3ff93f7fa3c8433e2165f2550fa14889fce147c15d9828531cbfc7ad11e01",
+        strip_prefix = "grpc-1.54.1",
+        urls = ["https://github.com/grpc/grpc/archive/v1.54.1.tar.gz"],
     )
