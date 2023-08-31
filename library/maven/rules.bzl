@@ -1,8 +1,8 @@
 load("@rules_jvm_external//:defs.bzl", rje_maven_install = "maven_install")
-load("@rules_jvm_external//:specs.bzl", rje_maven = "maven")
+load("@rules_jvm_external//:specs.bzl", rje_maven = "maven", rje_parse = "parse")
 load(":artifacts.bzl", maven_artifacts_org = "artifacts")
 
-def maven(artifacts_org, artifacts_repo={}, fail_on_missing_checksum=True):
+def maven(artifacts_org, artifacts_repo={}, override_targets={}, fail_on_missing_checksum=True, generate_compat_repositories=False):
     if len(artifacts_repo) > 0:
         _warn("There are {} artifacts_repo found. Overriding artifacts_org with `artifacts_repo` is discouraged!".format(len(artifacts_repo)))
     for a in artifacts_org:
@@ -16,16 +16,23 @@ def maven(artifacts_org, artifacts_repo={}, fail_on_missing_checksum=True):
         artifacts = artifacts_selected,
         repositories = [
             "https://repo1.maven.org/maven2",
+            "https://repo.maven.apache.org/maven2/",
             "https://repo.vaticle.com/repository/maven",
             "https://repo.vaticle.com/repository/maven-snapshot",
             "https://dl.google.com/dl/android/maven2",
             "https://maven.pkg.jetbrains.space/public/p/compose/dev",
         ],
+        override_targets = override_targets,
         strict_visibility = True,
         version_conflict_policy = "pinned",
         fetch_sources = True,
-        fail_on_missing_checksum = fail_on_missing_checksum
+        fail_on_missing_checksum = fail_on_missing_checksum,
+        generate_compat_repositories = generate_compat_repositories,
     )
+
+def parse_unversioned(artifact):
+    parsed = rje_parse.parse_maven_coordinate(artifact)
+    return parsed["group"] + ":" + parsed["artifact"]
 
 def maven_artifact(artifact, artifact_info):
     group, artifact_id = artifact.split(':')
@@ -36,14 +43,18 @@ def maven_artifact(artifact, artifact_info):
             version = artifact_info,
         )
     elif type(artifact_info) == type({}):
-        exclusions = []
-        for e in artifact_info['exclude']:
-            exclusions.append(e)
+        exclusions = None
+        if 'exclude' in artifact_info:
+            exclusions = []
+            for e in artifact_info['exclude']:
+                exclusions.append(e)
         artifact = rje_maven.artifact(
             group = group,
             artifact = artifact_id,
             version = artifact_info['version'],
-            exclusions = exclusions
+            packaging = artifact_info['packaging'] if 'packaging' in artifact_info else None,
+            classifier = artifact_info['classifier'] if 'classifier' in artifact_info else None,
+            exclusions =  exclusions
         )
     else:
         fail("The info for '" + artifact + "' must either be a 'string' (eg., '1.8.1') or a 'dict' (eg., {'version': '1.8.1', 'exclude': ['org.slf4j:slf4j']})")
