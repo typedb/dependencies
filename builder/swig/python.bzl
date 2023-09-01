@@ -80,7 +80,11 @@ def _swig_python_wrapper_impl(ctx):
         DefaultInfo(files = depset([wrap_src, wrap_py])),
         CcInfo(
             compilation_context = compilation_context,
-            linking_context = linking_context,
+            linking_context = select({
+                "@vaticle_dependencies//util/platform:is_mac": (ctx.attr.lib[CcInfo].linking_context),
+                "@vaticle_dependencies//util/platform:is_linux": (ctx.attr.lib[CcInfo].linking_context),
+                "@vaticle_dependencies//util/platform:is_windows": (linking_context),
+            }),
         ),
     ]
 
@@ -150,8 +154,17 @@ def swig_python(name, lib, shared_lib_name=None, **kwargs):
             deps = [lib, swig_wrapper_name],
             srcs = [swig_wrapper_name],
             linkshared = True,
-            copts = ["/DCOMPILING_DLL"],
-            linkopts = ["/LIBPATH:C:\\Windows\\System32"]
+#            copts = select({
+#                "@vaticle_dependencies//util/platform:is_mac": ([]),
+#                "@vaticle_dependencies//util/platform:is_linux": ([]),
+#                "@vaticle_dependencies//util/platform:is_windows": (["/DCOMPILING_DLL"]),
+#            }),
+#            linkopts = select({
+#                "@vaticle_dependencies//util/platform:is_mac": ([]),
+#                "@vaticle_dependencies//util/platform:is_linux": ([]),
+#                "@vaticle_dependencies//util/platform:is_windows": (["/LIBPATH:C:\\Windows\\System32"]),
+#            }),
+            linkopts = ["/LIBPATH:C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\SDK\\ScopeCppSDK\\vc15\\SDK\\lib"],
         )
 
     swig_cc_binary(shared_lib_name + ".so")
