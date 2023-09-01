@@ -73,7 +73,7 @@ def _swig_python_wrapper_impl(ctx):
     )
 
     linking_context = cc_common.create_linking_context(
-        linker_inputs = depset(ctx.attr._libpython[CcInfo].linking_context.linker_inputs.to_list(), transitive = [ctx.attr.lib[CcInfo].linking_context.linker_inputs]),
+        linker_inputs = depset([], transitive = [ctx.attr._libpython[CcInfo].linking_context.linker_inputs, ctx.attr.lib[CcInfo].linking_context.linker_inputs]),
     )
 
     return [
@@ -150,8 +150,8 @@ def swig_python(name, lib, shared_lib_name=None, **kwargs):
             deps = [lib, swig_wrapper_name],
             srcs = [swig_wrapper_name],
             linkshared = True,
-#            copts = ["/DCOMPILING_DLL"],
-#            linkopts = ["/LIBPATH:C:\\Windows\\System32"]
+            copts = ["/DCOMPILING_DLL"],
+            linkopts = ["/LIBPATH:C:\\Windows\\System32"]
         )
 
     swig_cc_binary(shared_lib_name + ".so")
