@@ -164,14 +164,14 @@ def swig_python(name, lib, shared_lib_name=None, **kwargs):
         )
 
     swig_cc_binary(shared_lib_name + ".so")
-    swig_cc_binary(shared_lib_name + ".lib")
+    swig_cc_binary(shared_lib_name + ".dll")
 
     native.alias(
         name = shared_lib_name,
         actual = select({
             "@vaticle_dependencies//util/platform:is_mac": (shared_lib_name + ".so"),
             "@vaticle_dependencies//util/platform:is_linux": (shared_lib_name + ".so"),
-            "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".lib"),
+            "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".dll"),
         })
     )
 
