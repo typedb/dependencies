@@ -73,7 +73,7 @@ def _swig_python_wrapper_impl(ctx):
     )
 
     linking_context = cc_common.create_linking_context(
-        linker_inputs = depset(ctx.attr.lib[CcInfo].linking_context.linker_inputs.to_list() + ctx.attr._libpython[CcInfo].linking_context.linker_inputs.to_list()),
+        linker_inputs = depset(ctx.attr._libpython[CcInfo].linking_context.linker_inputs.to_list(), transitive = [ctx.attr.lib[CcInfo].linking_context.linker_inputs]),
     )
 
     return [
