@@ -80,11 +80,7 @@ def _swig_python_wrapper_impl(ctx):
         DefaultInfo(files = depset([wrap_src, wrap_py])),
         CcInfo(
             compilation_context = compilation_context,
-            linking_context = select({
-                "@vaticle_dependencies//util/platform:is_mac": (ctx.attr.lib[CcInfo].linking_context),
-                "@vaticle_dependencies//util/platform:is_linux": (ctx.attr.lib[CcInfo].linking_context),
-                "@vaticle_dependencies//util/platform:is_windows": (linking_context),
-            }),
+            linking_context = linking_context,
         ),
     ]
 
