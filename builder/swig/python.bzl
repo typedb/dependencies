@@ -160,7 +160,7 @@ def swig_python(name, lib, shared_lib_name=None, **kwargs):
 #                "@vaticle_dependencies//util/platform:is_linux": ([]),
 #                "@vaticle_dependencies//util/platform:is_windows": (["/LIBPATH:C:\\Windows\\System32"]),
 #            }),
-            linkopts = ["/LIBPATH:\"C:/Program Files/Microsoft Visual Studio/2022/Community/SDK/ScopeCppSDK/vc15/SDK/lib\""],
+            linkopts = ["/LIBPATH:\"C:/Progra~1/Micros~1/2022/Community/SDK/ScopeCppSDK/vc15/SDK/lib\""],
         )
 
     swig_cc_binary(shared_lib_name + ".so")
