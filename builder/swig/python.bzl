@@ -151,6 +151,7 @@ def swig_python(name, lib, shared_lib_name=None, **kwargs):
             srcs = [swig_wrapper_name],
             linkshared = True,
             copts = ["/DCOMPILING_DLL"],
+            linkopts = ["/LIBPATH:C:\\Windows\\System32"]
         )
 
     swig_cc_binary(shared_lib_name + ".so")
