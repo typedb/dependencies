@@ -130,7 +130,7 @@ swig_python_wrapper = rule(
 )
 
 
-def swig_python(name, lib, shared_lib_name=None, **kwargs):
+def swig_python(name, lib, shared_lib_name=None, linkopts=(), **kwargs):
     swig_wrapper_name = name + "__swig"
     if not shared_lib_name:
         shared_lib_name = "_" + name
@@ -150,29 +150,22 @@ def swig_python(name, lib, shared_lib_name=None, **kwargs):
             deps = [lib, swig_wrapper_name],
             srcs = [swig_wrapper_name],
             linkshared = True,
-#            copts = select({
-#                "@vaticle_dependencies//util/platform:is_mac": ([]),
-#                "@vaticle_dependencies//util/platform:is_linux": ([]),
-#                "@vaticle_dependencies//util/platform:is_windows": (["/DCOMPILING_DLL"]),
-#            }),
-#            linkopts = select({
-#                "@vaticle_dependencies//util/platform:is_mac": ([]),
-#                "@vaticle_dependencies//util/platform:is_linux": ([]),
-#                "@vaticle_dependencies//util/platform:is_windows": (["/LIBPATH:C:\\Windows\\System32"]),
-#            }),
-            linkopts = ["ntdll.lib"],
+            linkopts = linkopts,
         )
 
-    swig_cc_binary(shared_lib_name + ".so")
-    swig_cc_binary(shared_lib_name + ".dll")
+    # FIXME: It should be possible to remove extensions and select
+#    swig_cc_binary(shared_lib_name + ".so")
+#    swig_cc_binary(shared_lib_name + ".dll")
 
-    native.alias(
-        name = shared_lib_name,
-        actual = select({
-            "@vaticle_dependencies//util/platform:is_mac": (shared_lib_name + ".so"),
-            "@vaticle_dependencies//util/platform:is_linux": (shared_lib_name + ".so"),
-            "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".dll"),
-        })
-    )
+    swig_cc_binary(shared_lib_name)
+
+#    native.alias(
+#        name = shared_lib_name,
+#        actual = select({
+#            "@vaticle_dependencies//util/platform:is_mac": (shared_lib_name + ".so"),
+#            "@vaticle_dependencies//util/platform:is_linux": (shared_lib_name + ".so"),
+#            "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".dll"),
+#        })
+#    )
 
     native.py_library(name = name, srcs = [swig_wrapper_name], data = [shared_lib_name])
