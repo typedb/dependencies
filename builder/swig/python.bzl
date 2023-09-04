@@ -153,19 +153,40 @@ def swig_python(name, lib, shared_lib_name=None, linkopts=(), **kwargs):
             linkopts = linkopts,
         )
 
-    # FIXME: It should be possible to remove extensions and select
-#    swig_cc_binary(shared_lib_name + ".so")
-#    swig_cc_binary(shared_lib_name + ".dll")
-
     swig_cc_binary(shared_lib_name)
-
-#    native.alias(
-#        name = shared_lib_name,
-#        actual = select({
-#            "@vaticle_dependencies//util/platform:is_mac": (shared_lib_name + ".so"),
-#            "@vaticle_dependencies//util/platform:is_linux": (shared_lib_name + ".so"),
-#            "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".dll"),
-#        })
-#    )
-
     native.py_library(name = name, srcs = [swig_wrapper_name], data = [shared_lib_name])
+
+
+def _dyn_lib_impl(ctx):
+    output_file = ctx.actions.declare_file(ctx.attr.out)
+    _copy_to_bin(ctx, ctx.files.src[0], output_file)
+    return [
+        DefaultInfo(files = depset([output_file])),
+    ]
+
+
+dyn_lib_wrapper = rule(
+    implementation = _dyn_lib_impl,
+    attrs = {
+        "out": attr.string(
+            doc = "Output file name without extension",
+            mandatory = True,
+        ),
+        "src": attr.label(
+            mandatory = True,
+        ),
+    }
+)
+
+
+def dyn_lib(name, out, src, visibility, **kwargs):
+    dyn_lib_wrapper(
+        name = name,
+        out = select({
+            "@vaticle_dependencies//util/platform:is_windows": out + ".pyd",
+            "//conditions:default": out + ".so",
+        }),
+        src = src,
+        visibility = visibility,
+        **kwargs,
+    )
