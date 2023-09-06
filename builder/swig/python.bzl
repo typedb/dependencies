@@ -24,7 +24,8 @@ def _copy_to_bin(ctx, src, dst):
 
 def _swig_python_wrapper_impl(ctx):
     module_name = getattr(ctx.attr, "class_name", ctx.attr.name)
-    interface_name = getattr(ctx.attr, "shared_lib_name", "_" + ctx.attr.name)
+    shared_lib_name = getattr(ctx.attr, "shared_lib_name", "_" + ctx.attr.name)
+    interface_name = getattr(ctx.attr, "interface_name", getattr(ctx.attr, "shared_lib_name", "_" + ctx.attr.name))
 
     args = ctx.attr.extra_args + [
         "-python",
@@ -60,20 +61,20 @@ def _swig_python_wrapper_impl(ctx):
 
     lib_compilation_context = ctx.attr.lib[CcInfo].compilation_context
     compilation_context = cc_common.create_compilation_context(
-        headers = depset(ctx.attr._python_header[CcInfo].compilation_context.headers.to_list() + swig_headers, transitive = [lib_compilation_context.headers]),
+        headers = depset(ctx.attr.python_headers[CcInfo].compilation_context.headers.to_list() + swig_headers, transitive = [lib_compilation_context.headers]),
         defines = lib_compilation_context.defines,
         framework_includes = lib_compilation_context.framework_includes,
         includes = lib_compilation_context.includes,
         local_defines = lib_compilation_context.local_defines,
         quote_includes = lib_compilation_context.quote_includes,
         system_includes = depset(
-            [file.dirname for file in ctx.attr._python_header[CcInfo].compilation_context.headers.to_list()],
-            transitive = [lib_compilation_context.system_includes],
+            [file.dirname for file in ctx.attr.python_headers[CcInfo].compilation_context.headers.to_list() + lib_compilation_context.headers.to_list()],
+            transitive = [lib_compilation_context.system_includes, lib_compilation_context.includes],
         )
     )
 
     linking_context = cc_common.create_linking_context(
-        linker_inputs = depset([], transitive = [ctx.attr._libpython[CcInfo].linking_context.linker_inputs, ctx.attr.lib[CcInfo].linking_context.linker_inputs]),
+        linker_inputs = depset([], transitive = [ctx.attr.libpython[CcInfo].linking_context.linker_inputs, ctx.attr.lib[CcInfo].linking_context.linker_inputs]),
     )
 
     return [
@@ -99,6 +100,9 @@ swig_python_wrapper = rule(
         "shared_lib_name": attr.string(
             doc = "Optional override for the dynamic library name (default: '_' + target name)",
         ),
+        "interface_name": attr.string(
+            doc = "Optional override for the dynamic library name used in python library (default: shared_lib_name)",
+        ),
         "interface": attr.label(
             doc = "Optional SWIG interface (.i) file",
             allow_single_file = True,
@@ -114,10 +118,10 @@ swig_python_wrapper = rule(
         "extra_args": attr.string_list(
             doc = "Extra arguments to be passed to SWIG",
         ),
-        "_python_header": attr.label(
+        "python_headers": attr.label(
             default = Label("@python39//:python_headers"),
         ),
-        "_libpython": attr.label(
+        "libpython": attr.label(
             default = Label("@python39//:libpython"),
         ),
         "_swig": attr.label(
@@ -130,7 +134,7 @@ swig_python_wrapper = rule(
 )
 
 
-def swig_python(name, lib, shared_lib_name=None, linkopts=(), **kwargs):
+def swig_python(*, name, lib, shared_lib_name=None, python_headers, libpython, linkopts=(), **kwargs):
     swig_wrapper_name = name + "__swig"
     if not shared_lib_name:
         shared_lib_name = "_" + name
@@ -140,6 +144,8 @@ def swig_python(name, lib, shared_lib_name=None, linkopts=(), **kwargs):
         name = swig_wrapper_name,
         shared_lib_name = shared_lib_name,
         lib = lib,
+        python_headers = python_headers,
+        libpython = libpython,
         **kwargs,
     )
 
