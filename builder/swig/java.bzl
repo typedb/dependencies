@@ -169,7 +169,7 @@ def swig_java_wrapper(**kwargs):
     )
 
 
-def swig_java(name, lib, shared_lib_name=None, **kwargs):
+def swig_java(name, lib, shared_lib_name=None, maven_coordinates=None, **kwargs):
     swig_wrapper_name = name + "__swig"
     swig_java_wrapper(
         name = swig_wrapper_name,
@@ -190,11 +190,9 @@ def swig_java(name, lib, shared_lib_name=None, **kwargs):
             linkshared = True,
         )
 
-    select({
-        "@vaticle_dependencies//util/platform:is_mac": swig_cc_binary(shared_lib_name + ".dylib"),
-        "@vaticle_dependencies//util/platform:is_linux": swig_cc_binary(shared_lib_name + ".so"),
-        "@vaticle_dependencies//util/platform:is_windows": swig_cc_binary(shared_lib_name + ".lib"),
-    })
+    swig_cc_binary(shared_lib_name + ".dylib")
+    swig_cc_binary(shared_lib_name + ".so")
+    swig_cc_binary(shared_lib_name + ".lib")
 
     native.alias(
         name = shared_lib_name,
@@ -205,4 +203,27 @@ def swig_java(name, lib, shared_lib_name=None, **kwargs):
         })
     )
 
-    native.java_library(name = name, srcs = [swig_wrapper_name], deps = [shared_lib_name])
+    def swig_java_library(platform):
+        native.java_library(
+            name = name + "-" + platform,
+            srcs = [swig_wrapper_name],
+            resources = [shared_lib_name],
+            tags = ["maven_coordinates=" + maven_coordinates.replace("{platform}", platform)],
+        )
+
+    swig_java_library("linux-aarch64")
+    swig_java_library("linux-x86_64")
+    swig_java_library("macosx-aarch64")
+    swig_java_library("macosx-x86_64")
+    swig_java_library("windows-x86_64")
+
+    native.alias(
+        name = name,
+        actual = select({
+            "@vaticle_dependencies//util/platform:is_linux_arm64": (name + "-linux-aarch64"),
+            "@vaticle_dependencies//util/platform:is_linux_x86_64": (name + "-linux-x86_64"),
+            "@vaticle_dependencies//util/platform:is_mac_arm64": (name + "-macosx-aarch64"),
+            "@vaticle_dependencies//util/platform:is_mac_x86_64": (name + "-macosx-x86_64"),
+            "@vaticle_dependencies//util/platform:is_win_x86_64": (name + "-windows-x86_64"),
+        })
+    )
