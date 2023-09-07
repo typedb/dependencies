@@ -191,6 +191,10 @@ def swig_java(name, lib, shared_lib_name=None, maven_coordinates=None, **kwargs)
             deps = [lib, swig_wrapper_name],
             srcs = [swig_wrapper_name],
             linkshared = True,
+            linkopts = select({
+                "@vaticle_dependencies//util/platform:is_windows": ["ntdll.lib"],
+                "//conditions:default": [],
+            }),
         )
 
     swig_cc_binary(shared_lib_name + ".dylib")
