@@ -85,7 +85,10 @@ def _swig_java_wrapper_impl(ctx):
         headers = depset(swig_headers, transitive = [lib_compilation_context.headers]),
         defines = lib_compilation_context.defines,
         framework_includes = lib_compilation_context.framework_includes,
-        includes = lib_compilation_context.includes,
+        includes = depset(
+            [h.dirname for h in ctx.attr.lib[CcInfo].compilation_context.headers.to_list()],
+            transitive = [lib_compilation_context.includes],
+        ),
         local_defines = lib_compilation_context.local_defines,
         quote_includes = lib_compilation_context.quote_includes,
         system_includes = depset(
