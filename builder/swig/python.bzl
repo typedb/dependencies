@@ -73,9 +73,15 @@ def _swig_python_wrapper_impl(ctx):
         )
     )
 
-    linking_context = cc_common.create_linking_context(
-        linker_inputs = ctx.attr.lib[CcInfo].linking_context.linker_inputs,
-    )
+    if ctx.attr.libpython:
+        linking_context = cc_common.create_linking_context(
+            linker_inputs = depset([], transitive = [ctx.attr.libpython[CcInfo].linking_context.linker_inputs, ctx.attr.lib[CcInfo].linking_context.linker_inputs]),
+        )
+    else:
+        linking_context = cc_common.create_linking_context(
+            linker_inputs = ctx.attr.lib[CcInfo].linking_context.linker_inputs,
+        )
+
 
     return [
         DefaultInfo(files = depset([wrap_src, wrap_py])),
@@ -122,7 +128,7 @@ swig_python_wrapper = rule(
             default = Label("@python39//:python_headers"),
         ),
         "libpython": attr.label(
-            default = Label("@python39//:libpython"),
+            doc = "libpython for linux and windows",
         ),
         "_swig": attr.label(
             default = Label("@swig//:swig"),
