@@ -74,7 +74,7 @@ def _swig_python_wrapper_impl(ctx):
     )
 
     linking_context = cc_common.create_linking_context(
-        linker_inputs = depset([], transitive = [ctx.attr.libpython[CcInfo].linking_context.linker_inputs, ctx.attr.lib[CcInfo].linking_context.linker_inputs]),
+        linker_inputs = ctx.attr.lib[CcInfo].linking_context.linker_inputs,
     )
 
     return [
@@ -157,6 +157,7 @@ def swig_python(*, name, lib, shared_lib_name=None, python_headers, libpython, l
             srcs = [swig_wrapper_name],
             linkshared = True,
             linkopts = linkopts,
+            copts = ["-undefined", "dynamic_lookup"],
         )
 
     swig_cc_binary(shared_lib_name)
