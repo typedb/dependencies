@@ -163,7 +163,10 @@ def swig_python(*, name, lib, shared_lib_name=None, python_headers, libpython, l
             srcs = [swig_wrapper_name],
             linkshared = True,
             linkopts = linkopts,
-            copts = ["-undefined", "dynamic_lookup"],
+            copts = select({
+                "@vaticle_dependencies//util/platform:is_mac": ["-undefined", "dynamic_lookup"],
+                "//conditions:default": [],
+            }),
         )
 
     swig_cc_binary(shared_lib_name)
