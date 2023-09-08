@@ -181,7 +181,7 @@ def swig_python(*, name, lib, shared_lib_name=None, python_headers, libpython, *
     native.py_library(name = name, srcs = [swig_wrapper_name], data = [shared_lib_name])
 
 
-def _dyn_lib_impl(ctx):
+def _dyn_lib_copy_impl(ctx):
     output_file = ctx.actions.declare_file(ctx.attr.out)
     _copy_to_bin(ctx, ctx.files.src[0], output_file)
     return [
@@ -189,8 +189,8 @@ def _dyn_lib_impl(ctx):
     ]
 
 
-dyn_lib_wrapper = rule(
-    implementation = _dyn_lib_impl,
+dyn_lib_copy_wrapper = rule(
+    implementation = _dyn_lib_copy_impl,
     attrs = {
         "out": attr.string(
             doc = "Output file name without extension",
@@ -203,9 +203,10 @@ dyn_lib_wrapper = rule(
 )
 
 
-def dyn_lib(name, out, src, visibility, **kwargs):
-    dyn_lib_wrapper(
+def dyn_lib_copy(name, out, src, visibility, **kwargs):
+    dyn_lib_copy_wrapper(
         name = name,
+#        out = "$(location " + src + ")",
         out = select({
             "@vaticle_dependencies//util/platform:is_windows": out + ".pyd",
             "//conditions:default": out + ".so",
