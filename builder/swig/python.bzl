@@ -125,7 +125,8 @@ swig_python_wrapper = rule(
             doc = "Extra arguments to be passed to SWIG",
         ),
         "python_headers": attr.label(
-            default = Label("@python39//:python_headers"),
+            doc = "Python headers",
+            mandatory = True,
         ),
         "libpython": attr.label(
             doc = "libpython for linux and windows",
@@ -140,7 +141,7 @@ swig_python_wrapper = rule(
 )
 
 
-def swig_python(*, name, lib, shared_lib_name=None, python_headers, libpython, linkopts=(), **kwargs):
+def swig_python(*, name, lib, shared_lib_name=None, python_headers, libpython, **kwargs):
     swig_wrapper_name = name + "__swig"
     if not shared_lib_name:
         shared_lib_name = "_" + name
@@ -151,7 +152,11 @@ def swig_python(*, name, lib, shared_lib_name=None, python_headers, libpython, l
         shared_lib_name = shared_lib_name,
         lib = lib,
         python_headers = python_headers,
-        libpython = libpython,
+        libpython = select({
+            "@vaticle_dependencies//util/platform:is_linux": libpython,
+            "@vaticle_dependencies//util/platform:is_mac": None,
+            "@vaticle_dependencies//util/platform:is_windows": libpython,
+        }),
         **kwargs,
     )
 
@@ -162,7 +167,10 @@ def swig_python(*, name, lib, shared_lib_name=None, python_headers, libpython, l
             deps = [lib, swig_wrapper_name],
             srcs = [swig_wrapper_name],
             linkshared = True,
-            linkopts = linkopts,
+            linkopts = select({
+                "@vaticle_dependencies//util/platform:is_windows": ["ntdll.lib"],
+                "//conditions:default": [],
+            }),
             copts = select({
                 "@vaticle_dependencies//util/platform:is_mac": ["-undefined", "dynamic_lookup"],
                 "//conditions:default": [],
