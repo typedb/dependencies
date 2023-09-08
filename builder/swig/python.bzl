@@ -25,7 +25,7 @@ def _copy_to_bin(ctx, src, dst):
 def _swig_python_wrapper_impl(ctx):
     module_name = getattr(ctx.attr, "class_name", ctx.attr.name)
     shared_lib_name = getattr(ctx.attr, "shared_lib_name", "_" + ctx.attr.name)
-    interface_name = getattr(ctx.attr, "interface_name", getattr(ctx.attr, "shared_lib_name", "_" + ctx.attr.name))
+    interface_name = getattr(ctx.attr, "interface_name", shared_lib_name)
 
     args = ctx.attr.extra_args + [
         "-python",
