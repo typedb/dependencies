@@ -182,7 +182,7 @@ def swig_java(name, lib, shared_lib_name=None, maven_coordinates=None, **kwargs)
     )
 
     if not shared_lib_name:
-        shared_lib_name = "lib" + name
+        shared_lib_name = name
 
     def swig_cc_binary(shared_lib_filename):
         # name doesn't accept select() either
@@ -197,16 +197,16 @@ def swig_java(name, lib, shared_lib_name=None, maven_coordinates=None, **kwargs)
             }),
         )
 
-    swig_cc_binary(shared_lib_name + ".dylib")
-    swig_cc_binary(shared_lib_name + ".so")
-    swig_cc_binary(shared_lib_name + ".lib")
+    swig_cc_binary("lib" + shared_lib_name + ".dylib")
+    swig_cc_binary("lib" + shared_lib_name + ".so")
+    swig_cc_binary(shared_lib_name + ".dll")
 
     native.alias(
-        name = shared_lib_name,
+        name = "lib" + shared_lib_name,
         actual = select({
-            "@vaticle_dependencies//util/platform:is_mac": (shared_lib_name + ".dylib"),
-            "@vaticle_dependencies//util/platform:is_linux": (shared_lib_name + ".so"),
-            "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".lib"),
+            "@vaticle_dependencies//util/platform:is_mac": ("lib" + shared_lib_name + ".dylib"),
+            "@vaticle_dependencies//util/platform:is_linux": ("lib" + shared_lib_name + ".so"),
+            "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".dll"),
         })
     )
 
@@ -214,7 +214,7 @@ def swig_java(name, lib, shared_lib_name=None, maven_coordinates=None, **kwargs)
         native.java_library(
             name = name + "-" + platform,
             srcs = [swig_wrapper_name],
-            resources = [shared_lib_name],
+            resources = ["lib" + shared_lib_name],
             tags = ["maven_coordinates=" + maven_coordinates.replace("{platform}", platform)],
         )
 
