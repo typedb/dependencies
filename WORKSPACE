@@ -27,8 +27,7 @@ rust_deps()
 
 load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
 rules_rust_dependencies()
-load("@rules_rust//rust:defs.bzl", "rust_common")
-rust_register_toolchains(edition = "2021", rust_analyzer_version = rust_common.default_version)
+rust_register_toolchains(edition = "2021")
 
 # Load //builder/python
 load("//builder/python:deps.bzl", python_deps = "deps")
