@@ -78,10 +78,7 @@ def _swig_python_wrapper_impl(ctx):
             linker_inputs = depset([], transitive = [ctx.attr.libpython[CcInfo].linking_context.linker_inputs, ctx.attr.lib[CcInfo].linking_context.linker_inputs]),
         )
     else:
-        linking_context = cc_common.create_linking_context(
-            linker_inputs = ctx.attr.lib[CcInfo].linking_context.linker_inputs,
-        )
-
+        linking_context = ctx.attr.lib[CcInfo].linking_context
 
     return [
         DefaultInfo(files = depset([wrap_src, wrap_py])),
@@ -125,11 +122,11 @@ swig_python_wrapper = rule(
             doc = "Extra arguments to be passed to SWIG",
         ),
         "python_headers": attr.label(
-            doc = "Python headers",
+            doc = "Python C headers",
             mandatory = True,
         ),
         "libpython": attr.label(
-            doc = "libpython for linux and windows",
+            doc = "libpython (only required for Linux and Windows builds)",
         ),
         "_swig": attr.label(
             default = Label("@swig//:swig"),
@@ -160,28 +157,25 @@ def swig_python(*, name, lib, shared_lib_name=None, python_headers, libpython, *
         **kwargs,
     )
 
-    def swig_cc_binary(shared_lib_filename):
-        # name doesn't accept select()
-        native.cc_binary(
-            name = shared_lib_filename,
-            deps = [lib, swig_wrapper_name],
-            srcs = [swig_wrapper_name],
-            linkshared = True,
-            linkopts = select({
-                "@vaticle_dependencies//util/platform:is_windows": ["ntdll.lib"],
-                "//conditions:default": [],
-            }),
-            copts = select({
-                "@vaticle_dependencies//util/platform:is_mac": ["-undefined", "dynamic_lookup"],
-                "//conditions:default": [],
-            }),
-        )
+    native.cc_binary(
+        name = shared_lib_name,
+        deps = [lib, swig_wrapper_name],
+        srcs = [swig_wrapper_name],
+        linkshared = True,
+        linkopts = select({
+            "@vaticle_dependencies//util/platform:is_windows": ["ntdll.lib"],
+            "//conditions:default": [],
+        }),
+        copts = select({
+            "@vaticle_dependencies//util/platform:is_mac": ["-undefined", "dynamic_lookup"],
+            "//conditions:default": [],
+        }),
+    )
 
-    swig_cc_binary(shared_lib_name)
     native.py_library(name = name, srcs = [swig_wrapper_name], data = [shared_lib_name])
 
 
-def _dyn_lib_copy_impl(ctx):
+def _py_native_lib_rename_impl(ctx):
     output_file = ctx.actions.declare_file(ctx.attr.out)
     _copy_to_bin(ctx, ctx.files.src[0], output_file)
     return [
@@ -189,8 +183,8 @@ def _dyn_lib_copy_impl(ctx):
     ]
 
 
-dyn_lib_copy_wrapper = rule(
-    implementation = _dyn_lib_copy_impl,
+_py_native_lib_rename_wrapper = rule(
+    implementation = _py_native_lib_rename_impl,
     attrs = {
         "out": attr.string(
             doc = "Output file name without extension",
@@ -203,10 +197,9 @@ dyn_lib_copy_wrapper = rule(
 )
 
 
-def dyn_lib_copy(name, out, src, visibility, **kwargs):
-    dyn_lib_copy_wrapper(
+def py_native_lib_rename(name, out, src, visibility, **kwargs):
+    _py_native_lib_rename_wrapper(
         name = name,
-#        out = "$(location " + src + ")",
         out = select({
             "@vaticle_dependencies//util/platform:is_windows": out + ".pyd",
             "//conditions:default": out + ".so",
