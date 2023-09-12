@@ -23,14 +23,13 @@ def _copy_to_bin(ctx, src, dst):
     )
 
 def _swig_python_wrapper_impl(ctx):
-    module_name = getattr(ctx.attr, "class_name", ctx.attr.name)
+    module_name = getattr(ctx.attr, "module_name", ctx.attr.name)
     shared_lib_name = getattr(ctx.attr, "shared_lib_name", "_" + ctx.attr.name)
-    interface_name = getattr(ctx.attr, "interface_name", shared_lib_name)
 
     args = ctx.attr.extra_args + [
         "-python",
         "-module", module_name,
-        "-interface", interface_name,
+        "-interface", shared_lib_name,
         ctx.file.interface.path,
     ]
 
@@ -97,14 +96,11 @@ swig_python_wrapper = rule(
             providers = [CcInfo],
             mandatory = True,
         ),
-        "class_name": attr.string(
+        "module_name": attr.string(
             doc = "Optional override for the python class name (default: same as target name)",
         ),
         "shared_lib_name": attr.string(
-            doc = "Optional override for the dynamic library name (default: '_' + target name)",
-        ),
-        "interface_name": attr.string(
-            doc = "Optional override for the dynamic library name used in python library (default: shared_lib_name)",
+            doc = "Optional override for the dynamic library name used in python library (default: '_' + target name)",
         ),
         "interface": attr.label(
             doc = "Optional SWIG interface (.i) file",
@@ -144,8 +140,8 @@ def swig_python(*, name, lib, shared_lib_name=None, python_headers, libpython, *
         shared_lib_name = "_" + name
 
     swig_python_wrapper(
-        class_name = name,
         name = swig_wrapper_name,
+        module_name = name,
         shared_lib_name = shared_lib_name,
         lib = lib,
         python_headers = python_headers,
