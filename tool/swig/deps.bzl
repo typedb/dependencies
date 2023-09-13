@@ -38,6 +38,7 @@ genrule(
 #define PACKAGE_VERSION "4.1.1"
 #define SWIG_CXX "unknown"
 #define SWIG_LIB "external/swig/Lib"
+#define SWIG_LIB_WIN_UNIX SWIG_LIB
 #define SWIG_PLATFORM "unknown"
 EOF
     \""",

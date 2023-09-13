@@ -23,13 +23,13 @@ def _copy_to_bin(ctx, src, dst):
     )
 
 def _swig_python_wrapper_impl(ctx):
-    module_name = getattr(ctx.attr, "class_name", ctx.attr.name)
-    interface_name = getattr(ctx.attr, "shared_lib_name", "_" + ctx.attr.name)
+    module_name = getattr(ctx.attr, "module_name", ctx.attr.name)
+    import_name = getattr(ctx.attr, "import_name", "_" + ctx.attr.name)
 
     args = ctx.attr.extra_args + [
         "-python",
         "-module", module_name,
-        "-interface", interface_name,
+        "-interface", import_name,
         ctx.file.interface.path,
     ]
 
@@ -60,23 +60,30 @@ def _swig_python_wrapper_impl(ctx):
 
     lib_compilation_context = ctx.attr.lib[CcInfo].compilation_context
     compilation_context = cc_common.create_compilation_context(
-        headers = depset(ctx.attr._python_header[CcInfo].compilation_context.headers.to_list() + swig_headers, transitive = [lib_compilation_context.headers]),
+        headers = depset(ctx.attr.python_headers[CcInfo].compilation_context.headers.to_list() + swig_headers, transitive = [lib_compilation_context.headers]),
         defines = lib_compilation_context.defines,
         framework_includes = lib_compilation_context.framework_includes,
         includes = lib_compilation_context.includes,
         local_defines = lib_compilation_context.local_defines,
         quote_includes = lib_compilation_context.quote_includes,
         system_includes = depset(
-            [file.dirname for file in ctx.attr._python_header[CcInfo].compilation_context.headers.to_list()],
-            transitive = [lib_compilation_context.system_includes],
+            [file.dirname for file in ctx.attr.python_headers[CcInfo].compilation_context.headers.to_list() + lib_compilation_context.headers.to_list()],
+            transitive = [lib_compilation_context.system_includes, lib_compilation_context.includes],
         )
     )
+
+    if ctx.attr.libpython:
+        linking_context = cc_common.create_linking_context(
+            linker_inputs = depset([], transitive = [ctx.attr.libpython[CcInfo].linking_context.linker_inputs, ctx.attr.lib[CcInfo].linking_context.linker_inputs]),
+        )
+    else:
+        linking_context = ctx.attr.lib[CcInfo].linking_context
 
     return [
         DefaultInfo(files = depset([wrap_src, wrap_py])),
         CcInfo(
             compilation_context = compilation_context,
-            linking_context = ctx.attr.lib[CcInfo].linking_context,
+            linking_context = linking_context,
         ),
     ]
 
@@ -89,11 +96,11 @@ swig_python_wrapper = rule(
             providers = [CcInfo],
             mandatory = True,
         ),
-        "class_name": attr.string(
-            doc = "Optional override for the python class name (default: same as target name)",
+        "module_name": attr.string(
+            doc = "Optional override for the python module name (default: same as target name)",
         ),
-        "shared_lib_name": attr.string(
-            doc = "Optional override for the dynamic library name (default: '_' + target name)",
+        "import_name": attr.string(
+            doc = "Optional override for the dynamic library name used in python library (default: '_' + target name)",
         ),
         "interface": attr.label(
             doc = "Optional SWIG interface (.i) file",
@@ -110,8 +117,12 @@ swig_python_wrapper = rule(
         "extra_args": attr.string_list(
             doc = "Extra arguments to be passed to SWIG",
         ),
-        "_python_header": attr.label(
-            default = Label("@python39//:python_headers"),
+        "python_headers": attr.label(
+            doc = "Python C headers",
+            mandatory = True,
+        ),
+        "libpython": attr.label(
+            doc = "libpython (only required for Linux and Windows builds)",
         ),
         "_swig": attr.label(
             default = Label("@swig//:swig"),
@@ -123,38 +134,78 @@ swig_python_wrapper = rule(
 )
 
 
-def swig_python(name, lib, shared_lib_name=None, **kwargs):
+def swig_python(*, name, lib, shared_lib_name=None, import_name=None, python_headers, libpython, **kwargs):
     swig_wrapper_name = name + "__swig"
     if not shared_lib_name:
         shared_lib_name = "_" + name
+    if not import_name:
+        import_name = shared_lib_name
 
     swig_python_wrapper(
-        class_name = name,
+        module_name = name,
         name = swig_wrapper_name,
-        shared_lib_name = shared_lib_name,
+        import_name = import_name,
         lib = lib,
+        python_headers = python_headers,
+        libpython = select({
+            "@vaticle_dependencies//util/platform:is_linux": libpython,
+            "@vaticle_dependencies//util/platform:is_mac": None,
+            "@vaticle_dependencies//util/platform:is_windows": libpython,
+        }),
         **kwargs,
     )
 
-    def swig_cc_binary(shared_lib_filename):
-        # name doesn't accept select()
-        native.cc_binary(
-            name = shared_lib_filename,
-            deps = [lib, swig_wrapper_name],
-            srcs = [swig_wrapper_name],
-            linkshared = True,
-        )
-
-    swig_cc_binary(shared_lib_name + ".so")
-    swig_cc_binary(shared_lib_name + ".lib")
-
-    native.alias(
+    native.cc_binary(
         name = shared_lib_name,
-        actual = select({
-            "@vaticle_dependencies//util/platform:is_mac": (shared_lib_name + ".so"),
-            "@vaticle_dependencies//util/platform:is_linux": (shared_lib_name + ".so"),
-            "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".lib"),
-        })
+        deps = [lib, swig_wrapper_name],
+        srcs = [swig_wrapper_name],
+        linkshared = True,
+        linkopts = select({
+            "@vaticle_dependencies//util/platform:is_windows": ["ntdll.lib"],
+            "//conditions:default": [],
+        }),
+        copts = select({
+            "@vaticle_dependencies//util/platform:is_mac": ["-undefined", "dynamic_lookup"],
+            "//conditions:default": [],
+        }),
     )
 
     native.py_library(name = name, srcs = [swig_wrapper_name], data = [shared_lib_name])
+
+
+def _py_native_lib_rename_impl(ctx):
+    output_file = ctx.actions.declare_file(ctx.attr.out)
+    _copy_to_bin(ctx, ctx.files.src[0], output_file)
+    return [
+        DefaultInfo(files = depset([output_file])),
+    ]
+
+
+_py_native_lib_rename_wrapper = rule(
+    implementation = _py_native_lib_rename_impl,
+    attrs = {
+        "out": attr.string(
+            doc = "Output file name without extension",
+            mandatory = True,
+        ),
+        "src": attr.label(
+            mandatory = True,
+        ),
+    }
+)
+
+
+# The generated dynamic library has to be copied into the output directory in order to be accessible by other rules.
+# We also choose the correct extension for the file. We need .pyd for Windows to be able to import from it.
+# (https://docs.python.org/3/faq/windows.html#is-a-pyd-file-the-same-as-a-dll)
+def py_native_lib_rename(name, out, src, visibility, **kwargs):
+    _py_native_lib_rename_wrapper(
+        name = name,
+        out = select({
+            "@vaticle_dependencies//util/platform:is_windows": out + ".pyd",
+            "//conditions:default": out + ".so",
+        }),
+        src = src,
+        visibility = visibility,
+        **kwargs,
+    )
