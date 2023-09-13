@@ -195,6 +195,9 @@ _py_native_lib_rename_wrapper = rule(
 )
 
 
+# The generated dynamic library has to be copied into the output directory in order to be accessible by other rules.
+# We also choose the correct extension for the file. We need .pyd for Windows to be able to import from it.
+# (https://docs.python.org/3/faq/windows.html#is-a-pyd-file-the-same-as-a-dll)
 def py_native_lib_rename(name, out, src, visibility, **kwargs):
     _py_native_lib_rename_wrapper(
         name = name,
