@@ -79,9 +79,9 @@ def _rust_cbindgen_impl(ctx):
     env = {
         "CARGO": rust_toolchain.cargo.path,
         "CARGO_HOME": cargo_home.path,
-        "HOST": rust_toolchain.exec_triple,
+        "HOST": rust_toolchain.exec_triple.str,
         "RUSTC": rust_toolchain.rustc.path,
-        "TARGET": rust_toolchain.target_triple,
+        "TARGET": rust_toolchain.target_triple.str,
     }
 
     tools = depset([
