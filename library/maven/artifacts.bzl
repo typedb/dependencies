@@ -295,6 +295,7 @@ artifacts = {
     "org.jetbrains.skiko:skiko-awt-runtime-macos-arm64": "0.7.34",
     "org.jetbrains.skiko:skiko-awt-runtime-macos-x64": "0.7.34",
     "org.jetbrains.skiko:skiko-awt-runtime-windows-x64": "0.7.34",
+    "org.jsoup:jsoup": "1.16.1",
     "org.kohsuke:github-api": "1.101",
     "org.mockito:mockito-core": "2.6.4",
     "org.openjdk.jmh:jmh-core": "1.23",

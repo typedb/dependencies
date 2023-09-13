@@ -82,6 +82,17 @@ sonarcloud_dependencies()
 load("//tool/swig:deps.bzl", swig_deps = "deps")
 swig_deps()
 
+# Load //tool/doc
+load("//tool/doc:deps.bzl", doc_deps = "deps")
+doc_deps()
+load("@vaticle_dependencies_tool_doc//:requirements.bzl", install_doc_deps = "install_deps")
+install_doc_deps()
+
+load("//tool/doc:java_deps.bzl", java_doc_deps = "deps")
+java_doc_deps()
+load("@google_bazel_common//:workspace_defs.bzl", "google_common_workspace_rules")
+google_common_workspace_rules()
+
 # Load @vaticle_bazel_distribution
 load("//distribution:deps.bzl", "vaticle_bazel_distribution")
 vaticle_bazel_distribution()
@@ -104,6 +115,12 @@ load("//library/crates:crates.bzl", "fetch_crates")
 fetch_crates()
 load("@crates//:defs.bzl", "crate_repositories")
 crate_repositories()
+
+## Load rules_sphinx
+#
+#load("//tool/doc:deps.bzl", "rules_sphinx_direct_deps", "rules_sphinx_indirect_deps", "sphinx_html")
+#rules_sphinx_direct_deps()
+#rules_sphinx_indirect_deps()
 
 ###############################################
 # Create @vaticle_typedb_workspace_refs #
