@@ -10,8 +10,8 @@ WINDOWS = [
     "@platforms//os:windows",
 ]
 
-ARM64 = [
-    "@platforms//cpu:arm64",
+AARCH64 = [
+    "@platforms//cpu:aarch64",
 ]
 
 X86_64 = [
@@ -35,8 +35,8 @@ config_setting(
 )
 
 config_setting(
-    name = "is_arm64",
-    constraint_values = ARM64,
+    name = "is_aarch64",
+    constraint_values = AARCH64,
 )
 
 config_setting(
@@ -45,8 +45,8 @@ config_setting(
 )
 
 config_setting(
-    name = "is_linux_arm64",
-    constraint_values = LINUX + ARM64,
+    name = "is_linux_aarch64",
+    constraint_values = LINUX + AARCH64,
 )
 
 config_setting(
@@ -55,8 +55,8 @@ config_setting(
 )
 
 config_setting(
-    name = "is_mac_arm64",
-    constraint_values = MAC + ARM64,
+    name = "is_mac_aarch64",
+    constraint_values = MAC + AARCH64,
 )
 
 config_setting(
@@ -70,8 +70,8 @@ config_setting(
 )
 
 platform(
-    name = "linux_arm64",
-    constraint_values = LINUX + ARM64,
+    name = "linux_aarch64",
+    constraint_values = LINUX + AARCH64,
 )
 
 platform(
@@ -80,8 +80,8 @@ platform(
 )
 
 platform(
-    name = "mac_arm64",
-    constraint_values = MAC + ARM64,
+    name = "mac_aarch64",
+    constraint_values = MAC + AARCH64,
 )
 
 platform(
