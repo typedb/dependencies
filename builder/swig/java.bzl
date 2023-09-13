@@ -85,7 +85,10 @@ def _swig_java_wrapper_impl(ctx):
         headers = depset(swig_headers, transitive = [lib_compilation_context.headers]),
         defines = lib_compilation_context.defines,
         framework_includes = lib_compilation_context.framework_includes,
-        includes = lib_compilation_context.includes,
+        includes = depset(
+            [h.dirname for h in ctx.attr.lib[CcInfo].compilation_context.headers.to_list()],
+            transitive = [lib_compilation_context.includes],
+        ),
         local_defines = lib_compilation_context.local_defines,
         quote_includes = lib_compilation_context.quote_includes,
         system_includes = depset(
@@ -169,7 +172,7 @@ def swig_java_wrapper(**kwargs):
     )
 
 
-def swig_java(name, lib, shared_lib_name=None, **kwargs):
+def swig_java(name, lib, shared_lib_name=None, tags=[], **kwargs):
     swig_wrapper_name = name + "__swig"
     swig_java_wrapper(
         name = swig_wrapper_name,
@@ -179,7 +182,7 @@ def swig_java(name, lib, shared_lib_name=None, **kwargs):
     )
 
     if not shared_lib_name:
-        shared_lib_name = "lib" + name
+        shared_lib_name = name
 
     def swig_cc_binary(shared_lib_filename):
         # name doesn't accept select() either
@@ -188,21 +191,28 @@ def swig_java(name, lib, shared_lib_name=None, **kwargs):
             deps = [lib, swig_wrapper_name],
             srcs = [swig_wrapper_name],
             linkshared = True,
+            linkopts = select({
+                "@vaticle_dependencies//util/platform:is_windows": ["ntdll.lib"],
+                "//conditions:default": [],
+            }),
         )
 
-    select({
-        "@vaticle_dependencies//util/platform:is_mac": swig_cc_binary(shared_lib_name + ".dylib"),
-        "@vaticle_dependencies//util/platform:is_linux": swig_cc_binary(shared_lib_name + ".so"),
-        "@vaticle_dependencies//util/platform:is_windows": swig_cc_binary(shared_lib_name + ".lib"),
-    })
+    swig_cc_binary("lib" + shared_lib_name + ".dylib")
+    swig_cc_binary("lib" + shared_lib_name + ".so")
+    swig_cc_binary(shared_lib_name + ".dll")
 
     native.alias(
-        name = shared_lib_name,
+        name = "lib" + shared_lib_name,
         actual = select({
-            "@vaticle_dependencies//util/platform:is_mac": (shared_lib_name + ".dylib"),
-            "@vaticle_dependencies//util/platform:is_linux": (shared_lib_name + ".so"),
-            "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".lib"),
+            "@vaticle_dependencies//util/platform:is_mac": ("lib" + shared_lib_name + ".dylib"),
+            "@vaticle_dependencies//util/platform:is_linux": ("lib" + shared_lib_name + ".so"),
+            "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".dll"),
         })
     )
 
-    native.java_library(name = name, srcs = [swig_wrapper_name], deps = [shared_lib_name])
+    native.java_library(
+        name = name,
+        srcs = [swig_wrapper_name],
+        resources = ["lib" + shared_lib_name],
+        tags = tags,
+    )
