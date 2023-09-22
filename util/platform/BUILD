@@ -1,95 +1,95 @@
-LINUX = [
-    "@platforms//os:linux",
-]
+#
+# Copyright (C) 2022 Vaticle
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as
+# published by the Free Software Foundation, either version 3 of the
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+#
 
-MAC = [
-    "@platforms//os:osx",
-]
-
-WINDOWS = [
-    "@platforms//os:windows",
-]
-
-AARCH64 = [
-    "@platforms//cpu:aarch64",
-]
-
-X86_64 = [
-    "@platforms//cpu:x86_64",
-]
-
+load(":constraints.bzl", "constraint_aarch64", "constraint_x86_64", "constraint_linux", "constraint_mac", "constraint_windows",
+     "constraint_linux_aarch64", "constraint_linux_x86_64", "constraint_mac_aarch64", "constraint_mac_x86_64",
+      "constraint_win_aarch64")
 
 config_setting(
     name = "is_linux",
-    constraint_values = LINUX,
+    constraint_values = constraint_linux,
 )
 
 config_setting(
     name = "is_mac",
-    constraint_values = MAC,
+    constraint_values = constraint_mac,
 )
 
 config_setting(
     name = "is_windows",
-    constraint_values = WINDOWS,
+    constraint_values = constraint_windows,
 )
 
 config_setting(
     name = "is_aarch64",
-    constraint_values = AARCH64,
+    constraint_values = constraint_aarch64,
 )
 
 config_setting(
     name = "is_x86_64",
-    constraint_values = X86_64,
+    constraint_values = constraint_x86_64,
 )
 
 config_setting(
     name = "is_linux_aarch64",
-    constraint_values = LINUX + AARCH64,
+    constraint_values = constraint_linux_aarch64,
 )
 
 config_setting(
     name = "is_linux_x86_64",
-    constraint_values = LINUX + X86_64,
+    constraint_values = constraint_linux_x86_64,
 )
 
 config_setting(
     name = "is_mac_aarch64",
-    constraint_values = MAC + AARCH64,
+    constraint_values = constraint_mac_aarch64,
 )
 
 config_setting(
     name = "is_mac_x86_64",
-    constraint_values = MAC + X86_64,
+    constraint_values = constraint_mac_x86_64,
 )
 
 config_setting(
     name = "is_win_x86_64",
-    constraint_values = WINDOWS + X86_64,
+    constraint_values = constraint_win_aarch64,
 )
 
 platform(
     name = "linux_aarch64",
-    constraint_values = LINUX + AARCH64,
+    constraint_values = constraint_linux_aarch64,
 )
 
 platform(
     name = "linux_x86_64",
-    constraint_values = LINUX + X86_64,
+    constraint_values = constraint_linux_x86_64,
 )
 
 platform(
     name = "mac_aarch64",
-    constraint_values = MAC + AARCH64,
+    constraint_values = constraint_mac_aarch64,
 )
 
 platform(
     name = "mac_x86_64",
-    constraint_values = MAC + X86_64,
+    constraint_values = constraint_mac_x86_64,
 )
 
 platform(
     name = "win_x86_64",
-    constraint_values = WINDOWS + X86_64,
+    constraint_values = constraint_win_aarch64,
 )
