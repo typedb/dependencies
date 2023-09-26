@@ -17,7 +17,7 @@
 
 load(":constraints.bzl", "constraint_aarch64", "constraint_x86_64", "constraint_linux", "constraint_mac", "constraint_windows",
      "constraint_linux_aarch64", "constraint_linux_x86_64", "constraint_mac_aarch64", "constraint_mac_x86_64",
-      "constraint_win_aarch64")
+      "constraint_win_x86_64")
 
 config_setting(
     name = "is_linux",
@@ -66,7 +66,7 @@ config_setting(
 
 config_setting(
     name = "is_win_x86_64",
-    constraint_values = constraint_win_aarch64,
+    constraint_values = constraint_win_x86_64,
 )
 
 platform(
@@ -91,5 +91,5 @@ platform(
 
 platform(
     name = "win_x86_64",
-    constraint_values = constraint_win_aarch64,
+    constraint_values = constraint_win_x86_64,
 )
