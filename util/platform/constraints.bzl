@@ -39,4 +39,4 @@ constraint_linux_x86_64 = constraint_linux + constraint_x86_64
 constraint_linux_aarch64 = constraint_linux + constraint_aarch64
 constraint_mac_x86_64 = constraint_mac + constraint_x86_64
 constraint_mac_aarch64 = constraint_mac + constraint_aarch64
-constraint_win_aarch64 = constraint_windows + constraint_aarch64
+constraint_win_x86_64 = constraint_windows + constraint_x86_64
