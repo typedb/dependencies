@@ -15,9 +15,8 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load(":constraints.bzl", "constraint_aarch64", "constraint_x86_64", "constraint_linux", "constraint_mac", "constraint_windows",
-     "constraint_linux_aarch64", "constraint_linux_x86_64", "constraint_mac_aarch64", "constraint_mac_x86_64",
-      "constraint_win_x86_64")
+load(":constraints.bzl", "constraint_arm64", "constraint_x86_64", "constraint_linux", "constraint_mac", "constraint_windows",
+     "constraint_linux_arm64", "constraint_linux_x86_64", "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_arm64")
 
 config_setting(
     name = "is_linux",
@@ -35,8 +34,8 @@ config_setting(
 )
 
 config_setting(
-    name = "is_aarch64",
-    constraint_values = constraint_aarch64,
+    name = "is_arm64",
+    constraint_values = constraint_arm64,
 )
 
 config_setting(
@@ -45,8 +44,8 @@ config_setting(
 )
 
 config_setting(
-    name = "is_linux_aarch64",
-    constraint_values = constraint_linux_aarch64,
+    name = "is_linux_arm64",
+    constraint_values = constraint_linux_arm64,
 )
 
 config_setting(
@@ -55,8 +54,8 @@ config_setting(
 )
 
 config_setting(
-    name = "is_mac_aarch64",
-    constraint_values = constraint_mac_aarch64,
+    name = "is_mac_arm64",
+    constraint_values = constraint_mac_arm64,
 )
 
 config_setting(
@@ -70,8 +69,8 @@ config_setting(
 )
 
 platform(
-    name = "linux_aarch64",
-    constraint_values = constraint_linux_aarch64,
+    name = "linux_arm64",
+    constraint_values = constraint_linux_arm64,
 )
 
 platform(
@@ -80,8 +79,8 @@ platform(
 )
 
 platform(
-    name = "mac_aarch64",
-    constraint_values = constraint_mac_aarch64,
+    name = "mac_arm64",
+    constraint_values = constraint_mac_arm64,
 )
 
 platform(
