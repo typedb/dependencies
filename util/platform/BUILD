@@ -16,7 +16,7 @@
 #
 
 load(":constraints.bzl", "constraint_arm64", "constraint_x86_64", "constraint_linux", "constraint_mac", "constraint_windows",
-     "constraint_linux_arm64", "constraint_linux_x86_64", "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_arm64")
+     "constraint_linux_arm64", "constraint_linux_x86_64", "constraint_mac_arm64", "constraint_mac_x86_64", "constraint_win_x86_64")
 
 config_setting(
     name = "is_linux",
