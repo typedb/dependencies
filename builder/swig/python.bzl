@@ -148,9 +148,9 @@ def swig_python(*, name, lib, shared_lib_name=None, import_name=None, python_hea
         lib = lib,
         python_headers = python_headers,
         libpython = select({
-            "@vaticle_dependencies//util/platform:is_linux": libpython,
-            "@vaticle_dependencies//util/platform:is_mac": None,
-            "@vaticle_dependencies//util/platform:is_windows": libpython,
+            "@vaticle_bazel_distribution//platform:is_linux": libpython,
+            "@vaticle_bazel_distribution//platform:is_mac": None,
+            "@vaticle_bazel_distribution//platform:is_windows": libpython,
         }),
         **kwargs,
     )
@@ -161,11 +161,11 @@ def swig_python(*, name, lib, shared_lib_name=None, import_name=None, python_hea
         srcs = [swig_wrapper_name],
         linkshared = True,
         linkopts = select({
-            "@vaticle_dependencies//util/platform:is_windows": ["ntdll.lib"],
+            "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib"],
             "//conditions:default": [],
         }),
         copts = select({
-            "@vaticle_dependencies//util/platform:is_mac": ["-undefined", "dynamic_lookup"],
+            "@vaticle_bazel_distribution//platform:is_mac": ["-undefined", "dynamic_lookup"],
             "//conditions:default": [],
         }),
     )
@@ -202,7 +202,7 @@ def py_native_lib_rename(name, out, src, visibility, **kwargs):
     _py_native_lib_rename_wrapper(
         name = name,
         out = select({
-            "@vaticle_dependencies//util/platform:is_windows": out + ".pyd",
+            "@vaticle_bazel_distribution//platform:is_windows": out + ".pyd",
             "//conditions:default": out + ".so",
         }),
         src = src,

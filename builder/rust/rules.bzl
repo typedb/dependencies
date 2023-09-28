@@ -36,9 +36,9 @@ def rust_cxx_bridge(name, src, deps = []):
             "$(location %s.cc)" % src,
         ],
         tool = select({
-            "@vaticle_dependencies//util/platform:is_mac": "@cxxbridge_mac//file",
-            "@vaticle_dependencies//util/platform:is_linux": "@cxxbridge_linux//file",
-            "@vaticle_dependencies//util/platform:is_windows": "@cxxbridge_windows//file",
+            "@vaticle_bazel_distribution//platform:is_mac": "@cxxbridge_mac//file",
+            "@vaticle_bazel_distribution//platform:is_linux": "@cxxbridge_linux//file",
+            "@vaticle_bazel_distribution//platform:is_windows": "@cxxbridge_windows//file",
 #            "//conditions:default": [name + "-mac"],
         }),
     )

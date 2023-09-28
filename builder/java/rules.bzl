@@ -9,54 +9,70 @@ def _expand_label(name):
 
 
 
-def native_java_libraries(name, deps = [], mac_deps = [], linux_deps = [], windows_deps = [],
-                          runtime_deps = [], mac_runtime_deps = [], linux_runtime_deps = [], windows_runtime_deps = [],
-                          native_libraries_deps = [], **kwargs):
-    all_mac_deps = []
-    all_linux_deps = []
-    all_windows_deps = []
-    
-    for dep in deps + mac_deps:
-        all_mac_deps.append(dep)
-    for dep in deps + linux_deps:
-        all_linux_deps.append(dep)
-    for dep in deps + windows_deps:
-        all_windows_deps.append(dep)
+def native_java_libraries(
+        name,
+        deps = [],
+        linux_arm64_deps = [],
+        linux_x86_64_deps = [],
+        mac_arm64_deps = [],
+        mac_x86_64_deps = [],
+        windows_x86_64_deps = [],
+        runtime_deps = [],
+        linux_arm64_runtime_deps = [],
+        linux_x86_64_runtime_deps = [],
+        mac_arm64_runtime_deps = [],
+        mac_x86_64_runtime_deps = [],
+        windows_x86_64_runtime_deps = [],
+        native_libraries_deps = [],
+        **kwargs
+):
+    all_linux_arm64_deps = deps + linux_arm64_deps
+    all_linux_x86_64_deps = deps + linux_x86_64_deps
+    all_mac_arm64_deps = deps + mac_arm64_deps
+    all_mac_x86_64_deps = deps + mac_x86_64_deps
+    all_windows_x86_64_deps = deps + windows_x86_64_deps
 
     for native_libraries_dep in native_libraries_deps:
-        all_mac_deps.append(native_libraries_dep + "-mac")
-        all_linux_deps.append(native_libraries_dep + "-linux")
-        all_windows_deps.append(native_libraries_dep + "-windows")
-    
-    all_mac_runtime_deps = []
-    all_linux_runtime_deps = []
-    all_windows_runtime_deps = []
-    
-    for runtime_dep in runtime_deps + mac_runtime_deps:
-        all_mac_runtime_deps.append(runtime_dep)
-    for runtime_dep in runtime_deps + linux_runtime_deps:
-        all_linux_runtime_deps.append(runtime_dep)
-    for runtime_dep in runtime_deps + windows_runtime_deps:
-        all_windows_runtime_deps.append(runtime_dep)
+        all_linux_arm64_deps.append(native_libraries_dep + "-linux-arm64")
+        all_linux_x86_64_deps.append(native_libraries_dep + "-linux-x86_64")
+        all_mac_arm64_deps.append(native_libraries_dep + "-mac-arm64")
+        all_mac_x86_64_deps.append(native_libraries_dep + "-mac-x86_64")
+        all_windows_x86_64_deps.append(native_libraries_dep + "-windows-x86_64")
+
+    all_linux_arm64_runtime_deps = runtime_deps + linux_arm64_runtime_deps
+    all_linux_x86_64_runtime_deps = runtime_deps + linux_x86_64_runtime_deps
+    all_mac_arm64_runtime_deps = runtime_deps + mac_arm64_runtime_deps
+    all_mac_x86_64_runtime_deps = runtime_deps + mac_x86_64_runtime_deps
+    all_windows_x86_64_runtime_deps = runtime_deps + windows_x86_64_runtime_deps
 
     native.java_library(
-        name = name + "-mac",
-        deps = all_mac_deps,
-        runtime_deps = all_mac_runtime_deps,
+        name = name + "-linux-arm64",
+        deps = all_linux_arm64_deps,
+        runtime_deps = all_linux_arm64_runtime_deps,
         **kwargs,
     )
-
     native.java_library(
-        name = name + "-linux",
-        deps = all_linux_deps,
-        runtime_deps = all_linux_runtime_deps,
+        name = name + "-linux-x86_64",
+        deps = all_linux_x86_64_deps,
+        runtime_deps = all_linux_x86_64_runtime_deps,
         **kwargs,
     )
-
     native.java_library(
-        name = name + "-windows",
-        deps = all_windows_deps,
-        runtime_deps = all_windows_runtime_deps,
+        name = name + "-mac-arm64",
+        deps = all_mac_arm64_deps,
+        runtime_deps = all_mac_arm64_runtime_deps,
+        **kwargs,
+    )
+    native.java_library(
+        name = name + "-mac-x86_64",
+        deps = all_mac_x86_64_deps,
+        runtime_deps = all_mac_x86_64_runtime_deps,
+        **kwargs,
+    )
+    native.java_library(
+        name = name + "-windows-x86_64",
+        deps = all_windows_x86_64_deps,
+        runtime_deps = all_windows_x86_64_runtime_deps,
         **kwargs,
     )
 
@@ -88,8 +104,10 @@ def host_compatible_java_test(name, deps = [], native_libraries_deps = [], **kwa
 def native_dep_for_host_platform(name):
     name = _expand_label(name)
     return select({
-         "@vaticle_dependencies//util/platform:is_mac": [name + "-mac"],
-         "@vaticle_dependencies//util/platform:is_linux": [name + "-linux"],
-         "@vaticle_dependencies//util/platform:is_windows": [name + "-windows"],
-         "//conditions:default": [name + "-mac"],
+         "@vaticle_bazel_distribution//platform:is_linux_arm64": [name + "-linux-arm64"],
+         "@vaticle_bazel_distribution//platform:is_linux_x86_64": [name + "-linux-x86_64"],
+         "@vaticle_bazel_distribution//platform:is_mac_arm64": [name + "-mac-arm64"],
+         "@vaticle_bazel_distribution//platform:is_mac_x86_64": [name + "-mac-x86_64"],
+         "@vaticle_bazel_distribution//platform:is_windows": [name + "-windows"],
+         "//conditions:default": ["INVALID"],
      })
