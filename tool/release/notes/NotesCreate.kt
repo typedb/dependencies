@@ -44,14 +44,15 @@ fun main(args: Array<String>) {
     val commits = collectCommits(org, repo, commit, Version.parse(version), bazelWorkspaceDir, githubToken)
     println("Found ${commits.size} commits to be collected into the release note.")
     val notes = collectNotes(org, repo, commits.reversed(), githubToken)
-    writeNotesMd(notes, templateFile, outputFile)
+    writeNotesMd(notes, templateFile, outputFile, version)
 }
 
 
-private fun writeNotesMd(notes: List<Note>, releaseTemplateFile: Path, releaseNotesFile: Path) {
+private fun writeNotesMd(notes: List<Note>, releaseTemplateFile: Path, releaseNotesFile: Path, version: String) {
     val template = releaseTemplateFile.toFile().readText()
     if (!template.matches(".*${Constant.releaseTemplateRegex.pattern}.*".toRegex(RegexOption.DOT_MATCHES_ALL)))
         throw RuntimeException("The release-template does not contain the '${Constant.releaseTemplateRegex}' placeholder")
     val markdown = template.replace(Constant.releaseTemplateRegex, escapeReplacement(Note.toMarkdown(notes)))
+            .replace("{version}", version)
     releaseNotesFile.toFile().writeText(markdown)
 }
