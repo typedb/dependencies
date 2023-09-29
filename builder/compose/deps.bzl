@@ -2,27 +2,33 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 
 def deps():
     http_file(
-        name = "jdk16_mac",
-        urls = ["https://download.java.net/java/GA/jdk16.0.2/d4a915d82b4c4fbb9bde534da945d746/7/GPL/openjdk-16.0.2_osx-x64_bin.tar.gz"],
-        sha256 = "e65f2437585f16a01fa8e10139d0d855e8a74396a1dfb0163294ed17edd704b8",
+        name = "jdk17_linux_arm64",
+        urls = ["https://download.oracle.com/java/17/latest/jdk-17_linux-aarch64_bin.tar.gz"],
+        sha256 = "cd24d7b21ec0791c5a77dfe0d9d7836c5b1a8b4b75db7d33d253d07caa243117",
     )
 
     http_file(
-        name = "jdk16_windows",
-        urls = ["https://download.java.net/java/GA/jdk16.0.2/d4a915d82b4c4fbb9bde534da945d746/7/GPL/openjdk-16.0.2_windows-x64_bin.zip"],
-        sha256 = "9df98be05fe674066cc39144467c47b1503cfa3de059c09cc4ccc3da9c253b9a",
+        name = "jdk17_linux_x86_64",
+        urls = ["https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.tar.gz"],
+        sha256 = "74b528a33bb2dfa02b4d74a0d66c9aff52e4f52924ce23a62d7f9eb1a6744657",
     )
 
     http_file(
-        name = "jdk16_linux",
-        urls = ["https://download.java.net/java/GA/jdk16.0.2/d4a915d82b4c4fbb9bde534da945d746/7/GPL/openjdk-16.0.2_linux-x64_bin.tar.gz"],
-        sha256 = "6c714ded7d881ca54970ec949e283f43d673a142fda1de79b646ddd619da9c0c",
+        name = "jdk17_mac_arm64",
+        urls = ["https://download.oracle.com/java/17/latest/jdk-17_macos-aarch64_bin.tar.gz"],
+        sha256 = "89f26bda33262d70455e774b55678fc259ae4f29c0a99eb0377d570507be3d04",
     )
 
     http_file(
-        name = "jdk17_linux",
-        urls = ["https://download.java.net/java/GA/jdk17/0d483333a00540d886896bac774ff48b/35/GPL/openjdk-17_linux-x64_bin.tar.gz"],
-        sha256 = "aef49cc7aa606de2044302e757fa94c8e144818e93487081c4fd319ca858134b",
+        name = "jdk17_mac_x86_64",
+        urls = ["https://download.oracle.com/java/17/latest/jdk-17_macos-x64_bin.tar.gz"],
+        sha256 = "ddc4928be11642f35b3cb1e6a56463032705fccb74e10ed5a67a73a5fc7b639f",
+    )
+
+    http_file(
+        name = "jdk17_windows_x86_64",
+        urls = ["https://download.oracle.com/java/17/latest/jdk-17_windows-x64_bin.zip"],
+        sha256 = "98385c1fd4db7ad3fd7ca2f33a1fadae0b15486cfde699138d47002d7068084a",
     )
 
     http_file(

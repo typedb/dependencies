@@ -164,9 +164,9 @@ def swig_java_wrapper(**kwargs):
     # cf. https://github.com/bazelbuild/bazel/issues/287
     _swig_java_wrapper(
         jni_md_header = select({
-            "@vaticle_dependencies//util/platform:is_mac": Label("@bazel_tools//tools/jdk:jni_md_header-darwin"),
-            "@vaticle_dependencies//util/platform:is_linux": Label("@bazel_tools//tools/jdk:jni_md_header-linux"),
-            "@vaticle_dependencies//util/platform:is_windows": Label("@bazel_tools//tools/jdk:jni_md_header-windows"),
+            "@vaticle_bazel_distribution//platform:is_mac": Label("@bazel_tools//tools/jdk:jni_md_header-darwin"),
+            "@vaticle_bazel_distribution//platform:is_linux": Label("@bazel_tools//tools/jdk:jni_md_header-linux"),
+            "@vaticle_bazel_distribution//platform:is_windows": Label("@bazel_tools//tools/jdk:jni_md_header-windows"),
         }),
         **kwargs,
     )
@@ -192,7 +192,7 @@ def swig_java(name, lib, shared_lib_name=None, tags=[], **kwargs):
             srcs = [swig_wrapper_name],
             linkshared = True,
             linkopts = select({
-                "@vaticle_dependencies//util/platform:is_windows": ["ntdll.lib"],
+                "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib"],
                 "//conditions:default": [],
             }),
         )
@@ -204,9 +204,9 @@ def swig_java(name, lib, shared_lib_name=None, tags=[], **kwargs):
     native.alias(
         name = "lib" + shared_lib_name,
         actual = select({
-            "@vaticle_dependencies//util/platform:is_mac": ("lib" + shared_lib_name + ".dylib"),
-            "@vaticle_dependencies//util/platform:is_linux": ("lib" + shared_lib_name + ".so"),
-            "@vaticle_dependencies//util/platform:is_windows": (shared_lib_name + ".dll"),
+            "@vaticle_bazel_distribution//platform:is_mac": ("lib" + shared_lib_name + ".dylib"),
+            "@vaticle_bazel_distribution//platform:is_linux": ("lib" + shared_lib_name + ".so"),
+            "@vaticle_bazel_distribution//platform:is_windows": (shared_lib_name + ".dll"),
         })
     )
 
