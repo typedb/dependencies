@@ -17,10 +17,10 @@
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
+load("@rules_python//python:pip.bzl", "pip_parse")
+
 def deps():
-    http_archive(
-        name = "google_bazel_common",
-        sha256 = "8ba02686ad2c9972ab31539bcbda7674d0b46f2ceb71aee417d2cf46d445ad4f",
-        strip_prefix = "bazel-common-c805fdbef7a7927606a2a48e08683952f58a2b71",
-        urls = ["https://github.com/google/bazel-common/archive/c805fdbef7a7927606a2a48e08683952f58a2b71.zip"],
+    pip_parse(
+        name = "vaticle_dependencies_tool_docs",
+        requirements_lock = "@vaticle_dependencies//tool/docs:requirements.txt",
     )
