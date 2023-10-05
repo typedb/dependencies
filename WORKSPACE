@@ -82,17 +82,6 @@ sonarcloud_dependencies()
 load("//tool/swig:deps.bzl", swig_deps = "deps")
 swig_deps()
 
-# Load //tool/docs
-load("//tool/docs:deps.bzl", doc_deps = "deps")
-doc_deps()
-load("@vaticle_dependencies_tool_doc//:requirements.bzl", install_doc_deps = "install_deps")
-install_doc_deps()
-
-load("//tool/docs:java_deps.bzl", java_doc_deps = "deps")
-java_doc_deps()
-load("@google_bazel_common//:workspace_defs.bzl", "google_common_workspace_rules")
-google_common_workspace_rules()
-
 # Load @vaticle_bazel_distribution
 load("//distribution:deps.bzl", "vaticle_bazel_distribution")
 vaticle_bazel_distribution()
