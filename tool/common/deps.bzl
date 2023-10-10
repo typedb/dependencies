@@ -14,4 +14,5 @@ maven_artifacts = [
   "org.zeroturnaround:zt-exec",
   "info.picocli:picocli",
   "org.jetbrains.compose.compiler:compiler",
+  "org.jsoup:jsoup",
 ]
