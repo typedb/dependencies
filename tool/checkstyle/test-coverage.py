@@ -48,7 +48,7 @@ if __name__ == '__main__':
             '-o', '-name', 'target',
         ')', '-prune', '-o', '-type', 'f', '-print'
     ], cwd=os.getenv("BUILD_WORKSPACE_DIRECTORY"))
-    workspace_files = workspace_files.split()
+    workspace_files = workspace_files.strip().split("\n")
 
     checkstyle_targets_xml, _ = tc.shell_execute([
         'bazel', 'query', 'kind(checkstyle_test, //...)', '--output', 'xml'
