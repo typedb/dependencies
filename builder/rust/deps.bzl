@@ -15,13 +15,14 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
+load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 
 def deps():
-    http_archive(
+    git_repository(
         name = "rules_rust",
-        sha256 = "b4e622a36904b5dd2d2211e40008fc473421c8b51c9efca746ab2ecf11dca08e",
-        urls = ["https://github.com/bazelbuild/rules_rust/releases/download/0.19.1/rules_rust-v0.19.1.tar.gz"],
+        remote = "https://github.com/vaticle/rules_rust",
+        commit = "2641f3aaf94a278ac2ef110a14c6c2d6c7eeb04a",
     )
     http_file(
         name = "cxxbridge_linux",
