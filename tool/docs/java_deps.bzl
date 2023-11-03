@@ -21,7 +21,7 @@ def deps():
     # Bazel Common Libraries (with javadoc)
     http_archive(
         name = "google_bazel_common",
-        sha256 = "8ba02686ad2c9972ab31539bcbda7674d0b46f2ceb71aee417d2cf46d445ad4f",
-        strip_prefix = "bazel-common-c805fdbef7a7927606a2a48e08683952f58a2b71",
-        urls = ["https://github.com/google/bazel-common/archive/c805fdbef7a7927606a2a48e08683952f58a2b71.zip"],
+        sha256 = "e982cc2e4c9a7d664e77d97a99debb3d18261e6ac6ea5bc4d8f453a521fdf1cf",
+        strip_prefix = "bazel-common-78cc73600ddfa62f953652625abd7c6f1656cfac",
+        urls = ["https://github.com/google/bazel-common/archive/78cc73600ddfa62f953652625abd7c6f1656cfac.zip"],
     )
