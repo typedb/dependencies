@@ -22,6 +22,8 @@ fn main() -> std::io::Result<()> {
     let protos: Vec<&str> = protos_raw.split(";").filter(|&str| !str.is_empty()).collect();
 
     tonic_build::configure()
+        .server_mod_attribute(".", "#[allow(non_camel_case_types)]")
+        .client_mod_attribute(".", "#[allow(non_camel_case_types)]")
         .compile(&protos, &[
             env::var("PROTOS_ROOT").expect("PROTOS_ROOT environment variable is not set")
         ])
