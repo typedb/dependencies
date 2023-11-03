@@ -35,6 +35,7 @@ crossbeam = "=0.8.2"
 coerce = "0.8.3"
 cxx = "=1.0.59"
 enum_dispatch = "=0.3.11"
+env_logger = "=0.10.0"
 fluvio-helm = "=0.4.3"
 futures = { version = "=0.3.21", features = ["executor", "thread-pool"] }
 http = "=0.2.8"
