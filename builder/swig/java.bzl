@@ -192,7 +192,7 @@ def swig_java(name, lib, shared_lib_name=None, tags=[], **kwargs):
             srcs = [swig_wrapper_name],
             linkshared = True,
             linkopts = select({
-                "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib"],
+                "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib"],
                 "//conditions:default": [],
             }),
         )
