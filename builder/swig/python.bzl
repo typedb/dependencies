@@ -161,7 +161,7 @@ def swig_python(*, name, lib, shared_lib_name=None, import_name=None, python_hea
         srcs = [swig_wrapper_name],
         linkshared = True,
         linkopts = select({
-            "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib"],
+            "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib"],
             "//conditions:default": [],
         }),
         copts = select({
