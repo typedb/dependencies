@@ -3972,6 +3972,7 @@ dependencies = [
  "tonic",
  "tonic-build",
  "tower",
+ "tower-http",
  "tracing",
  "tracing-subscriber",
  "uuid 1.1.2",
