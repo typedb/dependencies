@@ -16,13 +16,13 @@
 #
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file", "http_archive")
 
 def deps():
-    git_repository(
+    http_archive(
         name = "rules_rust",
-        remote = "https://github.com/vaticle/rules_rust",
-        commit = "2641f3aaf94a278ac2ef110a14c6c2d6c7eeb04a",
+        sha256 = "36ab8f9facae745c9c9c1b33d225623d976e78f2cc3f729b7973d8c20934ab95",
+        urls = ["https://github.com/bazelbuild/rules_rust/releases/download/0.31.0/rules_rust-v0.31.0.tar.gz"],
     )
     http_file(
         name = "cxxbridge_linux",

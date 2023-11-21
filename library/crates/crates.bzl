@@ -20,7 +20,6 @@ load("@rules_rust//crate_universe:deps_bootstrap.bzl", "cargo_bazel_bootstrap")
 load("@rules_rust//crate_universe:defs.bzl", "crate", "crates_repository", "render_config")
 
 def fetch_crates():
-    cargo_bazel_bootstrap() # Necessary to build cargo-bazel from sources
     crates_repository(
         name = "crates",
         cargo_lockfile = "@vaticle_dependencies//library/crates:Cargo.lock",
@@ -35,5 +34,4 @@ def fetch_crates():
             "x86_64-pc-windows-msvc",
             "x86_64-unknown-linux-gnu",
         ],
-        generator = "@cargo_bazel_bootstrap//:cargo-bazel"
     )
