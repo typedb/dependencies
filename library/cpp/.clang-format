@@ -1,0 +1,8 @@
+---
+BasedOnStyle: Chromium
+IndentWidth: 4
+AllowShortIfStatementsOnASingleLine: AllIfsAndElse
+ColumnLimit: 0
+InsertNewlineAtEOF: true
+MaxEmptyLinesToKeep: 2
+---
