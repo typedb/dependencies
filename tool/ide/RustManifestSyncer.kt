@@ -261,6 +261,7 @@ class RustManifestSyncer : Callable<Unit> {
                         return Config.inMemory().apply {
                             set<String>("version", version)
                             set<List<String>>("features", features)
+                            set<String>("default_features", "false")
                         }
                     }
                 }
@@ -282,7 +283,7 @@ class RustManifestSyncer : Callable<Unit> {
                             Crate(
                                     name = name,
                                     version = rawValueProps[VERSION]!!,
-                                    features = rawValueProps[FEATURES]?.split(",") ?: emptyList()
+                                    features = rawValueProps[FEATURES]?.split(",") ?: emptyList(),
                             )
                         } else {
                             Local(name = name, path = rawValueProps[PATH]!!)
