@@ -140,10 +140,23 @@ class RustManifestSyncer : Callable<Unit> {
         }
 
         private fun attachTestAndBuildProperties(properties: Collection<TargetProperties>) {
+            val TESTS_DIR = "tests"
             val (testProperties, nonTestProperties) = properties.partition { it.type == TargetProperties.Type.TEST }
                     .let { it.first to it.second.associateBy { properties -> properties.name } }
             testProperties.forEach { tp ->
-                tp.deps.filter { it.name in nonTestProperties }.forEach { nonTestProperties[it.name]!!.tests += tp }
+                // attach tests deps to the parent properties
+                var testsPath = tp.path.toPath();
+                while (testsPath.parent != null && testsPath.fileName != null && !testsPath.fileName.toString().equals(TESTS_DIR)) {
+                    testsPath = testsPath.parent
+                }
+                if (!testsPath.fileName.toString().equals(TESTS_DIR)) {
+                    throw RuntimeException("Could not find directory named '$TESTS_DIR' for test '${tp.name}'.");
+                }
+                val parent = nonTestProperties.values.filter { it.path.parentFile.toPath().equals(testsPath.parent) };
+                if (parent.size != 1) {
+                    throw RuntimeException("Found '${parent.size}'parents to attach test '${tp.name}' to.")
+                }
+                parent[0].tests += tp
             }
             val (buildProperties, nonBuildProperties) = properties.partition { it.type == TargetProperties.Type.BUILD }
                     .let { it.first.associateBy { properties -> properties.name } to it.second }
@@ -240,7 +253,7 @@ class RustManifestSyncer : Callable<Unit> {
             }
         }
 
-        class TargetProperties(
+        data class TargetProperties(
                 val path: File,
                 val name: String,
                 val targetName: String,
@@ -261,7 +274,7 @@ class RustManifestSyncer : Callable<Unit> {
                         return Config.inMemory().apply {
                             set<String>("version", version)
                             set<List<String>>("features", features)
-                            set<String>("default_features", "false")
+                            set<Boolean>("default_features", false)
                         }
                     }
                 }
