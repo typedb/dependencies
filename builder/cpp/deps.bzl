@@ -10,9 +10,9 @@ def deps():
 
     http_archive(
         name = "gherkin_cpp",
-        urls = ["https://github.com/krishnangovindraj/gherkin/archive/refs/heads/main.zip"],
+        urls = ["https://github.com/vaticle/gherkin/archive/19b7ca13da8bb4cb6dc27ef5af572a8a1233deb8.zip"],
         strip_prefix = "gherkin-main/cpp",
-        sha256 = "29e098c87c97cdd43b1449af2d9cb05e9b76359e4d8028647671fff7fffb85e2",
+        sha256 = "f8fd8d46b384a3c27a3bfed0e5eb1ad4ae2dbac862b18153a76178ec35a2c459",
         build_file_content = """
 cc_library(
   name = "gherkin-lib",
@@ -28,9 +28,9 @@ cc_library(
 
     http_archive(
         name = "cucumber_messages",
-        urls = ["https://github.com/krishnangovindraj/cucumber-messages/archive/refs/heads/main.zip"],
+        urls = ["https://github.com/vaticle/cucumber-messages/archive/fc5c391add237b0d5fa090072757a500863c24b7.zip"],
         strip_prefix = "cucumber-messages-main/cpp",
-        sha256 = "369de231fdb01ee7a06cb75779dd4b2aa15f95bbf58c11286e2ea596a840f4b3",
+        sha256 = "048a04c8b1163f601dc8992d41f3254a5ce58ac487514ee4ddd06090aa666d25",
         build_file_content = """
 cc_library(
   name = "cucumber-messages-lib",
