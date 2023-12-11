@@ -225,7 +225,7 @@ class RustManifestSyncer : Callable<Unit> {
                     }
 
                     TargetProperties.Type.TEST, TargetProperties.Type.BUILD -> throw IllegalStateException(
-                        "$CARGO_TOML should not be generated for sync properties of type ${properties.type}"
+                            "$CARGO_TOML should not be generated for sync properties of type ${properties.type}"
                     )
                 }
             }
