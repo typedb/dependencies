@@ -5,4 +5,5 @@ AllowShortIfStatementsOnASingleLine: AllIfsAndElse
 ColumnLimit: 0
 InsertNewlineAtEOF: true
 MaxEmptyLinesToKeep: 2
+AccessModifierOffset: -4
 ---
