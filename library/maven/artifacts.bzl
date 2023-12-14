@@ -56,7 +56,7 @@ artifacts = {
     "com.google.ortools:ortools-linux-x86-64": "9.6.2534",
     "com.google.ortools:ortools-linux-aarch64": "9.6.2534",
     "com.google.ortools:ortools-win32-x86-64": "9.6.2534",
-    "com.google.protobuf:protobuf-java": "3.20.1",
+    "com.google.protobuf:protobuf-java": "3.21.7",
     "com.google.re2j:re2j" : "1.6",
     "com.google.truth:truth" : "1.0.1",
     "com.jcraft:jsch": "0.1.55",
