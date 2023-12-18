@@ -83,7 +83,7 @@ def _doxygen_docs_impl(ctx):
             replacements["STRIP_FROM_PATH"] =ctx.attr.strip_from_path
 
     if ctx.file.main_page_md != None:
-        files.add(ctx.file.main_page_md)
+        files.append(ctx.file.main_page_md)
         replacements["USE_MDFILE_AS_MAINPAGE"] = ctx.file.main_page_md.path
 
     replacements["INPUT"] = " ".join([f.path for f in files])
