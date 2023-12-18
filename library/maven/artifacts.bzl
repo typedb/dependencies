@@ -112,6 +112,7 @@ artifacts = {
     "io.ktor:ktor-server-core-jvm": "2.3.7",
     "io.ktor:ktor-server-netty-jvm": "2.3.7",
     "io.ktor:ktor-server-default-headers-jvm": "2.3.7",
+    "io.ktor:ktor-server-websockets-jvm": "2.3.7",
     "io.kubernetes:client-java": {
         "exclude": ["com.github.stefanbirkner:system-rules"],
         "version": "12.0.0"
