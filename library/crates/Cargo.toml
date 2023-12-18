@@ -28,6 +28,7 @@ alcoholic_jwt = "=4091.0.0"
 async-stripe = { version = "=0.22.2", features = ["runtime-tokio-hyper"] }
 async-trait = "=0.1.59"
 axum = { version = "=0.5.15", features = ["ws"] }
+binary-layout = "3.2.0"
 chrono = "=0.4.23"
 clap = "=4.0.26"
 coerce = "0.8.3"
