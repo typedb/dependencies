@@ -14,4 +14,4 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 #
-exports_files(["clang_format.sh", ".clang-format"])
+exports_files(["clang_format.sh", ".clang-format", "doxyfile.template", "doxyfile_templater.py"])

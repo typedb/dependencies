@@ -23,8 +23,8 @@
 #---------------------------------------------------------------------------
 DOXYFILE_ENCODING      = UTF-8
 PROJECT_NAME           = ## <bazel rule MUST replace this line>
-PROJECT_NUMBER         =
-PROJECT_BRIEF          =
+PROJECT_NUMBER         = ## <bazel rule MAY replace this line>
+PROJECT_BRIEF          =                ## If we ever want a description
 OUTPUT_DIRECTORY       = ## <bazel rule MUST replace this line>
 CREATE_SUBDIRS         = NO
 ALLOW_UNICODE_NAMES    = NO
@@ -64,10 +64,10 @@ WARN_AS_ERROR          = NO
 #---------------------------------------------------------------------------
 # Configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = # THIS_LINE_GETS_REPLACED_BY_THE_BAZEL_RULE
+INPUT                  = ## <bazel rule MUST replace this line>
 INPUT_ENCODING         = UTF-8
-RECURSIVE              = NO             ## Bazel explicitly specifies files
-EXCLUDE_SYMLINKS       = YES
+RECURSIVE              = NO             ## bazel explicitly specifies files
+EXCLUDE_SYMLINKS       = NO             ## bazel needs NO
 USE_MDFILE_AS_MAINPAGE = ## <bazel rule MAY replace this line>
 VERBATIM_HEADERS       = YES
 
@@ -83,21 +83,18 @@ GENERATE_HTML          = YES
 HTML_OUTPUT            = html
 HTML_FILE_EXTENSION    = .html
 HTML_COLORSTYLE        = AUTO_LIGHT
-
 ENUM_VALUES_PER_LINE   = 4
 OBFUSCATE_EMAILS       = YES
 SEARCHENGINE           = YES
+
+GENERATE_LATEX         = NO
 
 #---------------------------------------------------------------------------
 # Configuration options related to diagram generator tools
 #---------------------------------------------------------------------------
 HIDE_UNDOC_RELATIONS   = YES
 CLASS_GRAPH            = YES
-COLLABORATION_GRAPH    = YES        ## TODO: Revisit
-GROUP_GRAPHS           = NO
-UML_LIMIT_NUM_FIELDS   = 10
-HAVE_DOT               = NO         ## Disables a bunch of stuff we're not interested in anyway
-
+HAVE_DOT               = NO             ## Disables many details
 
 #---------------------------------------------------------------------------
 # TODO: Everything below this point
@@ -183,3 +180,17 @@ LAYOUT_FILE            =
 # that contain images that are to be included in the documentation (see the
 # \image command).
 IMAGE_PATH             =
+
+# UML
+
+# If the COLLABORATION_GRAPH tag is set to YES then doxygen will generate a
+# graph for each documented class showing the direct and indirect implementation
+# dependencies (inheritance, containment, and class references variables) of the
+# class with other documented classes. Explicit enabling a collaboration graph,
+# when COLLABORATION_GRAPH is set to NO, can be accomplished by means of the
+# command \collaborationgraph. Disabling a collaboration graph can be
+# accomplished by means of the command \hidecollaborationgraph.
+# The default value is: YES.
+# This tag requires that the tag HAVE_DOT is set to YES.
+
+# COLLABORATION_GRAPH    = YES ## Already in the
