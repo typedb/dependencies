@@ -295,7 +295,7 @@ artifacts = {
     "org.jetbrains.kotlinx:kotlinx-coroutines-core": "1.6.0",
     "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm": "1.6.0",
     "org.jetbrains.kotlinx:kotlinx-coroutines-test": "1.6.0",
-    "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm": "1.6.0",
+    "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm": "1.0.0",
     # Find out the Skiko version we need by viewing dependencies of @maven//org_jetbrains_compose_ui_ui_graphics_desktop
     "org.jetbrains.skiko:skiko-awt": "0.7.34",
     "org.jetbrains.skiko:skiko-awt-runtime-linux-arm64": "0.7.34",
