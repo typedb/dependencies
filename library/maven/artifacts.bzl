@@ -109,7 +109,7 @@ artifacts = {
     "io.grpc:grpc-protobuf": "1.49.0",
     "io.grpc:grpc-stub": "1.49.0",
     "io.grpc:grpc-testing": "1.49.0",
-    "io.ktor:ktor-serialization-kotlinx-protobuf": "2.3.7",
+    "io.ktor:ktor-serialization-kotlinx-protobuf-jvm": "2.3.7",
     "io.ktor:ktor-server-core-jvm": "2.3.7",
     "io.ktor:ktor-server-netty-jvm": "2.3.7",
     "io.ktor:ktor-server-default-headers-jvm": "2.3.7",
