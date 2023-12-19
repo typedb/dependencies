@@ -35,6 +35,7 @@ ALWAYS_DETAILED_SEC    = YES
 REPEAT_BRIEF           = YES
 STRIP_FROM_PATH        = ## <bazel rule MAY replace this line>
 INHERIT_DOCS           = YES
+INLINE_INHERITED_MEMB  = NO
 
 MARKDOWN_SUPPORT       = YES
 AUTOLINK_SUPPORT       = YES
@@ -96,102 +97,3 @@ GENERATE_LATEX         = NO
 HIDE_UNDOC_RELATIONS   = YES
 CLASS_GRAPH            = YES
 HAVE_DOT               = NO             ## Disables many details
-
-#---------------------------------------------------------------------------
-# TODO: Everything below this point
-#---------------------------------------------------------------------------
-
-# If the ALWAYS_DETAILED_SEC and REPEAT_BRIEF tags are both set to YES then
-# doxygen will generate a detailed section even if there is only a brief
-# description.
-# The default value is: NO.
-ALWAYS_DETAILED_SEC    = NO
-
-# If the INLINE_INHERITED_MEMB tag is set to YES, doxygen will show all
-# inherited members of a class in the documentation of that class as if those
-# members were ordinary class members. Constructors, destructors and assignment
-# operators of the base classes will not be shown.
-# The default value is: NO.
-
-INLINE_INHERITED_MEMB  = NO
-
-# If you use STL classes (i.e. std::string, std::vector, etc.) but do not want
-# to include (a tag file for) the STL sources as input, then you should set this
-# tag to YES in order to let doxygen match functions declarations and
-# definitions whose arguments contain STL classes (e.g. func(std::string);
-# versus func(std::string) {}). This also make the inheritance and collaboration
-# diagrams that involve STL classes more complete and accurate.
-# The default value is: NO.
-
-BUILTIN_STL_SUPPORT    = NO
-
-
-# If the TIMESTAMP tag is set different from NO then each generated page will
-# contain the date or date and time when the page was generated. Setting this to
-# NO can help when comparing the output of multiple runs.
-# Possible values are: YES, NO, DATETIME and DATE.
-# The default value is: NO.
-
-TIMESTAMP              = NO
-
-#---------------------------------------------------------------------------
-# Build related configuration options
-#---------------------------------------------------------------------------
-
-# If the EXTRACT_ALL tag is set to YES, doxygen will assume all entities in
-# documentation are documented, even if no documentation was available. Private
-# class members and static file members will be hidden unless the
-# EXTRACT_PRIVATE respectively EXTRACT_STATIC tags are set to YES.
-# Note: This will also disable the warnings about undocumented members that are
-# normally produced when WARNINGS is set to YES.
-# The default value is: NO.
-
-EXTRACT_ALL            = NO
-#...
-
-# If the EXTRACT_STATIC tag is set to YES, all static members of a file will be
-# included in the documentation.
-# The default value is: NO.
-
-EXTRACT_STATIC         = NO
-
-# If the SORT_MEMBER_DOCS tag is set to YES then doxygen will sort the
-# (detailed) documentation of file and class members alphabetically by member
-# name. If set to NO, the members will appear in declaration order.
-# The default value is: YES.
-
-# The LAYOUT_FILE tag can be used to specify a layout file which will be parsed
-# by doxygen. The layout file controls the global structure of the generated
-# output files in an output format independent way. To create the layout file
-# that represents doxygen's defaults, run doxygen with the -l option. You can
-# optionally specify a file name after the option, if omitted DoxygenLayout.xml
-# will be used as the name of the layout file. See also section "Changing the
-# layout of pages" for information.
-#
-# Note that if you run doxygen from a directory containing a file called
-# DoxygenLayout.xml, doxygen will parse it automatically even if the LAYOUT_FILE
-# tag is left empty.
-
-LAYOUT_FILE            =
-
-#---------------------------------------------------------------------------
-# Configuration options related to the input files
-#---------------------------------------------------------------------------
-# The IMAGE_PATH tag can be used to specify one or more files or directories
-# that contain images that are to be included in the documentation (see the
-# \image command).
-IMAGE_PATH             =
-
-# UML
-
-# If the COLLABORATION_GRAPH tag is set to YES then doxygen will generate a
-# graph for each documented class showing the direct and indirect implementation
-# dependencies (inheritance, containment, and class references variables) of the
-# class with other documented classes. Explicit enabling a collaboration graph,
-# when COLLABORATION_GRAPH is set to NO, can be accomplished by means of the
-# command \collaborationgraph. Disabling a collaboration graph can be
-# accomplished by means of the command \hidecollaborationgraph.
-# The default value is: YES.
-# This tag requires that the tag HAVE_DOT is set to YES.
-
-# COLLABORATION_GRAPH    = YES ## Already in the
