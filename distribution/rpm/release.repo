@@ -1,5 +1,0 @@
-[repo-vaticle-rpm]
-name=repo-vaticle-rpm
-baseurl=http://repo.vaticle.com/repository/rpm/
-enabled=1
-gpgcheck=0
