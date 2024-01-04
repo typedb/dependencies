@@ -16,37 +16,23 @@
 #
 
 deployment = {
-    "apt.release": "https://repo.vaticle.com/repository/apt/",
-    "apt.snapshot": "https://repo.vaticle.com/repository/apt-snapshot/",
-
-    "artifact.release": "https://repo.vaticle.com/repository/artifact/",
-    "artifact.snapshot": "https://repo.vaticle.com/repository/artifact-snapshot/",
+    "cloudsmith.release": "cloudsmith://typedb/public",
+    "cloudsmith.snapshot": "cloudsmith://typedb/public-snapshot",
 
     "brew.release": "https://github.com/vaticle/homebrew-tap/",
     "brew.snapshot": "https://github.com/vaticle/homebrew-tap-test/",
 
     "crate.release": "https://crates.io",
-    "crate.snapshot": "https://repo.vaticle.com/repository/crates-snapshot/",
-
-    "helm.release": "https://repo.vaticle.com/repository/helm/",
-    "helm.snapshot": "https://repo.vaticle.com/repository/helm-snapshot/",
-
-    "maven.release": "https://repo.vaticle.com/repository/maven/",
-    "maven.snapshot": "https://repo.vaticle.com/repository/maven-snapshot/",
+    "crate.snapshot": "https://cargo.cloudsmith.io/typedb/private", # trailing / breaks the url
 
     "npm.release": "https://registry.npmjs.org/",
-    "npm.snapshot": "https://repo.vaticle.com/repository/npm-snapshot/",
+    "npm.snapshot": "https://npm.cloudsmith.io/typedb/private/",
 
     "pypi.release": "https://upload.pypi.org/legacy/",
-    "pypi.snapshot": "https://repo.vaticle.com/repository/pypi-snapshot/",
-
-    "rpm.release": "https://repo.vaticle.com/repository/rpm/",
-    "rpm.snapshot": "https://repo.vaticle.com/repository/rpm-snapshot/",
+    "pypi.snapshot": "https://python.cloudsmith.io/typedb/private/",
 }
 
 deployment_private = {
-    "artifact.release": "https://repo.vaticle.com/repository/private-artifact/",
-    "artifact.snapshot": "https://repo.vaticle.com/repository/private-artifact-snapshot/",
-
-    "npm.release": "https://repo.vaticle.com/repository/npm-private/",
+    "cloudsmith.release": "cloudsmith://typedb/private",
+    "cloudsmith.snapshot": "cloudsmith://typedb/private-snapshot",
 }
