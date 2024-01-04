@@ -16,6 +16,9 @@
 #
 
 deployment = {
+    "artifact.release" : "https://repo.typedb.com/public/public/raw/",
+    "artifact.snapshot" : "https://repo.typedb.com/public/public-snapshot/raw/",
+
     "cloudsmith.release": "cloudsmith://typedb/public",
     "cloudsmith.snapshot": "cloudsmith://typedb/public-snapshot",
 
@@ -23,16 +26,22 @@ deployment = {
     "brew.snapshot": "https://github.com/vaticle/homebrew-tap-test/",
 
     "crate.release": "https://crates.io",
-    "crate.snapshot": "https://cargo.cloudsmith.io/typedb/private", # trailing / breaks the url
+    "crate.snapshot": "https://cargo.cloudsmith.io/typedb/public-snapshot", # trailing / breaks the url
+
+    "maven.release": "https://repo.typedb.com/public/public/maven/",
+    "maven.snapshot": "https://repo.typedb.com/public/public-snapshot/maven/",
 
     "npm.release": "https://registry.npmjs.org/",
-    "npm.snapshot": "https://npm.cloudsmith.io/typedb/private/",
+    "npm.snapshot": "https://npm.cloudsmith.io/typedb/public-snapshot/",
 
     "pypi.release": "https://upload.pypi.org/legacy/",
-    "pypi.snapshot": "https://python.cloudsmith.io/typedb/private/",
+    "pypi.snapshot": "https://python.cloudsmith.io/typedb/public-snapshot/",
 }
 
 deployment_private = {
     "cloudsmith.release": "cloudsmith://typedb/private",
     "cloudsmith.snapshot": "cloudsmith://typedb/private-snapshot",
+
+    "artifact.release" : "https://repo.typedb.com/{entitlement_token}/private/raw/",
+    "artifact.snapshot" : "https://repo.typedb.com/{entitlement_token}/private-snapshot/raw",
 }
