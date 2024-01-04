@@ -142,6 +142,7 @@ artifacts = {
     "io.netty:netty-tcnative-boringssl-static": "2.0.61.Final",
     "io.opencensus:opencensus-api": "0.24.0",
     "io.opencensus:opencensus-contrib-grpc-metrics": "0.24.0",
+    "io.sentry:sentry" : "7.1.0",
     "io.perfmark:perfmark-api" : "0.25.0",
     "io.vavr:vavr": "0.9.0",
     "javax.annotation:javax.annotation-api": "1.3.2",
