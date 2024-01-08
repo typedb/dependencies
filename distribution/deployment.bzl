@@ -25,89 +25,72 @@ _cloudsmith_private = {
     "snapshot" : "cloudsmith://typedb/public-snapshot"
 }
 
-apt = {
-    "release" : {
-        "upload" : _cloudsmith_public["release"],
-    },
-    "snapshot": {
-        "upload" : _cloudsmith_public["snapshot"],
-    }
-}
-
-artifact = {
-    "release" : {
-        "upload" : _cloudsmith_public["release"],
-        "download": "https://repo.typedb.com/public/public-release/raw/"
-    },
-    "snapshot": {
-        "upload" : _cloudsmith_public["snapshot"],
-        "download" : "https://repo.typedb.com/public/public-snapshot/raw/",
-    }
-}
-
-brew = {
-    "release": "https://github.com/vaticle/homebrew-tap/",
-    "snapshot": "https://github.com/vaticle/homebrew-tap-test/",
-}
-
-crate = {
-    "release": "https://crates.io",
-    "snapshot": "https://cargo.cloudsmith.io/typedb/public-snapshot", # trailing / breaks the url
-}
-
-maven = {
-    "release" : {
-        "upload" : _cloudsmith_public["release"],
-        "download": "https://repo.typedb.com/public/public-release/maven/",
-    },
-    "snapshot": {
-        "upload" : _cloudsmith_public["snapshot"],
-        "download": "https://repo.typedb.com/public/public-snapshot/maven/",
-    }
-}
-
-npm = {
-    "release": "https://registry.npmjs.org/",
-    "snapshot": "https://npm.cloudsmith.io/typedb/public-snapshot/",
-}
-
-pypi = {
-    "release": "https://upload.pypi.org/legacy/",
-    "snapshot": "https://python.cloudsmith.io/typedb/public-snapshot/",
-}
-
-artifact_private = {
-    "release" : {
-        "upload" : _cloudsmith_private["release"],
-        "download": "https://repo.typedb.com/basic/private-release/raw/"
-    },
-    "snapshot": {
-        "upload" : _cloudsmith_private["snapshot"],
-        "download": "https://repo.typedb.com/basic/private-snapshot/raw/"
-    }
-}
-
-helm_private = {
-    "release" : {
-        "upload" : _cloudsmith_private["release"],
-        "download": "https://repo.typedb.com/basic/private-release/helm/charts/"
-    },
-    "snapshot": {
-        "upload" : _cloudsmith_private["snapshot"],
-        "download" : "https://repo.typedb.com/basic/private-snapshot/helm/charts/",
-    }
-}
-
 deployment = {
-    "artifact" : artifact,
-    "brew" : brew,
-    "crate" : crate,
-    "maven" : maven,
-    "npm" : npm,
-    "pypi" : pypi,
+    "apt" : {
+        "release" : {
+            "upload" : _cloudsmith_public["release"],
+        },
+        "snapshot": {
+            "upload" : _cloudsmith_public["snapshot"],
+        }
+    },
+    "artifact" : {
+        "release" : {
+            "upload" : _cloudsmith_public["release"],
+            "download": "https://repo.typedb.com/public/public-release/raw/"
+        },
+        "snapshot": {
+            "upload" : _cloudsmith_public["snapshot"],
+            "download" : "https://repo.typedb.com/public/public-snapshot/raw/",
+        }
+    },
+    "brew" : {
+        "release": "https://github.com/vaticle/homebrew-tap/",
+        "snapshot": "https://github.com/vaticle/homebrew-tap-test/",
+     },
+    "crate" : {
+        "release": "https://crates.io",
+        "snapshot": "https://cargo.cloudsmith.io/typedb/public-snapshot", # trailing / breaks the url
+    },
+    "maven" : {
+        "release" : {
+            "upload" : _cloudsmith_public["release"],
+            "download": "https://repo.typedb.com/public/public-release/maven/",
+        },
+        "snapshot": {
+            "upload" : _cloudsmith_public["snapshot"],
+            "download": "https://repo.typedb.com/public/public-snapshot/maven/",
+        }
+    },
+    "npm" : {
+        "release": "https://registry.npmjs.org/",
+        "snapshot": "https://npm.cloudsmith.io/typedb/public-snapshot/",
+    },
+    "pypi" : {
+        "release": "https://upload.pypi.org/legacy/",
+        "snapshot": "https://python.cloudsmith.io/typedb/public-snapshot/",
+    },
 }
 
 deployment_private = {
-    "artifact" : artifact_private,
-    "helm" : helm_private
+    "artifact" : {
+        "release" : {
+            "upload" : _cloudsmith_private["release"],
+            "download": "https://repo.typedb.com/basic/private-release/raw/"
+        },
+        "snapshot": {
+            "upload" : _cloudsmith_private["snapshot"],
+            "download": "https://repo.typedb.com/basic/private-snapshot/raw/"
+        }
+    },
+    "helm" :  {
+        "release" : {
+             "upload" : _cloudsmith_private["release"],
+             "download": "https://repo.typedb.com/basic/private-release/helm/charts/"
+        },
+        "snapshot": {
+             "upload" : _cloudsmith_private["snapshot"],
+             "download" : "https://repo.typedb.com/basic/private-snapshot/helm/charts/",
+        }
+    }
 }
