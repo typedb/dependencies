@@ -22,7 +22,7 @@ _cloudsmith_public = {
 
 _cloudsmith_private = {
     "release" : "cloudsmith://typedb/private-release",
-    "snapshot" : "cloudsmith://typedb/public-snapshot"
+    "snapshot" : "cloudsmith://typedb/private-snapshot"
 }
 
 deployment = {
