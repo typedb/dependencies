@@ -52,6 +52,16 @@ deployment = {
         "release": "https://crates.io",
         "snapshot": "https://cargo.cloudsmith.io/typedb/public-snapshot",
     },
+    "helm" :  {
+        "release" : {
+             "upload" : _cloudsmith_public["release"],
+             "download": "https://repo.typedb.com/basic/public-release/helm/charts/"
+        },
+        "snapshot": {
+             "upload" : _cloudsmith_public["snapshot"],
+             "download" : "https://repo.typedb.com/basic/public-snapshot/helm/charts/",
+        }
+    },
     "maven" : {
         "release" : {
             "upload" : _cloudsmith_public["release"],
@@ -81,16 +91,6 @@ deployment_private = {
         "snapshot": {
             "upload" : _cloudsmith_private["snapshot"],
             "download": "https://repo.typedb.com/basic/private-snapshot/raw/"
-        }
-    },
-    "helm" :  {
-        "release" : {
-             "upload" : _cloudsmith_private["release"],
-             "download": "https://repo.typedb.com/basic/private-release/helm/charts/"
-        },
-        "snapshot": {
-             "upload" : _cloudsmith_private["snapshot"],
-             "download" : "https://repo.typedb.com/basic/private-snapshot/helm/charts/",
         }
     }
 }
