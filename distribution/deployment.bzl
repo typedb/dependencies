@@ -50,7 +50,7 @@ deployment = {
      },
     "crate" : {
         "release": "https://crates.io",
-        "snapshot": "https://cargo.cloudsmith.io/typedb/public-snapshot", # trailing / breaks the url
+        "snapshot": "https://cargo.cloudsmith.io/typedb/public-snapshot",
     },
     "maven" : {
         "release" : {
