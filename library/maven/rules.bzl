@@ -1,6 +1,7 @@
 load("@rules_jvm_external//:defs.bzl", rje_maven_install = "maven_install")
 load("@rules_jvm_external//:specs.bzl", rje_maven = "maven", rje_parse = "parse")
 load(":artifacts.bzl", maven_artifacts_org = "artifacts")
+load("//distribution:deployment.bzl", "deployment")
 
 def maven(artifacts_org, internal_artifacts = {}, artifacts_repo={}, override_targets={}, fail_on_missing_checksum=True, generate_compat_repositories=False):
     if len(artifacts_repo) > 0:
@@ -21,8 +22,8 @@ def maven(artifacts_org, internal_artifacts = {}, artifacts_repo={}, override_ta
         repositories = [
             "https://repo1.maven.org/maven2",
             "https://repo.maven.apache.org/maven2/",
-            "https://repo.vaticle.com/repository/maven",
-            "https://repo.vaticle.com/repository/maven-snapshot",
+            deployment["maven"]["release"]["download"],
+            deployment["maven"]["snapshot"]["download"],
             "https://dl.google.com/dl/android/maven2",
             "https://maven.pkg.jetbrains.space/public/p/compose/dev",
         ],

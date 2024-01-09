@@ -33,7 +33,7 @@ def deps():
 
     http_file(
         name = "vaticle_apple_developer_id_application_cert",
-        urls = ["https://repo.vaticle.com/repository/cert/apple/VaticleAppleDeveloperIDApplicationCertificate.p12"],
+        urls = ["https://repo.typedb.com/5rr7o5TZos6fdAb8/private-infrastructure/raw/files/VaticleAppleDeveloperIDApplicationCertificate.p12"],
         sha256 = "4754e62a448f1c1dce7b377d5f1f26a5a28a6c43e6f31c05c7850ca4d0278f15",
         downloaded_file_path = "VaticleAppleDeveloperIDApplicationCertificate.p12",
     )
