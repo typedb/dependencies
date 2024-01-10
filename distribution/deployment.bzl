@@ -81,16 +81,16 @@ deployment_private = {
         "snapshot": {
             "upload" : _cloudsmith_private["snapshot"],
             "download": "https://repo.typedb.com/basic/private-snapshot/raw/"
+        }
+    },
+    "helm" :  {
+        "release" : {
+             "upload" : _cloudsmith_private["release"],
+             "download": "https://repo.typedb.com/basic/private-release/helm/charts/"
         },
-        "helm" :  {
-            "release" : {
-                 "upload" : _cloudsmith_private["release"],
-                 "download": "https://repo.typedb.com/basic/private-release/helm/charts/"
-            },
-            "snapshot": {
-                 "upload" : _cloudsmith_private["snapshot"],
-                 "download" : "https://repo.typedb.com/basic/private-snapshot/helm/charts/",
-            }
-        },
+        "snapshot": {
+             "upload" : _cloudsmith_private["snapshot"],
+             "download" : "https://repo.typedb.com/basic/private-snapshot/helm/charts/",
+        }
     }
 }
