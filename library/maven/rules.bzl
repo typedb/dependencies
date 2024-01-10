@@ -2,7 +2,7 @@ load("@rules_jvm_external//:defs.bzl", rje_maven_install = "maven_install")
 load("@rules_jvm_external//:specs.bzl", rje_maven = "maven", rje_parse = "parse")
 load(":artifacts.bzl", maven_artifacts_org = "artifacts")
 
-def maven(artifacts_org, artifacts_repo={}, override_targets={}, fail_on_missing_checksum=True, generate_compat_repositories=False):
+def maven(artifacts_org, internal_artifacts = {}, artifacts_repo={}, override_targets={}, fail_on_missing_checksum=True, generate_compat_repositories=False):
     if len(artifacts_repo) > 0:
         _warn("There are {} artifacts_repo found. Overriding artifacts_org with `artifacts_repo` is discouraged!".format(len(artifacts_repo)))
     for a in artifacts_org:
@@ -12,6 +12,10 @@ def maven(artifacts_org, artifacts_repo={}, override_targets={}, fail_on_missing
     for a in artifacts_org:
         artifact = maven_artifact(a, artifacts_repo.get(a, maven_artifacts_org[a]))
         artifacts_selected.append(artifact)
+    for coordinate, info in internal_artifacts.items():
+        if not coordinate.startswith("com.vaticle."):
+            fail("'" + coordinate + "' is not an internal dependency and must be declared in @vaticle_dependencies")
+        artifacts_selected.append(maven_artifact(coordinate, info))
     rje_maven_install(
         artifacts = artifacts_selected,
         repositories = [
