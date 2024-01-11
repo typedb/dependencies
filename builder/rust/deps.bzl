@@ -27,21 +27,21 @@ def deps():
     http_file(
         name = "cxxbridge_linux",
         urls = [
-            "https://repo.typedb.com/public/public-infrastructure/raw/versions/1.0.55/cxxbridge-v1.0.55-linux"
+            "https://repo.typedb.com/public/tools/raw/versions/1.0.55/cxxbridge-v1.0.55-linux"
         ],
         executable = True,
     )
     http_file(
         name = "cxxbridge_mac",
         urls = [
-            "https://repo.typedb.com/public/public-infrastructure/raw/versions/1.0.55/cxxbridge-v1.0.55-mac"
+            "https://repo.typedb.com/public/tools/raw/versions/1.0.55/cxxbridge-v1.0.55-mac"
         ],
         executable = True,
     )
     http_file(
         name = "cxxbridge_windows",
         urls = [
-            "https://repo.typedb.com/public/public-infrastructure/raw/versions/1.0.55/cxxbridge-v1.0.55-windows.exe",
+            "https://repo.typedb.com/public/tools/raw/versions/1.0.55/cxxbridge-v1.0.55-windows.exe",
         ],
         executable = True,
     )
