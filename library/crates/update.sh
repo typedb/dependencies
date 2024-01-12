@@ -28,9 +28,9 @@ if [ ! -x cargo ]; then
     arch=$(bash --version | head -n1 | grep -o '\S\+$')  # (arch-vendor-os)
     arch=${arch#(} && arch=${arch%)} # strip parentheses
     if [[ $arch == x86_64-apple-darwin* ]]; then
-        curl -o cargo https://repo.typedb.com/public/tools/raw/versions/1.66.0_darwin_x86_64/cargo
+        curl -o cargo https://repo.typedb.com/public/public-tools/raw/versions/1.66.0_darwin_x86_64/cargo
     elif [[ $arch == arm64-apple-darwin* ]]; then
-        curl -o cargo https://repo.typedb.com/public/tools/raw/versions/1.66.0_darwin_arm64/cargo
+        curl -o cargo https://repo.typedb.com/public/public-tools/raw/versions/1.66.0_darwin_arm64/cargo
     else
         echo "Unsupported architecture: $arch"
         exit 1
