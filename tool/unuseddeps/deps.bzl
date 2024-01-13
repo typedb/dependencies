@@ -20,21 +20,21 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 def deps():
     http_file(
         name = "unused_deps_mac",
-        urls = ["https://repo.vaticle.com/repository/meta/unused_deps-mac-7e793330b31d465f6bffe101ace2ab25d75e2eec"],
+        urls = ["https://repo.typedb.com/public/public-tools/raw/files/unused_deps-mac-7e793330b31d465f6bffe101ace2ab25d75e2eec"],
         executable = True
     )
     http_file(
         name = "unused_deps_linux",
-        urls = ["https://repo.vaticle.com/repository/meta/unused_deps-linux-7e793330b31d465f6bffe101ace2ab25d75e2eec"],
+        urls = ["https://repo.typedb.com/public/public-tools/raw/files/unused_deps-linux-7e793330b31d465f6bffe101ace2ab25d75e2eec"],
         executable = True
     )
     http_file(
         name = "buildozer_mac",
-        urls = ["https://repo.vaticle.com/repository/meta/buildozer-mac-7e793330b31d465f6bffe101ace2ab25d75e2eec"],
+        urls = ["https://repo.typedb.com/public/public-tools/raw/files/buildozer-mac-7e793330b31d465f6bffe101ace2ab25d75e2eec"],
         executable = True
     )
     http_file(
         name = "buildozer_linux",
-        urls = ["https://repo.vaticle.com/repository/meta/buildozer-linux-7e793330b31d465f6bffe101ace2ab25d75e2eec"],
+        urls = ["https://repo.typedb.com/public/public-tools/raw/files/buildozer-linux-7e793330b31d465f6bffe101ace2ab25d75e2eec"],
         executable = True
     )

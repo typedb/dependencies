@@ -1,5 +1,0 @@
-[repo-vaticle-rpm-snapshot]
-name=repo-vaticle-rpm-snapshot
-baseurl=http://repo.vaticle.com/repository/rpm-snapshot/
-enabled=1
-gpgcheck=0
