@@ -19,8 +19,7 @@
 sync-dependencies.py updates bazel dependencies between @vaticle repositories
 
 Example usage:
-bazel run @vaticle_dependencies//tool/sync:dependencies -- \
---source typedb-driver@1a2b3c4d1a2b3c4d1a2b3c4d1a2b3c4d1a2b3c4g
+bazel run @vaticle_dependencies//tool/sync:dependencies -- --source typedb-driver@1a2b3c4d1a2b3c4d1a2b3c4d1a2b3c4d1a2b3c4g
 """
 
 import argparse
