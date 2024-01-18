@@ -51,7 +51,7 @@ CMDLINE_PARSER = argparse.ArgumentParser(description='Automatic updater for Vati
 CMDLINE_PARSER.add_argument('--dry-run', help='Do not perform any real actions')
 CMDLINE_PARSER.add_argument('--source', required=True)
 
-COMMIT_SUBJECT_PREFIX = "//ci:sync-dependencies:"
+COMMIT_SUBJECT_PREFIX = "//tool/sync:dependencies"
 regex_git_commit = r'[0-9a-f]{40}'
 regex_git_tag = r'([0-9]+\.[0-9]+\.[0-9]+)'
 
