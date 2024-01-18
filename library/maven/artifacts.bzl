@@ -57,6 +57,7 @@ artifacts = {
     "com.google.ortools:ortools-linux-aarch64": "9.6.2534",
     "com.google.ortools:ortools-win32-x86-64": "9.6.2534",
     "com.google.protobuf:protobuf-java": "3.21.7",
+    "com.google.protobuf:protobuf-kotlin": "3.21.7",
     "com.google.re2j:re2j" : "1.6",
     "com.google.truth:truth" : "1.0.1",
     "com.jcraft:jsch": "0.1.55",
@@ -109,6 +110,15 @@ artifacts = {
     "io.grpc:grpc-protobuf": "1.49.0",
     "io.grpc:grpc-stub": "1.49.0",
     "io.grpc:grpc-testing": "1.49.0",
+    "io.ktor:ktor-client-cio-jvm": "2.3.7",
+    "io.ktor:ktor-client-core-jvm": "2.3.7",
+    "io.ktor:ktor-client-websockets-jvm": "2.3.7",
+    "io.ktor:ktor-serialization-kotlinx-jvm": "2.3.7",
+    "io.ktor:ktor-serialization-kotlinx-protobuf-jvm": "2.3.7",
+    "io.ktor:ktor-server-core-jvm": "2.3.7",
+    "io.ktor:ktor-server-netty-jvm": "2.3.7",
+    "io.ktor:ktor-server-default-headers-jvm": "2.3.7",
+    "io.ktor:ktor-server-websockets-jvm": "2.3.7",
     "io.kubernetes:client-java": {
         "exclude": ["com.github.stefanbirkner:system-rules"],
         "version": "12.0.0"
@@ -289,6 +299,8 @@ artifacts = {
     "org.jetbrains.kotlinx:kotlinx-coroutines-core": "1.6.0",
     "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm": "1.6.0",
     "org.jetbrains.kotlinx:kotlinx-coroutines-test": "1.6.0",
+    "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm": "1.5.1",
+    "org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm": "1.5.1",
     # Find out the Skiko version we need by viewing dependencies of @maven//org_jetbrains_compose_ui_ui_graphics_desktop
     "org.jetbrains.skiko:skiko-awt": "0.7.34",
     "org.jetbrains.skiko:skiko-awt-runtime-linux-arm64": "0.7.34",
