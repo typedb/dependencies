@@ -17,8 +17,6 @@
 
 package(default_visibility = ["//visibility:public"])
 
-load("@vaticle_dependencies_ci_pip//:requirements.bzl", "requirement")
-
 py_binary(
     name = "docs",
     srcs = ["docs.py"],

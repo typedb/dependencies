@@ -16,15 +16,12 @@
 #
 
 """
-sync-dependencies.py updates bazel dependencies between @graknlabs repositories
+sync-dependencies.py updates bazel dependencies between @vaticle repositories
 
 Example usage:
-bazel run @graknlabs_dependencies//ci:sync-dependencies -- \
---source client-python@1a2s3d4f1a2s3d4f1a2s3d4f1a2s3d4f1a2s3d4f \
---targets docs:development examples:development
+bazel run @vaticle_dependencies//tool/sync:dependencies -- \
+--source typedb-driver@1a2b3c4d1a2b3c4d1a2b3c4d1a2b3c4d1a2b3c4g
 """
-
-from __future__ import print_function
 
 import argparse
 import tool.common.common as tc
@@ -46,13 +43,13 @@ GITHUB_TOKEN = os.getenv('SYNC_DEPENDENCIES_TOKEN')
 if GITHUB_TOKEN is None:
     raise Exception("$SYNC_DEPENDENCIES_TOKEN is not set!")
 
-GRABL_HOST = 'https://grabl.grakn.ai'
+BOT_HOST = 'https://bot.vaticle.com'
 if not IS_CIRCLE_ENV:
-    GRABL_HOST = 'http://localhost:8000'
+    BOT_HOST = 'http://localhost:8000'
 
-GRABL_SYNC_DEPS = '{0}/sync/dependencies'.format(GRABL_HOST)
+BOT_SYNC_DEPS = '{0}/sync/dependencies'.format(BOT_HOST)
 
-CMDLINE_PARSER = argparse.ArgumentParser(description='Automatic updater for GraknLabs inter-repository dependencies')
+CMDLINE_PARSER = argparse.ArgumentParser(description='Automatic updater for Vaticle inter-repository dependencies')
 CMDLINE_PARSER.add_argument('--dry-run', help='Do not perform any real actions')  # TODO(vmax): support this argument
 CMDLINE_PARSER.add_argument('--source', required=True)
 CMDLINE_PARSER.add_argument('--targets', nargs='+', required=True)
@@ -61,14 +58,14 @@ COMMIT_SUBJECT_PREFIX = "//ci:sync-dependencies:"
 regex_git_commit = r'[0-9a-f]{40}'
 regex_git_tag = r'([0-9]+\.[0-9]+\.[0-9]+)'
 
-graknlabs = 'graknlabs'
+vaticle = 'vaticle'
 github_connection = github.Github(GITHUB_TOKEN)
-github_org = github_connection.get_organization(graknlabs)
+github_org = github_connection.get_organization(vaticle)
 
 
 def is_building_upstream():
     """ Returns False is running in a forked repo"""
-    return graknlabs in os.getenv('CIRCLE_REPOSITORY_URL', '')
+    return vaticle in os.getenv('CIRCLE_REPOSITORY_URL', '')
 
 
 def exception_handler(fun):
@@ -96,7 +93,7 @@ def short_commit(commit_sha):
 @exception_handler
 def main():
     if not is_building_upstream():
-        print('//ci:sync-dependencies aborted: not building the upstream repo on @graknlabs')
+        print('//ci:sync-dependencies aborted: not building the upstream repo on @vaticle')
         exit(0)
 
     arguments = CMDLINE_PARSER.parse_args(sys.argv[1:])
@@ -118,16 +115,16 @@ def main():
     github_commit = github_repo.get_commit(source_ref)
     source_message = github_commit.commit.message
 
-    # TODO: Check that the commit author is @grabl
+    # TODO: Check that the commit author is @vaticle-bot
     if not source_message.startswith(COMMIT_SUBJECT_PREFIX):
-        sync_message = '{0} {1}/{2}@{3}'.format(COMMIT_SUBJECT_PREFIX, graknlabs, source_repo, source_ref_short)
+        sync_message = '{0} {1}/{2}@{3}'.format(COMMIT_SUBJECT_PREFIX, vaticle, source_repo, source_ref_short)
     else:
         sync_message = source_message
 
     print('Requesting the synchronisation of dependency to {0}/{1}@{2} in the following repos:'
-          .format(graknlabs, source_repo, source_ref_short))
+          .format(vaticle, source_repo, source_ref_short))
     for target_repo in targets:
-        print('- {0}/{1}:{2}'.format(graknlabs, target_repo, targets[target_repo]))
+        print('- {0}/{1}:{2}'.format(vaticle, target_repo, targets[target_repo]))
 
     print('Constructing request payload:')
     sync_data = {
@@ -141,9 +138,9 @@ def main():
     sync_data_json = json.dumps(sync_data)
     signature = hmac.new(GITHUB_TOKEN.encode(), sync_data_json.encode(), hashlib.sha1).hexdigest()
 
-    print('Sending post request to: ' + GRABL_SYNC_DEPS)
+    print('Sending post request to: ' + BOT_SYNC_DEPS)
     tc.shell_execute([
-        'curl', '-X', 'POST', '--data', sync_data_json, '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, GRABL_SYNC_DEPS
+        'curl', '-X', 'POST', '--data', sync_data_json, '-H', 'Content-Type: application/json', '-H', 'X-Hub-Signature: ' + signature, BOT_SYNC_DEPS
     ])
     print('DONE!')
 
