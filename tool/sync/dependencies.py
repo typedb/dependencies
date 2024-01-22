@@ -92,7 +92,7 @@ def short_commit(commit_sha):
 @exception_handler
 def main():
     if not is_building_upstream():
-        print('//ci:sync-dependencies aborted: not building the upstream repo on @vaticle')
+        print('Sync dependencies aborted: not building the upstream repo on @vaticle')
         exit(0)
 
     arguments = CMDLINE_PARSER.parse_args(sys.argv[1:])
