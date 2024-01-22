@@ -5,6 +5,8 @@ def vaticle_dependencies_ci_pip():
         name = "vaticle_dependencies_ci_pip",
         requirements_lock = "@vaticle_dependencies//tool:requirements.txt",
     )
+    load("@vaticle_dependencies_ci_pip//:requirements.bzl", "install_deps")
+    install_deps()
 
 maven_artifacts = [
   "com.eclipsesource.minimal-json:minimal-json",
