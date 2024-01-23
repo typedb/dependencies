@@ -64,13 +64,6 @@ def _swig_csharp_wrapper_impl(ctx):
         arguments = args,
     )
 
-    # TODO: What to do for csharp?
-    jni_h = ctx.actions.declare_file("jni.h")
-    _copy_to_bin(ctx, ctx.file._jni_header, jni_h)
-
-    jni_md_h = ctx.actions.declare_file("jni_md.h")
-    _copy_to_bin(ctx, ctx.file.jni_md_header, jni_md_h)
-
     lib_compilation_context = ctx.attr.lib[CcInfo].compilation_context
     compilation_context = cc_common.create_compilation_context(
         # TODO: Probably fix the headers here
@@ -84,14 +77,13 @@ def _swig_csharp_wrapper_impl(ctx):
         local_defines = lib_compilation_context.local_defines,
         quote_includes = lib_compilation_context.quote_includes,
         system_includes = depset(
-            [jni_h.dirname, jni_md_h.dirname],
+            [],
             transitive = [lib_compilation_context.system_includes],
         )
     )
 
     return [
-        # TODO: jni_h, jni_md_h
-        DefaultInfo(files = depset([jni_h, jni_md_h, wrap_src, wrap_csharp])),
+        DefaultInfo(files = depset([wrap_src, wrap_csharp])),
         CcInfo(
             compilation_context = compilation_context,
             linking_context = ctx.attr.lib[CcInfo].linking_context,
@@ -99,7 +91,7 @@ def _swig_csharp_wrapper_impl(ctx):
     ]
 
 
-_swig_csharp_wrapper = rule(
+swig_csharp_wrapper = rule(
     implementation = _swig_csharp_wrapper_impl,
     attrs = {
         "lib": attr.label(
@@ -129,13 +121,6 @@ _swig_csharp_wrapper = rule(
         "extra_args": attr.string_list(
             doc = "Extra arguments to be passed to SWIG",
         ),
-        "_jni_header": attr.label( # TODO: Change to Csharp??
-            default = Label("@bazel_tools//tools/jdk:jni_header"),
-            allow_single_file = True,
-        ),
-        "jni_md_header": attr.label( # TODO: Change to PInvoke??
-            allow_single_file = True,
-        ),
         "_swig": attr.label(
             default = Label("@swig//:swig"),
             allow_single_file = True,
@@ -144,19 +129,6 @@ _swig_csharp_wrapper = rule(
         ),
     },
 )
-
-# TODO: jni_md_header to csharp
-def swig_csharp_wrapper(**kwargs):
-    # workaround for select() not being allowed as a default argument
-    # cf. https://github.com/bazelbuild/bazel/issues/287
-    _swig_csharp_wrapper(
-        jni_md_header = select({
-            "@vaticle_bazel_distribution//platform:is_mac": Label("@bazel_tools//tools/jdk:jni_md_header-darwin"),
-            "@vaticle_bazel_distribution//platform:is_linux": Label("@bazel_tools//tools/jdk:jni_md_header-linux"),
-            "@vaticle_bazel_distribution//platform:is_windows": Label("@bazel_tools//tools/jdk:jni_md_header-windows"),
-        }),
-        **kwargs,
-    )
 
 
 def swig_csharp(name, lib, shared_lib_name=None, tags=[], **kwargs):
