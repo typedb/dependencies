@@ -49,6 +49,12 @@ kotlin_repositories()
 load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
 kt_register_toolchains()
 
+# Load //builder/csharp
+load("//builder/csharp:deps.bzl", dotnet_deps = "deps")
+dotnet_deps()
+load("@rules_dotnet//dotnet:repositories.bzl", "rules_dotnet_dependencies")
+rules_dotnet_dependencies()
+
 load("//library/ortools/cc:deps.bzl", "google_or_tools_mac", "google_or_tools_linux", "google_or_tools_windows")
 google_or_tools_mac()
 google_or_tools_linux()
