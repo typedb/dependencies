@@ -18,7 +18,7 @@
 # TODO: Generalise and move the same functions (used by java, python, csharp)
 # to a base file, add reusage where possible.
 
-load("@rules_dotnet//dotnet:defs.bzl", "csharp_binary", "csharp_library")
+load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 
 def _copy_to_bin(ctx, src, dst):
     ctx.actions.run_shell(
@@ -131,7 +131,7 @@ swig_csharp_wrapper = rule(
 )
 
 
-def swig_csharp(name, lib, shared_lib_name=None, tags=[], **kwargs):
+def swig_csharp(name, lib, target_frameworks, targeting_packs, shared_lib_name=None, tags=[], **kwargs):
     swig_wrapper_name = name + "__swig"
     swig_csharp_wrapper(
         name = swig_wrapper_name,
@@ -175,5 +175,7 @@ def swig_csharp(name, lib, shared_lib_name=None, tags=[], **kwargs):
         name = name,
         srcs = [swig_wrapper_name],
         resources = ["lib" + shared_lib_name],
-        tags = tags,
+        target_frameworks = target_frameworks,
+        targeting_packs = targeting_packs,
+        tags = tags, # TODO
     )
