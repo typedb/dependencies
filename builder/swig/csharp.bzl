@@ -30,12 +30,13 @@ def _copy_to_bin(ctx, src, dst):
 def _swig_csharp_wrapper_impl(ctx):
     module_name = getattr(ctx.attr, "class_name", ctx.attr.name)
 
-    wrap_csharp = ctx.actions.declare_file("{}.cs".format(module_name))
+    wrap_csharp_name = "{}.cs".format(module_name)
+    wrap_csharp = ctx.actions.declare_file(wrap_csharp_name)
 
     args = ctx.attr.extra_args + [
         "-csharp",
         "-namespace", ctx.attr.namespace,
-        "-outfile", wrap_csharp.path,
+        "-outfile", wrap_csharp_name,
         ctx.file.interface.path,
     ]
 
@@ -66,7 +67,6 @@ def _swig_csharp_wrapper_impl(ctx):
 
     lib_compilation_context = ctx.attr.lib[CcInfo].compilation_context
     compilation_context = cc_common.create_compilation_context(
-        # TODO: Probably fix the headers here
         headers = depset(swig_headers, transitive = [lib_compilation_context.headers]),
         defines = lib_compilation_context.defines,
         framework_includes = lib_compilation_context.framework_includes,
@@ -157,7 +157,6 @@ def swig_csharp(name, lib, target_frameworks, targeting_packs, shared_lib_name=N
             }),
         )
 
-    # TODO: Maybe don't create multiple files for specific platform.
     swig_cc_binary("lib" + shared_lib_name + ".dylib")
     swig_cc_binary("lib" + shared_lib_name + ".so")
     swig_cc_binary(shared_lib_name + ".dll")
@@ -171,9 +170,17 @@ def swig_csharp(name, lib, target_frameworks, targeting_packs, shared_lib_name=N
         })
     )
 
+    native.genrule(
+        name = "csharp_source",
+        srcs = [swig_wrapper_name],
+        outs = [name + "_.cs"],
+        # TODO: Won't work for windows. We have to get one .cs file to pass it to the csharp_library.
+        cmd = "for f in $(SRCS); do if [[ \"$$f\" =~ \\.cs ]]; then cp $$f $(@D)/" + name + "_.cs; fi; done"
+    )
+
     csharp_library(
         name = name,
-        srcs = [swig_wrapper_name],
+        srcs = [name + "_.cs"],
         resources = ["lib" + shared_lib_name],
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
