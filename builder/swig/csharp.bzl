@@ -19,13 +19,8 @@
 # to a base file, add reusage where possible.
 
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
+load("@rules_dotnet//dotnet/private:providers.bzl", "DotnetAssemblyCompileInfo", "DotnetAssemblyRuntimeInfo")
 
-def _copy_to_bin(ctx, src, dst):
-    ctx.actions.run_shell(
-        inputs = [src],
-        outputs = [dst],
-        command = "cp -f '{}' '{}'".format(src.path, dst.path),
-    )
 
 def _swig_csharp_wrapper_impl(ctx):
     module_name = getattr(ctx.attr, "class_name", ctx.attr.name)
@@ -41,13 +36,13 @@ def _swig_csharp_wrapper_impl(ctx):
     ]
 
     if ctx.attr.enable_cxx:
-        wrap_src = ctx.actions.declare_file("{}_wrap.cxx".format(module_name))
+        wrap_cxx = ctx.actions.declare_file("{}_wrap.cxx".format(module_name))
         directors_header = ctx.actions.declare_file("{}_wrap.h".format(module_name))
-        args = ["-c++", "-o", wrap_src.path, "-oh", directors_header.path] + args
+        args = ["-c++", "-o", wrap_cxx.path, "-oh", directors_header.path] + args
         swig_headers = [directors_header]
     else:
-        wrap_src = ctx.actions.declare_file("{}_wrap.c".format(module_name))
-        args = ["-o", wrap_src.path] + args
+        wrap_cxx = ctx.actions.declare_file("{}_wrap.c".format(module_name))
+        args = ["-o", wrap_cxx.path] + args
         swig_headers = []
     
     for h in ctx.attr.lib[CcInfo].compilation_context.headers.to_list():
@@ -60,7 +55,7 @@ def _swig_csharp_wrapper_impl(ctx):
                 ctx.attr.lib[CcInfo].compilation_context.headers,
                 ctx.attr._swig.data_runfiles.files,
         ]),
-        outputs = [wrap_src, wrap_csharp] + swig_headers,
+        outputs = [wrap_cxx, wrap_csharp] + swig_headers,
         executable = ctx.file._swig,
         arguments = args,
     )
@@ -83,7 +78,11 @@ def _swig_csharp_wrapper_impl(ctx):
     )
 
     return [
-        DefaultInfo(files = depset([wrap_src, wrap_csharp])),
+        DefaultInfo(files = depset([wrap_cxx, wrap_csharp])),
+        OutputGroupInfo(
+            csharp_source = depset([wrap_csharp]),
+            cxx_source = depset([wrap_cxx]),
+        ),
         CcInfo(
             compilation_context = compilation_context,
             linking_context = ctx.attr.lib[CcInfo].linking_context,
@@ -131,8 +130,47 @@ swig_csharp_wrapper = rule(
 )
 
 
+def _csharp_native_library(ctx):
+    return [
+        DefaultInfo(
+            files = depset([ctx.file.native_lib]),
+            runfiles = ctx.runfiles(files = [ctx.file.native_lib])
+        ),
+        DotnetAssemblyCompileInfo(
+            name = "{}".format(ctx.file.native_lib.basename),
+            internals_visible_to = ctx.attr.name,
+            refs = [],
+            irefs = [],
+            analyzers = [],
+            compile_data = [ctx.file.native_lib],
+            exports = [],
+        ),
+        DotnetAssemblyRuntimeInfo(
+            name = "{}".format(ctx.file.native_lib.basename),
+            version = "",
+            deps = depset(),
+            nuget_info = [],
+            libs = [],
+            native = [ctx.file.native_lib],
+            direct_deps_depsjson_fragment = [],
+        )]
+
+
+csharp_native_library = rule(
+    implementation = _csharp_native_library,
+    attrs = {
+        "native_lib": attr.label(
+            doc = "Native cc library which needs to be wrapped as a C# library",
+            providers = [CcInfo],
+            mandatory = True,
+            allow_single_file = True,
+        ),
+    },
+)
+
+
 def swig_csharp(name, lib, target_frameworks, targeting_packs, shared_lib_name=None, tags=[], **kwargs):
-    swig_wrapper_name = name + "__swig"
+    swig_wrapper_name = "{}_swig".format(name)
     swig_csharp_wrapper(
         name = swig_wrapper_name,
         class_name = name,
@@ -157,32 +195,45 @@ def swig_csharp(name, lib, target_frameworks, targeting_packs, shared_lib_name=N
             }),
         )
 
-    swig_cc_binary("lib" + shared_lib_name + ".dylib")
-    swig_cc_binary("lib" + shared_lib_name + ".so")
-    swig_cc_binary(shared_lib_name + ".dll")
+    native_lib_name_root = "typedb_driver"
+    native_lib_name = "{}_native".format(native_lib_name_root)
+
+    # TODO: On Mac, it's enough to pass native_lib_name_root (lib and .dylib are added by the rule)
+    # Check if the same could work for Windows and Linux. Maybe we don't need to make
+    # this complex code with selects and functions...
+    swig_cc_binary("lib" + native_lib_name_root + ".dylib")
+    swig_cc_binary("lib" + native_lib_name_root + ".so")
+    swig_cc_binary(native_lib_name_root + ".dll")
 
     native.alias(
-        name = "lib" + shared_lib_name,
+        name = native_lib_name,
         actual = select({
-            "@vaticle_bazel_distribution//platform:is_mac": ("lib" + shared_lib_name + ".dylib"),
-            "@vaticle_bazel_distribution//platform:is_linux": ("lib" + shared_lib_name + ".so"),
-            "@vaticle_bazel_distribution//platform:is_windows": (shared_lib_name + ".dll"),
+            "@vaticle_bazel_distribution//platform:is_mac": ("lib" + native_lib_name_root + ".dylib"),
+            "@vaticle_bazel_distribution//platform:is_linux": ("lib" + native_lib_name_root + ".so"),
+            "@vaticle_bazel_distribution//platform:is_windows": (native_lib_name_root + ".dll"),
         })
     )
 
-    native.genrule(
-        name = "csharp_source",
+    csharp_native_lib_name = "{}_csharp".format(native_lib_name)
+
+    csharp_native_library(
+        name = csharp_native_lib_name,
+        native_lib = ":{}".format(native_lib_name),
+    )
+
+    csharp_source_name = "{}.cs".format(name)
+
+    native.filegroup(
+        name = csharp_source_name,
         srcs = [swig_wrapper_name],
-        outs = [name + "_.cs"],
-        # TODO: Won't work for windows. We have to get one .cs file to pass it to the csharp_library.
-        cmd = "for f in $(SRCS); do if [[ \"$$f\" =~ \\.cs ]]; then cp $$f $(@D)/" + name + "_.cs; fi; done"
+        output_group = "csharp_source",
     )
 
     csharp_library(
         name = name,
-        srcs = [name + "_.cs"],
-        resources = ["lib" + shared_lib_name],
+        srcs = [":{}".format(csharp_source_name)],
+        deps = [":{}".format(csharp_native_lib_name)],
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
-        tags = tags, # TODO
+        tags = tags,
     )
