@@ -76,6 +76,7 @@ artifacts = {
         "exclude": ["com.google.android.tools:dx"],
         "version": "1.16.10"
     },
+    "com.stripe:stripe-java": "24.12.0",
     "com.typesafe.akka:akka-actor-testkit-typed_2.12": "2.6.3",
     "com.typesafe.akka:akka-actor-typed_2.12": "2.6.3",
     "com.typesafe.akka:akka-actor_2.12": "2.6.3",
@@ -115,8 +116,10 @@ artifacts = {
     "io.grpc:grpc-stub": "1.49.0",
     "io.grpc:grpc-testing": "1.49.0",
     "io.ktor:ktor-client-cio-jvm": "2.3.7",
+    "io.ktor:ktor-client-content-negotiation-jvm": "2.3.7",
     "io.ktor:ktor-client-core-jvm": "2.3.7",
     "io.ktor:ktor-client-websockets-jvm": "2.3.7",
+    "io.ktor:ktor-serialization-gson-jvm": "2.3.7",
     "io.ktor:ktor-serialization-kotlinx-jvm": "2.3.7",
     "io.ktor:ktor-serialization-kotlinx-protobuf-jvm": "2.3.7",
     "io.ktor:ktor-server-core-jvm": "2.3.7",
