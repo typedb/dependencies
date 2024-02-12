@@ -169,7 +169,7 @@ csharp_native_library = rule(
 )
 
 
-def swig_csharp(name, lib, target_frameworks, targeting_packs, shared_lib_name=None, tags=[], **kwargs):
+def swig_csharp(name, lib, nullable_context, target_frameworks, targeting_packs, shared_lib_name=None, tags=[], **kwargs):
     swig_wrapper_name = "{}_swig".format(name)
     swig_csharp_wrapper(
         name = swig_wrapper_name,
@@ -233,6 +233,7 @@ def swig_csharp(name, lib, target_frameworks, targeting_packs, shared_lib_name=N
         name = name,
         srcs = [":{}".format(csharp_source_name)],
         deps = [":{}".format(csharp_native_lib_name)],
+        nullable = nullable_context,
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
         tags = tags,
