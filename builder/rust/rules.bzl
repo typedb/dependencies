@@ -124,6 +124,9 @@ def _rust_cbindgen_impl(ctx):
             files = depset([output_header], transitive = [rust_lib.files]),
             runfiles = ctx.runfiles([output_header], transitive_files = rust_lib.files),
         ),
+        OutputGroupInfo(
+            header = depset([output_header]),
+        ),
      ]
 
 rust_cbindgen = rule(
