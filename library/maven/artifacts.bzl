@@ -48,7 +48,7 @@ artifacts = {
     "com.google.cloud:google-cloud-secretmanager": "1.5.2",
     "com.google.cloud:google-cloud-pubsub": "1.112.5",
     "com.google.api.grpc:proto-google-cloud-pubsub-v1": "1.94.5",
-    "com.google.cloud:google-cloud-service-control": "1.26.0",
+    "com.google.cloud:google-cloud-service-control": "1.27.0",
     "com.google.code.findbugs:annotations": "3.0.1",
     "com.google.code.findbugs:jsr305": "3.0.2",
     "com.google.code.gson:gson": "2.9.0",
