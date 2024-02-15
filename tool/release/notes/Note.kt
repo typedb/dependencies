@@ -124,14 +124,16 @@ ${others.map(Note::toMarkdown).joinToString("\n")}
 }
 
 fun collectNotes(org: String, repo: String, commits: List<String>, githubToken: String): List<Note> {
+    val seenPRs = HashSet<Int>()
     return commits.flatMap { commit ->
         val pullsRes = httpGet("$github/repos/$org/$repo/commits/$commit/pulls", githubToken)
         val pullsJSON = Json.parse(pullsRes.parseAsString())
-        val prs = pullsJSON.asArray()
-        if (prs.size() > 0) {
+        val prs = pullsJSON.asArray().filterNot { pr -> seenPRs.contains(pr.asObject().get("number").asInt()) }
+        if (prs.size > 0) {
             val notes = prs.map { pr ->
                 val prNumber = pr.asObject().get("number").asInt()
                 println("collecting PR #$prNumber from commit '$commit'...")
+                seenPRs.add(prNumber)
                 Note.fromGithubPR(pr.asObject())
             }
             notes

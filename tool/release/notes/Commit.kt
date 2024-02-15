@@ -54,10 +54,18 @@ private fun getPrecedingVersion(org: String, repo: String, version: Version, git
     tags.addAll(body.asArray().map { release -> Version.parse(release.asObject().get("tag_name").asString()) })
     tags.sort()
     val currentIdx = tags.indexOf(version)
-    val preceding =
-        if (currentIdx >= 1) tags[currentIdx - 1]
-        else if (currentIdx == 0) null
-        else throw IllegalStateException("Version '$version' not found: currentIdx = '$currentIdx'")
+    val preceding = when {
+        currentIdx < 0 -> throw IllegalStateException("Version '$version' not found: currentIdx = '$currentIdx'")
+        currentIdx == 0 -> null
+        version.isPrerelease() -> tags[currentIdx - 1]
+        else -> {
+            var previousRelease = currentIdx - 1
+            while (previousRelease >= 0 && tags[previousRelease].isPrerelease()) previousRelease--
+
+            if (previousRelease < 0) null
+            else tags[previousRelease]
+        }
+    }
     return preceding
 }
 
