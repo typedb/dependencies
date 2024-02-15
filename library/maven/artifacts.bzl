@@ -49,7 +49,7 @@ artifacts = {
     "com.google.cloud:google-cloud-pubsub": "1.112.5",
     "com.google.api.grpc:proto-google-cloud-pubsub-v1": "1.94.5",
     "com.google.cloud:google-cloud-service-control": "1.7.0",
-    "com.google.cloud:proto-google-common-protos": "2.11.0",
+    "com.google.cloud:proto-google-common-protos": "2.9.0",
     "com.google.code.findbugs:annotations": "3.0.1",
     "com.google.code.findbugs:jsr305": "3.0.2",
     "com.google.code.gson:gson": "2.9.0",
