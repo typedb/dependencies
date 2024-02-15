@@ -37,30 +37,29 @@ artifacts = {
     "com.github.ben-manes.caffeine:caffeine": "2.8.6",
     "com.github.jknack:handlebars": "4.0.4",
     "com.github.rholder:guava-retrying": "2.0.0",
-#    SUGGESTED BOM VERSION: 26.1.3 https://storage.googleapis.com/cloud-opensource-java-dashboard/com.google.cloud/libraries-bom/26.1.3/index.html
     "com.google.android:annotations": "4.1.1.4",
-    "com.google.api.grpc:proto-google-common-protos" : "2.9.0", #2.9.6
-    "com.google.api:gax": "2.19.2",
-    "com.google.api:gax-grpc": "2.19.2",
-    "com.google.auth:google-auth-library-credentials": "1.6.0", # 1.11.0
-    "com.google.auth:google-auth-library-oauth2-http" : "1.6.0", # 1.11.0
+    "com.google.api.grpc:proto-google-common-protos" : "2.9.0",
+    "com.google.api:gax": "2.19.4",
+    "com.google.api:gax-grpc": "2.19.4",
+    "com.google.auth:google-auth-library-credentials": "1.6.0",
+    "com.google.auth:google-auth-library-oauth2-http" : "1.6.0",
     "com.google.auto.value:auto-value" : "1.9",
     "com.google.auto.value:auto-value-annotations" : "1.9",
-    "com.google.cloud:google-cloud-secretmanager": "1.5.2", # 2.3.10
+    "com.google.cloud:google-cloud-secretmanager": "1.5.2",
     "com.google.cloud:google-cloud-pubsub": "1.112.5",
     "com.google.api.grpc:proto-google-cloud-pubsub-v1": "1.94.5",
-    "com.google.cloud:google-cloud-service-control": "1.5.0", # 1.3.5
-    "com.google.code.findbugs:annotations": "3.0.1", # not in BOM 26.1.3
+    "com.google.cloud:google-cloud-service-control": "1.5.0",
+    "com.google.code.findbugs:annotations": "3.0.1",
     "com.google.code.findbugs:jsr305": "3.0.2",
-    "com.google.code.gson:gson": "2.9.0", # 2.9.1
-    "com.google.errorprone:error_prone_annotations": "2.9.0", # 2.15.0
+    "com.google.code.gson:gson": "2.9.0",
+    "com.google.errorprone:error_prone_annotations": "2.9.0",
     "com.google.guava:failureaccess" : "1.0.1",
-    "com.google.guava:guava": "30.1-jre", # 31.1-jre
-    "com.google.firebase:firebase-admin": "9.1.1", # not in BOM 26.1.3
-    "com.google.http-client:google-http-client": "1.34.2", # 1.42.2
-    "com.google.inject:guice": "4.2.2", # not in BOM 26.1.3
+    "com.google.guava:guava": "30.1-jre",
+    "com.google.firebase:firebase-admin": "9.1.1",
+    "com.google.http-client:google-http-client": "1.34.2",
+    "com.google.inject:guice": "4.2.2",
     "com.google.j2objc:j2objc-annotations" : "1.3",
-    "com.google.ortools:ortools-java": { # not in BOM 26.1.3
+    "com.google.ortools:ortools-java": {
         "version": "9.6.2534",
         # these transitive dependencies must be explicitly included
         "exclude": [
@@ -71,13 +70,13 @@ artifacts = {
            "com.google.ortools:ortools-win32-x86-64"
         ]
     },
-    "com.google.ortools:ortools-darwin-aarch64": "9.6.2534", # not in BOM 26.1.3
-    "com.google.ortools:ortools-darwin-x86-64": "9.6.2534", # not in BOM 26.1.3
-    "com.google.ortools:ortools-linux-aarch64": "9.6.2534", # not in BOM 26.1.3
-    "com.google.ortools:ortools-linux-x86-64": "9.6.2534", # not in BOM 26.1.3
-    "com.google.ortools:ortools-win32-x86-64": "9.6.2534", # not in BOM 26.1.3
+    "com.google.ortools:ortools-darwin-aarch64": "9.6.2534",
+    "com.google.ortools:ortools-darwin-x86-64": "9.6.2534",
+    "com.google.ortools:ortools-linux-aarch64": "9.6.2534",
+    "com.google.ortools:ortools-linux-x86-64": "9.6.2534",
+    "com.google.ortools:ortools-win32-x86-64": "9.6.2534",
     "com.google.protobuf:protobuf-java": "3.21.7",
-    "com.google.protobuf:protobuf-kotlin": "3.21.7", # not in BOM 26.1.3
+    "com.google.protobuf:protobuf-kotlin": "3.21.7",
     "com.google.re2j:re2j" : "1.6",
     "com.google.truth:truth" : "1.0.1",
     "com.jcraft:jsch": "0.1.55",
@@ -128,7 +127,6 @@ artifacts = {
     "io.cucumber:cucumber-junit": "5.1.3",
     "io.github.microutils:kotlin-logging-jvm": "2.0.10",
     "io.github.speedb-io:speedbjni": "2.6.0",
-    # 1.49.2
     "io.grpc:grpc-api": "1.49.0",
     "io.grpc:grpc-context": "1.49.0",
     "io.grpc:grpc-core": "1.49.0",
@@ -168,7 +166,6 @@ artifacts = {
         "exclude": ["com.github.stefanbirkner:system-rules"],
         "version": "0.1"
     },
-    #all suggested DOWNgrades by BOM
     "io.netty:netty-all": "4.1.87.Final",
     "io.netty:netty-codec-http2": "4.1.87.Final",
     "io.netty:netty-handler": "4.1.87.Final",
