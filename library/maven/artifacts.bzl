@@ -39,6 +39,7 @@ artifacts = {
     "com.github.rholder:guava-retrying": "2.0.0",
     "com.google.android:annotations": "4.1.1.4",
     "com.google.api.grpc:proto-google-common-protos" : "2.9.0",
+    "com.google.api.grpc:proto-google-cloud-pubsub-v1": "1.102.20",
     "com.google.api:gax": "2.19.4",
     "com.google.api:gax-grpc": "2.19.4",
     "com.google.auth:google-auth-library-credentials": "1.6.0",
