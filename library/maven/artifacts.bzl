@@ -46,6 +46,7 @@ artifacts = {
     "com.google.auth:google-auth-library-oauth2-http" : "1.6.0",
     "com.google.auto.value:auto-value" : "1.9",
     "com.google.auto.value:auto-value-annotations" : "1.9",
+    "com.google.cloud:google-cloud-cloudcommerceconsumerprocurement":"0.3.0",
     "com.google.cloud:google-cloud-pubsub": "1.120.20",
     "com.google.cloud:google-cloud-secretmanager": "1.5.2",
     "com.google.cloud:google-cloud-pubsub": "1.112.5",
