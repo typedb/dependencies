@@ -144,6 +144,7 @@ artifacts = {
     "io.fabric8:kubernetes-model-apps": "6.10.0",
     "io.fabric8:kubernetes-model-core": "6.10.0",
     "io.fabric8:kubernetes-model-policy": "6.10.0",
+    "io.ktor:ktor-client-auth-jvm": "2.3.7",
     "io.ktor:ktor-client-cio-jvm": "2.3.7",
     "io.ktor:ktor-client-content-negotiation-jvm": "2.3.7",
     "io.ktor:ktor-client-core-jvm": "2.3.7",
