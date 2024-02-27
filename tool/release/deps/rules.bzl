@@ -25,13 +25,14 @@ def _release_validate_deps_script_impl(ctx):
         template = ctx.file._release_validate_deps_template,
         substitutions = {
             "{workspace_refs_json_path}": ctx.file.refs.path,
+            "{version_file_path}": ctx.file.version_file.path,
             "{tagged_deps}": ",".join(ctx.attr.tagged_deps),
         }
     )
 
     return [
         DefaultInfo(
-            runfiles = ctx.runfiles(files = [ctx.file.refs]),
+            runfiles = ctx.runfiles(files = [ctx.file.refs, ctx.file.version_file]),
             executable = test_script
         )
     ]
@@ -40,6 +41,10 @@ def _release_validate_deps_script_impl(ctx):
 _release_validate_deps_script_test = rule(
     attrs = {
         "refs": attr.label(
+            allow_single_file = True,
+            mandatory = True
+        ),
+        "version_file": attr.label(
             allow_single_file = True,
             mandatory = True
         ),
