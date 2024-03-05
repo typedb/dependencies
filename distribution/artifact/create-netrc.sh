@@ -9,7 +9,9 @@ if [ -z $ARTIFACT_PASSWORD ]; then echo "ARTIFACT_PASSWORD is not set."; MISSING
 if [ $MISSING_VARIABLE = true ]; then exit 1; fi;
 
 cat >> ${HOME}/.netrc <<EOF
+
 machine repo.typedb.com
         login $ARTIFACT_USERNAME
         password $ARTIFACT_PASSWORD
+
 EOF
