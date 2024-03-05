@@ -76,7 +76,7 @@ artifacts = {
         "exclude": ["com.google.android.tools:dx"],
         "version": "1.16.10"
     },
-    "com.stripe:stripe-java": "24.12.0",
+    "com.stripe:stripe-java": "22.3.0",
     "com.typesafe.akka:akka-actor-testkit-typed_2.12": "2.6.3",
     "com.typesafe.akka:akka-actor-typed_2.12": "2.6.3",
     "com.typesafe.akka:akka-actor_2.12": "2.6.3",
