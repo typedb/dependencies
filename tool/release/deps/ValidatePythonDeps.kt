@@ -27,6 +27,9 @@ fun main(args: Array<String>) {
         items[0] to items[1]
     }
 
+    val packageVersion = File(args.removeAt(0)).readText().trim()
+    val isRcAllowed = packageVersion.lowercase().contains("rc")
+
     val versionRegex = Pattern.compile("^(\\d+!)?(\\d+)(\\.\\d+)+(a((\\d+)+)?)?\$")
     val pypiAddress = "https://pypi.org/pypi/%s/json"
 
@@ -36,6 +39,10 @@ fun main(args: Array<String>) {
 
         if (!versionRegex.matcher(version).matches()) {
             throw RuntimeException("invalid version of $it: $version")
+        }
+
+        if (!isRcAllowed && version.lowercase().contains("rc")) {
+            throw RuntimeException("RC dependency $it: $version not allowed for non-RC release $packageVersion")
         }
 
         val url = pypiAddress.format(it)

@@ -22,6 +22,9 @@ fun main(args: Array<String>) {
     val refFileReader = FileReader(refs.toFile())
     val parsed = Json.parse(refFileReader).asObject()
 
+    val packageVersion = File(args.removeAt(0)).readText().trim()
+    val isRcAllowed = packageVersion.lowercase().contains("rc")
+
     val versionRegex = Pattern.compile("^[0-9]+.[0-9]+.[0-9]+(-[-a-zA-Z0-9]+)?$")
     val npmjsAddress = "https://registry.npmjs.org/%s/-/%s-%s.tgz"
 
@@ -31,6 +34,10 @@ fun main(args: Array<String>) {
 
         if (!versionRegex.matcher(version).matches()) {
             throw RuntimeException("invalid version of $it: $version")
+        }
+
+        if (!isRcAllowed && version.lowercase().contains("rc")) {
+            throw RuntimeException("RC dependency $it: $version not allowed for non-RC release $packageVersion")
         }
 
         val url = npmjsAddress.format(it, it, version)

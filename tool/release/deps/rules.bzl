@@ -85,6 +85,7 @@ def release_validate_deps(name, **kwargs):
 def release_validate_nodejs_deps(
         name,
         package_json,
+        version_file,
         tagged_deps,
     ):
         kt_jvm_test(
@@ -100,7 +101,7 @@ def release_validate_nodejs_deps(
                 "@maven//:com_eclipsesource_minimal_json_minimal_json",
                 "@maven//:com_google_http_client_google_http_client",
             ],
-            args = ["$(location {})".format(package_json)] + tagged_deps,
+            args = ["$(location {})".format(package_json), "$(location {})".format(version_file)] + tagged_deps,
             tags = ["manual"],
         )
 
@@ -108,6 +109,7 @@ def release_validate_nodejs_deps(
 def release_validate_python_deps(
         name,
         requirements,
+        version_file,
         tagged_deps,
     ):
         kt_jvm_test(
@@ -123,6 +125,6 @@ def release_validate_python_deps(
                 "@maven//:com_eclipsesource_minimal_json_minimal_json",
                 "@maven//:com_google_http_client_google_http_client",
             ],
-            args = ["$(location {})".format(requirements)] + tagged_deps,
+            args = ["$(location {})".format(requirements), "$(location {})".format(version_file)] + tagged_deps,
             tags = ["manual"],
         )
