@@ -188,7 +188,7 @@ class RustManifestSyncer : Callable<Unit> {
                 }
                 val parent = nonTestProperties.values.filter { it.path.parentFile.toPath().equals(path.parent) };
                 if (parent.size != 1) {
-                    throw RuntimeException("Found '${parent.size}'parents to attach test '${tp.name}' to.")
+                    throw RuntimeException("Found '${parent.size}' parents to attach test '${tp.name}' to.")
                 }
 
                 if (isTest) {
