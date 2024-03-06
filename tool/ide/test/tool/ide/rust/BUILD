@@ -19,11 +19,11 @@
 # under the License.
 #
 
-load("@rules_rust//rust:defs.bzl", "rust_library")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
-rust_library(
-    name = "test-lib",
-    srcs = ["lib.rs"],
-    visibility = ["//visibility:public"]
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "apache-header",
+    size = "small",
 )
-

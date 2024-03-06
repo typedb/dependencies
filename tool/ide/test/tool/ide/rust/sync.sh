@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Copyright (C) 2022 Vaticle
 #
@@ -19,11 +20,4 @@
 # under the License.
 #
 
-load("@rules_rust//rust:defs.bzl", "rust_library")
-
-rust_library(
-    name = "test-lib",
-    srcs = ["lib.rs"],
-    visibility = ["//visibility:public"]
-)
-
+bazel run @vaticle_dependencies//tool/ide:rust_sync

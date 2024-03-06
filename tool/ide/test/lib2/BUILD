@@ -19,11 +19,16 @@
 # under the License.
 #
 
-load("@rules_rust//rust:defs.bzl", "rust_library")
+load("@rules_rust//rust:defs.bzl", "rust_library", "rust_test")
 
 rust_library(
-    name = "test-lib",
+    name = "lib2",
     srcs = ["lib.rs"],
     visibility = ["//visibility:public"]
 )
+
+# rust_test(
+#     name = "lib2_unit_tests",
+#     crate = ":lib2",
+# )
 
