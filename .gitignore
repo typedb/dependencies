@@ -10,6 +10,4 @@ library/crates/cargo
 tool/bazelcache/.terraform/*
 target
 Cargo.lock
-Cargo.toml
-!library/crates/Cargo.toml
 !library/crates/Cargo.lock
