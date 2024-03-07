@@ -76,7 +76,7 @@ artifacts = {
         "exclude": ["com.google.android.tools:dx"],
         "version": "1.16.10"
     },
-    "com.stripe:stripe-java": "24.12.0",
+    "com.stripe:stripe-java": "22.3.0",
     "com.typesafe.akka:akka-actor-testkit-typed_2.12": "2.6.3",
     "com.typesafe.akka:akka-actor-typed_2.12": "2.6.3",
     "com.typesafe.akka:akka-actor_2.12": "2.6.3",
@@ -322,7 +322,7 @@ artifacts = {
     "org.jetbrains.skiko:skiko-awt-runtime-windows-x64": "0.7.85",
     "org.jsoup:jsoup": "1.16.1",
     "org.kohsuke:github-api": "1.101",
-    "org.mockito:mockito-core": "2.6.4",
+    "org.mockito:mockito-core": "3.2.4",
     "org.openjdk.jmh:jmh-core": "1.23",
     "org.openjdk.jmh:jmh-generator-annprocess": "1.23",
     "org.scala-lang:scala-library": "2.12.10",
