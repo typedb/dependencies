@@ -314,7 +314,7 @@ class RustManifestSyncer : Callable<Unit> {
 
             private fun Config.addBenches() {
                 if (properties.benches.isNotEmpty()) {
-                    val mapped = properties.benches.map{
+                    val mapped = properties.benches.map {
                         createSubConfig().apply {
                             this.set<String>("name", it.name);
                             this.set<String>("harness", false);
