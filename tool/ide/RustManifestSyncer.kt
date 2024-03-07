@@ -184,6 +184,7 @@ class RustManifestSyncer : Callable<Unit> {
                 if (path.fileName == null) {
                     logger.debug { "Could not find directory named '$TESTS_DIR' for test '${tp.name}', assuming unit test..." }
                     path = tp.path.toPath()
+                    isTest = true
                 } else if (path.fileName.toString().equals(TESTS_DIR)) {
                     isTest = true
                 } else if (path.fileName.toString().equals(BENCHES_DIR)) {
