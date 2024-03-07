@@ -144,7 +144,10 @@ class RustManifestSyncer : Callable<Unit> {
         }
 
         private fun createCargoWorkspace(manifests: List<File>): Config {
-            val manifestPaths = manifests.map { workspace.relativize(it.toPath().parent).toString() }.toList();
+            val manifestPaths = manifests.map { workspace.relativize(it.toPath().parent).toString() }
+                    .filter { it.isNotBlank() }
+                    .distinct()
+                    .toList()
 
             val cargoToml = Config.inMemory();
             val subConfig = cargoToml.createSubConfig()
