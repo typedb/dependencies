@@ -133,7 +133,7 @@ class RustManifestSyncer : Callable<Unit> {
             val cargoWorkspaceString = TomlWriter().writeToString(cargoWorkspaceConfig.unmodifiable())
             val rootTomlPath = workspace.resolve(CARGO_TOML);
 
-            Files.newOutputStream(rootTomlPath, StandardOpenOption.APPEND).use {
+            Files.newOutputStream(rootTomlPath, StandardOpenOption.APPEND, StandardOpenOption.CREATE).use {
                 it.write(cargoWorkspaceString.toByteArray(StandardCharsets.UTF_8))
             }
 
