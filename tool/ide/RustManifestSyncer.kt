@@ -351,16 +351,14 @@ class RustManifestSyncer : Callable<Unit> {
 
                 data class Local(override val name: String, val external_path: String?, val local_path: String?) : Dependency(name) {
                     override fun toToml(cargoWorkspaceDir: File): Config {
-                        if (external_path != null) {
-                            return Config.inMemory().apply {
+                        return Config.inMemory().apply {
+                            if (external_path != null) {
                                 set<String>("path", external_path.replace(EXTERNAL_PLACEHOLDER, cargoWorkspaceDir.toString()))
-                            }
-                        } else if (local_path != null) {
-                            return Config.inMemory().apply {
+                            } else if (local_path != null) {
                                 set<String>("path", local_path)
+                            } else {
+                                throw IllegalStateException();
                             }
-                        } else {
-                            throw IllegalStateException();
                         }
                     }
                 }
