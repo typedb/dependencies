@@ -279,26 +279,22 @@ class RustManifestSyncer : Callable<Unit> {
             private fun Config.addDevAndBuildDependencies(cargoWorkspaceDir: File) {
                 if (properties.tests.isNotEmpty() || properties.benches.isNotEmpty()) {
                     createSubConfig().apply {
-                        this@addDevAndBuildDependencies.set<Config>("dev-dependencies",
-                                createSubConfig().apply {
-                                    var allTestProperties = properties.tests.toMutableList();
-                                    allTestProperties.addAll(properties.benches);
-                                    allTestProperties.flatMap { it.deps }
-                                            .distinctBy { it.name }
-                                            .filter { dep -> (dep.name != properties.name) && properties.deps.none { existingDep -> dep.name == existingDep.name } }
-                                            .forEach {
-                                                // WARN: this is a hack to replace 'local' repository paths that are relative to the test
-                                                //       to make them relative to the parent Cargo Toml
-                                                //       currently will only work for <package>/tests (ie. exactly one level of nesting)
-                                                val toml = it.toToml(cargoWorkspaceDir);
-                                                val path: String? = toml.get("path");
-                                                if (path != null && path.startsWith("../..")) {
-                                                    toml.set<String>("path", path.replaceFirst("../..", ".."))
-                                                }
-                                                set<Config>(it.name, toml)
-                                            }
+                        this@addDevAndBuildDependencies.set<Config>("dev-dependencies", this)
+                        arrayOf(properties.tests, properties.benches).flatMap { it }
+                                .flatMap { it.deps }
+                                .distinctBy { it.name }
+                                .filter { dep -> (dep.name != properties.name) && properties.deps.none { existingDep -> dep.name == existingDep.name } }
+                                .forEach {
+                                    // WARN: this is a hack to replace 'local' repository paths that are relative to the test
+                                    //       to make them relative to the parent Cargo Toml
+                                    //       currently will only work for <package>/tests (ie. exactly one level of nesting)
+                                    val toml = it.toToml(cargoWorkspaceDir);
+                                    val path: String? = toml.get("path");
+                                    if (path != null && path.startsWith("../..")) {
+                                        toml.set<String>("path", path.replaceFirst("../..", ".."))
+                                    }
+                                    set<Config>(it.name, toml)
                                 }
-                        )
                     }
                 }
 
