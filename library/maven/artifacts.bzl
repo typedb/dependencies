@@ -322,7 +322,7 @@ artifacts = {
     "org.jetbrains.skiko:skiko-awt-runtime-windows-x64": "0.7.85",
     "org.jsoup:jsoup": "1.16.1",
     "org.kohsuke:github-api": "1.101",
-    "org.mockito:mockito-core": "2.6.4",
+    "org.mockito:mockito-core": "3.2.4",
     "org.openjdk.jmh:jmh-core": "1.23",
     "org.openjdk.jmh:jmh-generator-annprocess": "1.23",
     "org.scala-lang:scala-library": "2.12.10",
