@@ -49,7 +49,6 @@ import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Targ
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TYPE
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.VERSION
 
-
 import picocli.CommandLine
 import java.io.File
 import java.io.FileInputStream
@@ -57,7 +56,7 @@ import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
-import java.util.*
+import java.util.Properties
 import java.util.concurrent.Callable
 import kotlin.io.path.Path
 import kotlin.system.exitProcess
