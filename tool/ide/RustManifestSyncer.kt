@@ -153,7 +153,7 @@ class RustManifestSyncer : Callable<Unit> {
             val subConfig = cargoToml.createSubConfig()
             subConfig.set<List<String>>("members", manifestPaths)
             cargoToml.set<Config>("workspace", subConfig)
-            return cargoToml;
+            return cargoToml
         }
 
         private fun loadSyncProperties(bazelBin: File): List<TargetProperties> {
@@ -176,18 +176,18 @@ class RustManifestSyncer : Callable<Unit> {
                     .let { it.first to it.second.associateBy { properties -> properties.name } }
             testProperties.forEach { tp ->
                 // attach tests deps to the parent properties
-                var path = tp.path.toPath();
+                var path = tp.path.toPath()
                 while (path.parent != null && path.fileName != null && (!path.fileName.toString().equals(TESTS_DIR) && !path.fileName.toString().equals(BENCHES_DIR))) {
                     path = path.parent
                 }
-                var isTest = false;
+                val isTest: Boolean
                 if (path.fileName == null) {
                     logger.debug { "Could not find directory named '$TESTS_DIR' for test '${tp.name}', assuming unit test..." }
                     path = tp.path.toPath()
                 } else if (path.fileName.toString().equals(TESTS_DIR)) {
-                    isTest = true;
+                    isTest = true
                 } else if (path.fileName.toString().equals(BENCHES_DIR)) {
-                    isTest = false;
+                    isTest = false
                 } else {
                     throw RuntimeException("Could not find directory named '$TESTS_DIR' or '$BENCHES_DIR' for Bazel test target '${tp.name}'.");
                 }
