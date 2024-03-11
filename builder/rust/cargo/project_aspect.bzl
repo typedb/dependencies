@@ -213,7 +213,6 @@ def _get_properties(target, ctx, source_files, crate_info):
         properties["entry.point.path"] = _src_relpath(target, ctx, entry_point_file)
         if len(_crate_build_deps_info(crate_info)) > 0:
             fail("Build deps support unimplemented")
-            #properties["build.deps"] = ",".join(_crate_build_deps_info(crate_info))
     for dep in _crate_deps_info(target, crate_info).items():
         properties["deps." + dep[0]] = dep[1]
     return properties
