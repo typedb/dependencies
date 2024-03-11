@@ -20,12 +20,6 @@
 #
 
 load("@rules_rust//rust:defs.bzl", "rust_library", "rust_test")
-load("@rules_rust//cargo:defs.bzl", "cargo_build_script")
-
-#cargo_build_script(
-#    name = "build_script",
-#    srcs = ["build.rs"],
-#)
 
 rust_library(
     name = "lib1",
