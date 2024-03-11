@@ -26,9 +26,11 @@ build:
     rust-ide-sync:
       image: vaticle-ubuntu-22.04
       command: |
+        library/crates/get_cargo.sh
+        export PATH=$PATH:$PWD
         cd tool/ide/test/
         tool/ide/rust/sync.sh
-        git diff --exit-code .
+        cargo build --quiet && echo SUCCESS
     sync-dependencies:
       image: vaticle-ubuntu-22.04
       filter:
