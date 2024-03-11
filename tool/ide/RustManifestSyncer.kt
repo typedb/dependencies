@@ -221,9 +221,8 @@ class RustManifestSyncer : Callable<Unit> {
         private inner class ManifestGenerator(private val properties: TargetProperties) {
             fun generateManifest(bazelBin: File): File {
                 val outputPath = manifestOutputPath(bazelBin)
-                val cargoWorkspaceDir = properties.path.parentFile.resolve(properties.targetName + CARGO_WORKSPACE_SUFFIX)
                 Files.newOutputStream(outputPath).use {
-                    it.write(manifestContent(cargoWorkspaceDir).toByteArray(StandardCharsets.UTF_8))
+                    it.write(manifestContent().toByteArray(StandardCharsets.UTF_8))
                 }
                 return outputPath.toFile()
             }
@@ -232,7 +231,7 @@ class RustManifestSyncer : Callable<Unit> {
                 return workspace.resolve(bazelBin.toPath().relativize(Path(properties.path.parent)).resolve(CARGO_TOML))
             }
 
-            private fun manifestContent(cargoWorkspaceDir: File): String {
+            private fun manifestContent(): String {
                 val cargoToml = Config.inMemory()
 
                 cargoToml.createSubConfig().apply {
@@ -246,10 +245,10 @@ class RustManifestSyncer : Callable<Unit> {
 
                 cargoToml.createSubConfig().apply {
                     cargoToml.set<Config>("dependencies", this)
-                    properties.deps.forEach { set<Config>(it.name, it.toToml(cargoWorkspaceDir, canonicalExternalPathDeps)) }
+                    properties.deps.forEach { set<Config>(it.name, it.toToml(properties.cargoWorkspaceDir, canonicalExternalPathDeps)) }
                 }
 
-                cargoToml.addDevAndBuildDependencies(cargoWorkspaceDir)
+                cargoToml.addDevAndBuildDependencies()
                 cargoToml.addBenches()
 
                 return GENERATED_FILE_NOTICE + TomlWriter().writeToString(cargoToml.unmodifiable())
@@ -280,24 +279,24 @@ class RustManifestSyncer : Callable<Unit> {
                 }
             }
 
-            private fun Config.addDevAndBuildDependencies(cargoWorkspaceDir: File) {
+            private fun Config.addDevAndBuildDependencies() {
                 if (properties.tests.isNotEmpty() || properties.benches.isNotEmpty()) {
                     createSubConfig().apply {
                         this@addDevAndBuildDependencies.set<Config>("dev-dependencies", this)
                         arrayOf(properties.tests, properties.benches).flatMap { it }
-                                .flatMap { it.deps }
-                                .distinctBy { it.name }
-                                .filter { dep -> (dep.name != properties.name) && properties.deps.none { existingDep -> dep.name == existingDep.name } }
-                                .forEach {
+                                .flatMap { it.deps.map { dep -> Pair(it.cargoWorkspaceDir, dep) } }
+                                .distinctBy { (_, dep) -> dep.name }
+                                .filter { (_, dep) -> (dep.name != properties.name) && properties.deps.none { existingDep -> dep.name == existingDep.name } }
+                                .forEach { (cargoWorkspaceDir, dep) ->
                                     // WARN: this is a hack to replace 'local' repository paths that are relative to the test
                                     //       to make them relative to the parent Cargo Toml
                                     //       currently will only work for <package>/tests (ie. exactly one level of nesting)
-                                    val toml = it.toToml(cargoWorkspaceDir, canonicalExternalPathDeps);
+                                    val toml = dep.toToml(cargoWorkspaceDir, canonicalExternalPathDeps);
                                     val path: String? = toml.get("path");
                                     if (path != null && path.startsWith("../..")) {
                                         toml.set<String>("path", path.replaceFirst("../..", ".."))
                                     }
-                                    set<Config>(it.name, toml)
+                                    set<Config>(dep.name, toml)
                                 }
                     }
                 }
@@ -305,10 +304,11 @@ class RustManifestSyncer : Callable<Unit> {
                 if (properties.buildScripts.isNotEmpty()) {
                     createSubConfig().apply {
                         this@addDevAndBuildDependencies.set<Config>("build-dependencies", this)
-                        properties.buildScripts.flatMap { it.deps }
-                                .distinctBy { it.name }
-                                .filter { it.name != properties.name }
-                                .forEach { set<Config>(it.name, it.toToml(cargoWorkspaceDir, canonicalExternalPathDeps)) }
+                        properties.buildScripts
+                                .flatMap { it.deps.map { dep -> Pair(it.cargoWorkspaceDir, dep) } }
+                                .distinctBy { (_, dep) -> dep.name }
+                                .filter { (_, dep) -> (dep.name != properties.name) }
+                                .forEach { (cargoWorkspaceDir, dep) -> set<Config>(dep.name, dep.toToml(cargoWorkspaceDir, canonicalExternalPathDeps)) }
                     }
                 }
             }
@@ -340,6 +340,8 @@ class RustManifestSyncer : Callable<Unit> {
                 val benches: MutableCollection<TargetProperties>,
                 val buildScripts: MutableCollection<TargetProperties>,
         ) {
+            val cargoWorkspaceDir get() = path.parentFile.resolve(targetName + CARGO_WORKSPACE_SUFFIX)
+
             sealed class Dependency(open val name: String) {
                 abstract fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config
 

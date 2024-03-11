@@ -13,8 +13,8 @@
 
 [dependencies]
 
-	[dependencies.lib]
-		path = "/private/var/tmp/_bazel_dmitriiubskii/df70a9e2beb8752a3e9f0e1552a0fe63/execroot/__main__/bazel-out/darwin_arm64-fastbuild/bin/test-lib-cargo-workspace/lib"
+	[dependencies.a]
+		path = "/private/var/tmp/_bazel_dmitriiubskii/df70a9e2beb8752a3e9f0e1552a0fe63/execroot/__main__/bazel-out/darwin_arm64-fastbuild/bin/test-lib-cargo-workspace/a"
 
 
 [workspace]

@@ -24,7 +24,7 @@ load("@rules_rust//rust:defs.bzl", "rust_library", "rust_test")
 rust_library(
     name = "lib1",
     srcs = ["lib.rs"],
-    deps = ["@vaticle_extern//:lib", "//lib2:lib2"],
+    deps = ["@vaticle_extern//:a", "//lib2:lib2"],
 )
 
 rust_test(

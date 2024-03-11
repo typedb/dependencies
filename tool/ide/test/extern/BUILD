@@ -22,7 +22,13 @@
 load("@rules_rust//rust:defs.bzl", "rust_library")
 
 rust_library(
-    name = "lib",
+    name = "a",
+    srcs = ["lib.rs"],
+    visibility = ["//visibility:public"]
+)
+
+rust_library(
+    name = "b",
     srcs = ["lib.rs"],
     visibility = ["//visibility:public"]
 )
