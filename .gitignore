@@ -5,10 +5,11 @@ bazel-bin
 bazel-out
 bazel-dependencies
 bazel-testlogs
+bazel-test
 library/crates/cargo
 tool/bazelcache/.terraform/*
 target
 Cargo.lock
 Cargo.toml
-!library/crates/Cargo.toml
 !library/crates/Cargo.lock
+!library/crates/Cargo.toml

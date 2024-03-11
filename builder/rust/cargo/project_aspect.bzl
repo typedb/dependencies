@@ -128,7 +128,7 @@ def _generate_cargo_project(ctx, target, crate_info, properties_file, sources):
 
     workspace_files = [manifest_file] + list(project_sources.values())
 
-    for dep in crate_info.transitive_deps:
+    for dep in crate_info.transitive_deps + crate_info.build_deps:
         if CargoProjectInfo in dep:
             dep_info = dep[CrateInfo]
             project_info = dep[CargoProjectInfo]
@@ -211,23 +211,45 @@ def _get_properties(target, ctx, source_files, crate_info):
         properties["edition"] = ctx.rule.attr.edition or _DEFAULT_RUST_EDITION
         entry_point_file = _entry_point_file(target, ctx, source_files)
         properties["entry.point.path"] = _src_relpath(target, ctx, entry_point_file)
-        properties["build.deps"] = ",".join(_crate_build_deps_info(crate_info))
+        if len(_crate_build_deps_info(crate_info)) > 0:
+            fail("Build deps support unimplemented")
     for dep in _crate_deps_info(target, crate_info).items():
         properties["deps." + dep[0]] = dep[1]
     return properties
 
 def _crate_deps_info(target, crate_info):
     deps_info = {}
+
     for dependency in crate_info.deps:
         dependency_info = dependency[CrateInfo]
         if _is_universe_crate(dependency):
             location = "version={}".format(dependency_info.version)
-        else:
+        elif not _is_external_target(target) and _is_external_target(dependency):
             location = "path=../{}".format(dependency_info.crate_name)
+        else:
+            target_to_root = _package_relative_path_to_root(target.label)
+            root_to_dep = _package_path_from_root(dependency.label)
+            repository_relative_path = target_to_root + "/" + root_to_dep
+            location = "path=../{};localpath={}".format(dependency_info.crate_name, repository_relative_path)
+
         features = ",".join(dependency_info.features)
         info = location + (";features={}".format(features) if features else "")
         deps_info[dependency_info.crate_name] = info
     return deps_info
+
+def _is_external_target(target):
+    return target.label.workspace_root.startswith("external/")
+
+def _package_relative_path_to_root(label):
+    package_path = label.package.strip()
+    if len(package_path) == 0:
+        return "."
+    else:
+        dirs_to_root = package_path.count("/") + 1
+        return "/".join([".."] * dirs_to_root)
+
+def _package_path_from_root(label):
+    return label.package
 
 def _crate_build_deps_info(crate_info):
     return [build_dep[CrateInfo].crate_name for build_dep in crate_info.build_deps]

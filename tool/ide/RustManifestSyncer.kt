@@ -42,12 +42,12 @@ import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Targ
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.EDITION
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.ENTRY_POINT_PATH
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.FEATURES
+import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.LOCAL_PATH
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.NAME
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.PATH
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TARGET_NAME
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TYPE
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.VERSION
-
 
 import picocli.CommandLine
 import java.io.File
@@ -55,7 +55,8 @@ import java.io.FileInputStream
 import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.*
+import java.nio.file.StandardOpenOption
+import java.util.Properties
 import java.util.concurrent.Callable
 import kotlin.io.path.Path
 import kotlin.system.exitProcess
@@ -98,6 +99,7 @@ class RustManifestSyncer : Callable<Unit> {
     }
 
     private class WorkspaceSyncer(private val workspace: Path, private var logger: Logger, private var shell: Shell) {
+        val canonicalExternalPathDeps: MutableMap<String, String> = mutableMapOf()
 
         fun sync() {
             logger.debug { "Syncing $workspace" }
@@ -123,7 +125,36 @@ class RustManifestSyncer : Callable<Unit> {
             val manifests = loadSyncProperties(bazelBin)
                     .filter { shouldGenerateManifest(it) }
                     .map { ManifestGenerator(it).generateManifest(bazelBin) }
+                    .toMutableList()
+
+            // append Cargo Workspace to root Cargo Manifest, or create it if it does not exist
+            val workspaceManifest = manifests.stream().filter { it.toPath().parent.equals(workspace) }
+                    .findFirst()
+            val cargoWorkspaceConfig = createCargoWorkspace(manifests);
+            val cargoWorkspaceString = TomlWriter().writeToString(cargoWorkspaceConfig.unmodifiable())
+            val rootTomlPath = workspace.resolve(CARGO_TOML);
+
+            Files.newOutputStream(rootTomlPath, StandardOpenOption.APPEND, StandardOpenOption.CREATE).use {
+                it.write(cargoWorkspaceString.toByteArray(StandardCharsets.UTF_8))
+            }
+
+            if (!workspaceManifest.isPresent) {
+                manifests.add(rootTomlPath.toFile())
+            }
             println(manifests.joinToString(System.lineSeparator()))
+        }
+
+        private fun createCargoWorkspace(manifests: List<File>): Config {
+            val manifestPaths = manifests.map { workspace.relativize(it.toPath().parent).toString() }
+                    .filter { it.isNotBlank() }
+                    .distinct()
+                    .toList()
+
+            val cargoToml = Config.inMemory();
+            val subConfig = cargoToml.createSubConfig()
+            subConfig.set<List<String>>("members", manifestPaths)
+            cargoToml.set<Config>("workspace", subConfig)
+            return cargoToml
         }
 
         private fun loadSyncProperties(bazelBin: File): List<TargetProperties> {
@@ -141,22 +172,40 @@ class RustManifestSyncer : Callable<Unit> {
 
         private fun attachTestAndBuildProperties(properties: Collection<TargetProperties>) {
             val TESTS_DIR = "tests"
+            val BENCHES_DIR = "benches" // we translate Bazel Tests in 'benches' into Cargo benchmarks
             val (testProperties, nonTestProperties) = properties.partition { it.type == TargetProperties.Type.TEST }
                     .let { it.first to it.second.associateBy { properties -> properties.name } }
             testProperties.forEach { tp ->
                 // attach tests deps to the parent properties
-                var testsPath = tp.path.toPath();
-                while (testsPath.parent != null && testsPath.fileName != null && !testsPath.fileName.toString().equals(TESTS_DIR)) {
-                    testsPath = testsPath.parent
+                var path = tp.path.toPath()
+                while (
+                        path.parent != null && path.fileName != null &&
+                        (!path.fileName.toString().equals(TESTS_DIR) && !path.fileName.toString().equals(BENCHES_DIR))
+                ) {
+                    path = path.parent
                 }
-                if (!testsPath.fileName.toString().equals(TESTS_DIR)) {
-                    throw RuntimeException("Could not find directory named '$TESTS_DIR' for test '${tp.name}'.");
+                val isTest: Boolean
+                if (path.fileName == null) {
+                    logger.debug { "Could not find directory named '$TESTS_DIR' for test '${tp.name}', assuming unit test..." }
+                    path = tp.path.toPath()
+                    isTest = true
+                } else if (path.fileName.toString().equals(TESTS_DIR)) {
+                    isTest = true
+                } else if (path.fileName.toString().equals(BENCHES_DIR)) {
+                    isTest = false
+                } else {
+                    throw RuntimeException("Could not find directory named '$TESTS_DIR' or '$BENCHES_DIR' for Bazel test target '${tp.name}'.");
                 }
-                val parent = nonTestProperties.values.filter { it.path.parentFile.toPath().equals(testsPath.parent) };
+                val parent = nonTestProperties.values.filter { it.path.parentFile.toPath().equals(path.parent) };
                 if (parent.size != 1) {
-                    throw RuntimeException("Found '${parent.size}'parents to attach test '${tp.name}' to.")
+                    throw RuntimeException("Found '${parent.size}' parents to attach test '${tp.name}' to.")
                 }
-                parent[0].tests += tp
+
+                if (isTest) {
+                    parent[0].tests += tp
+                } else {
+                    parent[0].benches += tp
+                }
             }
             val (buildProperties, nonBuildProperties) = properties.partition { it.type == TargetProperties.Type.BUILD }
                     .let { it.first.associateBy { properties -> properties.name } to it.second }
@@ -172,9 +221,8 @@ class RustManifestSyncer : Callable<Unit> {
         private inner class ManifestGenerator(private val properties: TargetProperties) {
             fun generateManifest(bazelBin: File): File {
                 val outputPath = manifestOutputPath(bazelBin)
-                val cargoWorkspaceDir = properties.path.parentFile.resolve(properties.targetName + CARGO_WORKSPACE_SUFFIX)
                 Files.newOutputStream(outputPath).use {
-                    it.write(manifestContent(cargoWorkspaceDir).toByteArray(StandardCharsets.UTF_8))
+                    it.write(manifestContent().toByteArray(StandardCharsets.UTF_8))
                 }
                 return outputPath.toFile()
             }
@@ -183,7 +231,7 @@ class RustManifestSyncer : Callable<Unit> {
                 return workspace.resolve(bazelBin.toPath().relativize(Path(properties.path.parent)).resolve(CARGO_TOML))
             }
 
-            private fun manifestContent(cargoWorkspaceDir: File): String {
+            private fun manifestContent(): String {
                 val cargoToml = Config.inMemory()
 
                 cargoToml.createSubConfig().apply {
@@ -197,10 +245,11 @@ class RustManifestSyncer : Callable<Unit> {
 
                 cargoToml.createSubConfig().apply {
                     cargoToml.set<Config>("dependencies", this)
-                    properties.deps.forEach { set<Config>(it.name, it.toToml(cargoWorkspaceDir)) }
+                    properties.deps.forEach { set<Config>(it.name, it.toToml(properties.cargoWorkspaceDir, canonicalExternalPathDeps)) }
                 }
 
-                cargoToml.addDevAndBuildDependencies(cargoWorkspaceDir)
+                cargoToml.addDevAndBuildDependencies()
+                cargoToml.addBenches()
 
                 return GENERATED_FILE_NOTICE + TomlWriter().writeToString(cargoToml.unmodifiable())
             }
@@ -230,25 +279,49 @@ class RustManifestSyncer : Callable<Unit> {
                 }
             }
 
-            private fun Config.addDevAndBuildDependencies(cargoWorkspaceDir: File) {
-                if (properties.tests.isNotEmpty()) {
+            private fun Config.addDevAndBuildDependencies() {
+                if (properties.tests.isNotEmpty() || properties.benches.isNotEmpty()) {
                     createSubConfig().apply {
                         this@addDevAndBuildDependencies.set<Config>("dev-dependencies", this)
-                        properties.tests.flatMap { it.deps }
-                                .distinctBy { it.name }
-                                .filter { it.name != properties.name }
-                                .forEach { set<Config>(it.name, it.toToml(cargoWorkspaceDir)) }
+                        arrayOf(properties.tests, properties.benches).flatMap { it }
+                                .flatMap { it.deps.map { dep -> Pair(it.cargoWorkspaceDir, dep) } }
+                                .distinctBy { (_, dep) -> dep.name }
+                                .filter { (_, dep) -> (dep.name != properties.name) && properties.deps.none { existingDep -> dep.name == existingDep.name } }
+                                .forEach { (cargoWorkspaceDir, dep) ->
+                                    // WARN: this is a hack to replace 'local' repository paths that are relative to the test
+                                    //       to make them relative to the parent Cargo Toml
+                                    //       currently will only work for <package>/tests (ie. exactly one level of nesting)
+                                    val toml = dep.toToml(cargoWorkspaceDir, canonicalExternalPathDeps);
+                                    val path: String? = toml.get("path");
+                                    if (path != null && path.startsWith("../..")) {
+                                        toml.set<String>("path", path.replaceFirst("../..", ".."))
+                                    }
+                                    set<Config>(dep.name, toml)
+                                }
                     }
                 }
 
                 if (properties.buildScripts.isNotEmpty()) {
                     createSubConfig().apply {
                         this@addDevAndBuildDependencies.set<Config>("build-dependencies", this)
-                        properties.buildScripts.flatMap { it.deps }
-                                .distinctBy { it.name }
-                                .filter { it.name != properties.name }
-                                .forEach { set<Config>(it.name, it.toToml(cargoWorkspaceDir)) }
+                        properties.buildScripts
+                                .flatMap { it.deps.map { dep -> Pair(it.cargoWorkspaceDir, dep) } }
+                                .distinctBy { (_, dep) -> dep.name }
+                                .filter { (_, dep) -> (dep.name != properties.name) }
+                                .forEach { (cargoWorkspaceDir, dep) -> set<Config>(dep.name, dep.toToml(cargoWorkspaceDir, canonicalExternalPathDeps)) }
                     }
+                }
+            }
+
+            private fun Config.addBenches() {
+                if (properties.benches.isNotEmpty()) {
+                    val mapped = properties.benches.map {
+                        createSubConfig().apply {
+                            this.set<String>("name", it.name);
+                            this.set<String>("harness", false);
+                        }
+                    }
+                    this.set<List<Config>>("bench", mapped)
                 }
             }
         }
@@ -264,13 +337,16 @@ class RustManifestSyncer : Callable<Unit> {
                 val buildDeps: Collection<String>,
                 val deps: Collection<Dependency>,
                 val tests: MutableCollection<TargetProperties>,
+                val benches: MutableCollection<TargetProperties>,
                 val buildScripts: MutableCollection<TargetProperties>,
         ) {
+            val cargoWorkspaceDir get() = path.parentFile.resolve(targetName + CARGO_WORKSPACE_SUFFIX)
+
             sealed class Dependency(open val name: String) {
-                abstract fun toToml(cargoWorkspaceDir: File): Config
+                abstract fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config
 
                 data class Crate(override val name: String, val version: String, val features: List<String>) : Dependency(name) {
-                    override fun toToml(cargoWorkspaceDir: File): Config {
+                    override fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config {
                         return Config.inMemory().apply {
                             set<String>("version", version)
                             set<List<String>>("features", features)
@@ -279,10 +355,20 @@ class RustManifestSyncer : Callable<Unit> {
                     }
                 }
 
-                data class Local(override val name: String, val path: String) : Dependency(name) {
-                    override fun toToml(cargoWorkspaceDir: File): Config {
+                data class Local(override val name: String, val external_path: String?, val local_path: String?) : Dependency(name) {
+                    override fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config {
                         return Config.inMemory().apply {
-                            set<String>("path", path.replace(EXTERNAL_PLACEHOLDER, cargoWorkspaceDir.toString()))
+                            if (external_path != null) {
+                                set<String>("path",
+                                    canonicalExternalPathDeps.computeIfAbsent(name) {
+                                        external_path.replace(EXTERNAL_PLACEHOLDER, cargoWorkspaceDir.toString())
+                                    }
+                                )
+                            } else if (local_path != null) {
+                                set<String>("path", local_path)
+                            } else {
+                                throw IllegalStateException();
+                            }
                         }
                     }
                 }
@@ -298,8 +384,10 @@ class RustManifestSyncer : Callable<Unit> {
                                     version = rawValueProps[VERSION]!!,
                                     features = rawValueProps[FEATURES]?.split(",") ?: emptyList(),
                             )
+                        } else if (LOCAL_PATH in rawValueProps) {
+                            Local(name = name, external_path = null, local_path = rawValueProps[LOCAL_PATH]!!)
                         } else {
-                            Local(name = name, path = rawValueProps[PATH]!!)
+                            Local(name = name, external_path = rawValueProps[PATH]!!, local_path = null)
                         }
                     }
                 }
@@ -339,6 +427,7 @@ class RustManifestSyncer : Callable<Unit> {
                                 buildDeps = props.getProperty(BUILD_DEPS, "").split(",").filter { it.isNotBlank() },
                                 entryPointPath = props.getProperty(ENTRY_POINT_PATH)?.let { Path(it) },
                                 tests = mutableListOf(),
+                                benches = mutableListOf(),
                                 buildScripts = mutableListOf(),
                         )
                     } catch (e: Exception) {
@@ -367,6 +456,7 @@ class RustManifestSyncer : Callable<Unit> {
                 const val TARGET_NAME = "target.name"
                 const val NAME = "name"
                 const val PATH = "path"
+                const val LOCAL_PATH = "localpath"
                 const val TYPE = "type"
                 const val VERSION = "version"
             }
@@ -382,7 +472,7 @@ class RustManifestSyncer : Callable<Unit> {
 
         companion object {
             const val GENERATED_FILE_NOTICE =
-"""
+                    """
 # Generated by Vaticle Cargo sync tool.
 # Do not commit or modify this file.
 
