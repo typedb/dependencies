@@ -23,6 +23,12 @@ build:
       image: vaticle-ubuntu-22.04
       command: |
         bazel build //...
+    rust-ide-sync:
+      image: vaticle-ubuntu-22.04
+      command: |
+        cd tool/ide/test/
+        tool/ide/rust/sync.sh
+        git diff --exit-code .
     sync-dependencies:
       image: vaticle-ubuntu-22.04
       filter:
