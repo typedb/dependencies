@@ -27,6 +27,8 @@ if [ ! -x cargo ]; then
         curl -o cargo https://repo.typedb.com/public/public-tools/raw/versions/1.66.0_darwin_x86_64/cargo
     elif [[ $arch == arm64-apple-darwin* ]]; then
         curl -o cargo https://repo.typedb.com/public/public-tools/raw/versions/1.66.0_darwin_arm64/cargo
+    elif [[ $arch == x86_64-*-linux* ]]; then
+        curl -o cargo https://repo.typedb.com/public/public-tools/raw/versions/1.66.0_linux_x86_64/cargo
     else
         echo "Unsupported architecture: $arch"
         exit 1
