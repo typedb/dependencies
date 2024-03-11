@@ -20,6 +20,7 @@
 #
 
 load("@rules_rust//rust:defs.bzl", "rust_library", "rust_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_library(
     name = "lib2",
@@ -30,4 +31,11 @@ rust_library(
 rust_test(
     name = "lib2_unit_tests",
     crate = ":lib2",
+)
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "apache-header",
+    size = "small",
 )

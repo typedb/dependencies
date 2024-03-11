@@ -20,9 +20,17 @@
 #
 
 load("@rules_rust//rust:defs.bzl", "rust_test")
+load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_test(
     name = "lib2_integration_test",
     srcs = ["test.rs"],
     deps = ["//lib2:lib2", "@vaticle_extern//:b"],
+)
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "apache-header",
+    size = "small",
 )

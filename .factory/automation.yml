@@ -29,6 +29,7 @@ build:
         library/crates/get_cargo.sh
         export PATH=$PATH:$PWD
         cd tool/ide/test/
+        bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=streamed || exit 1
         tool/ide/rust/sync.sh
         cargo build --quiet && echo SUCCESS
     sync-dependencies:
