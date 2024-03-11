@@ -99,6 +99,7 @@ class RustManifestSyncer : Callable<Unit> {
     }
 
     private class WorkspaceSyncer(private val workspace: Path, private var logger: Logger, private var shell: Shell) {
+        val canonicalExternalPathDeps: MutableMap<String, String> = mutableMapOf()
 
         fun sync() {
             logger.debug { "Syncing $workspace" }
@@ -177,7 +178,10 @@ class RustManifestSyncer : Callable<Unit> {
             testProperties.forEach { tp ->
                 // attach tests deps to the parent properties
                 var path = tp.path.toPath()
-                while (path.parent != null && path.fileName != null && (!path.fileName.toString().equals(TESTS_DIR) && !path.fileName.toString().equals(BENCHES_DIR))) {
+                while (
+                        path.parent != null && path.fileName != null &&
+                        (!path.fileName.toString().equals(TESTS_DIR) && !path.fileName.toString().equals(BENCHES_DIR))
+                ) {
                     path = path.parent
                 }
                 val isTest: Boolean
@@ -242,7 +246,7 @@ class RustManifestSyncer : Callable<Unit> {
 
                 cargoToml.createSubConfig().apply {
                     cargoToml.set<Config>("dependencies", this)
-                    properties.deps.forEach { set<Config>(it.name, it.toToml(cargoWorkspaceDir)) }
+                    properties.deps.forEach { set<Config>(it.name, it.toToml(cargoWorkspaceDir, canonicalExternalPathDeps)) }
                 }
 
                 cargoToml.addDevAndBuildDependencies(cargoWorkspaceDir)
@@ -288,7 +292,7 @@ class RustManifestSyncer : Callable<Unit> {
                                     // WARN: this is a hack to replace 'local' repository paths that are relative to the test
                                     //       to make them relative to the parent Cargo Toml
                                     //       currently will only work for <package>/tests (ie. exactly one level of nesting)
-                                    val toml = it.toToml(cargoWorkspaceDir);
+                                    val toml = it.toToml(cargoWorkspaceDir, canonicalExternalPathDeps);
                                     val path: String? = toml.get("path");
                                     if (path != null && path.startsWith("../..")) {
                                         toml.set<String>("path", path.replaceFirst("../..", ".."))
@@ -304,7 +308,7 @@ class RustManifestSyncer : Callable<Unit> {
                         properties.buildScripts.flatMap { it.deps }
                                 .distinctBy { it.name }
                                 .filter { it.name != properties.name }
-                                .forEach { set<Config>(it.name, it.toToml(cargoWorkspaceDir)) }
+                                .forEach { set<Config>(it.name, it.toToml(cargoWorkspaceDir, canonicalExternalPathDeps)) }
                     }
                 }
             }
@@ -337,10 +341,10 @@ class RustManifestSyncer : Callable<Unit> {
                 val buildScripts: MutableCollection<TargetProperties>,
         ) {
             sealed class Dependency(open val name: String) {
-                abstract fun toToml(cargoWorkspaceDir: File): Config
+                abstract fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config
 
                 data class Crate(override val name: String, val version: String, val features: List<String>) : Dependency(name) {
-                    override fun toToml(cargoWorkspaceDir: File): Config {
+                    override fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config {
                         return Config.inMemory().apply {
                             set<String>("version", version)
                             set<List<String>>("features", features)
@@ -350,10 +354,14 @@ class RustManifestSyncer : Callable<Unit> {
                 }
 
                 data class Local(override val name: String, val external_path: String?, val local_path: String?) : Dependency(name) {
-                    override fun toToml(cargoWorkspaceDir: File): Config {
+                    override fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config {
                         return Config.inMemory().apply {
                             if (external_path != null) {
-                                set<String>("path", external_path.replace(EXTERNAL_PLACEHOLDER, cargoWorkspaceDir.toString()))
+                                set<String>("path",
+                                    canonicalExternalPathDeps.computeIfAbsent(name) {
+                                        external_path.replace(EXTERNAL_PLACEHOLDER, cargoWorkspaceDir.toString())
+                                    }
+                                )
                             } else if (local_path != null) {
                                 set<String>("path", local_path)
                             } else {

@@ -19,3 +19,4 @@
  * under the License.
  */
 
+fn main() {}

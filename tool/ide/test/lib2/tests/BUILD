@@ -21,10 +21,8 @@
 
 load("@rules_rust//rust:defs.bzl", "rust_library", "rust_test")
 
-rust_test(
-    name = "lib2_integration_test",
-    srcs = ["test.rs"],
-    deps = ["//lib2:lib2"],
-)
-
-
+#rust_test(
+#    name = "lib2_integration_test",
+#    srcs = ["test.rs"],
+#    deps = ["//lib2:lib2", "@vaticle_extern//:lib"],
+#)

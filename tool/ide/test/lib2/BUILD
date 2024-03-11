@@ -27,8 +27,7 @@ rust_library(
     visibility = ["//visibility:public"]
 )
 
-# rust_test(
-#     name = "lib2_unit_tests",
-#     crate = ":lib2",
-# )
-
+rust_test(
+    name = "lib2_unit_tests",
+    crate = ":lib2",
+)

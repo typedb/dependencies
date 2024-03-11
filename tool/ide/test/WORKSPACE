@@ -70,3 +70,7 @@ load("@vaticle_dependencies//tool/common:deps.bzl", vaticle_dependencies_tool_ma
 load("@vaticle_dependencies//library/maven:rules.bzl", "maven")
 maven(vaticle_dependencies_tool_maven_artifacts)
 
+local_repository(
+    name = "vaticle_extern", # we filter external crates by `@vaticle_`!
+    path = "extern",
+)

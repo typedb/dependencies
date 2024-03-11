@@ -20,15 +20,20 @@
 #
 
 load("@rules_rust//rust:defs.bzl", "rust_library", "rust_test")
+load("@rules_rust//cargo:defs.bzl", "cargo_build_script")
+
+#cargo_build_script(
+#    name = "build_script",
+#    srcs = ["build.rs"],
+#)
 
 rust_library(
     name = "lib1",
     srcs = ["lib.rs"],
-    visibility = ["//visibility:public"]
+    deps = ["@vaticle_extern//:lib", "//lib2:lib2"],
 )
 
-# rust_test(
-#     name = "lib1_unit_tests",
-#     crate = ":lib1",
-# )
-
+rust_test(
+    name = "lib1_unit_tests",
+    crate = ":lib1",
+)
