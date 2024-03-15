@@ -237,4 +237,5 @@ def swig_csharp(name, lib, nullable_context, target_frameworks, targeting_packs,
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
         tags = tags,
+        allow_unsafe_blocks = True,
     )
