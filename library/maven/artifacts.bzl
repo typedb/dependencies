@@ -118,6 +118,7 @@ artifacts = {
     "io.fabric8:kubernetes-client": "6.10.0",
     "io.fabric8:kubernetes-client-api": "6.10.0",
     "io.fabric8:kubernetes-model": "6.10.0",
+    "io.fabric8:kubernetes-model-apiextensions": "6.10.0",
     "io.fabric8:kubernetes-model-apps": "6.10.0",
     "io.fabric8:kubernetes-model-core": "6.10.0",
     "io.ktor:ktor-client-cio-jvm": "2.3.7",
