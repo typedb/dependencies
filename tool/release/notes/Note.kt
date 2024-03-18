@@ -76,7 +76,7 @@ class Note {
             val goal = StringBuilder()
             var header = 0
             for (line in description.lines()) {
-                if (line.startsWith("##")) {
+                if (line.startsWith("## ")) {
                     header += 1
                 } else if (header == 1) {
                     goal.append(line).append("\n")
