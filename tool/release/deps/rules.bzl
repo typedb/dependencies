@@ -68,6 +68,7 @@ def release_validate_deps(name, **kwargs):
     # create rule that generates the templated script with the correct inputs
     _release_validate_deps_script_test(
         name = target_name,
+        version_file = "Version", # TODO: It is temporary while the main build fails!
         **kwargs
     )
 
