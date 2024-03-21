@@ -6,8 +6,12 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
 def vaticle_bazel_distribution():
-    git_repository(
+#    git_repository(
+#        name = "vaticle_bazel_distribution",
+#        remote = "https://github.com/vaticle/bazel-distribution",
+#        commit = "c473d17530dff5a4398d2de9c9fe966df9aca4ce" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_bazel_distribution
+#    )
+    native.local_repository(
         name = "vaticle_bazel_distribution",
-        remote = "https://github.com/vaticle/bazel-distribution",
-        commit = "c473d17530dff5a4398d2de9c9fe966df9aca4ce" # sync-marker: do not remove this comment, this is used for sync-dependencies by @vaticle_bazel_distribution
+        path = "../bazel-distribution",
     )
