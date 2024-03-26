@@ -98,7 +98,7 @@ swig_csharp_wrapper = rule(
             allow_files = True,
         ),
         "namespace": attr.string(
-            doc = "C# namespace where to put the sources",
+            doc = "C# namespace for the sources",
             mandatory = True,
         ),
         "enable_cxx": attr.bool(
@@ -157,17 +157,15 @@ csharp_native_library = rule(
 )
 
 
-def swig_csharp(name, lib, nullable_context, target_frameworks, targeting_packs, shared_lib_name=None, tags=[], **kwargs):
+def swig_csharp(name, lib, namespace, nullable_context, target_frameworks, targeting_packs, tags=[], **kwargs):
     swig_wrapper_name = "{}_swig".format(name)
     swig_csharp_wrapper(
         name = swig_wrapper_name,
         class_name = name,
         lib = lib,
+        namespace = namespace,
         **kwargs,
     )
-
-    if not shared_lib_name:
-        shared_lib_name = name
 
     def swig_cc_binary(shared_lib_filename):
         # name doesn't accept select() either
@@ -221,6 +219,7 @@ def swig_csharp(name, lib, nullable_context, target_frameworks, targeting_packs,
         name = name,
         srcs = [":{}".format(csharp_source_name)],
         deps = [":{}".format(csharp_native_lib_name)],
+        out = namespace,
         nullable = nullable_context,
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,
