@@ -311,6 +311,7 @@ artifacts = {
     "org.jetbrains.kotlin:kotlin-test": "1.9.22",
     "org.jetbrains.kotlinx:kotlinx-coroutines-core": "1.7.3",
     "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm": "1.7.3",
+    "org.jetbrains.kotlinx:kotlinx-coroutines-slf4j": "1.7.3",
     "org.jetbrains.kotlinx:kotlinx-coroutines-test": "1.7.3",
     "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm": "1.6.2",
     "org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm": "1.6.2",
