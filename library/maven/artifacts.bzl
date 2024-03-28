@@ -4,6 +4,7 @@ artifacts = {
     "ch.qos.logback:logback-core": "1.4.9",
     "ch.qos.logback.contrib:logback-json-classic" : "0.1.5",
     "ch.qos.logback.contrib:logback-json-core" : "0.1.5",
+    "ch.qos.logback.contrib:logback-jackson" : "0.1.5",
     "com.auth0:java-jwt": "3.8.3",
     "com.azure:azure-core": "1.5.0",
     "com.azure:azure-identity": "1.0.6",
