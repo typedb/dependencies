@@ -78,7 +78,6 @@ rules_pkg_dependencies()
 maven(vaticle_dependencies_tool_maven_artifacts)
 
 # Load Rust Crate dependencies
-
 load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
 crate_universe_dependencies()
 
