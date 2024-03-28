@@ -2,10 +2,9 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-
-
 load("@rules_rust//rust:defs.bzl", "rust_library")
-load("@vaticle_dependencies//builder/rust:rules.bzl", "rust_cxx_bridge")
+load("//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("//builder/rust:rules.bzl", "rust_cxx_bridge")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -54,4 +53,11 @@ cc_library(
             "@or_tools_windows//:incl",
         ],
     })
+)
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "mpl-header",
+    size = "small",
 )

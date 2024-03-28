@@ -2,8 +2,8 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-
 load("@vaticle_dependencies_ci_pip//:requirements.bzl", "requirement")
+load("//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -20,4 +20,11 @@ py_binary(
         requirement("wrapt"),
         requirement("certifi"),
     ],
+)
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "mpl-header",
+    size = "small",
 )

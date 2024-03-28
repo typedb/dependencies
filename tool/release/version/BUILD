@@ -4,6 +4,7 @@
 
 
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
+load("//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -17,4 +18,11 @@ kt_jvm_binary(
 
         "@maven//:org_zeroturnaround_zt_exec",
     ],
+)
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "mpl-header",
+    size = "small",
 )

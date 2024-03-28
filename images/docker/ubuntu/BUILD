@@ -4,6 +4,7 @@
 
 
 load("//images/docker/ubuntu:deployment.bzl", deployment_docker = "deployment")
+load("//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 sh_library(
     name = "version-docker",
@@ -23,4 +24,11 @@ sh_binary(
     deps = [":version-docker"],
     srcs = ["deploy-docker.sh"],
     args = ["$(location :version-docker)", deployment_docker["docker.organisation"], deployment_docker["docker.repository"]]
+)
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "mpl-header",
+    size = "small",
 )

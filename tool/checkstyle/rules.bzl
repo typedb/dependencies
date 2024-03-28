@@ -11,14 +11,21 @@ def _checkstyle_test_impl(ctx):
     args = ""
     inputs = []
 
-    license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-%s.txt" % ctx.attr.license_type
+    expected_file = "checkstyle-file-%s.txt" % ctx.attr.license_type
+    matched = False
+    for license_file in ctx.attr._license_files[0].files.to_list():
+        if license_file.basename == expected_file:
+            matched = True
+            break
+    if not matched:
+        fail("Could not find license file matching: %s" % expected_file)
 
     config = ctx.actions.declare_file("%s.xml" % ctx.attr.name)
     ctx.actions.expand_template(
         template = ctx.file._checkstyle_xml_template,
         output = config,
         substitutions = {
-            "{licenseFile}" : license_file
+            "{licenseFile}" : license_file.path
         }
     )
 

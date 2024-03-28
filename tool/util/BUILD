@@ -4,6 +4,8 @@
 
 
 load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
+load("//tool/checkstyle:rules.bzl", "checkstyle_test")
+
 exports_files(["wait-for-host.sh"])
 
 sh_binary(
@@ -53,4 +55,11 @@ java_binary(
     runtime_deps = [":wait-for-host-lib"],
     main_class = "com.vaticle.dependencies.tool.util.Wait_for_hostKt",
     visibility = ["//visibility:public"],
+)
+
+checkstyle_test(
+    name = "checkstyle",
+    include = glob(["*"]),
+    license_type = "mpl-header",
+    size = "small",
 )
