@@ -1,19 +1,7 @@
-#
-# Copyright (C) 2022 Vaticle
-#
-# This program is free software: you can redistribute it and/or modify
-# it under the terms of the GNU Affero General Public License as
-# published by the Free Software Foundation, either version 3 of the
-# License, or (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU Affero General Public License for more details.
-#
-# You should have received a copy of the GNU Affero General Public License
-# along with this program.  If not, see <https://www.gnu.org/licenses/>.
-#
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 
 def _checkstyle_test_impl(ctx):
     properties = ctx.file.properties
@@ -23,14 +11,21 @@ def _checkstyle_test_impl(ctx):
     args = ""
     inputs = []
 
-    license_file = "external/vaticle_dependencies/tool/checkstyle/config/checkstyle-file-%s.txt" % ctx.attr.license_type
+    expected_file = "checkstyle-file-%s.txt" % ctx.attr.license_type
+    matched = False
+    for license_file in ctx.attr._license_files[0].files.to_list():
+        if license_file.basename == expected_file:
+            matched = True
+            break
+    if not matched:
+        fail("Could not find license file matching: %s" % expected_file)
 
     config = ctx.actions.declare_file("%s.xml" % ctx.attr.name)
     ctx.actions.expand_template(
         template = ctx.file._checkstyle_xml_template,
         output = config,
         substitutions = {
-            "{licenseFile}" : license_file
+            "{licenseFile}" : license_file.path
         }
     )
 
@@ -85,10 +80,10 @@ checkstyle_test = rule(
         "license_type": attr.string(
             doc = "Type of license to produce the header for every source code",
             values = [
-                "agpl-header",
+                "mpl-header",
                 "apache-header",
                 "commercial-header",
-                "agpl-fulltext",
+                "mpl-fulltext",
                 "apache-fulltext",
                 "commercial-fulltext",
             ],

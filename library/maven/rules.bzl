@@ -1,3 +1,7 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 load("@rules_jvm_external//:defs.bzl", rje_maven_install = "maven_install")
 load("@rules_jvm_external//:specs.bzl", rje_maven = "maven", rje_parse = "parse")
 load(":artifacts.bzl", maven_artifacts_org = "artifacts")

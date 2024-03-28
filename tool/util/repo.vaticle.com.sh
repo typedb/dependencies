@@ -3,7 +3,4 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-deployment = {
-    "docker.organisation": "vaticle",
-    "docker.repository": "ubuntu",
-}
+docker run -d -p 443:8443 -p 80:8081 --restart=on-failure --name nexus -v nexus-data:/nexus-data -e NEXUS_CONTEXT=/ sonatype/nexus3:3.33.0
