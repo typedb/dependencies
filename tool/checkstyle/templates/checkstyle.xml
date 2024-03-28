@@ -20,7 +20,7 @@
     <module name="RegexpHeader">
         <property name="id" value="licenseHeader"/>
         <property name="headerFile" value="{licenseFile}"/>
-        <property name="multiLines" value="1"/>
+        <property name="multiLines" value="1, 2"/>
     </module>
 
     <module name="TreeWalker">

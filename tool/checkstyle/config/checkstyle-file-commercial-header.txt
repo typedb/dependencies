@@ -1,4 +1,5 @@
-^(#!.*)|(@.*)|(<\?.*)|(<!--.*)|(\/\*.*)
+^(#!.*)|(@.*)|(<\?.*)
+^(<!--.*)|(\/\*.*)
 ^.*This unpublished material is proprietary to Vaticle.$
 ^.*All rights reserved. The methods and$
 ^.*techniques described herein are considered trade secrets$
