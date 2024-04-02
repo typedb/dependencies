@@ -3,6 +3,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
+
 package com.vaticle.dependencies.tool.release.version
 
 import com.vaticle.bazel.distribution.common.Logging.LogLevel.DEBUG
@@ -16,6 +17,8 @@ import kotlin.io.path.exists
 val logger = Logger(DEBUG)
 val shell = Shell(logger)
 
+val VERSION_FILE_NAMES = arrayOf("VERSION", "VERSION.txt")
+
 fun main() {
     val (workspacePath, branchName, gitUsername, gitEmail) = Config.load()
 
@@ -23,8 +26,7 @@ fun main() {
     shell.execute(listOf("git", "config", "--global", "user.email", gitEmail))
     shell.execute(listOf("git", "checkout", branchName), baseDir = workspacePath)
 
-    val versionFile = workspacePath.resolve("VERSION")
-    if (!versionFile.exists()) throw RuntimeException("File not found: VERSION")
+    val versionFile = getVersionFilePath(workspacePath)
     val version = String(Files.readAllBytes(versionFile)).trim()
     val newVersion = bumpVersion(version)
 
@@ -33,6 +35,14 @@ fun main() {
 
     logger.debug { "Creating Git commit and pushing to the remote repository" }
     gitCommitAndPush(workspacePath, newVersion)
+}
+
+fun getVersionFilePath(workspacePath: Path): Path {
+    VERSION_FILE_NAMES.forEach {
+        val candidate = workspacePath.resolve(it)
+        if (candidate.exists()) return candidate
+    }
+    throw RuntimeException("Could not find any of the following files in ${workspacePath.toAbsolutePath()}: $VERSION_FILE_NAMES")
 }
 
 data class Config(val workspacePath: Path, val branchName: String, val gitUsername: String, val gitEmail: String) {
