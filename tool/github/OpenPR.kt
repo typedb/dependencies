@@ -6,6 +6,7 @@
 
 package com.vaticle.dependencies.tool.github
 
+import org.kohsuke.github.GitHub
 import picocli.CommandLine
 import java.util.concurrent.Callable
 import kotlin.system.exitProcess
@@ -23,8 +24,13 @@ object OpenPR: Callable<Int> {
     @CommandLine.Option(names = ["--title"], description = ["The title of the PR"])
     private lateinit var title: String
 
+    @CommandLine.Option(names = ["--title"], description = ["The body of the PR"])
+    private lateinit var body: String
+
     @CommandLine.Option(names = ["--token"], description = ["The GitHub authentication token"])
     private lateinit var token: String
+
+    private const val USERNAME = "vaticle-bot"
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -32,6 +38,8 @@ object OpenPR: Callable<Int> {
     }
 
     override fun call(): Int {
+        val gh = GitHub.connect(USERNAME, token)
+        gh.getRepository(repo).createPullRequest(title, headBranch, baseBranch, body)
         return 0
     }
 }
