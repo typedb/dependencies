@@ -328,6 +328,7 @@ artifacts = {
     "org.jetbrains.kotlinx:kotlinx-coroutines-test": "1.7.3",
     "org.jetbrains.kotlinx:kotlinx-serialization-core-jvm": "1.6.2",
     "org.jetbrains.kotlinx:kotlinx-serialization-protobuf-jvm": "1.6.2",
+    "org.jetbrains.kotlinx:kover-jvm-agent": "0.8.0-Beta2",
     # Find out the Skiko version we need by viewing dependencies of org.jetbrains.compose.ui/ui-graphics-desktop
     "org.jetbrains.skiko:skiko-awt": "0.7.85",
     "org.jetbrains.skiko:skiko-awt-runtime-linux-arm64": "0.7.85",
