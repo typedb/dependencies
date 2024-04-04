@@ -331,6 +331,7 @@ artifacts = {
     "org.jetbrains.kotlinx:kover-jvm-agent": "0.8.0-Beta2",
     "org.jetbrains.kotlinx:kover-cli": "0.8.0-Beta2",
     "org.jacoco:org.jacoco.agent": "0.8.12",
+    "org.jacoco:org.jacoco.cli": "0.8.12",
     # Find out the Skiko version we need by viewing dependencies of org.jetbrains.compose.ui/ui-graphics-desktop
     "org.jetbrains.skiko:skiko-awt": "0.7.85",
     "org.jetbrains.skiko:skiko-awt-runtime-linux-arm64": "0.7.85",
