@@ -29,6 +29,7 @@ artifacts = {
     "com.fasterxml.jackson.core:jackson-databind": "2.16.0",
     "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml": "2.9.9",
     "com.fasterxml.jackson.module:jackson-module-scala_2.11": "2.9.9",
+    "com.fasterxml.jackson.module:jackson-module-kotlin": "2.16.0",
     "com.fifesoft:rsyntaxtextarea": "3.1.3",
     "com.github.ben-manes.caffeine:caffeine": "2.8.6",
     "com.github.rholder:guava-retrying": "2.0.0",
