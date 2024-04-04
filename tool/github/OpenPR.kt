@@ -24,7 +24,7 @@ object OpenPR: Callable<Int> {
     @CommandLine.Option(names = ["--title"], description = ["The title of the PR"])
     private lateinit var title: String
 
-    @CommandLine.Option(names = ["--title"], description = ["The body of the PR"])
+    @CommandLine.Option(names = ["--body"], description = ["The body of the PR"])
     private lateinit var body: String
 
     @CommandLine.Option(names = ["--token"], description = ["The GitHub authentication token"])
