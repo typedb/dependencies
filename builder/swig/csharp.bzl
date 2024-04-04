@@ -3,9 +3,6 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-# TODO: Generalise and move the same functions (used by java, python, csharp)
-# to a base file, add reusage where possible.
-
 load("@rules_dotnet//dotnet:defs.bzl", "csharp_library")
 load("@rules_dotnet//dotnet/private:providers.bzl", "DotnetAssemblyCompileInfo", "DotnetAssemblyRuntimeInfo")
 
@@ -98,7 +95,7 @@ swig_csharp_wrapper = rule(
             allow_files = True,
         ),
         "namespace": attr.string(
-            doc = "C# namespace where to put the sources",
+            doc = "C# namespace for the sources",
             mandatory = True,
         ),
         "enable_cxx": attr.bool(
@@ -157,17 +154,15 @@ csharp_native_library = rule(
 )
 
 
-def swig_csharp(name, lib, nullable_context, target_frameworks, targeting_packs, shared_lib_name=None, tags=[], **kwargs):
+def swig_csharp(name, native_lib_name, lib, namespace, nullable_context, target_frameworks, targeting_packs, tags=[], **kwargs):
     swig_wrapper_name = "{}_swig".format(name)
     swig_csharp_wrapper(
         name = swig_wrapper_name,
         class_name = name,
         lib = lib,
+        namespace = namespace,
         **kwargs,
     )
-
-    if not shared_lib_name:
-        shared_lib_name = name
 
     def swig_cc_binary(shared_lib_filename):
         # name doesn't accept select() either
@@ -183,22 +178,16 @@ def swig_csharp(name, lib, nullable_context, target_frameworks, targeting_packs,
             }),
         )
 
-    native_lib_name_root = "typedb_driver"
-    native_lib_name = "{}_native".format(native_lib_name_root)
-
-    # TODO: On Mac, it's enough to pass native_lib_name_root (lib and .dylib are added by the rule)
-    # Check if the same could work for Windows and Linux. Maybe we don't need to make
-    # this complex code with selects and functions...
-    swig_cc_binary("lib" + native_lib_name_root + ".dylib")
-    swig_cc_binary("lib" + native_lib_name_root + ".so")
-    swig_cc_binary(native_lib_name_root + ".dll")
+    swig_cc_binary("lib" + native_lib_name + ".dylib")
+    swig_cc_binary("lib" + native_lib_name + ".so")
+    swig_cc_binary(native_lib_name + ".dll")
 
     native.alias(
         name = native_lib_name,
         actual = select({
-            "@vaticle_bazel_distribution//platform:is_mac": ("lib" + native_lib_name_root + ".dylib"),
-            "@vaticle_bazel_distribution//platform:is_linux": ("lib" + native_lib_name_root + ".so"),
-            "@vaticle_bazel_distribution//platform:is_windows": (native_lib_name_root + ".dll"),
+            "@vaticle_bazel_distribution//platform:is_mac": ("lib" + native_lib_name + ".dylib"),
+            "@vaticle_bazel_distribution//platform:is_linux": ("lib" + native_lib_name + ".so"),
+            "@vaticle_bazel_distribution//platform:is_windows": (native_lib_name + ".dll"),
         })
     )
 
@@ -221,6 +210,7 @@ def swig_csharp(name, lib, nullable_context, target_frameworks, targeting_packs,
         name = name,
         srcs = [":{}".format(csharp_source_name)],
         deps = [":{}".format(csharp_native_lib_name)],
+        out = namespace,
         nullable = nullable_context,
         target_frameworks = target_frameworks,
         targeting_packs = targeting_packs,

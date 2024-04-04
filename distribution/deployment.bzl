@@ -58,6 +58,10 @@ deployment = {
         "release": "https://upload.pypi.org/legacy/",
         "snapshot": "https://python.cloudsmith.io/typedb/public-snapshot/",
     },
+    "nuget" : {
+        "release": "https://api.nuget.org/v3/index.json",
+        "snapshot": "https://nuget.cloudsmith.io/typedb/public-snapshot/v3/index.json",
+    },
 }
 
 deployment_private = {
