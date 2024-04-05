@@ -82,6 +82,7 @@ artifacts = {
     "com.microsoft.azure:azure-mgmt-network": "1.33.1",
     "com.microsoft.azure:azure-mgmt-resources": "1.33.1",
     "com.microsoft.rest:client-runtime": "1.7.4",
+    "com.newrelic.agent.java:newrelic-agent": "8.10.0",
     "com.quantego:clp-java": {
         "exclude": ["com.google.android.tools:dx"],
         "version": "1.16.10"
