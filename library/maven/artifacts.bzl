@@ -136,6 +136,7 @@ artifacts = {
     "io.ktor:ktor-client-core-jvm": "2.3.7",
     "io.ktor:ktor-client-websockets-jvm": "2.3.7",
     "io.ktor:ktor-serialization-gson-jvm": "2.3.7",
+    "io.ktor:ktor-serialization-jackson-jvm": "2.3.7",
     "io.ktor:ktor-serialization-kotlinx-jvm": "2.3.7",
     "io.ktor:ktor-serialization-kotlinx-protobuf-jvm": "2.3.7",
     "io.ktor:ktor-server-core-jvm": "2.3.7",
