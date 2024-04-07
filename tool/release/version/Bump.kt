@@ -59,34 +59,36 @@ object Bump : Callable<Int> {
 
     override fun call(): Int {
         val path = workspacePath.resolve(file)
+        val type = VersionFileType.from(type)
 
-        val nextVersion = incrementAndWriteVersion(path, VersionFileType.from(type))
-        logger.debug { "Updated version for ${path.toAbsolutePath()} to '$nextVersion'" }
+        logger.debug { "Updating version for file ${path.toAbsolutePath()} of type ${type.stringValue}" }
+        val nextVersion = incrementAndWriteVersion(path, type)
+        logger.debug { "Updated version for file ${path.toAbsolutePath()} to '$nextVersion'" }
 
         logger.debug { "Creating Git commit and pushing to the remote repository" }
         gitCommitAndPush(path, nextVersion)
         return 0
     }
 
-    private fun incrementAndWriteVersion(path: Path, type: VersionFileType): String {
-        return when (type) {
-            VersionFileType.TEXT ->  {
+    private fun incrementAndWriteVersion(path: Path, type: VersionFileType) =
+        when (type) {
+            VersionFileType.TEXT -> {
                 val version = String(Files.readAllBytes(path)).trim()
                 val nextVersion = nextVersion(version)
                 Files.write(path, nextVersion.toByteArray())
                 nextVersion
             }
+
             VersionFileType.PACKAGE_JSON -> {
                 val objectMapper = ObjectMapper()
                 val json = objectMapper.readTree(path.toFile())
                 val version = json[LABEL_VERSION].asText()
                 val nextVersion = nextVersion(version)
                 (json as ObjectNode).put(LABEL_VERSION, nextVersion)
-                objectMapper.writer().writeValue(path.toFile(), json)
+                objectMapper.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), json)
                 nextVersion
             }
         }
-    }
 
     private fun nextVersion(version: String): String {
         val versionComponents = version.split(".").toTypedArray()
