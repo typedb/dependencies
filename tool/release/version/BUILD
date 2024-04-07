@@ -14,7 +14,6 @@ kt_jvm_binary(
     main_class = "com.vaticle.dependencies.tool.release.version.Bump",
     deps = [
         "@vaticle_bazel_distribution//common",
-        "@vaticle_bazel_distribution//common/shell",
         "@maven//:commons_io_commons_io",
         "@maven//:info_picocli_picocli",
         "@maven//:org_zeroturnaround_zt_exec",

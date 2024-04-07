@@ -8,7 +8,6 @@ package com.vaticle.dependencies.tool.release.version
 
 import com.vaticle.bazel.distribution.common.Logging.LogLevel.DEBUG
 import com.vaticle.bazel.distribution.common.Logging.Logger
-import com.vaticle.bazel.distribution.common.shell.Shell
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
@@ -28,12 +27,8 @@ object Bump : Callable<Int> {
     @Option(names = ["--type"], description = ["The type of the file."])
     private lateinit var type: String
 
-    @Option(names = ["--branch"], description = ["The git branch to commit the changes to."])
-    private lateinit var branch: String
-
     private val workspacePath = Paths.get(System.getenv("BUILD_WORKSPACE_DIRECTORY"))
     private val logger = Logger(DEBUG)
-    private val shell = Shell(logger)
 
     private const val LABEL_VERSION = "version"
 
@@ -64,9 +59,6 @@ object Bump : Callable<Int> {
         logger.debug { "Updating version for file ${path.toAbsolutePath()} of type ${type.stringValue}" }
         val nextVersion = incrementAndWriteVersion(path, type)
         logger.debug { "Updated version for file ${path.toAbsolutePath()} to '$nextVersion'" }
-
-        logger.debug { "Creating Git commit and pushing to the remote repository" }
-        gitCommitAndPush(path, nextVersion)
         return 0
     }
 
@@ -112,36 +104,5 @@ object Bump : Callable<Int> {
         }
         versionComponents[versionComponents.lastIndex] = lastVersionComponent
         return versionComponents.joinToString(".")
-    }
-
-    data class Config(val gitUsername: String, val gitEmail: String) {
-        companion object {
-            fun load() = Config(gitUsername = getenv("GIT_USERNAME"), gitEmail = getenv("GIT_EMAIL"))
-
-            private fun getenv(name: String, errorMsg: String = "$name environment variable is not set") =
-                System.getenv(name) ?: throw RuntimeException(errorMsg)
-        }
-    }
-
-    private fun gitCommitAndPush(path: Path, newVersion: String) {
-        val (gitUsername, gitEmail) = Config.load()
-
-        shell.execute(listOf("git", "config", "--global", "user.name", gitUsername))
-        shell.execute(listOf("git", "config", "--global", "user.email", gitEmail))
-        shell.execute(listOf("git", "checkout", branch), baseDir = workspacePath)
-        shell.execute(listOf("git", "add", path.toAbsolutePath().toString()), baseDir = workspacePath)
-        shell.execute(listOf("git", "commit", "-m", "Bump version number to $newVersion"), baseDir = workspacePath)
-        val maxRetries = 3
-        var retryCount = 0
-        while (retryCount < maxRetries) {
-            shell.execute(listOf("git", "pull", "--rebase"), baseDir = workspacePath)
-            val pushResult = shell.execute(listOf("git", "push"), baseDir = workspacePath, throwOnError = false)
-            if (pushResult.exitValue == 0) break
-            else {
-                // cover the edge case where someone else has already pushed
-                retryCount++
-                if (retryCount == maxRetries) throw RuntimeException("Exceeded retry limit of [$maxRetries] attempting to push to Git. Aborting.")
-            }
-        }
     }
 }
