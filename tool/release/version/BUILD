@@ -11,7 +11,7 @@ package(default_visibility = ["//visibility:public"])
 kt_jvm_binary(
     name = "bump",
     srcs = ["Bump.kt"],
-    main_class = "com.vaticle.dependencies.tool.release.version.BumpKt",
+    main_class = "com.vaticle.dependencies.tool.release.version.Bump",
     deps = [
         "@vaticle_bazel_distribution//common",
         "@vaticle_bazel_distribution//common/shell",
