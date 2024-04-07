@@ -12,92 +12,134 @@ import com.vaticle.bazel.distribution.common.shell.Shell
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import kotlin.io.path.exists
+import java.util.concurrent.Callable
+import kotlin.system.exitProcess
+import picocli.CommandLine
+import picocli.CommandLine.Option
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.ObjectNode
 
-val logger = Logger(DEBUG)
-val shell = Shell(logger)
+object Bump : Callable<Int> {
+    private val HELP_TEXT_ALLOWED_FILE_TYPES = "Must be one of ${VersionFileType.types()}"
 
-val VERSION_FILE_NAMES = arrayOf("VERSION", "VERSION.txt")
+    @Option(names = ["--file"], description = ["The path of the file."])
+    private lateinit var file: String
 
-fun main() {
-    val (workspacePath, branchName, gitUsername, gitEmail) = Config.load()
+    @Option(names = ["--type"], description = ["The type of the file."])
+    private lateinit var type: String
 
-    shell.execute(listOf("git", "config", "--global", "user.name", gitUsername))
-    shell.execute(listOf("git", "config", "--global", "user.email", gitEmail))
-    shell.execute(listOf("git", "checkout", branchName), baseDir = workspacePath)
+    @Option(names = ["--branch"], description = ["The git branch to commit the changes to."])
+    private lateinit var branch: String
 
-    val versionFile = getVersionFilePath(workspacePath)
-    val version = String(Files.readAllBytes(versionFile)).trim()
-    val newVersion = bumpVersion(version)
+    private val workspacePath = Paths.get(System.getenv("BUILD_WORKSPACE_DIRECTORY"))
+    private val logger = Logger(DEBUG)
+    private val shell = Shell(logger)
 
-    logger.debug { "Updating VERSION file content to '$newVersion'" }
-    Files.write(versionFile, newVersion.toByteArray())
+    private const val LABEL_VERSION = "version"
 
-    logger.debug { "Creating Git commit and pushing to the remote repository" }
-    gitCommitAndPush(workspacePath, newVersion)
-}
+    @JvmStatic
+    fun main(args: Array<String>): Unit = exitProcess(CommandLine(Bump).execute(*args))
 
-fun getVersionFilePath(workspacePath: Path): Path {
-    VERSION_FILE_NAMES.forEach {
-        val candidate = workspacePath.resolve(it)
-        if (candidate.exists()) return candidate
-    }
-    throw RuntimeException("Could not find any of the following files in ${workspacePath.toAbsolutePath()}: $VERSION_FILE_NAMES")
-}
+    private enum class VersionFileType(val stringValue: String) {
+        TEXT("text"),
+        PACKAGE_JSON("package-json");
 
-data class Config(val workspacePath: Path, val branchName: String, val gitUsername: String, val gitEmail: String) {
-    companion object {
-        fun load(): Config {
-            return Config(
-                workspacePath = Paths.get(getenv("BUILD_WORKSPACE_DIRECTORY", errorMsg = "Not running from within Bazel workspace")),
-                branchName = getenv("FACTORY_BRANCH"), gitUsername = getenv("GIT_USERNAME"),
-                gitEmail = getenv("GIT_EMAIL")
-            )
-        }
+        companion object {
+            fun types() = VersionFileType.values().map { it.stringValue }
 
-        private fun getenv(name: String, errorMsg: String = "$name environment variable is not set"): String {
-            return System.getenv(name) ?: throw RuntimeException(errorMsg)
+            fun from(stringValue: String): VersionFileType {
+                return when (stringValue) {
+                    TEXT.stringValue -> TEXT
+                    PACKAGE_JSON.stringValue -> PACKAGE_JSON
+                    else -> throw RuntimeException("$HELP_TEXT_ALLOWED_FILE_TYPES. Got $stringValue.")
+                }
+            }
         }
     }
-}
 
-fun bumpVersion(version: String): String {
-    val versionComponents = version.split(".").toTypedArray()
-    if (versionComponents.size != 3) throw RuntimeException("Version is supposed to have three components: x.y.z")
-    var lastVersionComponent = versionComponents[versionComponents.lastIndex]
+    override fun call(): Int {
+        val path = workspacePath.resolve(file)
 
-    try {
-        // regular version component ("0")
-        lastVersionComponent = (Integer.parseInt(lastVersionComponent) + 1).toString()
-    } catch (a: NumberFormatException) {
-        // must be a snapshot version "0-alpha-X" where X needs to be incremented
-        val versionSubComponents = lastVersionComponent.split("-").toTypedArray()
+        val nextVersion = incrementAndWriteVersion(path, VersionFileType.from(type))
+        logger.debug { "Updated version for ${path.toAbsolutePath()} to '$nextVersion'" }
+
+        logger.debug { "Creating Git commit and pushing to the remote repository" }
+        gitCommitAndPush(path, nextVersion)
+        return 0
+    }
+
+    private fun incrementAndWriteVersion(path: Path, type: VersionFileType): String {
+        return when (type) {
+            VersionFileType.TEXT ->  {
+                val version = String(Files.readAllBytes(path)).trim()
+                val nextVersion = nextVersion(version)
+                Files.write(path, nextVersion.toByteArray())
+                nextVersion
+            }
+            VersionFileType.PACKAGE_JSON -> {
+                val objectMapper = ObjectMapper()
+                val json = objectMapper.readTree(path.toFile())
+                val version = json[LABEL_VERSION].asText()
+                val nextVersion = nextVersion(version)
+                (json as ObjectNode).put(LABEL_VERSION, nextVersion)
+                objectMapper.writer().writeValue(path.toFile(), json)
+                nextVersion
+            }
+        }
+    }
+
+    private fun nextVersion(version: String): String {
+        val versionComponents = version.split(".").toTypedArray()
+        if (versionComponents.size != 3) throw RuntimeException("Version is supposed to have three components: x.y.z")
+        var lastVersionComponent = versionComponents[versionComponents.lastIndex]
+
         try {
-            versionSubComponents[versionSubComponents.lastIndex] = (
-                    Integer.parseInt(versionSubComponents[versionSubComponents.lastIndex]) + 1
-                    ).toString()
-            lastVersionComponent = versionSubComponents.joinToString("-")
-        } catch (b: NumberFormatException) {
-            throw RuntimeException("invalid version: $version")
+            // regular version component ("0")
+            lastVersionComponent = (Integer.parseInt(lastVersionComponent) + 1).toString()
+        } catch (a: NumberFormatException) {
+            // must be a snapshot version "0-alpha-X" where X needs to be incremented
+            val versionSubComponents = lastVersionComponent.split("-").toTypedArray()
+            try {
+                versionSubComponents[versionSubComponents.lastIndex] = (
+                        Integer.parseInt(versionSubComponents[versionSubComponents.lastIndex]) + 1
+                        ).toString()
+                lastVersionComponent = versionSubComponents.joinToString("-")
+            } catch (b: NumberFormatException) {
+                throw RuntimeException("invalid version: $version")
+            }
+        }
+        versionComponents[versionComponents.lastIndex] = lastVersionComponent
+        return versionComponents.joinToString(".")
+    }
+
+    data class Config(val gitUsername: String, val gitEmail: String) {
+        companion object {
+            fun load() = Config(gitUsername = getenv("GIT_USERNAME"), gitEmail = getenv("GIT_EMAIL"))
+
+            private fun getenv(name: String, errorMsg: String = "$name environment variable is not set") =
+                System.getenv(name) ?: throw RuntimeException(errorMsg)
         }
     }
-    versionComponents[versionComponents.lastIndex] = lastVersionComponent
-    return versionComponents.joinToString(".")
-}
 
-fun gitCommitAndPush(workspacePath: Path, newVersion: String) {
-    shell.execute(listOf("git", "add", "VERSION"), baseDir = workspacePath)
-    shell.execute(listOf("git", "commit", "-m", "Bump version number to $newVersion"), baseDir = workspacePath)
-    val maxRetries = 3
-    var retryCount = 0
-    while (retryCount < maxRetries) {
-        shell.execute(listOf("git", "pull", "--rebase"), baseDir = workspacePath)
-        val pushResult = shell.execute(listOf("git", "push"), baseDir = workspacePath, throwOnError = false)
-        if (pushResult.exitValue == 0) break
-        else {
-            // cover the edge case where someone else has already pushed
-            retryCount++
-            if (retryCount == maxRetries) throw RuntimeException("Exceeded retry limit of [$maxRetries] attempting to push to Git. Aborting.")
+    private fun gitCommitAndPush(path: Path, newVersion: String) {
+        val (gitUsername, gitEmail) = Config.load()
+
+        shell.execute(listOf("git", "config", "--global", "user.name", gitUsername))
+        shell.execute(listOf("git", "config", "--global", "user.email", gitEmail))
+        shell.execute(listOf("git", "checkout", branch), baseDir = workspacePath)
+        shell.execute(listOf("git", "add", path.toAbsolutePath().toString()), baseDir = workspacePath)
+        shell.execute(listOf("git", "commit", "-m", "Bump version number to $newVersion"), baseDir = workspacePath)
+        val maxRetries = 3
+        var retryCount = 0
+        while (retryCount < maxRetries) {
+            shell.execute(listOf("git", "pull", "--rebase"), baseDir = workspacePath)
+            val pushResult = shell.execute(listOf("git", "push"), baseDir = workspacePath, throwOnError = false)
+            if (pushResult.exitValue == 0) break
+            else {
+                // cover the edge case where someone else has already pushed
+                retryCount++
+                if (retryCount == maxRetries) throw RuntimeException("Exceeded retry limit of [$maxRetries] attempting to push to Git. Aborting.")
+            }
         }
     }
 }
