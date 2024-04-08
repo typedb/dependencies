@@ -332,7 +332,10 @@ artifacts = {
         "classifier": "runtime",
         "version": "0.8.12",
     },
-    "org.jacoco:org.jacoco.cli": "0.8.12",
+    "org.jacoco:org.jacoco.cli": {
+        "classifier": "nodeps",
+        "version": "0.8.12",
+    },
     # Find out the Skiko version we need by viewing dependencies of org.jetbrains.compose.ui/ui-graphics-desktop
     "org.jetbrains.skiko:skiko-awt": "0.7.85",
     "org.jetbrains.skiko:skiko-awt-runtime-linux-arm64": "0.7.85",
