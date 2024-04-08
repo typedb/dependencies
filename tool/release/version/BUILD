@@ -19,6 +19,7 @@ kt_jvm_binary(
         "@maven//:org_zeroturnaround_zt_exec",
         "@maven//:com_fasterxml_jackson_core_jackson_core",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_vdurmont_semver4j"
     ],
 )
 

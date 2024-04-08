@@ -6,6 +6,7 @@
 
 package com.vaticle.dependencies.tool.release.version
 
+import com.fasterxml.jackson.core.JsonPointer
 import com.vaticle.bazel.distribution.common.Logging.LogLevel.DEBUG
 import com.vaticle.bazel.distribution.common.Logging.Logger
 import java.nio.file.Files
@@ -17,9 +18,10 @@ import picocli.CommandLine
 import picocli.CommandLine.Option
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ObjectNode
+import com.vdurmont.semver4j.Semver
 
 object Bump : Callable<Int> {
-    private val HELP_TEXT_ALLOWED_FILE_TYPES = "Must be one of ${VersionFileType.types()}"
+    private val HELP_TEXT_ALLOWED_FILE_TYPES = "Must be one of ${VersionFileType.stringValues()}"
 
     @Option(names = ["--file"], description = ["The path of the file."])
     private lateinit var file: String
@@ -27,25 +29,26 @@ object Bump : Callable<Int> {
     @Option(names = ["--type"], description = ["The type of the file."])
     private lateinit var type: String
 
+    @Option(names = ["--json-pointer"], description = ["The JSON Pointer for the version string in the given file e.g. /version"])
+    private lateinit var jsonPointer: String
+
     private val workspacePath = Paths.get(System.getenv("BUILD_WORKSPACE_DIRECTORY"))
     private val logger = Logger(DEBUG)
-
-    private const val LABEL_VERSION = "version"
 
     @JvmStatic
     fun main(args: Array<String>): Unit = exitProcess(CommandLine(Bump).execute(*args))
 
     private enum class VersionFileType(val stringValue: String) {
         TEXT("text"),
-        PACKAGE_JSON("package-json");
+        JSON("json");
 
         companion object {
-            fun types() = VersionFileType.values().map { it.stringValue }
+            fun stringValues() = VersionFileType.values().map { it.stringValue }
 
             fun from(stringValue: String): VersionFileType {
                 return when (stringValue) {
                     TEXT.stringValue -> TEXT
-                    PACKAGE_JSON.stringValue -> PACKAGE_JSON
+                    JSON.stringValue -> JSON
                     else -> throw RuntimeException("$HELP_TEXT_ALLOWED_FILE_TYPES. Got $stringValue.")
                 }
             }
@@ -56,9 +59,9 @@ object Bump : Callable<Int> {
         val path = workspacePath.resolve(file)
         val type = VersionFileType.from(type)
 
-        logger.debug { "Updating version for file ${path.toAbsolutePath()} of type ${type.stringValue}" }
-        val nextVersion = incrementAndWriteVersion(path, type)
-        logger.debug { "Updated version for file ${path.toAbsolutePath()} to '$nextVersion'" }
+        logger.debug { "Incrementing version for file ${path.toAbsolutePath()} of type ${type.stringValue}" }
+        val versionPair = incrementAndWriteVersion(path, type)
+        logger.debug { "Incremented version for file ${path.toAbsolutePath()} from '${versionPair.first} to '${versionPair.second}'" }
         return 0
     }
 
@@ -66,43 +69,27 @@ object Bump : Callable<Int> {
         when (type) {
             VersionFileType.TEXT -> {
                 val version = String(Files.readAllBytes(path)).trim()
-                val nextVersion = nextVersion(version)
-                Files.write(path, nextVersion.toByteArray())
-                nextVersion
+                val newVersion = nextPatchVersion(version)
+
+                Files.write(path, newVersion.toByteArray())
+                Pair(version, newVersion)
             }
 
-            VersionFileType.PACKAGE_JSON -> {
+            VersionFileType.JSON -> {
                 val objectMapper = ObjectMapper()
+                val jsonPointer = JsonPointer.compile(jsonPointer)
+
                 val json = objectMapper.readTree(path.toFile())
-                val version = json[LABEL_VERSION].asText()
-                val nextVersion = nextVersion(version)
-                (json as ObjectNode).put(LABEL_VERSION, nextVersion)
+                val versionParent = json.at(jsonPointer.head())
+                val version = json.at(jsonPointer).asText()
+                val newVersion = nextPatchVersion(version)
+
+                val versionKey = jsonPointer.last().toString().replace(JsonPointer.SEPARATOR.toString(), "")
+                (versionParent as ObjectNode).put(versionKey, newVersion)
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(path.toFile(), json)
-                nextVersion
+                Pair(version, newVersion)
             }
         }
 
-    private fun nextVersion(version: String): String {
-        val versionComponents = version.split(".").toTypedArray()
-        if (versionComponents.size != 3) throw RuntimeException("Version is supposed to have three components: x.y.z")
-        var lastVersionComponent = versionComponents[versionComponents.lastIndex]
-
-        try {
-            // regular version component ("0")
-            lastVersionComponent = (Integer.parseInt(lastVersionComponent) + 1).toString()
-        } catch (a: NumberFormatException) {
-            // must be a snapshot version "0-alpha-X" where X needs to be incremented
-            val versionSubComponents = lastVersionComponent.split("-").toTypedArray()
-            try {
-                versionSubComponents[versionSubComponents.lastIndex] = (
-                        Integer.parseInt(versionSubComponents[versionSubComponents.lastIndex]) + 1
-                        ).toString()
-                lastVersionComponent = versionSubComponents.joinToString("-")
-            } catch (b: NumberFormatException) {
-                throw RuntimeException("invalid version: $version")
-            }
-        }
-        versionComponents[versionComponents.lastIndex] = lastVersionComponent
-        return versionComponents.joinToString(".")
-    }
+    private fun nextPatchVersion(version: String) = Semver(version).nextPatch().toString()
 }
