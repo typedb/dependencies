@@ -350,4 +350,5 @@ artifacts = {
     "org.zeroturnaround:zt-exec": "1.10",
     "com.mailgun:mailgun-java": "1.1.2",
     "io.github.openfeign:feign-core": "13.2.1",
+    "com.vdurmont:semver4j": "3.1.0",
 }

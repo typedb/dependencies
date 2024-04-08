@@ -11,12 +11,15 @@ package(default_visibility = ["//visibility:public"])
 kt_jvm_binary(
     name = "bump",
     srcs = ["Bump.kt"],
-    main_class = "com.vaticle.dependencies.tool.release.version.BumpKt",
+    main_class = "com.vaticle.dependencies.tool.release.version.Bump",
     deps = [
         "@vaticle_bazel_distribution//common",
-        "@vaticle_bazel_distribution//common/shell",
-
+        "@maven//:commons_io_commons_io",
+        "@maven//:info_picocli_picocli",
         "@maven//:org_zeroturnaround_zt_exec",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_vdurmont_semver4j"
     ],
 )
 

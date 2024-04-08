@@ -36,9 +36,7 @@ object OpenPR: Callable<Int> {
     private lateinit var token: String
 
     @JvmStatic
-    fun main(args: Array<String>) {
-        exitProcess(CommandLine(OpenPR).execute(*args))
-    }
+    fun main(args: Array<String>): Unit = exitProcess(CommandLine(OpenPR).execute(*args))
 
     override fun call(): Int {
         val gh = GitHub.connect(username, token)
