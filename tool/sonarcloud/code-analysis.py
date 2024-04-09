@@ -36,11 +36,11 @@ try:
         ' -Dsonar.branch.name=' + args.branch + \
         ' -Dsonar.sources=. -Dsonar.java.binaries=. ' + \
         ' -Dsonar.java.libraries=.' + \
+        ' -Dsonar.plugins.downloadOnlyRequired=true' + \
         ' -Dsonar.host.url=https://sonarcloud.io' + \
         ' -Dsonar.token=$SONARCLOUD_CODE_ANALYSIS_CREDENTIAL'
     if args.coverage_reports is not None:
         cmd = cmd + ' -Dsonar.coverage.jacoco.xmlReportPaths=' + args.coverage_reports
-    print(cmd)
     sp.check_call(cmd, cwd=os.getenv('BUILD_WORKSPACE_DIRECTORY'), shell=True)
 finally:
     shutil.rmtree(tmpdir)
