@@ -8,5 +8,9 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_file")
 def sonarcloud_dependencies():
     http_file(
         name = "sonarscanner_zip",
-        urls = ["https://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/4.8.1.3023/sonar-scanner-cli-4.8.1.3023.zip"]
+        urls = [select({
+            "@vaticle_bazel_distribution//platform:is_mac" : "https://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/5.0.1.3006/sonar-scanner-cli-5.0.1.3006-macosx.zip",
+            "@vaticle_bazel_distribution//platform:is_linux" : "https://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/5.0.1.3006/sonar-scanner-cli-5.0.1.3006-linux.zip",
+            "//conditions:default" : "https://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/5.0.1.3006/sonar-scanner-cli-5.0.1.3006.zip"
+        })]
     )
