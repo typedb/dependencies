@@ -20,24 +20,29 @@ parser.add_argument('--project-key', help='Sonarcloud project key', required=Tru
 parser.add_argument('--organisation', help='Sonarcloud organisation', default='vaticle')
 parser.add_argument('--commit-id', help='git commit id', required=True)
 parser.add_argument('--branch', help='git branch name', required=True)
+parser.add_argument('--coverage-reports', help='location of JaCoCo XML coverage reports')
 args = parser.parse_args()
 
 tmpdir = None
 try:
     tmpdir = tempfile.mkdtemp()
-    sp.check_call(['unzip', '-qq',
-        os.path.join('external', 'sonarscanner_zip', 'file', 'downloaded'), '-d', tmpdir])
+    sonarscanner_path = glob.glob(os.path.join('external', 'sonarscanner_*_zip'))[0]
+    sp.check_call([
+        'unzip', '-qq', os.path.join(sonarscanner_path, 'file', 'downloaded'), '-d', tmpdir
+    ])
     sp.check_call(['mv'] + glob.glob(os.path.join(tmpdir, 'sonar-scanner-*', '*')) + ['.'], cwd=tmpdir)
-    sp.check_call(
-        os.path.join(tmpdir, 'bin', 'sonar-scanner') + \
-            ' -Dsonar.projectKey=' + args.project_key + \
-            ' -Dsonar.organization=' + args.organisation + \
-            ' -Dsonar.projectVersion=' + args.commit_id + \
-            ' -Dsonar.branch.name=' + args.branch + \
-            ' -Dsonar.sources=. -Dsonar.java.binaries=. ' + \
-            ' -Dsonar.java.libraries=.' + \
-            ' -Dsonar.host.url=https://sonarcloud.io' + \
-            ' -Dsonar.login=$SONARCLOUD_CODE_ANALYSIS_CREDENTIAL',
-        cwd=os.getenv('BUILD_WORKSPACE_DIRECTORY'), shell=True)
+    cmd=os.path.join(tmpdir, 'bin', 'sonar-scanner') + \
+        ' -Dsonar.projectKey=' + args.project_key + \
+        ' -Dsonar.organization=' + args.organisation + \
+        ' -Dsonar.projectVersion=' + args.commit_id + \
+        ' -Dsonar.branch.name=' + args.branch + \
+        ' -Dsonar.sources=. -Dsonar.java.binaries=. ' + \
+        ' -Dsonar.java.libraries=.' + \
+        ' -Dsonar.plugins.downloadOnlyRequired=true' + \
+        ' -Dsonar.host.url=https://sonarcloud.io' + \
+        ' -Dsonar.token=$SONARCLOUD_CODE_ANALYSIS_CREDENTIAL'
+    if args.coverage_reports is not None:
+        cmd = cmd + ' -Dsonar.coverage.jacoco.xmlReportPaths=' + args.coverage_reports
+    sp.check_call(cmd, cwd=os.getenv('BUILD_WORKSPACE_DIRECTORY'), shell=True)
 finally:
     shutil.rmtree(tmpdir)

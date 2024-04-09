@@ -10,7 +10,11 @@ py_binary(
     name = "code-analysis",
     srcs = ["code-analysis.py"],
     main = "code-analysis.py",
-    data = [ "@sonarscanner_zip//file"]
+    data = select({
+        "@vaticle_bazel_distribution//platform:is_linux" : [ "@sonarscanner_linux_zip//file" ],
+        "@vaticle_bazel_distribution//platform:is_mac" : [ "@sonarscanner_mac_zip//file" ],
+        "//conditions:default" : [ "@sonarscanner_zip//file" ]
+    })
 )
 
 checkstyle_test(
