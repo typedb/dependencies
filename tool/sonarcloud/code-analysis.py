@@ -26,8 +26,10 @@ args = parser.parse_args()
 tmpdir = None
 try:
     tmpdir = tempfile.mkdtemp()
-    sp.check_call(['unzip', '-qq',
-        os.path.join(glob.glob(os.path.join('external', 'sonarscanner_*_zip'))[0], 'file', 'downloaded'), '-d', tmpdir])
+    sonarscanner_path = glob.glob(os.path.join('external', 'sonarscanner_*_zip'))[0]
+    sp.check_call([
+        'unzip', '-qq', os.path.join(sonarscanner_path, 'file', 'downloaded'), '-d', tmpdir
+    ])
     sp.check_call(['mv'] + glob.glob(os.path.join(tmpdir, 'sonar-scanner-*', '*')) + ['.'], cwd=tmpdir)
     cmd=os.path.join(tmpdir, 'bin', 'sonar-scanner') + \
         ' -Dsonar.projectKey=' + args.project_key + \
