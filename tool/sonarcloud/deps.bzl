@@ -21,6 +21,6 @@ def sonarcloud_dependencies():
         ),
         "//conditions:default": http_file(
             name = "sonarscanner_zip",
-            urls = ["https://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/5.0.1.3006/sonar-scanner-cli-5.0.1.3006.zip"]
+            urls = ["https://repo1.maven.org/maven2/org/sonarsource/scanner/cli/sonar-scanner-cli/5.0.1.3006/sonar-scanner-cli-5.0.1.3006-mac.zip"]
         ),
     })
