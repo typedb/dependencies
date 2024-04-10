@@ -84,6 +84,8 @@ artifacts = {
     "com.microsoft.rest:client-runtime": "1.7.4",
     "com.newrelic.agent.java:newrelic-agent": "8.10.0",
     "com.newrelic.logging:logback": "3.1.0",
+    "com.newrelic.telemetry:telemetry-core": "0.16.0",
+    "com.newrelic.telemetry:telemetry-http-okhttp": "0.16.0",
     "com.quantego:clp-java": {
         "exclude": ["com.google.android.tools:dx"],
         "version": "1.16.10"
