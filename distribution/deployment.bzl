@@ -19,7 +19,7 @@ deployment = {
     "apt.release": "https://repo.vaticle.com/repository/apt/",
     "apt.snapshot": "https://repo.vaticle.com/repository/apt-snapshot/",
 
-    "artifact.release": "https://repo.vaticle.com/repository/artifact/",
+    "artifact.release": "https://repo.typedb.com/public/public-release/raw/",
     "artifact.snapshot": "https://repo.vaticle.com/repository/artifact-snapshot/",
 
     "brew.release": "https://github.com/vaticle/homebrew-tap/",
@@ -31,11 +31,11 @@ deployment = {
     "helm.release": "https://repo.vaticle.com/repository/helm/",
     "helm.snapshot": "https://repo.vaticle.com/repository/helm-snapshot/",
 
-    "maven.release": "https://repo.vaticle.com/repository/maven/",
-    "maven.snapshot": "https://repo.vaticle.com/repository/maven-snapshot/",
+    "maven.release": "https://repo.typedb.com/public/public-release/maven/",
+    "maven.snapshot": "https://repo.typedb.com/public/public-snapshot/maven/",
 
     "npm.release": "https://registry.npmjs.org/",
-    "npm.snapshot": "https://repo.vaticle.com/repository/npm-snapshot/",
+    "npm.snapshot": "https://npm.cloudsmith.io/typedb/public-snapshot/",
 
     "pypi.release": "https://upload.pypi.org/legacy/",
     "pypi.snapshot": "https://repo.vaticle.com/repository/pypi-snapshot/",
@@ -45,8 +45,8 @@ deployment = {
 }
 
 deployment_private = {
-    "artifact.release": "https://repo.vaticle.com/repository/private-artifact/",
-    "artifact.snapshot": "https://repo.vaticle.com/repository/private-artifact-snapshot/",
+    "artifact.release": "https://repo.typedb.com/basic/private-release/raw/",
+    "artifact.snapshot": "https://repo.typedb.com/basic/private-snapshot/raw/",
 
     "npm.release": "https://repo.vaticle.com/repository/npm-private/",
 }

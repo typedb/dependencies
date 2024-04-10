@@ -17,10 +17,17 @@
 
 load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_file")
 
-def native_artifact_files(name, artifact_name, **kwargs):
-    for platform, ext in [("mac", "zip"), ("linux", "tar.gz"), ("windows", "zip")]:
+platform_extension = {
+    "linux": "tar.gz",
+    "mac": "zip",
+    "windows": "zip",
+}
+
+def native_artifact_files(name, artifact_name, group_name, **kwargs):
+    for platform, ext in platform_extension.items():
         artifact_file(
             name = name + "_" + platform,
+            group_name = group_name.replace("{platform}", platform).replace("{ext}", ext),
             # Can't use .format() because the result string will still have the unresolved parameter {version}
             artifact_name = artifact_name.replace("{platform}", platform).replace("{ext}", ext),
             **kwargs,
