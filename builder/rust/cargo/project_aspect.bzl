@@ -21,6 +21,7 @@ _LIB_ENTRY_POINT = "lib.rs"
 CrateInfo = provider(fields = [
     "kind",            # str
     "crate_name",      # str
+    "crate_path",      # str
     "version",         # str
     "features",        # List[str]
     "deps",            # List[target]
@@ -80,12 +81,14 @@ def _crate_info(ctx, target):
             if tag.startswith("crate-name"):
                 crate_name = tag.split("=")[1]
 
+    crate_path = target.label.package
     deps = _crate_deps(ctx, target)
     transitive_deps = _transitive_crate_deps(deps)
 
     return CrateInfo(
         kind = ctx.rule.kind,
         crate_name = crate_name,
+        crate_path = crate_path,
         version = getattr(ctx.rule.attr, "version", "0.0.0"),
         features = getattr(ctx.rule.attr, "crate_features", []),
         deps = deps,
@@ -192,6 +195,7 @@ def _get_properties(target, ctx, source_files, crate_info):
 
     properties = {}
     properties["name"] = crate_info.crate_name
+    properties["path"] = crate_info.crate_path
     properties["target.name"] = target.label.name
     properties["type"] = target_type
     properties["version"] = crate_info.version

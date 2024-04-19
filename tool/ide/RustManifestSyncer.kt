@@ -272,19 +272,30 @@ class RustManifestSyncer : Callable<Unit> {
                     createSubConfig().apply {
                         this@addDevAndBuildDependencies.set<Config>("dev-dependencies", this)
                         arrayOf(properties.tests, properties.benches).flatMap { it }
-                                .flatMap { it.deps.map { dep -> Pair(it.cargoWorkspaceDir, dep) } }
+                                .flatMap { it.deps.map { dep -> Pair(it, dep) } }
                                 .distinctBy { (_, dep) -> dep.name }
                                 .filter { (_, dep) -> (dep.name != properties.name) && properties.deps.none { existingDep -> dep.name == existingDep.name } }
-                                .forEach { (cargoWorkspaceDir, dep) ->
+                                .forEach { (dep_properties, transitive_dep) ->
                                     // WARN: this is a hack to replace 'local' repository paths that are relative to the test
                                     //       to make them relative to the parent Cargo Toml
                                     //       currently will only work for <package>/tests (ie. exactly one level of nesting)
-                                    val toml = dep.toToml(cargoWorkspaceDir, canonicalExternalPathDeps);
-                                    val path: String? = toml.get("path");
+                                    val toml = transitive_dep.toToml(dep_properties.cargoWorkspaceDir, canonicalExternalPathDeps);
+                                    var path: String? = toml.get("path");
                                     if (path != null && path.startsWith("../..")) {
-                                        toml.set<String>("path", path.replaceFirst("../..", ".."))
+                                        // we are at path X
+                                        // we have a test or bench dep at X/tests/...Y
+                                        // we have the relative path from Root to X and Root to Y.
+                                        // so we can get the relative path from X to Y.
+                                        // we also have the relative path from Y to dependencies of Y
+                                        // so: take relative path from X to Y, resolve relative path from Y to dep(Y), and normalise.
+                                        val rootToSelf = Path.of(properties.cratePath).toFile();
+                                        val rootToDep = Path.of(dep_properties.cratePath).toFile();
+                                        val selfToDepRelative = rootToDep.relativeTo(rootToSelf);
+                                        val depToTransitiveDepRelative = path;
+                                        val selfToTransitiveDepRelative = selfToDepRelative.resolve(depToTransitiveDepRelative).normalize();
+                                        toml.set<String>("path", selfToTransitiveDepRelative.toString())
                                     }
-                                    set<Config>(dep.name, toml)
+                                    set<Config>(transitive_dep.name, toml)
                                 }
                     }
                 }
@@ -318,6 +329,7 @@ class RustManifestSyncer : Callable<Unit> {
                 val path: File,
                 val name: String,
                 val targetName: String,
+                val cratePath: String,
                 val type: Type,
                 val version: String,
                 val edition: String?,
@@ -414,6 +426,7 @@ class RustManifestSyncer : Callable<Unit> {
                                 deps = parseDependencies(extractDependencyEntries(props)),
                                 buildDeps = props.getProperty(BUILD_DEPS, "").split(",").filter { it.isNotBlank() },
                                 entryPointPath = props.getProperty(ENTRY_POINT_PATH)?.let { Path(it) },
+                                cratePath =  props.getProperty(PATH),
                                 tests = mutableListOf(),
                                 benches = mutableListOf(),
                                 buildScripts = mutableListOf(),
