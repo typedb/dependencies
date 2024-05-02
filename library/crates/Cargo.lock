@@ -4558,6 +4558,7 @@ dependencies = [
  "prost",
  "prost-build",
  "rand 0.8.5",
+ "rand_core 0.3.1",
  "regex",
  "reqwest",
  "same-file",
