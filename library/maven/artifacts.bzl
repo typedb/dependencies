@@ -34,6 +34,7 @@ artifacts = {
     "com.fasterxml.jackson.datatype:jackson-datatype-jdk8": "2.16.0",
     "com.fifesoft:rsyntaxtextarea": "3.1.3",
     "com.github.ben-manes.caffeine:caffeine": "2.8.6",
+    "com.github.jknack:handlebars": "4.0.4",
     "com.github.rholder:guava-retrying": "2.0.0",
     "com.google.android:annotations": "4.1.1.4",
     "com.google.api.grpc:proto-google-common-protos" : "2.9.0",
