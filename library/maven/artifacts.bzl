@@ -360,7 +360,7 @@ artifacts = {
     "org.slf4j:slf4j-api": "2.0.0",
     "org.slf4j:slf4j-simple": "2.0.0",
     "org.springframework.security:spring-security-crypto": "5.5.0",
-    "org.yaml:snakeyaml": "1.25",
+    "org.yaml:snakeyaml": "2.2",
     "org.zeromq:jeromq": "0.5.2",
     "org.zeroturnaround:zt-exec": "1.10",
     "com.mailgun:mailgun-java": "1.1.2",
