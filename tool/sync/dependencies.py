@@ -29,7 +29,7 @@ GITHUB_TOKEN = os.getenv('SYNC_DEPENDENCIES_TOKEN')
 if GITHUB_TOKEN is None:
     raise Exception("$SYNC_DEPENDENCIES_TOKEN is not set!")
 
-BOT_HOST = 'https://bot.vaticle.com'
+BOT_HOST = 'https://bot.typedb.com'
 if not IS_CI_ENV:
     BOT_HOST = 'http://localhost:8000'
 
