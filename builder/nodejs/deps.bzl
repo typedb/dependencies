@@ -14,7 +14,7 @@ def deps(patch = []):
 
     http_archive(
         name = "aspect_rules_ts",
-        sha256 = "4c3f34fff9f96ffc9c26635d8235a32a23a6797324486c7d23c1dfa477e8b451",
-        strip_prefix = "rules_ts-1.4.5",
-        url = "https://github.com/aspect-build/rules_ts/releases/download/v1.4.5/rules_ts-v1.4.5.tar.gz",
+        sha256 = "97a8246bf6d1c7077b296e90a6e307bf8eabed02c5bca84d46db81efbf6ead41",
+        strip_prefix = "rules_ts-2.4.0",
+        url = "https://github.com/aspect-build/rules_ts/releases/download/v2.4.0/rules_ts-v2.4.0.tar.gz",
     )
