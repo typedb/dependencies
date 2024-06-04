@@ -24,6 +24,13 @@ python_deps()
 load("@rules_python//python:repositories.bzl", "py_repositories")
 py_repositories()
 
+# Load //builder/go
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+load("//builder/go:deps.bzl", go_deps = "deps")
+go_deps()
+
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
 # Load //builder/java
 load("//builder/java:deps.bzl", java_deps = "deps")
 java_deps()
