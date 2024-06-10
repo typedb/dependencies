@@ -14,13 +14,13 @@ def _copy_to_bin(ctx, src, dst):
 def _swig_go_wrapper_impl(ctx):
     module_name = ctx.attr.name
 
-#    TODO make it a dir but we know we will have just 1 file in this dir for bazel
     wrap_go_dir = ctx.actions.declare_directory("{}".format(module_name))
 
     args = ctx.attr.extra_args + [
         "-go",
 #        "c++",
         "-outdir", wrap_go_dir.path,
+        "-package", "typedb_driver", # name of the import in the driver
         ctx.file.interface.path,
     ]
 
@@ -37,6 +37,8 @@ def _swig_go_wrapper_impl(ctx):
     for h in ctx.attr.lib[CcInfo].compilation_context.headers.to_list():
         args = ["-I" + h.dirname] + args
 
+#    out_file = ctx.actions.declare_file("target.go")
+
     ctx.actions.run(
         inputs = depset(
             [ctx.file.interface] + ctx.files.includes,
@@ -49,8 +51,30 @@ def _swig_go_wrapper_impl(ctx):
         executable = ctx.file._swig,
         arguments = args,
     )
-    # get the src file here, then return it
+    # get the directory. call the target by a name.
 
+
+    # we get the file from the go_dir and we use the cmd to generate a .go file that is inside this dir. it is stored in
+    # the outs. We can get this by calling the target by its name.
+#    out_file = ctx.actions.declare_file("foo.go")
+#
+##    cmd = """
+##        set -e
+##        GENERATED_FILE = $(cat {out_f}.go)
+##        cp "$GENERATED_FILE" "{out_f}"
+##        """.format(out_f=out_file.path)
+#    cmd = """
+#        cat {dir_p}/typedb_driver.go > {out_f}
+#    """.format(out_f = out_file.path, dir_p = wrap_go_dir.path)
+#
+#    ctx.actions.run_shell(
+#        outputs= [out_file],
+#         TODO try running run shell with inputs =...
+# but current verison works well too
+#        command=cmd,
+#        )
+
+# if in here use ctx.actions.run_shell, genrule does not work
 
     lib_compilation_context = ctx.attr.lib[CcInfo].compilation_context
 #    wrap_zip = ctx.actions.declare_file(module_name + ".zip")
@@ -92,11 +116,10 @@ def _swig_go_wrapper_impl(ctx):
     )
 
     return [
-        DefaultInfo(files = depset([wrap_src, "foo"])),
-#        need to use this to seperate the go target
+        DefaultInfo(files = depset([wrap_src])),
+#        need to use this to seperate the go target and cxx. the .h is in the ccinfo
         OutputGroupInfo( # https://bazel.build/extending/rules#requesting_output_files
-            go_dir = depset([wrap_go_dir]),
-            # TODO this will be a file if we do the genrule here and grab the file
+            go_source = depset([wrap_go_dir]), # its actually a dir!
             cxx_source = depset([wrap_src]),
         ),
         CcInfo(
@@ -169,6 +192,7 @@ def swig_go_wrapper(**kwargs):
 
 def swig_go(name, lib, shared_lib_name=None, tags=[], **kwargs):
     swig_wrapper_name = name + "_swig"
+
     swig_go_wrapper(
         name = swig_wrapper_name,
         class_name = name,
@@ -179,23 +203,40 @@ def swig_go(name, lib, shared_lib_name=None, tags=[], **kwargs):
     if not shared_lib_name:
         shared_lib_name = name
 
-#    native.filegroup(
-#        name = "cxx_source_name",
-#        srcs = [swig_wrapper_name],
-#        output_group = "cxx_source",
-#    )
+#    out_file = ctx.actions.declare_file("foo.go")
+
+#    cmd = """
+#        cat {swig_wrapper_name}/target.go > {out_f}
+#    """.format(out_f = out_file.path)
+
+#    ctx.actions.run_shell(
+#        outputs= [out_file],
+#        command=cmd,
+#        )
+
+    native.filegroup(
+        name = "source_file",
+        srcs = [swig_wrapper_name],
+        output_group = "go_source",
+    )
 
 
+    native.genrule( # copy the generated go file into an output file
+        name="go_wrapper_copier",
+        outs= ["typedb_driver.go"],
+        srcs =[":source_file"],
+        cmd_bash = "cat $(SRCS)/typedb_driver.go > $@", # TODO remove hard coding
+        visibility = ["//visibility:public"],
+    )
     def swig_cc_binary(shared_lib_filename):
-        # name doesn't accept select() either
         native.cc_binary(
             name = shared_lib_filename,
-            deps = [lib, "cxx_source_name"],
-            srcs = ["cxx_source_name"],
+            deps = [lib, swig_wrapper_name],
+            srcs = [swig_wrapper_name],
             linkshared = True,
             linkopts = select({
                     "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
-                    "@vaticle_bazel_distribution//platform:is_mac": ["-framework CoreFoundation"],
+                    "@vaticle_bazel_distribution//platform:is_mac": ["-framework CoreFoundation", "-install_name go/libtypedb_driver_go_native.dylib"],
                     "//conditions:default": [],
                 }),
         )
@@ -213,35 +254,14 @@ def swig_go(name, lib, shared_lib_name=None, tags=[], **kwargs):
         })
     )
 
-
-    # use a genrule to get our source file as a target rather than our dir.
-
-#    go_source_name = name + ".go" # where we want our output
-
-
-    # we want to generate the .go file, by running a simple grep on *.go
-#     ls | grep *.go
-
-
-    native.filegroup(
-        name = "go_dir_name",
-        srcs = [swig_wrapper_name],
-        output_group = "go_dir",
-)
-
-
-    print("hello")
-    print(swig_wrapper_name)
-#    print(swig_wrapper_name + "/" + go_source_name)
-
     go_library(
         name = name,
-        srcs = ["foo.go"],
-        data = ["lib" + shared_lib_name], # TODO do we need "lib" + ?
+        srcs = ["typedb_driver.go"],
+        data = ["lib" + shared_lib_name],
         importpath = "example/go_wrapper",
-        cgo=True
+        visibility = ["//visibility:public"],
+        cgo=True,
+
     )
     # needs name, go file (in the dir), and resource being the lib(contains cxx, .h)
     # in most cases this data file is copied to where it goes
-
-# needs dylib, needs .go
