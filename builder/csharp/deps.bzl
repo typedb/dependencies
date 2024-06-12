@@ -2,10 +2,12 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("//builder/aspect:deps.bzl", "aspect_bazel_lib")
 
 def deps(use_patched_version=False):
+    aspect_bazel_lib()
+
     http_archive(
         name = "rules_dotnet",
         sha256 = "09021aa1d8a63395cd072e384cd560612e713f35a448da43a7e89087787aadc0",
