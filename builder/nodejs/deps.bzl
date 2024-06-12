@@ -3,8 +3,11 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+load("//builder/aspect:deps.bzl", "aspect_bazel_lib")
 
 def deps(patch = []):
+    aspect_bazel_lib()
+
     http_archive(
         name = "aspect_rules_js",
         sha256 = "e3e6c3d42491e2938f4239a3d04259a58adc83e21e352346ad4ef62f87e76125",
