@@ -1,18 +1,20 @@
 # This Source Code Form is subject to the terms of the Mozilla Public
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
+
 load("@io_bazel_rules_go//go:def.bzl", "go_library")
 
 def _swig_go_wrapper_impl(ctx):
     module_name = ctx.attr.name
 
-    # Go outputs to a directory.
+    # Swig outputs to a directory when using Go.
     wrap_go_dir = ctx.actions.declare_directory("{}".format(module_name))
 
     args = ctx.attr.extra_args + [
         "-go",
         "-outdir", wrap_go_dir.path,
-        "-package", "typedb_driver",
+        "-intgosize", "32",
+        "-package", ctx.attr.package_name,
         ctx.file.interface.path,
     ]
 
@@ -32,7 +34,6 @@ def _swig_go_wrapper_impl(ctx):
     ctx.actions.run(
         inputs = depset(
             [ctx.file.interface] + ctx.files.includes,
-
             transitive = [
                 ctx.attr.lib[CcInfo].compilation_context.headers,
                 ctx.attr._swig.data_runfiles.files,
@@ -59,9 +60,6 @@ def _swig_go_wrapper_impl(ctx):
         )
     )
 
-    # need to use OutputGroupInfo to separate the go file and cxx, so it doesn't attempt to compile both with C and
-    # complain about the go file. The .h is provided in the CcInfo.
-
     return [
         DefaultInfo(files = depset([wrap_src])),
         OutputGroupInfo(
@@ -74,8 +72,6 @@ def _swig_go_wrapper_impl(ctx):
         ),
     ]
 
-
-
 _swig_go_wrapper = rule(
     implementation = _swig_go_wrapper_impl,
     attrs = {
@@ -83,9 +79,6 @@ _swig_go_wrapper = rule(
             doc = "The C library for which to generate the wrapper",
             providers = [CcInfo],
             mandatory = True,
-        ),
-        "class_name": attr.string(
-            doc = "Optional override for the java class name (default: same as target name)",
         ),
         "interface": attr.label(
             doc = "Optional SWIG interface (.i) file",
@@ -95,10 +88,9 @@ _swig_go_wrapper = rule(
             doc = "Additional SWIG files required for wrapper generation",
             allow_files = True,
         ),
-#        "package": attr.string(
-#            doc = "Java package for which to generate the sources",
-#            mandatory = True,
-#        ),
+        "package_name": attr.string(
+            doc = "Package name override for generated Go package",
+        ),
         "enable_cxx": attr.bool(
             doc = "Enable SWIG C++ processing (default: False)",
             default = False,
@@ -106,13 +98,6 @@ _swig_go_wrapper = rule(
         "extra_args": attr.string_list(
             doc = "Extra arguments to be passed to SWIG",
         ),
-#        "_jni_header": attr.label(
-#            default = Label("@bazel_tools//tools/jdk:jni_header"),
-#            allow_single_file = True,
-#        ),
-#        "jni_md_header": attr.label(
-#            allow_single_file = True,
-#        ),
         "_swig": attr.label(
             default = Label("@swig//:swig"),
             allow_single_file = True,
@@ -122,29 +107,18 @@ _swig_go_wrapper = rule(
     },
 )
 
-def swig_go(name, lib, shared_lib_name=None, tags=[], **kwargs):
+def swig_go(name, lib, package_name, shared_lib_name=None, tags=[], **kwargs):
     swig_wrapper_name = name + "_swig"
 
     _swig_go_wrapper(
         name = swig_wrapper_name,
-        class_name = name,
         lib = lib,
+        package_name=package_name,
         **kwargs,
     )
 
     if not shared_lib_name:
         shared_lib_name = name
-
-#    out_file = ctx.actions.declare_file("foo.go")
-
-#    cmd = """
-#        cat {swig_wrapper_name}/target.go > {out_f}
-#    """.format(out_f = out_file.path)
-
-#    ctx.actions.run_shell(
-#        outputs= [out_file],
-#        command=cmd,
-#        )
 
     native.filegroup(
         name = "source_file",
@@ -155,9 +129,9 @@ def swig_go(name, lib, shared_lib_name=None, tags=[], **kwargs):
     # copy the generated go file (assuming it is called typedb_driver.go) into an output file with the same name
     native.genrule(
         name="go_wrapper_copier",
-        outs= ["typedb_driver.go"],
+        outs= [package_name + ".go"], # packagename
         srcs =[":source_file"],
-        cmd_bash = "cat $(SRCS)/typedb_driver.go > $@",
+        cmd_bash = "cp $(SRCS)/{pkg_name}.go  $@".format(pkg_name=package_name),
         visibility = ["//visibility:public"],
     )
 
@@ -167,14 +141,12 @@ def swig_go(name, lib, shared_lib_name=None, tags=[], **kwargs):
             deps = [lib, swig_wrapper_name],
             srcs = [swig_wrapper_name],
             linkshared = True,
-
             linkopts = select({
                     "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
                     "@vaticle_bazel_distribution//platform:is_mac": ["-framework CoreFoundation", "-install_name go/{filename}".format(filename=shared_lib_filename)],
                     "//conditions:default": [],
                 }),
         )
-
 
     swig_cc_binary("lib" + shared_lib_name + ".dylib")
     swig_cc_binary("lib" + shared_lib_name + ".so")
@@ -191,11 +163,9 @@ def swig_go(name, lib, shared_lib_name=None, tags=[], **kwargs):
 
     go_library(
         name = name,
-        srcs = ["typedb_driver.go"],
+        srcs = [package_name + ".go"],
         data = ["lib" + shared_lib_name],
-
-        importpath = "typedb_driver/go_wrapper",
+        importpath = package_name + "/go_wrapper",
         visibility = ["//visibility:public"],
         cgo=True,
-
     )
