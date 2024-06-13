@@ -126,12 +126,15 @@ def swig_go(name, lib, package_name, shared_lib_name=None, tags=[], **kwargs):
         output_group = "go_source",
     )
 
-    # copy the generated go file (assuming it is called typedb_driver.go) into an output file with the same name
+    # TODO windows would use copy, maybe use an if statement or select to check
+    cmd = "cp $(SRCS)/{pkg_name}.go  $@".format(pkg_name=package_name)
+
+    # Copy the generated go file into an output file with the same name.
     native.genrule(
         name="go_wrapper_copier",
-        outs= [package_name + ".go"], # packagename
+        outs= [package_name + ".go"],
         srcs =[":source_file"],
-        cmd_bash = "cp $(SRCS)/{pkg_name}.go  $@".format(pkg_name=package_name),
+        cmd_bash = cmd,
         visibility = ["//visibility:public"],
     )
 
