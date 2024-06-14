@@ -130,9 +130,9 @@ def swig_go(name, lib, package_name, shared_lib_name=None, tags=[], **kwargs):
 
     # Copy the generated go file into an output file with the same name.
     native.genrule(
-        name="go_wrapper_copier",
-        outs= [package_name + ".go"],
-        srcs =[":source_file"],
+        name = "go_wrapper_copier",
+        outs = [package_name + ".go"],
+        srcs = [":source_file"],
         cmd_bash = "cp " + cmd_suffix,
         cmd_bat = "copy " + cmd_suffix,
         visibility = ["//visibility:public"],
@@ -165,10 +165,10 @@ def swig_go(name, lib, package_name, shared_lib_name=None, tags=[], **kwargs):
     )
 
     go_library(
-        name=name,
-        srcs=[package_name + ".go"],
-        data=["lib" + shared_lib_name],
-        importpath=package_name + "/go_wrapper",
-        visibility=["//visibility:public"],
+        name = name,
+        srcs = [package_name + ".go"],
+        data = ["lib" + shared_lib_name],
+        importpath = package_name + "/go_wrapper",
+        visibility = ["//visibility:public"],
         cgo=True,
     )
