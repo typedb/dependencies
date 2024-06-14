@@ -113,7 +113,7 @@ def swig_go(name, lib, package_name, shared_lib_name=None, tags=[], **kwargs):
     _swig_go_wrapper(
         name = swig_wrapper_name,
         lib = lib,
-        package_name=package_name,
+        package_name = package_name,
         **kwargs,
     )
 
@@ -170,5 +170,5 @@ def swig_go(name, lib, package_name, shared_lib_name=None, tags=[], **kwargs):
         data = ["lib" + shared_lib_name],
         importpath = package_name + "/go_wrapper",
         visibility = ["//visibility:public"],
-        cgo=True,
+        cgo = True,
     )
