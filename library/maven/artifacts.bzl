@@ -42,7 +42,7 @@ artifacts = {
     "com.google.api:gax": "2.19.4",
     "com.google.api:gax-grpc": "2.19.4",
     "com.google.api-client:google-api-client": "2.0.0",
-    "com.google.apis:google-api-services-servicecontrol": "v1-rev124-1.25.0",
+    "com.google.apis:google-api-services-servicecontrol": "v1-rev20191003-1.30.3",
     "com.google.auth:google-auth-library-credentials": "1.6.0",
     "com.google.auth:google-auth-library-oauth2-http" : "1.6.0",
     "com.google.auto.value:auto-value" : "1.9",
