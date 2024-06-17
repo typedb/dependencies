@@ -60,6 +60,7 @@ artifacts = {
     "com.google.guava:guava": "30.1-jre",
     "com.google.firebase:firebase-admin": "9.1.1",
     "com.google.http-client:google-http-client": "1.41.4",
+    "com.google.http-client:google-http-client-gson": "1.41.4",
     "com.google.inject:guice": "4.2.2",
     "com.google.j2objc:j2objc-annotations" : "1.3",
     "com.google.ortools:ortools-java": {
