@@ -327,13 +327,18 @@ class RustManifestSyncer : Callable<Unit> {
             }
 
             private fun Config.addTests() {
-                if (properties.tests.isNotEmpty()) {
-                    val mapped = properties.tests.map {
+                val mapped = properties.tests.map {
+                    if (it.entryPointPath != null) {
+                        val path = Path(properties.cratePath).relativize(Path(it.cratePath)).resolve(it.entryPointPath)
                         createSubConfig().apply {
                             this.set<String>("name", it.name)
-                            this.set<String>("path", Path(properties.cratePath).relativize(Path(it.cratePath)).toString());
+                            this.set<String>("path", path.toString());
                         }
+                    } else {
+                        null
                     }
+                }.filterNotNull()
+                if (mapped.isNotEmpty()) {
                     this.set<List<Config>>("test", mapped)
                 }
             }
