@@ -6,6 +6,7 @@
 
 package com.vaticle.dependencies.tool.release.notes
 
+import com.vaticle.dependencies.tool.common.Version
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.notExists

@@ -5,10 +5,16 @@
 package(default_visibility = ["//visibility:public"])
 
 load("//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_library")
 
 py_library(
     name = "common",
     srcs = ["common.py"],
+)
+
+kt_jvm_library(
+    name = "version",
+    srcs = [ "Version.kt" ],
 )
 
 checkstyle_test(
