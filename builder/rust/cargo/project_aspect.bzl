@@ -205,6 +205,9 @@ def _get_properties(target, ctx, source_files, crate_info):
         properties["entry.point.path"] = _src_relpath(target, ctx, entry_point_file)
         if len(_crate_build_deps_info(crate_info)) > 0:
             fail("Build deps support unimplemented")
+    if target_type == "test" and ctx.rule.attr.crate == None:
+       entry_point_file = _entry_point_file(target, ctx, source_files)
+       properties["entry.point.path"] = _src_relpath(target, ctx, entry_point_file)
     for dep in _crate_deps_info(target, crate_info).items():
         properties["deps." + dep[0]] = dep[1]
     return properties
@@ -256,6 +259,9 @@ def _entry_point_file(target, ctx, source_files):
         return _find_entry_point_in_sources(target, ctx, source_files)
 
 def _find_entry_point_in_sources(target, ctx, source_files):
+    if len(source_files) == 1:
+        return source_files[0]
+
     standard_entry_point_name = _BIN_ENTRY_POINT if ctx.rule.kind == "rust_binary" else _LIB_ENTRY_POINT
     alternative_entry_point_name = "{}.rs".format(ctx.rule.attr.name)
 

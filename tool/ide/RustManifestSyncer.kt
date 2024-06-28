@@ -142,6 +142,7 @@ class RustManifestSyncer : Callable<Unit> {
             val subConfig = cargoToml.createSubConfig()
             subConfig.set<List<String>>("members", manifestPaths)
             cargoToml.set<Config>("workspace", subConfig)
+            cargoToml.set<String>("resolver", "2")
             return cargoToml
         }
 
@@ -238,6 +239,7 @@ class RustManifestSyncer : Callable<Unit> {
 
                 cargoToml.addDevAndBuildDependencies()
                 cargoToml.addBenches()
+                cargoToml.addTests()
 
                 return GENERATED_FILE_NOTICE + TomlWriter().writeToString(cargoToml.unmodifiable())
             }
@@ -321,6 +323,23 @@ class RustManifestSyncer : Callable<Unit> {
                         }
                     }
                     this.set<List<Config>>("bench", mapped)
+                }
+            }
+
+            private fun Config.addTests() {
+                val mapped = properties.tests.map {
+                    if (it.entryPointPath != null) {
+                        val path = Path(properties.cratePath).relativize(Path(it.cratePath)).resolve(it.entryPointPath)
+                        createSubConfig().apply {
+                            this.set<String>("name", it.name)
+                            this.set<String>("path", path.toString());
+                        }
+                    } else {
+                        null
+                    }
+                }.filterNotNull()
+                if (mapped.isNotEmpty()) {
+                    this.set<List<Config>>("test", mapped)
                 }
             }
         }
