@@ -39,6 +39,7 @@ macro_rules_attribute = "0.2.0"
 maybe-async = "0.2.7"
 mime = "0.3.16"
 mime_guess = "2.0.4"
+paste = "1.0.15"
 pest = "2.7.4"
 pest_derive = "2.7.4"
 pprof = { version = "0.13.0", features = ["flamegraph", "criterion"] }
