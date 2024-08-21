@@ -14,6 +14,7 @@ def fetch_crates():
         manifests = ["@vaticle_dependencies//library/crates:Cargo.toml"],
         annotations = {
             "cbindgen": [crate.annotation(gen_binaries = True)],
+            "librocksdb-sys": [crate.annotation(rustc_flags = ["-C", "opt-level=3"])],
         },
         supported_platform_triples = [
             "aarch64-apple-darwin",
