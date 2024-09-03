@@ -5,6 +5,8 @@
 artifacts = {
     "androidx.annotation:annotation": "1.2.0",
     "aws.sdk.kotlin:sqs-jvm": "1.3.23",
+    "aws.sdk.kotlin:marketplacemetering-jvm": "1.3.23",
+    "aws.sdk.kotlin:marketplaceentitlementservice-jvm": "1.3.23",
     "ch.qos.logback:logback-classic": "1.4.9",
     "ch.qos.logback:logback-core": "1.4.9",
     "ch.qos.logback.contrib:logback-json-classic" : "0.1.5",
