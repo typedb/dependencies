@@ -96,6 +96,7 @@ artifacts = {
     "com.newrelic.logging:logback": "3.1.0",
     "com.newrelic.telemetry:telemetry-core": "0.16.0",
     "com.newrelic.telemetry:telemetry-http-okhttp": "0.16.0",
+    "com.posthog.java:posthog": "1.1.1",
     "com.quantego:clp-java": {
         "exclude": ["com.google.android.tools:dx"],
         "version": "1.16.10"
