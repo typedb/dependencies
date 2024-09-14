@@ -28,7 +28,7 @@ env_logger = "0.10.0"
 fluvio-helm = "0.4.3"
 futures = { version = "0.3.30", features = ["executor", "thread-pool"] }
 hmac = "0.12.1"
-http = "0.2.8"
+http = "1.1.0"
 itertools = "0.10.3"
 jsonwebtoken = "8.3.0"
 k8s-openapi = { version = "0.16.0", features = ["v1_25"] }

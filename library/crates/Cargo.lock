@@ -4878,7 +4878,7 @@ dependencies = [
  "fluvio-helm",
  "futures",
  "hmac",
- "http 0.2.12",
+ "http 1.1.0",
  "itertools 0.10.5",
  "jsonwebtoken",
  "k8s-openapi",
