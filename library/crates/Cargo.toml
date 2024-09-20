@@ -44,8 +44,8 @@ pest = "2.7.4"
 pest_derive = "2.7.4"
 pprof = { version = "0.13.0", features = ["flamegraph", "criterion"] }
 proc-macro2 = "1.0.83"
-prost = "0.13.1"
-prost-build = "0.13.1"
+prost = "^0.13"
+prost-build = "^0.13"
 rand = "0.8.5"
 regex = "1.6.0"
 reqwest = { version = "0.11.12", features = ["json"] }
@@ -61,9 +61,9 @@ tempdir = "0.3.7"
 tokio = { version = "1.28.2", features = ["rt", "rt-multi-thread"] }
 tokio-retry = "0.3.0"
 tokio-stream = "0.1.11"
-tonic = { version = "0.12.1", features = ["tls", "tls-roots"] }
-tonic-build = "0.12.1"
-tonic-types = "0.12.1"
+tonic = { version = "^0.12", features = ["tls", "tls-roots"] }
+tonic-build = "^0.12"
+tonic-types = "^0.12"
 tower = "0.4.13"
 tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
