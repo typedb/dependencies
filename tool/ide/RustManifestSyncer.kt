@@ -110,6 +110,9 @@ class RustManifestSyncer : Callable<Unit> {
         }
 
         fun generateManifests(bazelBin: File) {
+            val rootTomlPath = workspace.resolve(CARGO_TOML);
+            Files.deleteIfExists(rootTomlPath);
+
             val manifests = loadSyncProperties(bazelBin)
                     .filter { shouldGenerateManifest(it) }
                     .map { ManifestGenerator(it).generateManifest(bazelBin) }
@@ -120,7 +123,6 @@ class RustManifestSyncer : Callable<Unit> {
                     .findFirst()
             val cargoWorkspaceConfig = createCargoWorkspace(manifests);
             val cargoWorkspaceString = TomlWriter().writeToString(cargoWorkspaceConfig.unmodifiable())
-            val rootTomlPath = workspace.resolve(CARGO_TOML);
 
             Files.newOutputStream(rootTomlPath, StandardOpenOption.APPEND, StandardOpenOption.CREATE).use {
                 it.write(cargoWorkspaceString.toByteArray(StandardCharsets.UTF_8))
