@@ -3,10 +3,10 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-workspace(name = "vaticle_dependencies")
+workspace(name = "typedb_dependencies")
 
 ################################
-# Load @vaticle_dependencies #
+# Load @typedb_dependencies #
 ################################
 
 # Load //builder/rust
@@ -43,9 +43,9 @@ google_or_tools_linux()
 google_or_tools_windows()
 
 # Load //tool/common
-load("//tool/common:deps.bzl", "vaticle_dependencies_ci_pip", vaticle_dependencies_tool_maven_artifacts = "maven_artifacts")
-vaticle_dependencies_ci_pip()
-load("@vaticle_dependencies_ci_pip//:requirements.bzl", "install_deps")
+load("//tool/common:deps.bzl", "typedb_dependencies_ci_pip", typedb_dependencies_tool_maven_artifacts = "maven_artifacts")
+typedb_dependencies_ci_pip()
+load("@typedb_dependencies_ci_pip//:requirements.bzl", "install_deps")
 install_deps()
 
 # Load //tool/checkstyle
@@ -75,7 +75,7 @@ load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
 # Load Maven artifacts
-maven(vaticle_dependencies_tool_maven_artifacts)
+maven(typedb_dependencies_tool_maven_artifacts)
 
 # Load Rust Crate dependencies
 load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")
@@ -91,4 +91,4 @@ crate_repositories()
 ###############################################
 
 load("@vaticle_bazel_distribution//common:rules.bzl", "workspace_refs")
-workspace_refs(name = "vaticle_dependencies_workspace_refs")
+workspace_refs(name = "typedb_dependencies_workspace_refs")

@@ -4,10 +4,10 @@
 
 load("@rules_python//python:pip.bzl", "pip_parse")
 
-def vaticle_dependencies_ci_pip(python_interpreter_target=None):
+def typedb_dependencies_ci_pip(python_interpreter_target=None):
     pip_parse(
-        name = "vaticle_dependencies_ci_pip",
-        requirements_lock = "@vaticle_dependencies//tool:requirements.txt",
+        name = "typedb_dependencies_ci_pip",
+        requirements_lock = "@typedb_dependencies//tool:requirements.txt",
         python_interpreter_target = python_interpreter_target
     )
 

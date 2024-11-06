@@ -41,7 +41,7 @@ _release_validate_deps_script_test = rule(
         ),
         "_release_validate_deps_template": attr.label(
             allow_single_file=True,
-            default = "@vaticle_dependencies//tool/release/deps:ValidateDeps.kt"
+            default = "@typedb_dependencies//tool/release/deps:ValidateDeps.kt"
         )
     },
     implementation = _release_validate_deps_script_impl,
@@ -80,7 +80,7 @@ def release_validate_nodejs_deps(
             name = name,
             main_class = "com.vaticle.dependencies.tool.release.deps.ValidateNodeJsDepsKt",
             srcs = [
-                "@vaticle_dependencies//tool/release/deps:ValidateNodeJsDeps.kt"
+                "@typedb_dependencies//tool/release/deps:ValidateNodeJsDeps.kt"
             ],
             data = [
                 package_json,
@@ -104,7 +104,7 @@ def release_validate_python_deps(
             name = name,
             main_class = "com.vaticle.dependencies.tool.release.deps.ValidatePythonDepsKt",
             srcs = [
-                "@vaticle_dependencies//tool/release/deps:ValidatePythonDeps.kt"
+                "@typedb_dependencies//tool/release/deps:ValidatePythonDeps.kt"
             ],
             data = [
                 requirements,

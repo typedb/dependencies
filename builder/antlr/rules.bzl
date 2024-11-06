@@ -10,6 +10,6 @@ def python_grammar_adapter(
         name = name,
         srcs = [input],
         outs = [output],
-        cmd_bash = "$(location @vaticle_dependencies//builder/antlr:grammar-adapter) --in $< --out $@ --adapt-keyword type --adapt-keyword filter",
-        tools = ["@vaticle_dependencies//builder/antlr:grammar-adapter"],
+        cmd_bash = "$(location @typedb_dependencies//builder/antlr:grammar-adapter) --in $< --out $@ --adapt-keyword type --adapt-keyword filter",
+        tools = ["@typedb_dependencies//builder/antlr:grammar-adapter"],
     )

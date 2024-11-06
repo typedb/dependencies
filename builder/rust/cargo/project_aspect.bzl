@@ -65,7 +65,7 @@ rust_cargo_project_aspect = aspect(
     implementation = _rust_cargo_project_aspect_impl,
     attrs = {
         "_manifest_writer" : attr.label(
-            default = Label("@vaticle_dependencies//builder/rust/cargo:manifest-writer"),
+            default = Label("@typedb_dependencies//builder/rust/cargo:manifest-writer"),
             executable = True,
             cfg = "exec",
         )

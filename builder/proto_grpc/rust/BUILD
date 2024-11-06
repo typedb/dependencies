@@ -4,7 +4,7 @@
 
 
 load("@rules_rust//rust:defs.bzl", "rust_binary")
-load("@vaticle_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
+load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 
 rust_binary(
     name = "compile",

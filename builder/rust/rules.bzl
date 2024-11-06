@@ -5,7 +5,7 @@
 
 load("@bazel_skylib//rules:run_binary.bzl", "run_binary")
 load("@rules_cc//cc:defs.bzl", "cc_library")
-load("@vaticle_dependencies//builder/rust/cargo:project_aspect.bzl", "CargoProjectInfo", "rust_cargo_project_aspect")
+load("@typedb_dependencies//builder/rust/cargo:project_aspect.bzl", "CargoProjectInfo", "rust_cargo_project_aspect")
 load("@rules_rust//rust/private:providers.bzl", "DepInfo")
 
 def rust_cxx_bridge(name, src, deps = []):

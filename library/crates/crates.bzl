@@ -10,8 +10,8 @@ load("@rules_rust//crate_universe:defs.bzl", "crate", "crates_repository", "rend
 def fetch_crates():
     crates_repository(
         name = "crates",
-        cargo_lockfile = "@vaticle_dependencies//library/crates:Cargo.lock",
-        manifests = ["@vaticle_dependencies//library/crates:Cargo.toml"],
+        cargo_lockfile = "@typedb_dependencies//library/crates:Cargo.lock",
+        manifests = ["@typedb_dependencies//library/crates:Cargo.toml"],
         annotations = {
             "cbindgen": [crate.annotation(gen_binaries = True)],
             "librocksdb-sys": [crate.annotation(rustc_flags = ["-C", "opt-level=3"])],

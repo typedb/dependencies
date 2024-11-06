@@ -12,14 +12,14 @@ def maven(artifacts_org, internal_artifacts = {}, artifacts_repo={}, override_ta
         _warn("There are {} artifacts_repo found. Overriding artifacts_org with `artifacts_repo` is discouraged!".format(len(artifacts_repo)))
     for a in artifacts_org:
         if a not in maven_artifacts_org.keys():
-            fail("'" + a + "' has not been declared in @vaticle_dependencies")
+            fail("'" + a + "' has not been declared in @typedb_dependencies")
     artifacts_selected = []
     for a in artifacts_org:
         artifact = maven_artifact(a, artifacts_repo.get(a, maven_artifacts_org[a]))
         artifacts_selected.append(artifact)
     for coordinate, info in internal_artifacts.items():
         if not coordinate.startswith("com.vaticle."):
-            fail("'" + coordinate + "' is not an internal dependency and must be declared in @vaticle_dependencies")
+            fail("'" + coordinate + "' is not an internal dependency and must be declared in @typedb_dependencies")
         artifacts_selected.append(maven_artifact(coordinate, info))
     rje_maven_install(
         artifacts = artifacts_selected,

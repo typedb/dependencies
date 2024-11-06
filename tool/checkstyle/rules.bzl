@@ -126,7 +126,7 @@ checkstyle_test = rule(
         "_license_files": attr.label_list(
             allow_files=True,
             doc = "License file(s) that can be used with the checkstyle license target",
-            default = ["@vaticle_dependencies//tool/checkstyle/config:license_files"]
+            default = ["@typedb_dependencies//tool/checkstyle/config:license_files"]
         ),
     },
 )

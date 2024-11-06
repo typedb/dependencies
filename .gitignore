@@ -8,7 +8,7 @@
 .ijwb/
 bazel-bin
 bazel-out
-bazel-dependencies
+bazel-typedb-dependencies
 bazel-testlogs
 bazel-test
 library/crates/cargo

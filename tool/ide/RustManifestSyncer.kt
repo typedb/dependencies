@@ -501,7 +501,7 @@ class RustManifestSyncer : Callable<Unit> {
     }
 
     private object ShellArgs {
-        const val ASPECTS = "--aspects=@vaticle_dependencies//builder/rust/cargo:project_aspect.bzl%rust_cargo_project_aspect"
+        const val ASPECTS = "--aspects=@typedb_dependencies//builder/rust/cargo:project_aspect.bzl%rust_cargo_project_aspect"
         const val BAZEL = "bazel"
         const val BAZEL_BIN = "bazel-bin"
         const val BUILD = "build"

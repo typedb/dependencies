@@ -29,8 +29,8 @@ def artifact_repackage(name, srcs, files_to_keep):
         name = name,
         outs = ["{}.tar.gz".format(name)],
         srcs = srcs,
-        cmd = "$(location @vaticle_dependencies//distribution/artifact:artifact-repackage) $< $@ {}".format(
+        cmd = "$(location @typedb_dependencies//distribution/artifact:artifact-repackage) $< $@ {}".format(
             "|".join(files_to_keep)
         ),
-        tools = ["@vaticle_dependencies//distribution/artifact:artifact-repackage"]
+        tools = ["@typedb_dependencies//distribution/artifact:artifact-repackage"]
     )
