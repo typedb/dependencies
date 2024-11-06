@@ -141,8 +141,8 @@ class RustManifestSyncer : Callable<Unit> {
             val cargoToml = Config.inMemory();
             val subConfig = cargoToml.createSubConfig()
             subConfig.set<List<String>>("members", manifestPaths)
+            subConfig.set<String>("resolver", "2")
             cargoToml.set<Config>("workspace", subConfig)
-            cargoToml.set<String>("resolver", "2")
             return cargoToml
         }
 
@@ -369,7 +369,7 @@ class RustManifestSyncer : Callable<Unit> {
                         return Config.inMemory().apply {
                             set<String>("version", version)
                             set<List<String>>("features", features)
-                            set<Boolean>("default_features", false)
+                            set<Boolean>("default-features", false)
                         }
                     }
                 }
