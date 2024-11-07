@@ -111,11 +111,11 @@ def host_compatible_java_test(name, deps = [], native_libraries_deps = [], **kwa
 def native_dep_for_host_platform(name):
     name = _expand_label(name)
     return select({
-         "@vaticle_bazel_distribution//platform:is_linux_arm64": [name + "-linux-arm64"],
-         "@vaticle_bazel_distribution//platform:is_linux_x86_64": [name + "-linux-x86_64"],
-         "@vaticle_bazel_distribution//platform:is_mac_arm64": [name + "-mac-arm64"],
-         "@vaticle_bazel_distribution//platform:is_mac_x86_64": [name + "-mac-x86_64"],
-         "@vaticle_bazel_distribution//platform:is_windows": [name + "-windows"],
+         "@typedb_bazel_distribution//platform:is_linux_arm64": [name + "-linux-arm64"],
+         "@typedb_bazel_distribution//platform:is_linux_x86_64": [name + "-linux-x86_64"],
+         "@typedb_bazel_distribution//platform:is_mac_arm64": [name + "-mac-arm64"],
+         "@typedb_bazel_distribution//platform:is_mac_x86_64": [name + "-mac-x86_64"],
+         "@typedb_bazel_distribution//platform:is_windows": [name + "-windows"],
          "//conditions:default": ["INVALID"],
      })
 

@@ -21,15 +21,15 @@ rust_cxx_bridge(
     name = "ortools_bridge",
     src = "ortools.rs",
     deps = select({
-        "@vaticle_bazel_distribution//platform:is_mac": [
+        "@typedb_bazel_distribution//platform:is_mac": [
             "@or_tools_mac//:lib",
             "@or_tools_mac//:incl",
         ],
-        "@vaticle_bazel_distribution//platform:is_linux": [
+        "@typedb_bazel_distribution//platform:is_linux": [
             "@or_tools_linux//:lib",
             "@or_tools_linux//:incl",
         ],
-        "@vaticle_bazel_distribution//platform:is_windows": [
+        "@typedb_bazel_distribution//platform:is_windows": [
             "@or_tools_windows//:lib",
             "@or_tools_windows//:incl",
         ],
@@ -40,15 +40,15 @@ cc_library(
     name = "ortools_bridge_wrapper",
     hdrs = ["OrToolsWrapper.h"],
     deps = select({
-        "@vaticle_bazel_distribution//platform:is_mac": [
+        "@typedb_bazel_distribution//platform:is_mac": [
             "@or_tools_mac//:lib",
             "@or_tools_mac//:incl",
         ],
-        "@vaticle_bazel_distribution//platform:is_linux": [
+        "@typedb_bazel_distribution//platform:is_linux": [
             "@or_tools_linux//:lib",
             "@or_tools_linux//:incl",
         ],
-        "@vaticle_bazel_distribution//platform:is_windows": [
+        "@typedb_bazel_distribution//platform:is_windows": [
             "@or_tools_windows//:lib",
             "@or_tools_windows//:incl",
         ],

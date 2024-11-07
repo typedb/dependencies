@@ -4,15 +4,15 @@
 
 
 google_or_tools = select({
-         "@vaticle_bazel_distribution//platform:is_mac": [
+         "@typedb_bazel_distribution//platform:is_mac": [
              "@maven//:com_google_ortools_ortools_darwin",
              "@maven//:com_google_ortools_ortools_darwin_java",
          ],
-         "@vaticle_bazel_distribution//platform:is_linux": [
+         "@typedb_bazel_distribution//platform:is_linux": [
              "@maven//:com_google_ortools_ortools_linux_x86_64",
              "@maven//:com_google_ortools_ortools_linux_x86_64_java"
          ],
-         "@vaticle_bazel_distribution//platform:is_windows": [
+         "@typedb_bazel_distribution//platform:is_windows": [
              "@maven//:com_google_ortools_ortools_win32_x86_64",
              "@maven//:com_google_ortools_ortools_win32_x86_64_java"
          ],

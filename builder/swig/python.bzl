@@ -136,9 +136,9 @@ def swig_python(*, name, lib, shared_lib_name=None, import_name=None, python_hea
         lib = lib,
         python_headers = python_headers,
         libpython = select({
-            "@vaticle_bazel_distribution//platform:is_linux": libpython,
-            "@vaticle_bazel_distribution//platform:is_mac": None,
-            "@vaticle_bazel_distribution//platform:is_windows": libpython,
+            "@typedb_bazel_distribution//platform:is_linux": libpython,
+            "@typedb_bazel_distribution//platform:is_mac": None,
+            "@typedb_bazel_distribution//platform:is_windows": libpython,
         }),
         **kwargs,
     )
@@ -150,11 +150,11 @@ def swig_python(*, name, lib, shared_lib_name=None, import_name=None, python_hea
         linkshared = True,
         linkopts = select({
             # TODO: move http certificate/encryption libraries into arguments
-            "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
+            "@typedb_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
             "//conditions:default": [],
         }),
         copts = select({
-            "@vaticle_bazel_distribution//platform:is_mac": ["-undefined", "dynamic_lookup"],
+            "@typedb_bazel_distribution//platform:is_mac": ["-undefined", "dynamic_lookup"],
             "//conditions:default": [],
         }),
     )
@@ -191,7 +191,7 @@ def py_native_lib_rename(name, out, src, visibility, **kwargs):
     _py_native_lib_rename_wrapper(
         name = name,
         out = select({
-            "@vaticle_bazel_distribution//platform:is_windows": out + ".pyd",
+            "@typedb_bazel_distribution//platform:is_windows": out + ".pyd",
             "//conditions:default": out + ".so",
         }),
         src = src,

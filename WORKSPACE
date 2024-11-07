@@ -64,12 +64,12 @@ sonarcloud_dependencies()
 load("//tool/swig:deps.bzl", swig_deps = "deps")
 swig_deps()
 
-# Load @vaticle_bazel_distribution
-load("//distribution:deps.bzl", "vaticle_bazel_distribution")
-vaticle_bazel_distribution()
+# Load @typedb_bazel_distribution
+load("//distribution:deps.bzl", "typedb_bazel_distribution")
+typedb_bazel_distribution()
 
-# Load //@vaticle_bazel_distribution//common
-load("@vaticle_bazel_distribution//common:deps.bzl", "rules_pkg")
+# Load //@typedb_bazel_distribution//common
+load("@typedb_bazel_distribution//common:deps.bzl", "rules_pkg")
 rules_pkg()
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
@@ -90,5 +90,5 @@ crate_repositories()
 # Create @vaticle_typedb_workspace_refs #
 ###############################################
 
-load("@vaticle_bazel_distribution//common:rules.bzl", "workspace_refs")
+load("@typedb_bazel_distribution//common:rules.bzl", "workspace_refs")
 workspace_refs(name = "typedb_dependencies_workspace_refs")

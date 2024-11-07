@@ -152,9 +152,9 @@ def swig_java_wrapper(**kwargs):
     # cf. https://github.com/bazelbuild/bazel/issues/287
     _swig_java_wrapper(
         jni_md_header = select({
-            "@vaticle_bazel_distribution//platform:is_mac": Label("@bazel_tools//tools/jdk:jni_md_header-darwin"),
-            "@vaticle_bazel_distribution//platform:is_linux": Label("@bazel_tools//tools/jdk:jni_md_header-linux"),
-            "@vaticle_bazel_distribution//platform:is_windows": Label("@bazel_tools//tools/jdk:jni_md_header-windows"),
+            "@typedb_bazel_distribution//platform:is_mac": Label("@bazel_tools//tools/jdk:jni_md_header-darwin"),
+            "@typedb_bazel_distribution//platform:is_linux": Label("@bazel_tools//tools/jdk:jni_md_header-linux"),
+            "@typedb_bazel_distribution//platform:is_windows": Label("@bazel_tools//tools/jdk:jni_md_header-windows"),
         }),
         **kwargs,
     )
@@ -181,7 +181,7 @@ def swig_java(name, lib, shared_lib_name=None, tags=[], **kwargs):
             linkshared = True,
             linkopts = select({
                 # TODO: move http certificate/encryption libraries into arguments
-                "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
+                "@typedb_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
                 "//conditions:default": [],
             }),
         )
@@ -193,9 +193,9 @@ def swig_java(name, lib, shared_lib_name=None, tags=[], **kwargs):
     native.alias(
         name = "lib" + shared_lib_name,
         actual = select({
-            "@vaticle_bazel_distribution//platform:is_mac": ("lib" + shared_lib_name + ".dylib"),
-            "@vaticle_bazel_distribution//platform:is_linux": ("lib" + shared_lib_name + ".so"),
-            "@vaticle_bazel_distribution//platform:is_windows": (shared_lib_name + ".dll"),
+            "@typedb_bazel_distribution//platform:is_mac": ("lib" + shared_lib_name + ".dylib"),
+            "@typedb_bazel_distribution//platform:is_linux": ("lib" + shared_lib_name + ".so"),
+            "@typedb_bazel_distribution//platform:is_windows": (shared_lib_name + ".dll"),
         })
     )
 

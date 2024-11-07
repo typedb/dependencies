@@ -9,7 +9,7 @@ load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 rust_library(
     name = "lib1",
     srcs = ["lib.rs"],
-    deps = ["@vaticle_extern//:a", "//lib2:lib2"],
+    deps = ["@typedb_extern//:a", "//lib2:lib2"],
 )
 
 rust_test(

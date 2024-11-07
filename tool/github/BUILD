@@ -10,8 +10,8 @@ kt_jvm_library(
     srcs = glob(["*.kt"]),
     data = glob(["template/**/*"]),
     deps = [
-        "@vaticle_bazel_distribution//common",
-        "@vaticle_bazel_distribution//common/shell",
+        "@typedb_bazel_distribution//common",
+        "@typedb_bazel_distribution//common/shell",
         "@maven//:org_zeroturnaround_zt_exec",
         "@maven//:commons_io_commons_io",
         "@maven//:info_picocli_picocli",

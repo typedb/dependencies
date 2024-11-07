@@ -145,8 +145,8 @@ def swig_go(name, lib, package_name, shared_lib_name=None, tags=[], **kwargs):
             srcs = [swig_wrapper_name],
             linkshared = True,
             linkopts = select({
-                    "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
-                    "@vaticle_bazel_distribution//platform:is_mac": ["-framework CoreFoundation", "-install_name go/{filename}".format(filename=shared_lib_filename)],
+                    "@typedb_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
+                    "@typedb_bazel_distribution//platform:is_mac": ["-framework CoreFoundation", "-install_name go/{filename}".format(filename=shared_lib_filename)],
                     "//conditions:default": [],
                 }),
         )
@@ -158,9 +158,9 @@ def swig_go(name, lib, package_name, shared_lib_name=None, tags=[], **kwargs):
     native.alias(
         name = "lib" + shared_lib_name,
         actual = select({
-            "@vaticle_bazel_distribution//platform:is_mac": ("lib" + shared_lib_name + ".dylib"),
-            "@vaticle_bazel_distribution//platform:is_linux": ("lib" + shared_lib_name + ".so"),
-            "@vaticle_bazel_distribution//platform:is_windows": (shared_lib_name + ".dll"),
+            "@typedb_bazel_distribution//platform:is_mac": ("lib" + shared_lib_name + ".dylib"),
+            "@typedb_bazel_distribution//platform:is_linux": ("lib" + shared_lib_name + ".so"),
+            "@typedb_bazel_distribution//platform:is_windows": (shared_lib_name + ".dll"),
         })
     )
 

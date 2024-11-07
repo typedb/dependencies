@@ -8,11 +8,11 @@ package com.vaticle.dependencies.tool.ide
 
 import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
-import com.vaticle.bazel.distribution.common.Logging.LogLevel.DEBUG
-import com.vaticle.bazel.distribution.common.Logging.LogLevel.ERROR
-import com.vaticle.bazel.distribution.common.Logging.Logger
-import com.vaticle.bazel.distribution.common.shell.Shell
-import com.vaticle.bazel.distribution.common.util.FileUtil.listFilesRecursively
+import com.typedb.bazel.distribution.common.Logging.LogLevel.DEBUG
+import com.typedb.bazel.distribution.common.Logging.LogLevel.ERROR
+import com.typedb.bazel.distribution.common.Logging.Logger
+import com.typedb.bazel.distribution.common.shell.Shell
+import com.typedb.bazel.distribution.common.util.FileUtil.listFilesRecursively
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.ASPECTS
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BAZEL
 import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BAZEL_BIN

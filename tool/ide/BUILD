@@ -21,9 +21,9 @@ kt_jvm_library(
         "RustManifestSyncer.kt",
     ],
     deps = [
-        "@vaticle_bazel_distribution//common",
-        "@vaticle_bazel_distribution//common/shell",
-        "@vaticle_bazel_distribution//common/util",
+        "@typedb_bazel_distribution//common",
+        "@typedb_bazel_distribution//common/shell",
+        "@typedb_bazel_distribution//common/util",
 
         "@maven//:com_electronwill_night_config_core",
         "@maven//:com_electronwill_night_config_toml",

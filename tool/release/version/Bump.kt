@@ -7,8 +7,8 @@
 package com.vaticle.dependencies.tool.release.version
 
 import com.fasterxml.jackson.core.JsonPointer
-import com.vaticle.bazel.distribution.common.Logging.LogLevel.DEBUG
-import com.vaticle.bazel.distribution.common.Logging.Logger
+import com.typedb.bazel.distribution.common.Logging.LogLevel.DEBUG
+import com.typedb.bazel.distribution.common.Logging.Logger
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths

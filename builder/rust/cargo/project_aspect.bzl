@@ -170,7 +170,7 @@ def _copy_to_bin(ctx, src, dst):
     )
 
 def _should_generate_cargo_project(ctx, target):
-    return (str(target.label).startswith("@vaticle") or str(target.label).startswith("//")
+    return (str(target.label).startswith("@typedb") or str(target.label).startswith("//")
         or str(target.label).startswith("@//")) and \
         ctx.rule.kind in _TARGET_TYPES and _TARGET_TYPES[ctx.rule.kind] in ["bin", "lib", "test"]
 

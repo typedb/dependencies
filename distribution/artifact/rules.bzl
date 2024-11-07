@@ -3,7 +3,7 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-load("@vaticle_bazel_distribution//artifact:rules.bzl", "artifact_file")
+load("@typedb_bazel_distribution//artifact:rules.bzl", "artifact_file")
 
 platform_extension = {
     "linux-arm64": "tar.gz",

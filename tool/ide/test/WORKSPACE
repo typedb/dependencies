@@ -38,11 +38,11 @@ load("@typedb_dependencies//tool/checkstyle:deps.bzl", checkstyle_deps = "deps")
 checkstyle_deps()
 
 ####################################
-# Load @vaticle_bazel_distribution #
+# Load @typedb_bazel_distribution #
 ####################################
 
-load("@typedb_dependencies//distribution:deps.bzl", "vaticle_bazel_distribution")
-vaticle_bazel_distribution()
+load("@typedb_dependencies//distribution:deps.bzl", "typedb_bazel_distribution")
+typedb_bazel_distribution()
 
 ###############
 # Load @maven #
@@ -55,6 +55,6 @@ load("@typedb_dependencies//library/maven:rules.bzl", "maven")
 maven(typedb_dependencies_tool_maven_artifacts)
 
 local_repository(
-    name = "vaticle_extern", # we filter external crates by `@vaticle_`!
+    name = "typedb_extern", # we filter external crates by `@typedb_`!
     path = "extern",
 )

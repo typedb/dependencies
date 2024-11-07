@@ -173,7 +173,7 @@ def swig_csharp(name, native_lib_name, lib, namespace, nullable_context, target_
             linkshared = True,
             linkopts = select({
                 # TODO: move http certificate/encryption libraries into arguments
-                "@vaticle_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
+                "@typedb_bazel_distribution//platform:is_windows": ["ntdll.lib", "secur32.lib", "crypt32.lib", "ncrypt.lib"],
                 "//conditions:default": [],
             }),
         )
@@ -185,9 +185,9 @@ def swig_csharp(name, native_lib_name, lib, namespace, nullable_context, target_
     native.alias(
         name = native_lib_name,
         actual = select({
-            "@vaticle_bazel_distribution//platform:is_mac": ("lib" + native_lib_name + ".dylib"),
-            "@vaticle_bazel_distribution//platform:is_linux": ("lib" + native_lib_name + ".so"),
-            "@vaticle_bazel_distribution//platform:is_windows": (native_lib_name + ".dll"),
+            "@typedb_bazel_distribution//platform:is_mac": ("lib" + native_lib_name + ".dylib"),
+            "@typedb_bazel_distribution//platform:is_linux": ("lib" + native_lib_name + ".so"),
+            "@typedb_bazel_distribution//platform:is_windows": (native_lib_name + ".dll"),
         })
     )
 

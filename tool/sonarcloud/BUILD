@@ -11,8 +11,8 @@ py_binary(
     srcs = ["code-analysis.py"],
     main = "code-analysis.py",
     data = select({
-        "@vaticle_bazel_distribution//platform:is_linux" : [ "@sonarscanner_linux_zip//file" ],
-        "@vaticle_bazel_distribution//platform:is_mac" : [ "@sonarscanner_mac_zip//file" ],
+        "@typedb_bazel_distribution//platform:is_linux" : [ "@sonarscanner_linux_zip//file" ],
+        "@typedb_bazel_distribution//platform:is_mac" : [ "@sonarscanner_mac_zip//file" ],
         "//conditions:default" : [ "@sonarscanner_zip//file" ]
     })
 )
