@@ -43,17 +43,17 @@ COMMIT_SUBJECT_PREFIX = "//tool/sync:dependencies"
 regex_git_commit = r'[0-9a-f]{40}'
 regex_git_tag = r'([0-9]+\.[0-9]+\.[0-9]+)'
 
-vaticle = 'vaticle'
+typedb = 'typedb'
 github_connection = github.Github(GITHUB_TOKEN)
-github_org = github_connection.get_organization(vaticle)
+github_org = github_connection.get_organization(typedb)
 
 
 def is_building_upstream():
     """ Returns False is running in a forked repo"""
     if IS_CIRCLECI:
-        return vaticle in os.getenv('CIRCLE_REPOSITORY_URL', '')
+        return typedb in os.getenv('CIRCLE_REPOSITORY_URL', '')
     elif IS_FACTORY:
-        return vaticle == os.getenv('FACTORY_OWNER')
+        return typedb == os.getenv('FACTORY_OWNER')
     else:
         return False
 
@@ -99,11 +99,11 @@ def main():
 
     # TODO: Check that the commit author is @typedb-bot
     if not source_message.startswith(COMMIT_SUBJECT_PREFIX):
-        sync_message = '{0} {1}/{2}@{3}'.format(COMMIT_SUBJECT_PREFIX, vaticle, source_repo, source_ref_short)
+        sync_message = '{0} {1}/{2}@{3}'.format(COMMIT_SUBJECT_PREFIX, typedb, source_repo, source_ref_short)
     else:
         sync_message = source_message
 
-    print('Requesting the synchronisation of dependency to {0}/{1}@{2}'.format(vaticle, source_repo, source_ref_short))
+    print('Requesting the synchronisation of dependency to {0}/{1}@{2}'.format(typedb, source_repo, source_ref_short))
 
     print('Constructing request payload:')
     sync_data = {
