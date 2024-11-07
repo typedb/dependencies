@@ -4,7 +4,7 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 """
-sync-dependencies.py updates bazel dependencies between @vaticle repositories
+sync-dependencies.py updates bazel dependencies between @typedb repositories
 
 Example usage:
 bazel run @typedb_dependencies//tool/sync:dependencies -- --source typedb-driver@1a2b3c4d1a2b3c4d1a2b3c4d1a2b3c4d1a2b3c4g
@@ -80,7 +80,7 @@ def short_commit(commit_sha):
 @exception_handler
 def main():
     if not is_building_upstream():
-        print('Sync dependencies aborted: not building the upstream repo on @vaticle')
+        print('Sync dependencies aborted: not building the upstream repo on @typedb')
         exit(0)
 
     arguments = CMDLINE_PARSER.parse_args(sys.argv[1:])
@@ -97,7 +97,7 @@ def main():
     github_commit = github_repo.get_commit(source_ref)
     source_message = github_commit.commit.message
 
-    # TODO: Check that the commit author is @vaticle-bot
+    # TODO: Check that the commit author is @typedb-bot
     if not source_message.startswith(COMMIT_SUBJECT_PREFIX):
         sync_message = '{0} {1}/{2}@{3}'.format(COMMIT_SUBJECT_PREFIX, vaticle, source_repo, source_ref_short)
     else:
