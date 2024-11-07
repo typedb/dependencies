@@ -1,4 +1,4 @@
-# Vaticle Dependencies
+# TypeDB Dependencies
 
 [![Factory](https://factory.vaticle.com/api/status/vaticle/dependencies/badge.svg)](https://factory.vaticle.com/vaticle/dependencies)
 

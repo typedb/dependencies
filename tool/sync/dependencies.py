@@ -35,7 +35,7 @@ if not IS_CI_ENV:
 
 BOT_SYNC_DEPS = '{0}/sync/dependencies'.format(BOT_HOST)
 
-CMDLINE_PARSER = argparse.ArgumentParser(description='Automatic updater for Vaticle inter-repository dependencies')
+CMDLINE_PARSER = argparse.ArgumentParser(description='Automatic updater for TypeDB inter-repository dependencies')
 CMDLINE_PARSER.add_argument('--dry-run', help='Do not perform any real actions')
 CMDLINE_PARSER.add_argument('--source', required=True)
 
