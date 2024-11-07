@@ -8,7 +8,6 @@ load("@typedb_dependencies//tool/checkstyle:rules.bzl", "checkstyle_test")
 rust_library(
     name = "test-lib",
     srcs = ["lib.rs"],
-    deps = ["@typedb_extern//:a"],
 )
 
 checkstyle_test(
