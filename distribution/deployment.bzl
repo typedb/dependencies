@@ -33,8 +33,8 @@ deployment = {
         }
     },
     "brew" : {
-        "release": "https://github.com/vaticle/homebrew-tap/",
-        "snapshot": "https://github.com/vaticle/homebrew-tap-test/",
+        "release": "https://github.com/typedb/homebrew-tap/",
+        "snapshot": "https://github.com/typedb/homebrew-tap-test/",
      },
     "crate" : {
         "release": "https://crates.io",
