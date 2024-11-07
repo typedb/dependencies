@@ -5,7 +5,7 @@
  */
 
 
-package com.vaticle.dependencies.library.maven
+package com.typedb.dependencies.library.maven
 
 import java.lang.System.lineSeparator
 import java.nio.file.Files

@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.vaticle.dependencies.tool.release.deps
+package com.typedb.dependencies.tool.release.deps
 
 import com.eclipsesource.json.Json
 import com.google.api.client.http.GenericUrl

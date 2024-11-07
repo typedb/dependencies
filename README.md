@@ -1,6 +1,6 @@
 # TypeDB Dependencies
 
-[![Factory](https://factory.vaticle.com/api/status/vaticle/dependencies/badge.svg)](https://factory.vaticle.com/vaticle/dependencies)
+[![Factory](https://factory.vaticle.com/api/status/typedb/typedb-dependencies/badge.svg)](https://factory.vaticle.com/typedb/typedb-dependencies)
 
 Bazel dependencies and build tools for [@typedb](https://github.com/typedb) repositories.
 

@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.vaticle.dependencies.factory.analysis
+package com.typedb.dependencies.factory.analysis
 
 import com.eclipsesource.json.Json
 import com.eclipsesource.json.JsonObject

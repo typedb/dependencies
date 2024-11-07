@@ -5,7 +5,7 @@
 
 
 [package]
-name = "vaticle-dependencies"
+name = "typedb-dependencies"
 version = "0.0.0"
 
 [lib]

@@ -10,7 +10,7 @@ load("//tool/checkstyle:rules.bzl", "checkstyle_test")
 kt_jvm_binary(
     name = "dependency-analysis",
     srcs = ["DependencyAnalysis.kt"],
-    main_class = "com.vaticle.dependencies.factory.analysis.DependencyAnalysisKt",
+    main_class = "com.typedb.dependencies.factory.analysis.DependencyAnalysisKt",
     deps = [
         "@maven//:com_eclipsesource_minimal_json_minimal_json",
         "@maven//:org_zeroturnaround_zt_exec",

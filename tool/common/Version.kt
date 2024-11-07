@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.vaticle.dependencies.tool.common
+package com.typedb.dependencies.tool.common
 
 data class Version(val major: Int, val minor: Int, val patch: Int, val rc: Int?, val alpha: Int?): Comparable<Version> {
     companion object {

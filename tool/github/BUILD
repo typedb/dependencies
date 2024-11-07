@@ -23,7 +23,7 @@ kt_jvm_library(
 java_binary(
     name = "open-pr",
     runtime_deps = ["open-pr-jar"],
-    main_class = "com.vaticle.dependencies.tool.github.OpenPR",
+    main_class = "com.typedb.dependencies.tool.github.OpenPR",
     visibility = ["//visibility:public"],
 )
 

@@ -11,7 +11,7 @@ package(default_visibility = ["//visibility:public"])
 kt_jvm_binary(
     name = "validate",
     srcs = glob(["NotesValidate.kt", "Commit.kt", "Common.kt"]),
-    main_class = "com.vaticle.dependencies.tool.release.notes.NotesValidateKt",
+    main_class = "com.typedb.dependencies.tool.release.notes.NotesValidateKt",
     deps = [
         "//tool/common:version",
         "@maven//:com_eclipsesource_minimal_json_minimal_json",
@@ -23,7 +23,7 @@ kt_jvm_binary(
 kt_jvm_binary(
     name = "create",
     srcs = glob(["NotesCreate.kt", "Note.kt", "Commit.kt", "Common.kt"]),
-    main_class = "com.vaticle.dependencies.tool.release.notes.NotesCreateKt",
+    main_class = "com.typedb.dependencies.tool.release.notes.NotesCreateKt",
     deps = [
         "//tool/common:version",
         "@maven//:com_eclipsesource_minimal_json_minimal_json",

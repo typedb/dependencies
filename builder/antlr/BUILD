@@ -18,7 +18,7 @@ kt_jvm_library(
 java_binary(
     name = "grammar-adapter",
     runtime_deps = [":grammar-adapter-lib"],
-    main_class = "com.vaticle.dependencies.builder.antlr.GrammarAdapterKt"
+    main_class = "com.typedb.dependencies.builder.antlr.GrammarAdapterKt"
 )
 
 checkstyle_test(

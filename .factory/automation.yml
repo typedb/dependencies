@@ -5,12 +5,12 @@
 build:
   correctness:
     build:
-      image: vaticle-ubuntu-22.04
+      image: typedb-ubuntu-22.04
       command: |
         bazel build //...
         bazel test $(bazel query 'kind(checkstyle_test, //... except tool/ide/...)') || exit 1
     rust-ide-sync:
-      image: vaticle-ubuntu-22.04
+      image: typedb-ubuntu-22.04
       command: |
         library/crates/get_cargo.sh
         export PATH=$PATH:$PWD
@@ -19,7 +19,7 @@ build:
         tool/ide/rust/sync.sh
         cargo generate-lockfile --quiet && echo SUCCESS
     sync-dependencies:
-      image: vaticle-ubuntu-22.04
+      image: typedb-ubuntu-22.04
       filter:
         owner: typedb
         branch: [master, development]

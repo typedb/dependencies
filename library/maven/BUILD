@@ -9,7 +9,7 @@ load("@io_bazel_rules_kotlin//kotlin:jvm.bzl", "kt_jvm_binary")
 
 kt_jvm_binary(
     name = "update",
-    main_class = "com.vaticle.dependencies.library.maven.UpdateKt",
+    main_class = "com.typedb.dependencies.library.maven.UpdateKt",
     srcs = ["update.kt"],
 )
 

@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.vaticle.dependencies.tool.ide
+package com.typedb.dependencies.tool.ide
 
 import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
@@ -13,29 +13,29 @@ import com.typedb.bazel.distribution.common.Logging.LogLevel.ERROR
 import com.typedb.bazel.distribution.common.Logging.Logger
 import com.typedb.bazel.distribution.common.shell.Shell
 import com.typedb.bazel.distribution.common.util.FileUtil.listFilesRecursively
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.ASPECTS
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BAZEL
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BAZEL_BIN
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BUILD
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.INFO
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.OUTPUT_GROUPS
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.QUERY
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.ShellArgs.RUST_TARGETS_QUERY
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.CARGO_TOML
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.CARGO_WORKSPACE_SUFFIX
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.EXTERNAL_PLACEHOLDER
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.MANIFEST_PROPERTIES_SUFFIX
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.BUILD_DEPS
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.DEPS_PREFIX
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.EDITION
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.ENTRY_POINT_PATH
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.FEATURES
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.LOCAL_PATH
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.NAME
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.PATH
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TARGET_NAME
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TYPE
-import com.vaticle.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.VERSION
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.ASPECTS
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BAZEL
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BAZEL_BIN
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BUILD
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.INFO
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.OUTPUT_GROUPS
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.QUERY
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.RUST_TARGETS_QUERY
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.CARGO_TOML
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.CARGO_WORKSPACE_SUFFIX
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.EXTERNAL_PLACEHOLDER
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.MANIFEST_PROPERTIES_SUFFIX
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.BUILD_DEPS
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.DEPS_PREFIX
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.EDITION
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.ENTRY_POINT_PATH
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.FEATURES
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.LOCAL_PATH
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.NAME
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.PATH
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TARGET_NAME
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TYPE
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.VERSION
 
 import picocli.CommandLine
 import java.io.File

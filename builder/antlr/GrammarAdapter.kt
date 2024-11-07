@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.vaticle.dependencies.builder.antlr
+package com.typedb.dependencies.builder.antlr
 
 
 import picocli.CommandLine

@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.vaticle.dependencies.tool.github
+package com.typedb.dependencies.tool.github
 
 import org.kohsuke.github.GitHub
 import picocli.CommandLine

@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.vaticle.dependencies.tool.release.version
+package com.typedb.dependencies.tool.release.version
 
 import com.fasterxml.jackson.core.JsonPointer
 import com.typedb.bazel.distribution.common.Logging.LogLevel.DEBUG

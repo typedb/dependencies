@@ -4,9 +4,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.vaticle.dependencies.tool.release.notes
+package com.typedb.dependencies.tool.release.notes
 
-import com.vaticle.dependencies.tool.common.Version
+import com.typedb.dependencies.tool.common.Version
 import java.nio.file.Path
 import java.nio.file.Paths
 import kotlin.io.path.notExists

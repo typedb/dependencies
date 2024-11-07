@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.vaticle.dependencies.tool.util
+package com.typedb.dependencies.tool.util
 
 import java.net.InetAddress
 import java.net.UnknownHostException

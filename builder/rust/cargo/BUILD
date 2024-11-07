@@ -11,7 +11,7 @@ java_binary(
     runtime_deps = [
         ":manifest-writer-lib",
     ],
-    main_class = "com.vaticle.dependencies.builder.rust.cargo.ManifestWriterKt",
+    main_class = "com.typedb.dependencies.builder.rust.cargo.ManifestWriterKt",
     visibility = ["//visibility:public"],
 )
 

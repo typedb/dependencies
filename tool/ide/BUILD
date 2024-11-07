@@ -11,7 +11,7 @@ java_binary(
     runtime_deps = [
         ":rust_manifest_syncer",
     ],
-    main_class = "com.vaticle.dependencies.tool.ide.RustManifestSyncerKt",
+    main_class = "com.typedb.dependencies.tool.ide.RustManifestSyncerKt",
     visibility = ["//visibility:public"],
 )
 

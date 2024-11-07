@@ -4,16 +4,16 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.vaticle.dependencies.tool.release.notes
+package com.typedb.dependencies.tool.release.notes
 
 import com.eclipsesource.json.Json
 import com.eclipsesource.json.JsonArray
 import com.eclipsesource.json.JsonObject
-import com.vaticle.dependencies.tool.release.notes.Constant.labelBug
-import com.vaticle.dependencies.tool.release.notes.Constant.labelFeature
-import com.vaticle.dependencies.tool.release.notes.Constant.github
-import com.vaticle.dependencies.tool.release.notes.Constant.labelPrefix
-import com.vaticle.dependencies.tool.release.notes.Constant.labelRefactor
+import com.typedb.dependencies.tool.release.notes.Constant.labelBug
+import com.typedb.dependencies.tool.release.notes.Constant.labelFeature
+import com.typedb.dependencies.tool.release.notes.Constant.github
+import com.typedb.dependencies.tool.release.notes.Constant.labelPrefix
+import com.typedb.dependencies.tool.release.notes.Constant.labelRefactor
 
 class Note {
     enum class Type { FEATURE, BUG, REFACTOR, OTHER }

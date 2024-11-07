@@ -11,7 +11,7 @@ package(default_visibility = ["//visibility:public"])
 kt_jvm_binary(
     name = "bump",
     srcs = ["Bump.kt"],
-    main_class = "com.vaticle.dependencies.tool.release.version.Bump",
+    main_class = "com.typedb.dependencies.tool.release.version.Bump",
     deps = [
         "@typedb_bazel_distribution//common",
         "@maven//:commons_io_commons_io",

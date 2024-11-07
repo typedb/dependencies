@@ -4,7 +4,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.vaticle.dependencies.builder.rust.cargo
+package com.typedb.dependencies.builder.rust.cargo
 
 import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
