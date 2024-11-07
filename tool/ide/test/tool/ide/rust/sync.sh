@@ -4,4 +4,4 @@
 # file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
 
-bazel run @vaticle_dependencies//tool/ide:rust_sync
+bazel run @typedb_dependencies//tool/ide:rust_sync

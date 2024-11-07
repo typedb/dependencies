@@ -5,19 +5,19 @@
 
 
 local_repository(
-    name = "vaticle_dependencies",
+    name = "typedb_dependencies",
     path = "../../../..",
 )
 
 # Load //builder/rust
-load("@vaticle_dependencies//builder/rust:deps.bzl", rust_deps = "deps")
+load("@typedb_dependencies//builder/rust:deps.bzl", rust_deps = "deps")
 rust_deps()
 
 load("@rules_rust//rust:repositories.bzl", "rules_rust_dependencies", "rust_register_toolchains")
 rules_rust_dependencies()
 rust_register_toolchains(edition = "2021")
 
-load("@vaticle_dependencies//library/crates:crates.bzl", "fetch_crates")
+load("@typedb_dependencies//library/crates:crates.bzl", "fetch_crates")
 fetch_crates()
 load("@crates//:defs.bzl", "crate_repositories")
 crate_repositories()
