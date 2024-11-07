@@ -6,6 +6,8 @@
 
 package com.typedb.dependencies.tool.ide
 
+import com.eclipsesource.json.Json
+import com.eclipsesource.json.JsonObject
 import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
 import com.typedb.bazel.distribution.common.Logging.LogLevel.DEBUG
@@ -17,13 +19,17 @@ import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.ASPECTS
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BAZEL
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BAZEL_BIN
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BUILD
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.CQUERY
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.INFO
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.OUTPUT_BASE
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.OUTPUT_FILES
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.OUTPUT_GROUPS
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.QUERY
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.RUST_TARGETS_QUERY
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.CARGO_TOML
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.CARGO_WORKSPACE_SUFFIX
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.EXTERNAL_PLACEHOLDER
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.GITHUB_TYPEDB
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.MANIFEST_PROPERTIES_SUFFIX
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.BUILD_DEPS
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.DEPS_PREFIX
@@ -57,6 +63,9 @@ class RustManifestSyncer : Callable<Unit> {
     @CommandLine.Option(names = ["--verbose", "-v"], required = false)
     private var verbose: Boolean = false
 
+    @CommandLine.Parameters(index = "0")
+    private var workspaceRefsLabel: String = ""
+
     private lateinit var logger: Logger
     private lateinit var shell: Shell
     private val workspaceDir = Path(System.getenv("BUILD_WORKSPACE_DIRECTORY"))
@@ -65,10 +74,11 @@ class RustManifestSyncer : Callable<Unit> {
         logger = Logger(logLevel = if (verbose) DEBUG else ERROR)
         shell = Shell(logger, verbose)
 
+        val workspaceRefs = loadWorkspaceRefs();
         val rustTargets = rustTargets(shell, workspaceDir)
         validateTargets(rustTargets)
         loadRustToolchainAndExternalDeps(rustTargets)
-        WorkspaceSyncer(workspaceDir, logger, shell).sync()
+        WorkspaceSyncer(workspaceDir, workspaceRefs, logger, shell).sync()
     }
 
     private fun validateTargets(targets: List<String>) {
@@ -79,6 +89,15 @@ class RustManifestSyncer : Callable<Unit> {
         shell.execute(command = listOf(BAZEL, BUILD) + rustTargets + "--keep_going", baseDir = workspaceDir, throwOnError = false)
     }
 
+    private fun loadWorkspaceRefs(): JsonObject {
+        shell.execute(command = listOf(BAZEL, BUILD, workspaceRefsLabel), baseDir = workspaceDir);
+        val workspaceRefsFile = shell.execute(command = listOf(BAZEL, CQUERY, OUTPUT_FILES, workspaceRefsLabel), baseDir = workspaceDir)
+                .outputString().trim();
+
+        val bazelOutputBase = shell.execute(listOf(BAZEL, INFO, OUTPUT_BASE), workspaceDir).outputString().trim();
+        return Json.parse(File(bazelOutputBase, workspaceRefsFile).readText()).asObject();
+    }
+
     companion object {
         private fun rustTargets(shell: Shell, workspace: Path): List<String> {
             return shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_QUERY), workspace)
@@ -86,7 +105,7 @@ class RustManifestSyncer : Callable<Unit> {
         }
     }
 
-    private class WorkspaceSyncer(private val workspace: Path, private var logger: Logger, private var shell: Shell) {
+    private class WorkspaceSyncer(private val workspace: Path, private val workspaceRefs: JsonObject, private var logger: Logger, private var shell: Shell) {
         val canonicalExternalPathDeps: MutableMap<String, String> = mutableMapOf()
 
         fun sync() {
@@ -150,7 +169,7 @@ class RustManifestSyncer : Callable<Unit> {
 
         private fun loadSyncProperties(bazelBin: File): List<TargetProperties> {
             return findSyncPropertiesFiles(bazelBin)
-                    .map { TargetProperties.fromPropertiesFile(it) }
+                    .map { TargetProperties.fromPropertiesFile(it, workspaceRefs) }
                     .apply { attachTestAndBuildProperties(this) }
         }
 
@@ -394,8 +413,26 @@ class RustManifestSyncer : Callable<Unit> {
                     }
                 }
 
+                data class Git(override val name: String, val commit: String?, val tag: String?) : Dependency(name) {
+                    override fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config {
+                        return Config.inMemory().apply {
+                            // WARN: assuming that the repository name is _the same_ as the crate name
+                            //       it happens to be true for protocol and typeql, but won't allow us to depend on multiple crates in the same repo
+                            set<String>("git", GITHUB_TYPEDB + name);
+                            if (commit != null) {
+                                set<String>("rev", commit);
+                            } else if (tag != null) {
+                                set<String>("tag", tag);
+                            } else {
+                                println(name + " " + commit + " " + tag);
+                                throw IllegalStateException();
+                            }
+                        }
+                    }
+                }
+
                 companion object {
-                    fun of(rawKey: String, rawValue: String): Dependency {
+                    fun of(rawKey: String, rawValue: String, workspaceRefs: JsonObject): Dependency {
                         val name = rawKey.split(".", limit = 2)[1]
                         val rawValueProps = rawValue.split(";")
                                 .associate { it.split("=", limit = 2).let { parts -> parts[0] to parts[1] } }
@@ -408,7 +445,14 @@ class RustManifestSyncer : Callable<Unit> {
                         } else if (LOCAL_PATH in rawValueProps) {
                             Local(name = name, external_path = null, local_path = rawValueProps[LOCAL_PATH]!!)
                         } else {
-                            Local(name = name, external_path = rawValueProps[PATH]!!, local_path = null)
+                            // WARN: we rely on this naming scheme:
+                            //       any internal git dependency is named "@typedb_{name}" where all hyphens in the name are replaced by underscores
+                            val typedb_name = "typedb_" + name.replace("-", "_");
+                            Git(
+                                    name = name,
+                                    commit = workspaceRefs["commits"].asObject()[typedb_name]?.asString(),
+                                    tag = workspaceRefs["tags"].asObject()[typedb_name]?.asString(),
+                            )
                         }
                     }
                 }
@@ -434,7 +478,7 @@ class RustManifestSyncer : Callable<Unit> {
             }
 
             companion object {
-                fun fromPropertiesFile(path: File): TargetProperties {
+                fun fromPropertiesFile(path: File, workspaceRefs: JsonObject): TargetProperties {
                     val props = Properties().apply { load(FileInputStream(path.toString())) }
                     try {
                         return TargetProperties(
@@ -444,7 +488,7 @@ class RustManifestSyncer : Callable<Unit> {
                                 type = Type.of(props.getProperty(TYPE)),
                                 version = props.getProperty(VERSION),
                                 edition = props.getProperty(EDITION, "2021"),
-                                deps = parseDependencies(extractDependencyEntries(props)),
+                                deps = parseDependencies(extractDependencyEntries(props), workspaceRefs),
                                 buildDeps = props.getProperty(BUILD_DEPS, "").split(",").filter { it.isNotBlank() },
                                 entryPointPath = props.getProperty(ENTRY_POINT_PATH)?.let { Path(it) },
                                 cratePath =  props.getProperty(PATH),
@@ -464,8 +508,8 @@ class RustManifestSyncer : Callable<Unit> {
                             .toMap()
                 }
 
-                private fun parseDependencies(raw: Map<String, String>): Collection<Dependency> {
-                    return raw.map { Dependency.of(it.key, it.value) }
+                private fun parseDependencies(raw: Map<String, String>, workspaceRefs: JsonObject): Collection<Dependency> {
+                    return raw.map { Dependency.of(it.key, it.value, workspaceRefs) }
                 }
             }
 
@@ -479,6 +523,8 @@ class RustManifestSyncer : Callable<Unit> {
                 const val NAME = "name"
                 const val PATH = "path"
                 const val LOCAL_PATH = "localpath"
+                const val COMMIT = "commit"
+                const val TAG = "tag"
                 const val TYPE = "type"
                 const val VERSION = "version"
             }
@@ -490,6 +536,7 @@ class RustManifestSyncer : Callable<Unit> {
             const val EXTERNAL_PLACEHOLDER = ".."
             const val MANIFEST_PROPERTIES_SUFFIX = ".cargo.properties"
             const val CARGO_WORKSPACE_SUFFIX = "-cargo-workspace"
+            const val GITHUB_TYPEDB = "https://github.com/typedb/"
         }
 
         companion object {
@@ -510,6 +557,9 @@ class RustManifestSyncer : Callable<Unit> {
         const val INFO = "info"
         const val OUTPUT_GROUPS = "--output_groups=rust_cargo_project"
         const val QUERY = "query"
+        const val CQUERY = "cquery"
+        const val OUTPUT_FILES = "--output=files"
+        const val OUTPUT_BASE = "output_base"
         const val RUST_TARGETS_QUERY = "kind(rust_*, //...)"
     }
 }
