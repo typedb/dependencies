@@ -14,7 +14,7 @@ def deps():
 
     http_archive(
         name = "gherkin_cpp",
-        urls = ["https://github.com/vaticle/gherkin/archive/19b7ca13da8bb4cb6dc27ef5af572a8a1233deb8.zip"],
+        urls = ["https://github.com/typedb/gherkin/archive/19b7ca13da8bb4cb6dc27ef5af572a8a1233deb8.zip"],
         strip_prefix = "gherkin-19b7ca13da8bb4cb6dc27ef5af572a8a1233deb8/cpp",
         sha256 = "f8fd8d46b384a3c27a3bfed0e5eb1ad4ae2dbac862b18153a76178ec35a2c459",
         build_file_content = """
@@ -32,7 +32,7 @@ cc_library(
 
     http_archive(
         name = "cucumber_messages",
-        urls = ["https://github.com/vaticle/cucumber-messages/archive/fc5c391add237b0d5fa090072757a500863c24b7.zip"],
+        urls = ["https://github.com/typedb/cucumber-messages/archive/fc5c391add237b0d5fa090072757a500863c24b7.zip"],
         strip_prefix = "cucumber-messages-fc5c391add237b0d5fa090072757a500863c24b7/cpp",
         sha256 = "048a04c8b1163f601dc8992d41f3254a5ce58ac487514ee4ddd06090aa666d25",
         build_file_content = """
