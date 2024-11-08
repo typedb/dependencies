@@ -4,6 +4,6 @@
 
 
 deployment = {
-    "docker.organisation": "vaticle",
+    "docker.organisation": "typedb",
     "docker.repository": "ubuntu",
 }

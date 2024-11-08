@@ -35,7 +35,7 @@ def deps():
         sha256 = "98385c1fd4db7ad3fd7ca2f33a1fadae0b15486cfde699138d47002d7068084a",
     )
 
-    http_file(
+    http_file( # Can't rename the Developer ID Certificate for now
         name = "vaticle_apple_developer_id_application_cert",
         urls = ["https://repo.typedb.com/5rr7o5TZos6fdAb8/private-tools/raw/files/VaticleAppleDeveloperIDApplicationCertificate.p12"],
         sha256 = "4754e62a448f1c1dce7b377d5f1f26a5a28a6c43e6f31c05c7850ca4d0278f15",

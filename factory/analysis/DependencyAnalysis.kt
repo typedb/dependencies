@@ -43,7 +43,7 @@ fun main() {
     val factoryEndpoint = "/api/analysis/dependency-analysis"
     val workflow = System.getenv("FACTORY_WORKFLOW")
             ?: throw RuntimeException("FACTORY_WORKFLOW environment variable is not set")
-    val dependencies = Paths.get(workspaceDirectory, "dependencies", "vaticle", "repositories.bzl")
+    val dependencies = Paths.get(workspaceDirectory, "dependencies", "typedb", "repositories.bzl")
 
     var repositoriesArray = Json.array()
 

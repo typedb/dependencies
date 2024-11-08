@@ -17,7 +17,7 @@ if not credential:
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--project-key', help='Sonarcloud project key', required=True)
-parser.add_argument('--organisation', help='Sonarcloud organisation', default='vaticle')
+parser.add_argument('--organisation', help='Sonarcloud organisation', default='typedb')
 parser.add_argument('--commit-id', help='git commit id', required=True)
 parser.add_argument('--branch', help='git branch name', required=True)
 parser.add_argument('--coverage-reports', help='location of JaCoCo XML coverage reports')

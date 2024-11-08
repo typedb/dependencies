@@ -12,7 +12,7 @@ import java.util.concurrent.Callable
 import kotlin.system.exitProcess
 
 object OpenPR: Callable<Int> {
-    private const val DEFAULT_USERNAME = "vaticle-bot"
+    private const val DEFAULT_USERNAME = "typedb-bot"
 
     @CommandLine.Option(names = ["--repo"], description = ["The repository to open the PR on"])
     private lateinit var repo: String
