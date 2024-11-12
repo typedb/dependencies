@@ -196,6 +196,7 @@ def _get_properties(target, ctx, source_files, crate_info):
     properties = {}
     properties["name"] = crate_info.crate_name
     properties["path"] = crate_info.crate_path
+    properties["features"] = ",".join(crate_info.features)
     properties["target.name"] = target.label.name
     properties["type"] = target_type
     properties["version"] = crate_info.version

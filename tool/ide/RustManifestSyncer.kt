@@ -170,6 +170,8 @@ class RustManifestSyncer : Callable<Unit> {
         private fun loadSyncProperties(bazelBin: File): List<TargetProperties> {
             return findSyncPropertiesFiles(bazelBin)
                     .map { TargetProperties.fromPropertiesFile(it, workspaceRefs) }
+                    .groupBy { it.name }.values
+                    .map { TargetProperties.mergeList(it) }
                     .apply { attachTestAndBuildProperties(this) }
         }
 
@@ -249,6 +251,11 @@ class RustManifestSyncer : Callable<Unit> {
                     set<String>("name", properties.name)
                     set<String>("edition", properties.edition)
                     set<String>("version", properties.version)
+                }
+
+                cargoToml.createSubConfig().apply {
+                    cargoToml.set<Config>("features", this)
+                    properties.features.forEach { set<Config>(it, emptyList<String>()) }
                 }
 
                 cargoToml.createEntryPointSubConfig()
@@ -371,6 +378,7 @@ class RustManifestSyncer : Callable<Unit> {
                 val targetName: String,
                 val cratePath: String,
                 val type: Type,
+                val features: Collection<String>,
                 val version: String,
                 val edition: String?,
                 val entryPointPath: Path?,
@@ -395,7 +403,12 @@ class RustManifestSyncer : Callable<Unit> {
                     }
                 }
 
-                data class Local(override val name: String, val external_path: String?, val local_path: String?) : Dependency(name) {
+                data class Local(
+                        override val name: String,
+                        val external_path: String?,
+                        val local_path: String?,
+                        val features: List<String>,
+                ) : Dependency(name) {
                     override fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config {
                         return Config.inMemory().apply {
                             if (external_path != null) {
@@ -409,11 +422,12 @@ class RustManifestSyncer : Callable<Unit> {
                             } else {
                                 throw IllegalStateException();
                             }
+                            set<List<String>>("features", features)
                         }
                     }
                 }
 
-                data class Git(override val name: String, val commit: String?, val tag: String?) : Dependency(name) {
+                data class Git(override val name: String, val commit: String?, val tag: String?, val features: List<String>) : Dependency(name) {
                     override fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config {
                         return Config.inMemory().apply {
                             // WARN: assuming that the repository name is _the same_ as the crate name
@@ -424,9 +438,9 @@ class RustManifestSyncer : Callable<Unit> {
                             } else if (tag != null) {
                                 set<String>("tag", tag);
                             } else {
-                                println(name + " " + commit + " " + tag);
                                 throw IllegalStateException();
                             }
+                            set<List<String>>("features", features)
                         }
                     }
                 }
@@ -443,7 +457,12 @@ class RustManifestSyncer : Callable<Unit> {
                                     features = rawValueProps[FEATURES]?.split(",") ?: emptyList(),
                             )
                         } else if (LOCAL_PATH in rawValueProps) {
-                            Local(name = name, external_path = null, local_path = rawValueProps[LOCAL_PATH]!!)
+                            Local(
+                                    name = name,
+                                    external_path = null,
+                                    local_path = rawValueProps[LOCAL_PATH]!!,
+                                    features = rawValueProps[FEATURES]?.split(",") ?: emptyList(),
+                            )
                         } else {
                             // WARN: we rely on this naming scheme:
                             //       any internal git dependency is named "@typedb_{name}" where all hyphens in the name are replaced by underscores
@@ -452,6 +471,7 @@ class RustManifestSyncer : Callable<Unit> {
                                     name = name,
                                     commit = workspaceRefs["commits"].asObject()[typedb_name]?.asString(),
                                     tag = workspaceRefs["tags"].asObject()[typedb_name]?.asString(),
+                                    features = rawValueProps[FEATURES]?.split(",") ?: emptyList(),
                             )
                         }
                     }
@@ -486,12 +506,13 @@ class RustManifestSyncer : Callable<Unit> {
                                 name = props.getProperty(NAME),
                                 targetName = props.getProperty(TARGET_NAME),
                                 type = Type.of(props.getProperty(TYPE)),
+                                features = props.getProperty(FEATURES).split(",").filter { it.isNotBlank() },
                                 version = props.getProperty(VERSION),
                                 edition = props.getProperty(EDITION, "2021"),
                                 deps = parseDependencies(extractDependencyEntries(props), workspaceRefs),
                                 buildDeps = props.getProperty(BUILD_DEPS, "").split(",").filter { it.isNotBlank() },
                                 entryPointPath = props.getProperty(ENTRY_POINT_PATH)?.let { Path(it) },
-                                cratePath =  props.getProperty(PATH),
+                                cratePath = props.getProperty(PATH),
                                 tests = mutableListOf(),
                                 benches = mutableListOf(),
                                 buildScripts = mutableListOf(),
@@ -499,6 +520,29 @@ class RustManifestSyncer : Callable<Unit> {
                     } catch (e: Exception) {
                         throw IllegalStateException("Failed to parse Manifest Sync properties file at $path", e)
                     }
+                }
+
+                fun mergeList(all_properties: List<TargetProperties>): TargetProperties {
+                    var base = all_properties.get(0);
+                    all_properties.subList(1, all_properties.size).forEach { properties -> 
+                        base = TargetProperties(
+                                path = base.path,
+                                name = base.name,
+                                targetName = base.targetName,
+                                type = base.type,
+                                features = (base.features + properties.features).distinct(),
+                                version = base.version,
+                                edition = base.edition,
+                                deps = (base.deps + properties.deps).distinct(),
+                                buildDeps = base.buildDeps,
+                                entryPointPath = base.entryPointPath,
+                                cratePath = base.cratePath,
+                                tests = base.tests,
+                                benches = base.benches,
+                                buildScripts = base.buildScripts,
+                        )
+                    };
+                    return base;
                 }
 
                 private fun extractDependencyEntries(props: Properties): Map<String, String> {
