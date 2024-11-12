@@ -423,6 +423,7 @@ class RustManifestSyncer : Callable<Unit> {
                                 throw IllegalStateException();
                             }
                             set<List<String>>("features", features)
+                            set<Boolean>("default-features", false)
                         }
                     }
                 }
@@ -441,6 +442,7 @@ class RustManifestSyncer : Callable<Unit> {
                                 throw IllegalStateException();
                             }
                             set<List<String>>("features", features)
+                            set<Boolean>("default-features", false)
                         }
                     }
                 }
