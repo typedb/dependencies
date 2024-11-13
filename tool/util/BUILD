@@ -9,21 +9,6 @@ load("//tool/checkstyle:rules.bzl", "checkstyle_test")
 exports_files(["wait-for-host.sh"])
 
 sh_binary(
-    name = "restart-repo-container",
-    srcs = ["restart-repo-container.sh"],
-)
-
-sh_binary(
-    name = "ssh-repo-container",
-    srcs = ["ssh-repo-container.sh"],
-)
-
-sh_binary(
-    name = "ssh-repo-machine",
-    srcs = ["ssh-repo-machine.sh"],
-)
-
-sh_binary(
     name = "install-ssh-credential",
     srcs = [":install-ssh-credential.sh"],
 )
