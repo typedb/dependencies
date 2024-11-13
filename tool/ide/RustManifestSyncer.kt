@@ -452,18 +452,19 @@ class RustManifestSyncer : Callable<Unit> {
                         val name = rawKey.split(".", limit = 2)[1]
                         val rawValueProps = rawValue.split(";")
                                 .associate { it.split("=", limit = 2).let { parts -> parts[0] to parts[1] } }
+                        val features = rawValueProps[FEATURES]?.split(",")?.filter { it != "bazel" } ?: emptyList();
                         return if (VERSION in rawValueProps) {
                             Crate(
                                     name = name,
                                     version = rawValueProps[VERSION]!!,
-                                    features = rawValueProps[FEATURES]?.split(",") ?: emptyList(),
+                                    features = features,
                             )
                         } else if (LOCAL_PATH in rawValueProps) {
                             Local(
                                     name = name,
                                     external_path = null,
                                     local_path = rawValueProps[LOCAL_PATH]!!,
-                                    features = rawValueProps[FEATURES]?.split(",") ?: emptyList(),
+                                    features = features,
                             )
                         } else {
                             // WARN: we rely on this naming scheme:
@@ -473,7 +474,7 @@ class RustManifestSyncer : Callable<Unit> {
                                     name = name,
                                     commit = workspaceRefs["commits"].asObject()[typedb_name]?.asString(),
                                     tag = workspaceRefs["tags"].asObject()[typedb_name]?.asString(),
-                                    features = rawValueProps[FEATURES]?.split(",") ?: emptyList(),
+                                    features = features,
                             )
                         }
                     }
