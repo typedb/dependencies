@@ -39,6 +39,7 @@ import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Targe
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.LOCAL_PATH
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.NAME
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.PATH
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.WORKSPACE_NAME
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TARGET_NAME
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TYPE
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.VERSION
@@ -170,7 +171,7 @@ class RustManifestSyncer : Callable<Unit> {
         private fun loadSyncProperties(bazelBin: File): List<TargetProperties> {
             return findSyncPropertiesFiles(bazelBin)
                     .map { TargetProperties.fromPropertiesFile(it, workspaceRefs) }
-                    .groupBy { it.name }.values
+                    .groupBy { Pair(it.name, it.path) }.values
                     .map { TargetProperties.mergeList(it) }
                     .apply { attachTestAndBuildProperties(this) }
         }
@@ -428,12 +429,16 @@ class RustManifestSyncer : Callable<Unit> {
                     }
                 }
 
-                data class Git(override val name: String, val commit: String?, val tag: String?, val features: List<String>) : Dependency(name) {
+                data class Git(
+                    override val name: String,
+                    val repoName: String,
+                    val commit: String?,
+                    val tag: String?,
+                    val features: List<String>,
+                ) : Dependency(name) {
                     override fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config {
                         return Config.inMemory().apply {
-                            // WARN: assuming that the repository name is _the same_ as the crate name
-                            //       it happens to be true for protocol and typeql, but won't allow us to depend on multiple crates in the same repo
-                            set<String>("git", GITHUB_TYPEDB + name);
+                            set<String>("git", GITHUB_TYPEDB + repoName);
                             if (commit != null) {
                                 set<String>("rev", commit);
                             } else if (tag != null) {
@@ -468,12 +473,14 @@ class RustManifestSyncer : Callable<Unit> {
                             )
                         } else {
                             // WARN: we rely on this naming scheme:
-                            //       any internal git dependency is named "@typedb_{name}" where all hyphens in the name are replaced by underscores
-                            val typedb_name = "typedb_" + name.replace("-", "_");
+                            //       any internal git dependency is named "@{workspaceName}" where all hyphens in the name are replaced by underscores
+                            val workspaceName = rawValueProps[WORKSPACE_NAME]!!;
+                            val repoName = workspaceName.replace("_", "-");
                             Git(
                                     name = name,
-                                    commit = workspaceRefs["commits"].asObject()[typedb_name]?.asString(),
-                                    tag = workspaceRefs["tags"].asObject()[typedb_name]?.asString(),
+                                    repoName = repoName,
+                                    commit = workspaceRefs["commits"].asObject()[workspaceName]?.asString(),
+                                    tag = workspaceRefs["tags"].asObject()[workspaceName]?.asString(),
                                     features = features,
                             )
                         }
@@ -574,6 +581,7 @@ class RustManifestSyncer : Callable<Unit> {
                 const val TAG = "tag"
                 const val TYPE = "type"
                 const val VERSION = "version"
+                const val WORKSPACE_NAME = "workspace_name"
             }
         }
 
