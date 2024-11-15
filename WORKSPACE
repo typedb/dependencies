@@ -19,26 +19,26 @@ load("@rules_rust//rust:defs.bzl", "rust_common")
 rust_register_toolchains(edition = "2021", rust_analyzer_version = rust_common.default_version)
 
 # Load //builder/python
-load("//builder/python:deps.bzl", python_deps = "deps")
-python_deps()
+load("//builder/python:deps.bzl", "rules_python")
+rules_python()
 load("@rules_python//python:repositories.bzl", "py_repositories")
 py_repositories()
 
 # Load //builder/java
-load("//builder/java:deps.bzl", java_deps = "deps")
-java_deps()
+load("//builder/java:deps.bzl", "rules_jvm_external")
+rules_jvm_external()
 load("//library/maven:rules.bzl", "maven")
 
 # Load //builder/kotlin
-load("//builder/kotlin:deps.bzl", kotlin_deps = "deps")
-kotlin_deps()
+load("//builder/kotlin:deps.bzl", "io_bazel_rules_kotlin")
+io_bazel_rules_kotlin()
 load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories")
 kotlin_repositories()
 load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
 kt_register_toolchains()
 
 # Load //common
-load("//common/java:artifacts.bzl", typedb_common_java_maven_artifacts = "maven_artifacts")
+load("//common/java:artifacts.bzl", typedb_common_maven_artifacts = "maven_artifacts")
 
 load("//library/ortools/cc:deps.bzl", "google_or_tools_mac", "google_or_tools_linux", "google_or_tools_windows")
 google_or_tools_mac()
@@ -64,8 +64,8 @@ load("//tool/sonarcloud:deps.bzl", "sonarcloud_dependencies")
 sonarcloud_dependencies()
 
 # Load //tool/swig
-load("//tool/swig:deps.bzl", swig_deps = "deps")
-swig_deps()
+load("//tool/swig:deps.bzl", "swig")
+swig()
 
 ###################################
 # Load @typedb_bazel_distribution #
@@ -82,14 +82,14 @@ load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
 # Load @typedb_bazel_distribution_cloudsmith
-load("@typedb_bazel_distribution//common/uploader:deps.bzl", uploader_dpes = "deps")
-uploader_dpes()
-load("@typedb_bazel_distribution_uploader//:requirements.bzl", install_uploader_deps = "install_deps")
-install_uploader_deps()
+load("@typedb_bazel_distribution//common/uploader:deps.bzl", "typedb_bazel_distribution_uploader")
+typedb_bazel_distribution_uploader()
+load("@typedb_bazel_distribution_uploader//:requirements.bzl", uploader_install_deps = "install_deps")
+uploader_install_deps()
 
 # Load Maven artifacts
 maven(
-    typedb_common_java_maven_artifacts +
+    typedb_common_maven_artifacts +
     common_tool_maven_artifacts
 )
 

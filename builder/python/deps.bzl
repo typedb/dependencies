@@ -5,7 +5,7 @@
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
-def deps(use_patched_version=False):
+def rules_python(use_patched_version=False):
     http_archive(
         name = "rules_python",
         sha256 = "c6fb25d0ba0246f6d5bd820dd0b2e66b339ccc510242fd4956b9a639b548d113",

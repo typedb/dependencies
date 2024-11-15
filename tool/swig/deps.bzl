@@ -5,7 +5,7 @@
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive", "http_file")
 
-def deps():
+def swig():
     http_archive(
         name = "swig",
         urls = ["http://prdownloads.sourceforge.net/swig/swig-4.1.1.tar.gz"],
