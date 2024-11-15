@@ -4,7 +4,7 @@
 
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 
-def deps():
+def rules_antlr():
     git_repository(
         name = "rules_antlr",
         remote = "https://github.com/marcohu/rules_antlr",
