@@ -21,6 +21,7 @@ _LIB_ENTRY_POINT = "lib.rs"
 CrateInfo = provider(fields = [
     "kind",            # str
     "crate_name",      # str
+    "workspace_name",  # str
     "crate_path",      # str
     "version",         # str
     "features",        # List[str]
@@ -81,6 +82,7 @@ def _crate_info(ctx, target):
             if tag.startswith("crate-name"):
                 crate_name = tag.split("=")[1]
 
+    workspace_name = target.label.workspace_name
     crate_path = target.label.package
     deps = _crate_deps(ctx, target)
     transitive_deps = _transitive_crate_deps(deps)
@@ -88,6 +90,7 @@ def _crate_info(ctx, target):
     return CrateInfo(
         kind = ctx.rule.kind,
         crate_name = crate_name,
+        workspace_name = workspace_name,
         crate_path = crate_path,
         version = getattr(ctx.rule.attr, "version", "0.0.0"),
         features = getattr(ctx.rule.attr, "crate_features", []),
@@ -196,6 +199,7 @@ def _get_properties(target, ctx, source_files, crate_info):
     properties = {}
     properties["name"] = crate_info.crate_name
     properties["path"] = crate_info.crate_path
+    properties["features"] = ",".join(crate_info.features)
     properties["target.name"] = target.label.name
     properties["type"] = target_type
     properties["version"] = crate_info.version
@@ -220,7 +224,7 @@ def _crate_deps_info(target, crate_info):
         if _is_universe_crate(dependency):
             location = "version={}".format(dependency_info.version)
         elif not _is_external_target(target) and _is_external_target(dependency):
-            location = "path=../{}".format(dependency_info.crate_name)
+            location = "path=../{};workspace_name={}".format(dependency_info.crate_name, dependency_info.workspace_name)
         else:
             target_to_root = _package_relative_path_to_root(target.label)
             root_to_dep = _package_path_from_root(dependency.label)

@@ -103,7 +103,7 @@ load("@crates//:defs.bzl", "crate_repositories")
 crate_repositories()
 
 ###############################################
-# Create @typedb_dependencies_workspace_refs #
+# Create @typedb_dependencies_workspace_refs  #
 ###############################################
 
 load("@typedb_bazel_distribution//common:rules.bzl", "workspace_refs")

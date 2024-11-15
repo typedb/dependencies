@@ -6,6 +6,8 @@
 
 package com.typedb.dependencies.tool.ide
 
+import com.eclipsesource.json.Json
+import com.eclipsesource.json.JsonObject
 import com.electronwill.nightconfig.core.Config
 import com.electronwill.nightconfig.toml.TomlWriter
 import com.typedb.bazel.distribution.common.Logging.LogLevel.DEBUG
@@ -17,13 +19,17 @@ import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.ASPECTS
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BAZEL
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BAZEL_BIN
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.BUILD
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.CQUERY
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.INFO
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.OUTPUT_BASE
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.OUTPUT_FILES
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.OUTPUT_GROUPS
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.QUERY
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.ShellArgs.RUST_TARGETS_QUERY
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.CARGO_TOML
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.CARGO_WORKSPACE_SUFFIX
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.EXTERNAL_PLACEHOLDER
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.GITHUB_TYPEDB
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Paths.MANIFEST_PROPERTIES_SUFFIX
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.BUILD_DEPS
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.DEPS_PREFIX
@@ -33,6 +39,7 @@ import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.Targe
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.LOCAL_PATH
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.NAME
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.PATH
+import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.WORKSPACE_NAME
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TARGET_NAME
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.TYPE
 import com.typedb.dependencies.tool.ide.RustManifestSyncer.WorkspaceSyncer.TargetProperties.Keys.VERSION
@@ -57,6 +64,9 @@ class RustManifestSyncer : Callable<Unit> {
     @CommandLine.Option(names = ["--verbose", "-v"], required = false)
     private var verbose: Boolean = false
 
+    @CommandLine.Parameters(index = "0")
+    private var workspaceRefsLabel: String = ""
+
     private lateinit var logger: Logger
     private lateinit var shell: Shell
     private val workspaceDir = Path(System.getenv("BUILD_WORKSPACE_DIRECTORY"))
@@ -65,10 +75,11 @@ class RustManifestSyncer : Callable<Unit> {
         logger = Logger(logLevel = if (verbose) DEBUG else ERROR)
         shell = Shell(logger, verbose)
 
+        val workspaceRefs = loadWorkspaceRefs();
         val rustTargets = rustTargets(shell, workspaceDir)
         validateTargets(rustTargets)
         loadRustToolchainAndExternalDeps(rustTargets)
-        WorkspaceSyncer(workspaceDir, logger, shell).sync()
+        WorkspaceSyncer(workspaceDir, workspaceRefs, logger, shell).sync()
     }
 
     private fun validateTargets(targets: List<String>) {
@@ -79,6 +90,15 @@ class RustManifestSyncer : Callable<Unit> {
         shell.execute(command = listOf(BAZEL, BUILD) + rustTargets + "--keep_going", baseDir = workspaceDir, throwOnError = false)
     }
 
+    private fun loadWorkspaceRefs(): JsonObject {
+        shell.execute(command = listOf(BAZEL, BUILD, workspaceRefsLabel), baseDir = workspaceDir);
+        val workspaceRefsFile = shell.execute(command = listOf(BAZEL, CQUERY, OUTPUT_FILES, workspaceRefsLabel), baseDir = workspaceDir)
+                .outputString().trim();
+
+        val bazelOutputBase = shell.execute(listOf(BAZEL, INFO, OUTPUT_BASE), workspaceDir).outputString().trim();
+        return Json.parse(File(bazelOutputBase, workspaceRefsFile).readText()).asObject();
+    }
+
     companion object {
         private fun rustTargets(shell: Shell, workspace: Path): List<String> {
             return shell.execute(listOf(BAZEL, QUERY, RUST_TARGETS_QUERY), workspace)
@@ -86,7 +106,7 @@ class RustManifestSyncer : Callable<Unit> {
         }
     }
 
-    private class WorkspaceSyncer(private val workspace: Path, private var logger: Logger, private var shell: Shell) {
+    private class WorkspaceSyncer(private val workspace: Path, private val workspaceRefs: JsonObject, private var logger: Logger, private var shell: Shell) {
         val canonicalExternalPathDeps: MutableMap<String, String> = mutableMapOf()
 
         fun sync() {
@@ -110,6 +130,9 @@ class RustManifestSyncer : Callable<Unit> {
         }
 
         fun generateManifests(bazelBin: File) {
+            val rootTomlPath = workspace.resolve(CARGO_TOML);
+            Files.deleteIfExists(rootTomlPath);
+
             val manifests = loadSyncProperties(bazelBin)
                     .filter { shouldGenerateManifest(it) }
                     .map { ManifestGenerator(it).generateManifest(bazelBin) }
@@ -120,7 +143,6 @@ class RustManifestSyncer : Callable<Unit> {
                     .findFirst()
             val cargoWorkspaceConfig = createCargoWorkspace(manifests);
             val cargoWorkspaceString = TomlWriter().writeToString(cargoWorkspaceConfig.unmodifiable())
-            val rootTomlPath = workspace.resolve(CARGO_TOML);
 
             Files.newOutputStream(rootTomlPath, StandardOpenOption.APPEND, StandardOpenOption.CREATE).use {
                 it.write(cargoWorkspaceString.toByteArray(StandardCharsets.UTF_8))
@@ -141,14 +163,16 @@ class RustManifestSyncer : Callable<Unit> {
             val cargoToml = Config.inMemory();
             val subConfig = cargoToml.createSubConfig()
             subConfig.set<List<String>>("members", manifestPaths)
+            subConfig.set<String>("resolver", "2")
             cargoToml.set<Config>("workspace", subConfig)
-            cargoToml.set<String>("resolver", "2")
             return cargoToml
         }
 
         private fun loadSyncProperties(bazelBin: File): List<TargetProperties> {
             return findSyncPropertiesFiles(bazelBin)
-                    .map { TargetProperties.fromPropertiesFile(it) }
+                    .map { TargetProperties.fromPropertiesFile(it, workspaceRefs) }
+                    .groupBy { Pair(it.name, it.path) }.values
+                    .map { TargetProperties.mergeList(it) }
                     .apply { attachTestAndBuildProperties(this) }
         }
 
@@ -228,6 +252,11 @@ class RustManifestSyncer : Callable<Unit> {
                     set<String>("name", properties.name)
                     set<String>("edition", properties.edition)
                     set<String>("version", properties.version)
+                }
+
+                cargoToml.createSubConfig().apply {
+                    cargoToml.set<Config>("features", this)
+                    properties.features.forEach { set<Config>(it, emptyList<String>()) }
                 }
 
                 cargoToml.createEntryPointSubConfig()
@@ -350,6 +379,7 @@ class RustManifestSyncer : Callable<Unit> {
                 val targetName: String,
                 val cratePath: String,
                 val type: Type,
+                val features: Collection<String>,
                 val version: String,
                 val edition: String?,
                 val entryPointPath: Path?,
@@ -369,12 +399,17 @@ class RustManifestSyncer : Callable<Unit> {
                         return Config.inMemory().apply {
                             set<String>("version", version)
                             set<List<String>>("features", features)
-                            set<Boolean>("default_features", false)
+                            set<Boolean>("default-features", false)
                         }
                     }
                 }
 
-                data class Local(override val name: String, val external_path: String?, val local_path: String?) : Dependency(name) {
+                data class Local(
+                        override val name: String,
+                        val external_path: String?,
+                        val local_path: String?,
+                        val features: List<String>,
+                ) : Dependency(name) {
                     override fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config {
                         return Config.inMemory().apply {
                             if (external_path != null) {
@@ -388,25 +423,66 @@ class RustManifestSyncer : Callable<Unit> {
                             } else {
                                 throw IllegalStateException();
                             }
+                            set<List<String>>("features", features)
+                            set<Boolean>("default-features", false)
+                        }
+                    }
+                }
+
+                data class Git(
+                    override val name: String,
+                    val repoName: String,
+                    val commit: String?,
+                    val tag: String?,
+                    val features: List<String>,
+                ) : Dependency(name) {
+                    override fun toToml(cargoWorkspaceDir: File, canonicalExternalPathDeps: MutableMap<String, String>): Config {
+                        return Config.inMemory().apply {
+                            set<String>("git", GITHUB_TYPEDB + repoName);
+                            if (commit != null) {
+                                set<String>("rev", commit);
+                            } else if (tag != null) {
+                                set<String>("tag", tag);
+                            } else {
+                                throw IllegalStateException();
+                            }
+                            set<List<String>>("features", features)
+                            set<Boolean>("default-features", false)
                         }
                     }
                 }
 
                 companion object {
-                    fun of(rawKey: String, rawValue: String): Dependency {
+                    fun of(rawKey: String, rawValue: String, workspaceRefs: JsonObject): Dependency {
                         val name = rawKey.split(".", limit = 2)[1]
                         val rawValueProps = rawValue.split(";")
                                 .associate { it.split("=", limit = 2).let { parts -> parts[0] to parts[1] } }
+                        val features = rawValueProps[FEATURES]?.split(",")?.filter { it != "bazel" } ?: emptyList();
                         return if (VERSION in rawValueProps) {
                             Crate(
                                     name = name,
                                     version = rawValueProps[VERSION]!!,
-                                    features = rawValueProps[FEATURES]?.split(",") ?: emptyList(),
+                                    features = features,
                             )
                         } else if (LOCAL_PATH in rawValueProps) {
-                            Local(name = name, external_path = null, local_path = rawValueProps[LOCAL_PATH]!!)
+                            Local(
+                                    name = name,
+                                    external_path = null,
+                                    local_path = rawValueProps[LOCAL_PATH]!!,
+                                    features = features,
+                            )
                         } else {
-                            Local(name = name, external_path = rawValueProps[PATH]!!, local_path = null)
+                            // WARN: we rely on this naming scheme:
+                            //       any internal git dependency is named "@{workspaceName}" where all hyphens in the name are replaced by underscores
+                            val workspaceName = rawValueProps[WORKSPACE_NAME]!!;
+                            val repoName = workspaceName.replace("_", "-");
+                            Git(
+                                    name = name,
+                                    repoName = repoName,
+                                    commit = workspaceRefs["commits"].asObject()[workspaceName]?.asString(),
+                                    tag = workspaceRefs["tags"].asObject()[workspaceName]?.asString(),
+                                    features = features,
+                            )
                         }
                     }
                 }
@@ -432,7 +508,7 @@ class RustManifestSyncer : Callable<Unit> {
             }
 
             companion object {
-                fun fromPropertiesFile(path: File): TargetProperties {
+                fun fromPropertiesFile(path: File, workspaceRefs: JsonObject): TargetProperties {
                     val props = Properties().apply { load(FileInputStream(path.toString())) }
                     try {
                         return TargetProperties(
@@ -440,12 +516,13 @@ class RustManifestSyncer : Callable<Unit> {
                                 name = props.getProperty(NAME),
                                 targetName = props.getProperty(TARGET_NAME),
                                 type = Type.of(props.getProperty(TYPE)),
+                                features = props.getProperty(FEATURES).split(",").filter { it.isNotBlank() },
                                 version = props.getProperty(VERSION),
                                 edition = props.getProperty(EDITION, "2021"),
-                                deps = parseDependencies(extractDependencyEntries(props)),
+                                deps = parseDependencies(extractDependencyEntries(props), workspaceRefs),
                                 buildDeps = props.getProperty(BUILD_DEPS, "").split(",").filter { it.isNotBlank() },
                                 entryPointPath = props.getProperty(ENTRY_POINT_PATH)?.let { Path(it) },
-                                cratePath =  props.getProperty(PATH),
+                                cratePath = props.getProperty(PATH),
                                 tests = mutableListOf(),
                                 benches = mutableListOf(),
                                 buildScripts = mutableListOf(),
@@ -455,6 +532,29 @@ class RustManifestSyncer : Callable<Unit> {
                     }
                 }
 
+                fun mergeList(all_properties: List<TargetProperties>): TargetProperties {
+                    var base = all_properties.get(0);
+                    all_properties.subList(1, all_properties.size).forEach { properties -> 
+                        base = TargetProperties(
+                                path = base.path,
+                                name = base.name,
+                                targetName = base.targetName,
+                                type = base.type,
+                                features = (base.features + properties.features).distinct(),
+                                version = base.version,
+                                edition = base.edition,
+                                deps = (base.deps + properties.deps).distinct(),
+                                buildDeps = base.buildDeps,
+                                entryPointPath = base.entryPointPath,
+                                cratePath = base.cratePath,
+                                tests = base.tests,
+                                benches = base.benches,
+                                buildScripts = base.buildScripts,
+                        )
+                    };
+                    return base;
+                }
+
                 private fun extractDependencyEntries(props: Properties): Map<String, String> {
                     return props.entries
                             .map { it.key.toString() to it.value.toString() }
@@ -462,8 +562,8 @@ class RustManifestSyncer : Callable<Unit> {
                             .toMap()
                 }
 
-                private fun parseDependencies(raw: Map<String, String>): Collection<Dependency> {
-                    return raw.map { Dependency.of(it.key, it.value) }
+                private fun parseDependencies(raw: Map<String, String>, workspaceRefs: JsonObject): Collection<Dependency> {
+                    return raw.map { Dependency.of(it.key, it.value, workspaceRefs) }
                 }
             }
 
@@ -477,8 +577,11 @@ class RustManifestSyncer : Callable<Unit> {
                 const val NAME = "name"
                 const val PATH = "path"
                 const val LOCAL_PATH = "localpath"
+                const val COMMIT = "commit"
+                const val TAG = "tag"
                 const val TYPE = "type"
                 const val VERSION = "version"
+                const val WORKSPACE_NAME = "workspace_name"
             }
         }
 
@@ -488,13 +591,14 @@ class RustManifestSyncer : Callable<Unit> {
             const val EXTERNAL_PLACEHOLDER = ".."
             const val MANIFEST_PROPERTIES_SUFFIX = ".cargo.properties"
             const val CARGO_WORKSPACE_SUFFIX = "-cargo-workspace"
+            const val GITHUB_TYPEDB = "https://github.com/typedb/"
         }
 
         companion object {
             const val GENERATED_FILE_NOTICE =
                     """
 # Generated by TypeDB Cargo sync tool.
-# Do not commit or modify this file.
+# Do not modify this file.
 
 """
         }
@@ -508,6 +612,9 @@ class RustManifestSyncer : Callable<Unit> {
         const val INFO = "info"
         const val OUTPUT_GROUPS = "--output_groups=rust_cargo_project"
         const val QUERY = "query"
+        const val CQUERY = "cquery"
+        const val OUTPUT_FILES = "--output=files"
+        const val OUTPUT_BASE = "output_base"
         const val RUST_TARGETS_QUERY = "kind(rust_*, //...)"
     }
 }

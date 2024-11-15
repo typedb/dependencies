@@ -54,7 +54,15 @@ load("@typedb_dependencies//tool/common:deps.bzl", typedb_dependencies_tool_mave
 load("@typedb_dependencies//library/maven:rules.bzl", "maven")
 maven(typedb_dependencies_tool_maven_artifacts)
 
-local_repository(
-    name = "typedb_extern", # we filter external crates by `@typedb_`!
-    path = "extern",
-)
+###############################
+# Create @test_workspace_refs #
+###############################
+
+# Load //@typedb_bazel_distribution//common
+load("@typedb_bazel_distribution//common:deps.bzl", "rules_pkg")
+rules_pkg()
+load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
+rules_pkg_dependencies()
+
+load("@typedb_bazel_distribution//common:rules.bzl", "workspace_refs")
+workspace_refs(name = "test_workspace_refs")
