@@ -37,13 +37,16 @@ kotlin_repositories()
 load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
 kt_register_toolchains()
 
+# Load //common
+load("//common/java:artifacts.bzl", typedb_common_java_maven_artifacts = "maven_artifacts")
+
 load("//library/ortools/cc:deps.bzl", "google_or_tools_mac", "google_or_tools_linux", "google_or_tools_windows")
 google_or_tools_mac()
 google_or_tools_linux()
 google_or_tools_windows()
 
 # Load //tool/common
-load("//tool/common:deps.bzl", "typedb_dependencies_ci_pip", typedb_dependencies_tool_maven_artifacts = "maven_artifacts")
+load("//tool/common:deps.bzl", "typedb_dependencies_ci_pip", common_tool_maven_artifacts = "maven_artifacts")
 typedb_dependencies_ci_pip()
 load("@typedb_dependencies_ci_pip//:requirements.bzl", "install_deps")
 install_deps()
@@ -64,6 +67,10 @@ sonarcloud_dependencies()
 load("//tool/swig:deps.bzl", swig_deps = "deps")
 swig_deps()
 
+###################################
+# Load @typedb_bazel_distribution #
+###################################
+
 # Load @typedb_bazel_distribution
 load("//distribution:deps.bzl", "typedb_bazel_distribution")
 typedb_bazel_distribution()
@@ -74,8 +81,17 @@ rules_pkg()
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
 
+# Load @typedb_bazel_distribution_cloudsmith
+load("@typedb_bazel_distribution//common/uploader:deps.bzl", uploader_dpes = "deps")
+uploader_dpes()
+load("@typedb_bazel_distribution_uploader//:requirements.bzl", install_uploader_deps = "install_deps")
+install_uploader_deps()
+
 # Load Maven artifacts
-maven(typedb_dependencies_tool_maven_artifacts)
+maven(
+    typedb_common_java_maven_artifacts +
+    common_tool_maven_artifacts
+)
 
 # Load Rust Crate dependencies
 load("@rules_rust//crate_universe:repositories.bzl", "crate_universe_dependencies")

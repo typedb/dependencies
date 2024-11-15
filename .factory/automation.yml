@@ -18,6 +18,17 @@ build:
         bazel test $(bazel query 'kind(checkstyle_test, //...)') --test_output=streamed || exit 1
         tool/ide/rust/sync.sh
         cargo generate-lockfile --quiet && echo SUCCESS
+    deploy-maven-snapshot:
+      filter:
+        owner: typedb
+        branch: [ master, development ]
+      image: typedb-ubuntu-22.04
+      dependencies: [ build ]
+      command: |
+        export DEPLOY_MAVEN_USERNAME=$REPO_TYPEDB_USERNAME
+        export DEPLOY_MAVEN_PASSWORD=$REPO_TYPEDB_PASSWORD
+        bazel run //tool/bazelinstall:remote_cache_setup.sh
+        bazel run --define version=$(git rev-parse HEAD) //common/java:deploy-maven -- snapshot
     sync-dependencies:
       image: typedb-ubuntu-22.04
       filter:
