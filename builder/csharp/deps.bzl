@@ -5,7 +5,7 @@
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("//builder/aspect:deps.bzl", "aspect_bazel_lib")
 
-def deps(use_patched_version=False):
+def rules_dotnet(use_patched_version=False):
     aspect_bazel_lib()
 
     http_archive(
