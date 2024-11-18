@@ -13,7 +13,7 @@ rust_library(
 checkstyle_test(
     name = "checkstyle",
     include = glob(["*"]),
-    exclude = [".bazelversion"],
+    exclude = [".bazelversion", "Cargo.toml"],
     license_type = "mpl-header",
     size = "small",
 )
