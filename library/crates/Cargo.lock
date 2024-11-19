@@ -2636,6 +2636,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "moka"
+version = "0.12.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "32cf62eb4dd975d2dde76432fb1075c49e3ee2331cf36f1f8fd4b66550d32b6f"
+dependencies = [
+ "crossbeam-channel",
+ "crossbeam-epoch",
+ "crossbeam-utils",
+ "once_cell",
+ "parking_lot",
+ "quanta",
+ "rustc_version",
+ "smallvec",
+ "tagptr",
+ "thiserror",
+ "triomphe",
+ "uuid 1.10.0",
+]
+
+[[package]]
 name = "multimap"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3250,6 +3270,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "quanta"
+version = "0.12.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8e5167a477619228a0b284fac2674e3c388cba90631d7b7de620e6f1fcd08da5"
+dependencies = [
+ "crossbeam-utils",
+ "libc",
+ "once_cell",
+ "raw-cpuid",
+ "wasi 0.11.0+wasi-snapshot-preview1",
+ "web-sys",
+ "winapi",
+]
+
+[[package]]
 name = "quick-xml"
 version = "0.26.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3364,6 +3399,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ca3129af7b92a17112d59ad498c6f81eaf463253766b90396d39ea7a39d6613c"
 dependencies = [
  "rand_core 0.5.1",
+]
+
+[[package]]
+name = "raw-cpuid"
+version = "11.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "1ab240315c661615f2ee9f0f2cd32d5a7343a84d5ebcccb99d46e6637565e7b0"
+dependencies = [
+ "bitflags 2.6.0",
 ]
 
 [[package]]
@@ -3568,6 +3612,15 @@ name = "rustc-hash"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "08d43f7aa6b08d49f382cde6a7982047c3426db949b1424bc4b7ec9ae12c6ce2"
+
+[[package]]
+name = "rustc_version"
+version = "0.4.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "cfcb3a22ef46e85b45de6ee7e79d063319ebb6594faafcf1c225ea92ab6e9b92"
+dependencies = [
+ "semver",
+]
 
 [[package]]
 name = "rustix"
@@ -3782,6 +3835,12 @@ dependencies = [
  "core-foundation-sys",
  "libc",
 ]
+
+[[package]]
+name = "semver"
+version = "1.0.23"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "61697e0a1c7e512e84a621326239844a24d8207b4669b41bc18b32ea5cbf988b"
 
 [[package]]
 name = "serde"
@@ -4226,6 +4285,12 @@ dependencies = [
  "core-foundation-sys",
  "libc",
 ]
+
+[[package]]
+name = "tagptr"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7b2093cf4c8eb1e67749a6762251bc9cd836b6fc171623bd0a9d324d37af2417"
 
 [[package]]
 name = "tempdir"
@@ -4689,6 +4754,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "triomphe"
+version = "0.1.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "859eb650cfee7434994602c3a68b25d77ad9e68c8a6cd491616ef86661382eb3"
+
+[[package]]
 name = "try-lock"
 version = "0.2.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4722,6 +4793,78 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
+]
+
+[[package]]
+name = "typedb-dependencies"
+version = "0.0.0"
+dependencies = [
+ "alcoholic_jwt",
+ "async-std",
+ "async-stripe",
+ "async-trait",
+ "axum 0.5.17",
+ "bincode",
+ "cbindgen",
+ "chrono",
+ "chrono-tz",
+ "clap 4.5.18",
+ "coerce",
+ "criterion",
+ "crossbeam",
+ "cucumber",
+ "cxx",
+ "enum_dispatch",
+ "env_logger",
+ "fluvio-helm",
+ "futures",
+ "hmac",
+ "http 1.1.0",
+ "itertools 0.10.5",
+ "jsonwebtoken",
+ "k8s-openapi",
+ "kube",
+ "log",
+ "lz4",
+ "macro_rules_attribute",
+ "maybe-async",
+ "mime",
+ "mime_guess",
+ "moka",
+ "paste",
+ "pest",
+ "pest_derive",
+ "pprof",
+ "proc-macro2",
+ "prost",
+ "prost-build",
+ "rand 0.8.5",
+ "rand_core 0.3.1",
+ "regex",
+ "reqwest",
+ "rocksdb",
+ "same-file",
+ "seahash",
+ "serde",
+ "serde_json",
+ "serde_yaml 0.9.34+deprecated",
+ "serial_test",
+ "sha2",
+ "smol",
+ "syn 2.0.77",
+ "tempdir",
+ "tokio",
+ "tokio-retry",
+ "tokio-stream",
+ "tonic",
+ "tonic-build",
+ "tonic-types",
+ "tower 0.4.13",
+ "tracing",
+ "tracing-subscriber",
+ "uuid 1.10.0",
+ "webpki",
+ "xoshiro",
 ]
 
 [[package]]
@@ -4880,77 +5023,6 @@ name = "value-bag"
 version = "1.9.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5a84c137d37ab0142f0f2ddfe332651fdbf252e7b7dbb4e67b6c1f1b2e925101"
-
-[[package]]
-name = "typedb-dependencies"
-version = "0.0.0"
-dependencies = [
- "alcoholic_jwt",
- "async-std",
- "async-stripe",
- "async-trait",
- "axum 0.5.17",
- "bincode",
- "cbindgen",
- "chrono",
- "chrono-tz",
- "clap 4.5.18",
- "coerce",
- "criterion",
- "crossbeam",
- "cucumber",
- "cxx",
- "enum_dispatch",
- "env_logger",
- "fluvio-helm",
- "futures",
- "hmac",
- "http 1.1.0",
- "itertools 0.10.5",
- "jsonwebtoken",
- "k8s-openapi",
- "kube",
- "log",
- "lz4",
- "macro_rules_attribute",
- "maybe-async",
- "mime",
- "mime_guess",
- "paste",
- "pest",
- "pest_derive",
- "pprof",
- "proc-macro2",
- "prost",
- "prost-build",
- "rand 0.8.5",
- "rand_core 0.3.1",
- "regex",
- "reqwest",
- "rocksdb",
- "same-file",
- "seahash",
- "serde",
- "serde_json",
- "serde_yaml 0.9.34+deprecated",
- "serial_test",
- "sha2",
- "smol",
- "syn 2.0.77",
- "tempdir",
- "tokio",
- "tokio-retry",
- "tokio-stream",
- "tonic",
- "tonic-build",
- "tonic-types",
- "tower 0.4.13",
- "tracing",
- "tracing-subscriber",
- "uuid 1.10.0",
- "webpki",
- "xoshiro",
-]
 
 [[package]]
 name = "vcpkg"
