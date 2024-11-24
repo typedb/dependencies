@@ -46,6 +46,7 @@ pprof = { version = "0.13.0", features = ["flamegraph", "criterion"] }
 proc-macro2 = "1.0.83"
 prost = "^0.13"
 prost-build = "^0.13"
+pwhash = "1.0.0"
 rand = "0.8.5"
 regex = "1.6.0"
 reqwest = { version = "0.11.12", features = ["json"] }
