@@ -29,6 +29,7 @@ fluvio-helm = "0.4.3"
 futures = { version = "0.3.30", features = ["executor", "thread-pool"] }
 hmac = "0.12.1"
 http = "1.1.0"
+hyper = { version = "0.14.31", features = ["full"] }
 itertools = "0.10.3"
 jsonwebtoken = "8.3.0"
 k8s-openapi = { version = "0.16.0", features = ["v1_25"] }
@@ -50,7 +51,7 @@ prost-build = "^0.13"
 pwhash = "1.0.0"
 rand = "0.8.5"
 regex = "1.6.0"
-reqwest = { version = "0.11.12", features = ["json"] }
+reqwest = { version = "0.11.12", features = ["json", "blocking"] }
 rocksdb = { version = "0.22.0", features = ["lz4"], default_features = false }
 same-file = "1.0.6"
 seahash = "4.1.0"
@@ -59,6 +60,7 @@ serde_json = "1.0.125"
 serde_yaml = "0.9.33"
 sha2 = "0.10.6"
 syn = "2.0.66"
+sysinfo = "0.33.0"
 tempdir = "0.3.7"
 tokio = { version = "1.28.2", features = ["rt", "rt-multi-thread"] }
 tokio-retry = "0.3.0"
@@ -71,6 +73,7 @@ tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
 uuid = { version = "1.1.2", features = ["fast-rng", "v4"] }
 webpki = "0.22.2"
+xxhash-rust = { version = "0.8.12", features = ["xxh3"] }
 
 [dev-dependencies]
 async-std = { version = "1.12.0", features = ["attributes"] }
