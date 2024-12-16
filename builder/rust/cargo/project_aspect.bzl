@@ -73,6 +73,34 @@ rust_cargo_project_aspect = aspect(
     }
 )
 
+# TODO: Consider merging with `rust_cargo_project_aspect`
+# (isolate from `if _should_generate_cargo_project(ctx, target)`)
+def _rust_cargo_properties_aspect_impl(target, ctx):
+    if ctx.rule.kind not in _TARGET_TYPES.keys():
+        # not a crate
+        return []
+
+    crate_info = _crate_info(ctx, target)
+    sources = [f for src in getattr(ctx.rule.attr, "srcs", []) + getattr(ctx.rule.attr, "compile_data", []) for f in src.files.to_list()]
+    properties_file = _build_cargo_properties_file(target, ctx, sources, crate_info)
+
+    return [
+        crate_info,
+        OutputGroupInfo(rust_cargo_properties = depset([properties_file])),
+    ]
+
+rust_cargo_properties_aspect = aspect(
+    attr_aspects = ["deps", "proc_macro_deps", "crate"],
+    implementation = _rust_cargo_properties_aspect_impl,
+    attrs = {
+        "_manifest_writer" : attr.label(
+            default = Label("@typedb_dependencies//builder/rust/cargo:manifest-writer"),
+            executable = True,
+            cfg = "exec",
+        )
+    }
+)
+
 def _crate_info(ctx, target):
     if _is_universe_crate(target):
         crate_name = str(target.label).split(".")[0].rsplit("-", 1)[0].removeprefix("@crates__")

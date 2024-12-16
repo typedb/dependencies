@@ -605,12 +605,12 @@ class RustManifestSyncer : Callable<Unit> {
     }
 
     private object ShellArgs {
-        const val ASPECTS = "--aspects=@typedb_dependencies//builder/rust/cargo:project_aspect.bzl%rust_cargo_project_aspect"
+        const val ASPECTS = "--aspects=@typedb_dependencies//builder/rust/cargo:project_aspect.bzl%rust_cargo_properties_aspect"
         const val BAZEL = "bazel"
         const val BAZEL_BIN = "bazel-bin"
         const val BUILD = "build"
         const val INFO = "info"
-        const val OUTPUT_GROUPS = "--output_groups=rust_cargo_project"
+        const val OUTPUT_GROUPS = "--output_groups=rust_cargo_properties"
         const val QUERY = "query"
         const val CQUERY = "cquery"
         const val OUTPUT_FILES = "--output=files"
