@@ -30,7 +30,7 @@ futures = { version = "0.3.30", features = ["executor", "thread-pool"] }
 hmac = "0.12.1"
 http = "1.1.0"
 hyper = { version = "0.14.31", features = ["full"] }
-hyper-rustls = "0.27.3"
+hyper-rustls = "0.25.0"
 itertools = "0.10.3"
 jsonwebtoken = "8.3.0"
 k8s-openapi = { version = "0.16.0", features = ["v1_25"] }
