@@ -373,7 +373,7 @@ dependencies = [
  "hmac 0.12.1",
  "http-types",
  "hyper 0.14.32",
- "hyper-tls 0.5.0",
+ "hyper-tls",
  "serde",
  "serde_json",
  "serde_path_to_error",
@@ -2107,22 +2107,6 @@ dependencies = [
  "native-tls",
  "tokio",
  "tokio-native-tls",
-]
-
-[[package]]
-name = "hyper-tls"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "70206fc6890eaca9fde8a0bf71caa2ddfc9fe045ac9e5c70df101a7dbde866e0"
-dependencies = [
- "bytes",
- "http-body-util",
- "hyper 1.5.2",
- "hyper-util",
- "native-tls",
- "tokio",
- "tokio-native-tls",
- "tower-service",
 ]
 
 [[package]]
@@ -5121,7 +5105,7 @@ dependencies = [
  "hmac 0.12.1",
  "http 1.2.0",
  "hyper 0.14.32",
- "hyper-tls 0.6.0",
+ "hyper-tls",
  "itertools 0.10.5",
  "jsonwebtoken",
  "k8s-openapi",
