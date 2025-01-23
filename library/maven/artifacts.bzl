@@ -82,6 +82,7 @@ artifacts = {
     "com.google.ortools:ortools-linux-x86-64": "9.6.2534",
     "com.google.ortools:ortools-win32-x86-64": "9.6.2534",
     "com.google.protobuf:protobuf-java": "3.21.7",
+    "com.google.protobuf:protobuf-java-util": "3.21.7",
     "com.google.protobuf:protobuf-kotlin": "3.21.7",
     "com.google.re2j:re2j" : "1.6",
     "com.google.truth:truth" : "1.0.1",
@@ -163,6 +164,7 @@ artifacts = {
     "io.ktor:ktor-server-core-jvm": "2.3.7",
     "io.ktor:ktor-server-netty-jvm": "2.3.7",
     "io.ktor:ktor-server-default-headers-jvm": "2.3.7",
+    "io.ktor:ktor-server-status-pages": "2.3.7",
     "io.ktor:ktor-server-websockets-jvm": "2.3.7",
     "io.kubernetes:client-java": {
         "exclude": ["com.github.stefanbirkner:system-rules"],
