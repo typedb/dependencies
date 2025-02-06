@@ -608,6 +608,10 @@ class RustManifestSyncer : Callable<Unit> {
                                 buildScripts = first.buildScripts,
                         )
                     } else {
+                        val (libs, bins) = package_properties.partition { it.type == TargetProperties.Type.LIB }
+                        if (libs.size > 1) {
+                            throw IllegalStateException("Found too many distinct libs post-merge at $lib.cratePath: ${libs.map { it.name }}")
+                        }
                         return TargetProperties(
                                 path = lib.path,
                                 name = lib.name,
@@ -620,7 +624,7 @@ class RustManifestSyncer : Callable<Unit> {
                                 buildDeps = lib.buildDeps,
                                 entryPointPath = lib.entryPointPath,
                                 cratePath = lib.cratePath,
-                                bins = lib.bins,
+                                bins = bins.toMutableList(),
                                 tests = lib.tests,
                                 benches = lib.benches,
                                 buildScripts = lib.buildScripts,
