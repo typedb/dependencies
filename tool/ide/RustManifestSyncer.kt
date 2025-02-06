@@ -173,7 +173,7 @@ class RustManifestSyncer : Callable<Unit> {
                     .map { TargetProperties.fromPropertiesFile(it, workspaceRefs) }
                     .groupBy { Pair(it.name, it.path) }.values
                     .map { TargetProperties.mergeList(it) }
-                    .apply { attachTestAndBuildProperties(this) }
+                    .run { attachTestAndBuildProperties(this) }
         }
 
         private fun findSyncPropertiesFiles(bazelBin: File): List<File> {
@@ -183,7 +183,7 @@ class RustManifestSyncer : Callable<Unit> {
             return filesToCheck.filter { it.name.endsWith(MANIFEST_PROPERTIES_SUFFIX) }
         }
 
-        private fun attachTestAndBuildProperties(properties: Collection<TargetProperties>) {
+        private fun attachTestAndBuildProperties(properties: Collection<TargetProperties>): List<TargetProperties> {
             val TESTS_DIR = "tests"
             val BENCHES_DIR = "benches" // we translate Bazel Tests in 'benches' into Cargo benchmarks
             val (testProperties, nonTestProperties) = properties.partition { it.type == TargetProperties.Type.TEST }
@@ -220,11 +220,18 @@ class RustManifestSyncer : Callable<Unit> {
                     parent[0].benches += tp
                 }
             }
+
             val (buildProperties, nonBuildProperties) = properties.partition { it.type == TargetProperties.Type.BUILD }
                     .let { it.first.associateBy { properties -> properties.name } to it.second }
             nonBuildProperties.forEach { nbp ->
                 nbp.buildDeps.forEach { buildProperties["${it}_"]?.let { buildProperties -> nbp.buildScripts += buildProperties } }
             }
+
+            val packages = properties.filter { it.type == TargetProperties.Type.LIB || it.type == TargetProperties.Type.BIN }
+                .groupBy { it.cratePath }.values
+                .map { TargetProperties.mergePackage(it) }
+
+            return packages;
         }
 
         private fun shouldGenerateManifest(properties: TargetProperties): Boolean {
@@ -267,6 +274,7 @@ class RustManifestSyncer : Callable<Unit> {
                 }
 
                 cargoToml.addDevAndBuildDependencies()
+                cargoToml.addBins()
                 cargoToml.addBenches()
                 cargoToml.addTests()
 
@@ -343,6 +351,23 @@ class RustManifestSyncer : Callable<Unit> {
                 }
             }
 
+            private fun Config.addBins() {
+                if (properties.bins.isNotEmpty()) {
+                    val mapped = properties.bins.map {
+                    if (it.entryPointPath != null) {
+                        val path = Path(properties.cratePath).relativize(Path(it.cratePath)).resolve(it.entryPointPath)
+                            createSubConfig().apply {
+                                this.set<String>("name", it.name);
+                                this.set<String>("path", path.toString());
+                            }
+                        } else {
+                            null
+                        }
+                    }.filterNotNull()
+                    this.set<List<Config>>("bin", mapped)
+                }
+            }
+
             private fun Config.addBenches() {
                 if (properties.benches.isNotEmpty()) {
                     val mapped = properties.benches.map {
@@ -385,6 +410,7 @@ class RustManifestSyncer : Callable<Unit> {
                 val entryPointPath: Path?,
                 val buildDeps: Collection<String>,
                 val deps: Collection<Dependency>,
+                val bins: MutableCollection<TargetProperties>,
                 val tests: MutableCollection<TargetProperties>,
                 val benches: MutableCollection<TargetProperties>,
                 val buildScripts: MutableCollection<TargetProperties>,
@@ -523,6 +549,7 @@ class RustManifestSyncer : Callable<Unit> {
                                 buildDeps = props.getProperty(BUILD_DEPS, "").split(",").filter { it.isNotBlank() },
                                 entryPointPath = props.getProperty(ENTRY_POINT_PATH)?.let { Path(it) },
                                 cratePath = props.getProperty(PATH),
+                                bins = mutableListOf(),
                                 tests = mutableListOf(),
                                 benches = mutableListOf(),
                                 buildScripts = mutableListOf(),
@@ -547,12 +574,62 @@ class RustManifestSyncer : Callable<Unit> {
                                 buildDeps = base.buildDeps,
                                 entryPointPath = base.entryPointPath,
                                 cratePath = base.cratePath,
+                                bins = base.bins,
                                 tests = base.tests,
                                 benches = base.benches,
                                 buildScripts = base.buildScripts,
                         )
                     };
                     return base;
+                }
+
+                fun mergePackage(package_properties: List<TargetProperties>): TargetProperties {
+                    if (package_properties.size == 1) {
+                        return package_properties.get(0);
+                    }
+                    var lib = package_properties.firstOrNull { it.type == TargetProperties.Type.LIB }
+                    if (lib == null) {
+                        val first = package_properties.get(0);
+                        return TargetProperties(
+                                path = first.path,
+                                name = first.cratePath.replace('/', '-'),
+                                targetName = first.targetName,
+                                type = first.type,
+                                features = first.features,
+                                version = first.version,
+                                edition = first.edition,
+                                deps = package_properties.flatMap { it.deps }.distinct(),
+                                buildDeps = first.buildDeps,
+                                entryPointPath = first.entryPointPath,
+                                cratePath = first.cratePath,
+                                bins = package_properties.toMutableList(),
+                                tests = first.tests,
+                                benches = first.benches,
+                                buildScripts = first.buildScripts,
+                        )
+                    } else {
+                        val (libs, bins) = package_properties.partition { it.type == TargetProperties.Type.LIB }
+                        if (libs.size > 1) {
+                            throw IllegalStateException("Found too many distinct libs post-merge at $lib.cratePath: ${libs.map { it.name }}")
+                        }
+                        return TargetProperties(
+                                path = lib.path,
+                                name = lib.name,
+                                targetName = lib.targetName,
+                                type = lib.type,
+                                features = lib.features,
+                                version = lib.version,
+                                edition = lib.edition,
+                                deps = package_properties.flatMap { it.deps }.distinct(),
+                                buildDeps = lib.buildDeps,
+                                entryPointPath = lib.entryPointPath,
+                                cratePath = lib.cratePath,
+                                bins = bins.toMutableList(),
+                                tests = lib.tests,
+                                benches = lib.benches,
+                                buildScripts = lib.buildScripts,
+                        )
+                    }
                 }
 
                 private fun extractDependencyEntries(props: Properties): Map<String, String> {
