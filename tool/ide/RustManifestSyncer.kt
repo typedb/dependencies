@@ -353,7 +353,6 @@ class RustManifestSyncer : Callable<Unit> {
 
             private fun Config.addBins() {
                 if (properties.bins.isNotEmpty()) {
-                    println(properties.bins)
                     val mapped = properties.bins.map {
                     if (it.entryPointPath != null) {
                         val path = Path(properties.cratePath).relativize(Path(it.cratePath)).resolve(it.entryPointPath)
